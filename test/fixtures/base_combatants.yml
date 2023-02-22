@@ -1,0 +1,31 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  armor_class: 1
+  hit_die: 1
+  hit_dice_number: 1
+  hitpoints: 1
+  proficiency_bonus: 1
+  strength: 1
+  dexterity: 1
+  constitution: 1
+  intelligence: 1
+  wisdom: 1
+  charisma: 1
+  skills: 
+
+two:
+  name: MyString
+  armor_class: 1
+  hit_die: 1
+  hit_dice_number: 1
+  hitpoints: 1
+  proficiency_bonus: 1
+  strength: 1
+  dexterity: 1
+  constitution: 1
+  intelligence: 1
+  wisdom: 1
+  charisma: 1
+  skills: 

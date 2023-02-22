@@ -1,0 +1,2 @@
+class BaseCombatant < ApplicationRecord
+end
