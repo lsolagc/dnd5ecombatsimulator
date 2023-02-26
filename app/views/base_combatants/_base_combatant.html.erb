@@ -1,66 +1,91 @@
 <div id="<%= dom_id base_combatant %>">
   <p>
-    <strong>Name:</strong>
-    <%= base_combatant.name %>
+    <h1>
+      <%= base_combatant.name %>
+    </h1>
   </p>
 
   <p>
-    <strong>Armor class:</strong>
+    <strong>
+      <%= BaseCombatant.human_attribute_name('armor_class').capitalize %>
+    </strong>
     <%= base_combatant.armor_class %>
   </p>
 
   <p>
-    <strong>Hit die:</strong>
+    <strong>
+      <%= BaseCombatant.human_attribute_name('hit_die').capitalize %>
+    </strong>
     <%= base_combatant.hit_die %>
   </p>
 
   <p>
-    <strong>Hit dice number:</strong>
+    <strong>
+      <%= BaseCombatant.human_attribute_name('hit_dice_number').capitalize %>
+    </strong>
     <%= base_combatant.hit_dice_number %>
   </p>
 
   <p>
-    <strong>Hitpoints:</strong>
+    <strong>
+      <%= BaseCombatant.human_attribute_name('hitpoints').capitalize %>
+    </strong>
     <%= base_combatant.hitpoints %>
   </p>
 
   <p>
-    <strong>Proficiency bonus:</strong>
+    <strong>
+      <%= BaseCombatant.human_attribute_name('proficiency_bonus').capitalize %>
+    </strong>
     <%= base_combatant.proficiency_bonus %>
   </p>
 
   <p>
-    <strong>Strength:</strong>
+    <strong>
+      <%= BaseCombatant.human_attribute_name('strength').capitalize %>
+    </strong>
     <%= base_combatant.strength %>
   </p>
 
   <p>
-    <strong>Dexterity:</strong>
+    <strong>
+      <%= BaseCombatant.human_attribute_name('dexterity').capitalize %>
+    </strong>
     <%= base_combatant.dexterity %>
   </p>
 
   <p>
-    <strong>Constitution:</strong>
+    <strong>
+      <%= BaseCombatant.human_attribute_name('constitution').capitalize %>
+    </strong>
     <%= base_combatant.constitution %>
   </p>
 
   <p>
-    <strong>Intelligence:</strong>
+    <strong>
+      <%= BaseCombatant.human_attribute_name('intelligence').capitalize %>
+    </strong>
     <%= base_combatant.intelligence %>
   </p>
 
   <p>
-    <strong>Wisdom:</strong>
+    <strong>
+      <%= BaseCombatant.human_attribute_name('wisdom').capitalize %>
+    </strong>
     <%= base_combatant.wisdom %>
   </p>
 
   <p>
-    <strong>Charisma:</strong>
+    <strong>
+      <%= BaseCombatant.human_attribute_name('charisma').capitalize %>
+    </strong>
     <%= base_combatant.charisma %>
   </p>
 
   <p>
-    <strong>Skills:</strong>
+    <strong>
+      <%= BaseCombatant.human_attribute_name('skills').capitalize %>
+    </strong>
     <%= base_combatant.skills %>
   </p>
 

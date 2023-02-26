@@ -1,0 +1,16 @@
+pt-br:
+  activerecord:
+    attributes:
+      base_combatant:
+        name: nome
+        armor_class: classe de armadura
+        hit_die: dado de vida
+        hit_dice_number: quantidade de dados de vida
+        hitpoints: pontos de vida
+        proficiency_bonus: bônus de proficiência
+        strength: força
+        dexterity: destreza
+        constitution: constituição
+        intelligence: inteligência
+        wisdom: sabedoria
+        charisma: carisma

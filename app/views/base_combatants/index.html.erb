@@ -3,12 +3,28 @@
 <h1>Base combatants</h1>
 
 <div id="base_combatants">
-  <% @base_combatants.each do |base_combatant| %>
-    <%= render base_combatant %>
-    <p>
-      <%= link_to "Show this base combatant", base_combatant %>
-    </p>
-  <% end %>
-</div>
+  <table>
+    <thead>
+      <tr>
+        <th>
+          <%= BaseCombatant.human_attribute_name('name').capitalize %>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @base_combatants.each do |base_combatant| %>
+        <tr>
+          <td>
+            <%= link_to base_combatant.name, base_combatant_path(base_combatant) %>
+          </td>
+        </tr>
+      <% end %>
+      <tr>
+        <td>
+          <%= link_to "New base combatant", new_base_combatant_path %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-<%= link_to "New base combatant", new_base_combatant_path %>
+</div>
