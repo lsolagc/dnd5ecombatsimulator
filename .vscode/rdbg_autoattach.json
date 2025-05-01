@@ -1,0 +1,9 @@
+{
+  "type": "rdbg",
+  "name": "Attach with rdbg",
+  "request": "attach",
+  "rdbgPath": "/home/sola/.rbenv/versions/3.4.2/lib/ruby/gems/3.4.0/gems/debug-1.10.0/exe/rdbg",
+  "debugPort": "/run/user/1000/rdbg-61552",
+  "localfs": true,
+  "autoAttach": "0.014027601226183184"
+}
