@@ -83,9 +83,16 @@ class Components::PlayerClassComponents::Form < Components::Base
       end
 
       div(class: "inline") do
-        plain form.submit class:
-                            "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer"
+        input type: "submit",
+              name: "commit",
+              value: @player_class.new_record? ? "Create Player class" : "Update Player class",
+              class: input_primary_classes,
+              data: { disable_with: "Update Player Class" }
       end
     end
+  end
+
+  def input_primary_classes
+     "px-4 py-2 h-9 text-sm whitespace-nowrap inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90"
   end
 end
