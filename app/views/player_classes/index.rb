@@ -31,11 +31,15 @@ class Views::PlayerClasses::Index < Views::PlayerClasses::Base
           TableBody do
             if @player_classes.any?
               @player_classes.each do |player_class|
+                # TODO: seria legal automatizar isso de alguma forma
                 TableRow do
                   TableCell { player_class.name }
                   TableCell { player_class.hit_die }
                   TableCell { player_class.description }
                   TableCell { player_class.spellcasting_modifier }
+                  TableCell { player_class.created_at.strftime("%Y-%m-%d %H:%M:%S") }
+                  TableCell { player_class.updated_at.strftime("%Y-%m-%d %H:%M:%S") }
+                  actions_cell(player_class)
                 end
               end
             else
@@ -46,6 +50,13 @@ class Views::PlayerClasses::Index < Views::PlayerClasses::Base
           end
         end
       end
+    end
+  end
+
+  def actions_cell(player_class)
+    TableCell(class: "flex justify-between items-center")  do
+      Link(href: player_class_path(player_class), variant: :secondary, size: :md) { "Show" }
+      Link(href: edit_player_class_path(player_class), variant: :primary, size: :md) { "Edit" }
     end
   end
 end

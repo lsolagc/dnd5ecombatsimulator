@@ -16,6 +16,7 @@ class Views::PlayerClasses::Edit < Views::PlayerClasses::Base
 
       div(class: "flex justify-between items-center") do
         Heading(level: 1, class: "font-bold text-4xl") { "Editing player class" }
+        Link(href: player_classes_path, variant: :secondary) { "Back to player classes" }
       end
 
       render PlayerClassComponents::Form(player_class: @player_class)

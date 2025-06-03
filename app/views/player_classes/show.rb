@@ -21,8 +21,7 @@ class Views::PlayerClasses::Show < Views::Base
       Link(href: edit_player_class_path(@player_class), variant: :primary) { "Edit this player class" }
       Link(href: player_classes_path, variant: :secondary) { "Back to player classes" }
 
-      # Link(href: player_class_path, variant: :destructive, class: "text-stone-100", data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }) { "Destroy this player class" }
-      # Button(method: :delete, form_class: "sm:inline-block mt-2 sm:mt-0 sm:ml-2", data: { turbo_confirm: "Are you sure?" }) { "Destroy this player class" }
+      # TODO: transform this into a component
       button_to "Destroy this player class",
                 @player_class,
                 method: :delete,
