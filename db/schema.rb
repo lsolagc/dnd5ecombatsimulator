@@ -16,9 +16,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_195227) do
 
   create_table "player_classes", force: :cascade do |t|
     t.string "name"
-    t.string "hit_die"
+    t.integer "hit_die", default: 0, null: false
     t.text "description"
-    t.string "spellcasting_modifier"
+    t.integer "spellcasting_modifier", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
