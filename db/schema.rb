@@ -18,7 +18,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_195227) do
     t.string "name"
     t.integer "hit_die", default: 0, null: false
     t.text "description"
-    t.integer "spellcasting_modifier", default: 0, null: false
+    t.integer "spellcasting_modifier"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
