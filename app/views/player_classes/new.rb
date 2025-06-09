@@ -3,8 +3,8 @@
 class Views::PlayerClasses::New < Views::PlayerClasses::Base
   def page_title = "New player class"
 
-  def initialize(notice: nil)
-    @player_class = model_class.new
+  def initialize(player_class: nil, notice: nil)
+    @player_class = player_class || model_class.new
     @notice = notice
   end
 

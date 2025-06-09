@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Views::PlayerClasses::Show < Views::Base
-  def initialize(player_class:)
+  def initialize(player_class:, notice: nil)
     @player_class = player_class
+    @notice = notice
   end
 
   def view_template
