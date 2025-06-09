@@ -39,16 +39,20 @@ class Components::PlayerClassComponents::Form < Components::Base
 
       div(class: "my-5") do
         plain form.label :hit_die
-        plain form.text_field :hit_die,
-                              class: [
-                                "block shadow-sm rounded-md border px-3 py-2 mt-2 w-full text-stone-950",
-                                {
-                                  "border-gray-400 focus:outline-blue-600":
-                                    @player_class.errors[:hit_die].none?,
-                                  "border-red-400 focus:outline-red-600":
-                                    @player_class.errors[:hit_die].any?
-                                }
-                              ]
+        plain form.select :hit_die,
+                          PlayerClass.hit_dice.map { |die, _| [ die.humanize, die ] },
+                          {}, # select options argument
+                          {
+                            class: [
+                              "block shadow-sm rounded-md border px-3 py-2 mt-2 w-full text-stone-950",
+                              {
+                                "border-gray-400 focus:outline-blue-600":
+                                  @player_class.errors[:hit_die].none?,
+                                "border-red-400 focus:outline-red-600":
+                                  @player_class.errors[:hit_die].any?
+                              }
+                            ]
+                          }
       end
 
       div(class: "my-5") do
@@ -68,18 +72,24 @@ class Components::PlayerClassComponents::Form < Components::Base
 
       div(class: "my-5") do
         plain form.label :spellcasting_modifier
-        plain form.text_field :spellcasting_modifier,
-                              class: [
-                                "block shadow-sm rounded-md border px-3 py-2 mt-2 w-full text-stone-950",
-                                {
-                                  "border-gray-400 focus:outline-blue-600":
-                                    @player_class.errors[
-                                      :spellcasting_modifier
-                                    ].none?,
-                                  "border-red-400 focus:outline-red-600":
-                                    @player_class.errors[:spellcasting_modifier].any?
-                                }
-                              ]
+        plain form.select :spellcasting_modifier,
+                          PlayerClass.spellcasting_modifiers.map { |modifier, _| [ modifier.humanize, modifier ] },
+                          {
+                            include_blank: "Select a spellcasting modifier"
+                          }, # select options argument
+                          {
+                            class: [
+                              "block shadow-sm rounded-md border px-3 py-2 mt-2 w-full text-stone-950",
+                              {
+                                "border-gray-400 focus:outline-blue-600":
+                                  @player_class.errors[
+                                    :spellcasting_modifier
+                                  ].none?,
+                                "border-red-400 focus:outline-red-600":
+                                  @player_class.errors[:spellcasting_modifier].any?
+                              }
+                            ]
+                          }
       end
 
       div(class: "inline") do
