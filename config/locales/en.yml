@@ -28,4 +28,11 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  activerecord:
+    errors:
+      messages:
+        not_a_hash: "must be a Hash object"
+        invalid_section: "%{section} must be an object"
+        missing_key: "missing key %{key} in %{section}"
+        invalid_value: "%{section}.%{key} must be boolean"
+
