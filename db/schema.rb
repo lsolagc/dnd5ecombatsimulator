@@ -10,9 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_13_195227) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_22_235034) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "combatants", force: :cascade do |t|
+    t.integer "armor_class", default: 10, null: false
+    t.integer "strength", default: 10, null: false
+    t.integer "dexterity", default: 10, null: false
+    t.integer "constitution", default: 10, null: false
+    t.integer "intelligence", default: 10, null: false
+    t.integer "wisdom", default: 10, null: false
+    t.integer "charisma", default: 10, null: false
+    t.integer "speed", default: 30, null: false
+    t.integer "proficiency_bonus", default: 2, null: false
+    t.jsonb "vulnerabilities", default: {"conditions" => {"fear" => false, "stun" => false, "charm" => false, "prone" => false, "grapple" => false, "deafness" => false, "blindness" => false, "paralysis" => false, "poisoning" => false, "restraint" => false, "exhaustion" => false, "invisibility" => false, "petrification" => false, "incapacitation" => false, "unconsciousness" => false}, "damage_types" => {"acid" => false, "cold" => false, "fire" => false, "force" => false, "poison" => false, "psychic" => false, "radiant" => false, "thunder" => false, "necrotic" => false, "piercing" => false, "slashing" => false, "lightning" => false, "bludgeoning" => false}}
+    t.jsonb "resistances", default: {"conditions" => {"fear" => false, "stun" => false, "charm" => false, "prone" => false, "grapple" => false, "deafness" => false, "blindness" => false, "paralysis" => false, "poisoning" => false, "restraint" => false, "exhaustion" => false, "invisibility" => false, "petrification" => false, "incapacitation" => false, "unconsciousness" => false}, "damage_types" => {"acid" => false, "cold" => false, "fire" => false, "force" => false, "poison" => false, "psychic" => false, "radiant" => false, "thunder" => false, "necrotic" => false, "piercing" => false, "slashing" => false, "lightning" => false, "bludgeoning" => false}}
+    t.jsonb "immunities", default: {"conditions" => {"fear" => false, "stun" => false, "charm" => false, "prone" => false, "grapple" => false, "deafness" => false, "blindness" => false, "paralysis" => false, "poisoning" => false, "restraint" => false, "exhaustion" => false, "invisibility" => false, "petrification" => false, "incapacitation" => false, "unconsciousness" => false}, "damage_types" => {"acid" => false, "cold" => false, "fire" => false, "force" => false, "poison" => false, "psychic" => false, "radiant" => false, "thunder" => false, "necrotic" => false, "piercing" => false, "slashing" => false, "lightning" => false, "bludgeoning" => false}}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "player_classes", force: :cascade do |t|
     t.string "name"
