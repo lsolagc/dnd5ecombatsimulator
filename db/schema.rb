@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_22_235034) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_24_212918) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -29,6 +29,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_22_235034) do
     t.jsonb "immunities", default: {"conditions" => {"fear" => false, "stun" => false, "charm" => false, "prone" => false, "grapple" => false, "deafness" => false, "blindness" => false, "paralysis" => false, "poisoning" => false, "restraint" => false, "exhaustion" => false, "invisibility" => false, "petrification" => false, "incapacitation" => false, "unconsciousness" => false}, "damage_types" => {"acid" => false, "cold" => false, "fire" => false, "force" => false, "poison" => false, "psychic" => false, "radiant" => false, "thunder" => false, "necrotic" => false, "piercing" => false, "slashing" => false, "lightning" => false, "bludgeoning" => false}}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "combatable_type", null: false
+    t.bigint "combatable_id", null: false
+    t.index ["combatable_type", "combatable_id"], name: "index_combatants_on_combatable"
+  end
+
+  create_table "player_characters", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "level", default: 1
+    t.bigint "player_class_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["player_class_id"], name: "index_player_characters_on_player_class_id"
   end
 
   create_table "player_classes", force: :cascade do |t|
@@ -39,4 +51,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_22_235034) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_foreign_key "player_characters", "player_classes"
 end
