@@ -13,7 +13,7 @@
       "version": "16"
     }
   },
-  "postCreateCommand": "bundle install",
+  "postCreateCommand": "mkdir -p ~/.ssh && cp -r /workspaces/dnd/resources/.ssh/* ~/.ssh/ 2>/dev/null || true && chmod 700 ~/.ssh && chmod 600 ~/.ssh/* 2>/dev/null || true && bundle install",
   "customizations": {
     "vscode": {
       "extensions": [
