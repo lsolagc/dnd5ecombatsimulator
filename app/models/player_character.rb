@@ -6,14 +6,18 @@ class PlayerCharacter < ApplicationRecord
 
   delegate :hit_die, :spellcasting_modifier, to: :player_class
   delegate_ability_scores_to :combatant
-  delegate :armor_class, to: :combatant
+  delegate :armor_class, :max_hit_points, :max_hit_points=, :current_hit_points, :current_hit_points=, :initialize_for_combat, to: :combatant
 
-  before_validation :initialize_combatant, if: -> { combatant.nil? }
+  before_create :initialize_combatant, if: -> { combatant.nil? }
+  before_create :setup_hit_points
 
-  attr_accessor :current_hit_points, :max_hit_points
-
-  def initiative
-    dexterity_modifier
+  def setup_hit_points
+    case level
+    when 1
+      self.max_hit_points = hit_points_at_level_one
+    else
+      self.max_hit_points = hit_points_at_level_one + roll_hit_points(for_level: level)
+    end
   end
 
   def roll_hit_points(for_level: 1)
@@ -22,13 +26,13 @@ class PlayerCharacter < ApplicationRecord
 
     additional_hit_points = 0
     if for_level && for_level > 1
-      additional_levels = for_level - 1
+      additional_levels = for_level - level
       additional_levels.times do
         additional_hit_points += rand(1..hit_die_value) + constitution_modifier
       end
     end
 
-    self.max_hit_points = hit_points_at_level_one + additional_hit_points
+    additional_hit_points
   end
 
   def hit_points_at_level_one
@@ -37,10 +41,6 @@ class PlayerCharacter < ApplicationRecord
 
   def hit_die_value
     hit_die.to_s.delete("d").to_i
-  end
-
-  def initialize_for_combat
-    self.current_hit_points = max_hit_points || hit_points_at_level_one
   end
 
   def attack(target:)
@@ -65,10 +65,6 @@ class PlayerCharacter < ApplicationRecord
     if current_hit_points <= 0
       self.current_hit_points = 0
     end
-  end
-
-  def dead?
-    current_hit_points.nil? || current_hit_points <= 0
   end
 
   def initialize_combatant
