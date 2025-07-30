@@ -9,9 +9,9 @@ class Components::Layout < Components::Base
     html do
       head do
         title { @page_info.title }
-        raw helpers.stylesheet_link_tag("tailwind", "data-turbo-track": "reload")
-        raw helpers.javascript_importmap_tags
-        raw helpers.turbo_include_tags
+        stylesheet_link_tag("tailwind", "data-turbo-track": "reload")
+        javascript_importmap_tags
+        turbo_include_tags
       end
 
       body(class: "text-gray-200") do

@@ -14,6 +14,10 @@ class Components::Base < Phlex::HTML
   include Phlex::Rails::Helpers::ButtonTo
   include Phlex::Rails::Helpers::Pluralize
 
+  register_output_helper :stylesheet_link_tag
+  register_output_helper :javascript_importmap_tags
+  register_output_helper :turbo_include_tags
+
   if Rails.env.development?
     def before_template
       comment { "Before #{self.class.name}" }
