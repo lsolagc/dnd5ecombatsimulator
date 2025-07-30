@@ -1,11 +1,19 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
+aragorn:
+  name: Aragorn
   level: 1
-  player_class: one
+  player_class: fighter
+  # max_hit_points: 12 (d10 + 2 CON)
 
-two:
-  name: MyString
+merlin:
+  name: Merlin
   level: 1
-  player_class: two
+  player_class: wizard
+  # max_hit_points: 8 (d6 + 2 CON)
+
+elora:
+  name: Elora
+  level: 1
+  player_class: cleric
+  # max_hit_points: 10 (d8 + 2 CON)

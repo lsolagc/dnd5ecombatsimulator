@@ -1,13 +1,73 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  hit_die: MyString
-  description: MyText
-  spellcasting_modifier: MyString
+barbarian:
+  name: Barbarian
+  hit_die: d12
+  description: A fierce warrior of primitive background who can enter a battle rage.
+  spellcasting_modifier: 
 
-two:
-  name: MyString
-  hit_die: MyString
-  description: MyText
-  spellcasting_modifier: MyString
+bard:
+  name: Bard
+  hit_die: d8
+  description: An inspiring magician whose power echoes the music of creation.
+  spellcasting_modifier: charisma
+
+cleric:
+  name: Cleric
+  hit_die: d8
+  description: A priestly champion who wields divine magic in service of a higher power.
+  spellcasting_modifier: wisdom
+
+druid:
+  name: Druid
+  hit_die: d8
+  description: A priest of the Old Faith, wielding the powers of nature.
+  spellcasting_modifier: wisdom
+
+fighter:
+  name: Fighter
+  hit_die: d10
+  description: A master of martial combat, skilled with a variety of weapons and armor.
+  spellcasting_modifier: 
+
+monk:
+  name: Monk
+  hit_die: d8
+  description: A master of martial arts, harnessing the power of the body in pursuit of physical and spiritual perfection.
+  spellcasting_modifier: 
+
+paladin:
+  name: Paladin
+  hit_die: d10
+  description: A holy warrior bound to a sacred oath.
+  spellcasting_modifier: charisma
+
+ranger:
+  name: Ranger
+  hit_die: d10
+  description: A warrior who uses martial prowess and nature magic to combat threats on the edges of civilization.
+  spellcasting_modifier: wisdom
+
+rogue:
+  name: Rogue
+  hit_die: d8
+  description: A scoundrel who uses stealth and trickery to overcome obstacles and enemies.
+  spellcasting_modifier: 
+
+sorcerer:
+  name: Sorcerer
+  hit_die: d6
+  description: A spellcaster who draws on inherent magic from a gift or bloodline.
+  spellcasting_modifier: charisma
+
+warlock:
+  name: Warlock
+  hit_die: d8
+  description: A wielder of magic that is derived from a bargain with an extraplanar entity.
+  spellcasting_modifier: charisma
+
+wizard:
+  name: Wizard
+  hit_die: d6
+  description: A scholarly magic-user capable of manipulating the structures of reality.
+  spellcasting_modifier: intelligence
