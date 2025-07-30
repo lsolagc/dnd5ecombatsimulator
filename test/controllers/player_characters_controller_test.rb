@@ -2,7 +2,7 @@ require "test_helper"
 
 class PlayerCharactersControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @player_character = player_characters(:one)
+    @player_character = player_characters(:aragorn)
   end
 
   test "should get index" do
@@ -17,7 +17,7 @@ class PlayerCharactersControllerTest < ActionDispatch::IntegrationTest
 
   test "should create player_character" do
     assert_difference("PlayerCharacter.count") do
-      post player_characters_url, params: { player_character: { level: @player_character.level, name: @player_character.name, player_class_id: @player_character.player_class_id } }
+      post player_characters_url, params: { player_character: { level: @player_character.level, name: @player_character.name, player_class_id: @player_character.player_class_id, combatant: @player_character.combatant } }
     end
 
     assert_redirected_to player_character_url(PlayerCharacter.last)

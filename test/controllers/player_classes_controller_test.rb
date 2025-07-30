@@ -2,7 +2,7 @@ require "test_helper"
 
 class PlayerClassesControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @player_class = player_classes(:one)
+    @player_class = player_classes(:barbarian)
   end
 
   test "should get index" do
@@ -16,6 +16,7 @@ class PlayerClassesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create player_class" do
+    @player_class.name = "New Class"
     assert_difference("PlayerClass.count") do
       post player_classes_url, params: { player_class: { description: @player_class.description, hit_die: @player_class.hit_die, name: @player_class.name, spellcasting_modifier: @player_class.spellcasting_modifier } }
     end
