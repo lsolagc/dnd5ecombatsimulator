@@ -6,7 +6,7 @@ class PlayerCharacter < ApplicationRecord
 
   delegate :hit_die, :spellcasting_modifier, to: :player_class
   delegate_ability_scores_to :combatant
-  delegate :armor_class, :max_hit_points, :max_hit_points=, :current_hit_points, :current_hit_points=, :initialize_for_combat, to: :combatant
+  delegate :armor_class, :max_hit_points, :max_hit_points=, :current_hit_points, :current_hit_points=, :initiative, :dead?, :initialize_for_combat, to: :combatant
 
   before_create :initialize_combatant, if: -> { combatant.nil? }
   before_create :setup_hit_points

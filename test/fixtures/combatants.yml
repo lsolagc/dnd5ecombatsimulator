@@ -17,6 +17,19 @@ aragorn_combatant:
   max_hit_points: 12
   combatable: aragorn (PlayerCharacter)
 
+aragorn_copy_combatant:
+  armor_class: 16
+  strength: 15
+  dexterity: 12
+  constitution: 14
+  intelligence: 10
+  wisdom: 12
+  charisma: 11
+  speed: 30
+  proficiency_bonus: 2
+  max_hit_points: 12
+  combatable: aragorn_copy (PlayerCharacter)
+
 merlin_combatant:
   armor_class: 12
   strength: 8

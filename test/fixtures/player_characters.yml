@@ -6,6 +6,12 @@ aragorn:
   player_class: fighter
   # max_hit_points: 12 (d10 + 2 CON)
 
+aragorn_copy:
+  name: Aragorn Copy
+  level: 1
+  player_class: fighter
+  # max_hit_points: 12 (d10 + 2 CON)
+
 merlin:
   name: Merlin
   level: 1
