@@ -1,8 +1,10 @@
 class Combatant < ApplicationRecord
-  include AbilityScoreLogic
+  include AbilityScores
   include ConditionAndDamageTypeLogic
 
   delegated_type :combatable, types: %w[ PlayerCharacter ]
+
+  has_ability_score_modifiers
 
   attr_accessor :current_hit_points
 
