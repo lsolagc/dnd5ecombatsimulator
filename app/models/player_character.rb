@@ -1,12 +1,13 @@
 class PlayerCharacter < ApplicationRecord
   include AbilityScores
+  include CombatantBehavior
 
   belongs_to :player_class
-  has_one :combatant, as: :combatable, touch: true
-
-  delegate_ability_scores_to :combatant
   delegate :hit_die, :spellcasting_modifier, to: :player_class
-  delegate :armor_class, :max_hit_points, :max_hit_points=, :current_hit_points, :current_hit_points=, :initiative, :dead?, :initialize_for_combat, to: :combatant
+
+  has_one :combatant, as: :combatable, touch: true
+  behave_as_combatant
+  delegate_ability_scores_to :combatant
 
   before_create :initialize_combatant, if: -> { combatant.nil? }
   before_create :setup_hit_points
