@@ -29,7 +29,7 @@ class PlayerCharacter < ApplicationRecord
     if for_level && for_level > 1
       additional_levels = for_level - level
       additional_levels.times do
-        additional_hit_points += rand(1..hit_die_value) + constitution_modifier
+        additional_hit_points += Dice.send(hit_die) + constitution_modifier
       end
     end
 
