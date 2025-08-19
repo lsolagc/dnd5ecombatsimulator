@@ -55,11 +55,11 @@ class EncounterService
       initiative_rolls = {}
 
       @party_one.each do |combatant|
-        initiative_rolls[combatant] = combatant.initiative + rand(1..20)
+        initiative_rolls[combatant] = Dice.d20(modifier: combatant.initiative).total
       end
 
       @party_two.each do |combatant|
-        initiative_rolls[combatant] = combatant.initiative + rand(1..20)
+        initiative_rolls[combatant] = Dice.d20(modifier: combatant.initiative).total
       end
 
       @round_order = initiative_rolls.sort_by { |_, roll| -roll }.to_h
@@ -75,7 +75,8 @@ class EncounterService
         target_party = @party_one.include?(combatant) ? @party_two : @party_one
         target = target_party.reject { |m| m.dead? }.sample
 
-        attack_result = combatant.attack(target: target)
+        attack_roll, damage_roll = combatant.roll_an_attack
+        attack_result = target.get_attacked(attack_roll:, damage_roll:)
 
         round_result = {
           initiative: initiative_roll,

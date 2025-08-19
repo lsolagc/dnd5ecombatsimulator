@@ -44,14 +44,17 @@ class PlayerCharacter < ApplicationRecord
     hit_die.to_s.delete("d").to_i
   end
 
-  def attack(target:)
-    raise ArgumentError, "Target must be a Combatant" unless target.respond_to?(:combatant)
+  def roll_an_attack
+    attack_roll = Dice.d20
+    damage_roll = Dice.d4(modifier: strength_modifier)
 
-    attack_roll = rand(1..20)
-    if attack_roll >= target.armor_class
-      damage = rand(1..4) + strength_modifier
-      target.take_damage(amount: damage, damage_type: :bludgeoning)
-      { success: true, attack_roll: attack_roll, damage: damage, message: "Hit!" }
+    [ attack_roll, damage_roll ]
+  end
+
+  def get_attacked(attack_roll:, damage_roll:)
+    if attack_roll.total >= armor_class
+      take_damage(amount: damage_roll.total, damage_type: :bludgeoning)
+      { success: true, attack_roll: attack_roll.total, damage: damage_roll.total, message: "Hit!" }
     else
       { success: false, attack_roll: attack_roll, message: "Miss!" }
     end
