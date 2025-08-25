@@ -27,6 +27,8 @@ class EncounterService
     end
 
     cleanup
+
+    self
   end
 
   private

@@ -22,6 +22,6 @@ class EncounterServiceTest < ActiveSupport::TestCase
       number_of_rounds: 6
     }
 
-    assert_equal expected_result, encounter_result
+    assert_equal expected_result, encounter_result.encounter_log[:end_of_encounter]
   end
 end
