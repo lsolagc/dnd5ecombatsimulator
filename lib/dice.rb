@@ -10,12 +10,30 @@
 # Todos os métodos retornam uma instância de Dice::RollResult.
 #
 module Dice
+  @@dice_calls = []
+
+  def self.dice_calls
+    r = {}
+    for i in 0...@@dice_calls.size do
+      r[i] = @@dice_calls[i].map(&:to_s)
+    end
+
+    r.to_json
+  end
+
+  def self.log_dice_call
+    @@dice_calls << caller_locations.select { |i| i.to_s.include?("/workspaces/dnd/") }
+  end
+
+  def self.reset_dice_logs
+    @@dice_calls = []
+  end
   # Rola qualquer combinação de dados no formato "[quantidade]d[tipo]" com modificador opcional.
   #
   # @param dice [String] Ex: '2d6', '4d8'
   # @param modifier [Integer] Modificador a ser somado ao resultado total
   # @return [Dice::RollResult] Resultado da rolagem
-  def self.roll(dice:, modifier: 0)
+  def self.roll(dice:, modifier: 0, crit: false)
     # generic roll, called like Dice.roll(dice: '4d8', modifier: 4)
     dice = dice.to_s.downcase
     raise ArgumentError, "dice must be formatted like [number of dice]d[type of die] (e.g. 4d8)" unless dice.match?(/\d+d\d+/)
@@ -27,7 +45,10 @@ module Dice
       dice_rolls += rand(1..max_value_of_die)
     end
 
+    dice_rolls = dice_rolls * 2 if crit
     total_roll_value = dice_rolls + modifier
+
+    log_dice_call
 
     Dice::RollResult.new(natural: dice_rolls, total: total_roll_value)
   end

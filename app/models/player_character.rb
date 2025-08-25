@@ -45,16 +45,17 @@ class PlayerCharacter < ApplicationRecord
   end
 
   def roll_an_attack
-    attack_roll = Dice.d20
-    damage_roll = Dice.d4(modifier: strength_modifier)
-
-    [ attack_roll, damage_roll ]
+    Dice::AttackRoll.new(damage_dice: damage_roll)
   end
 
-  def get_attacked(attack_roll:, damage_roll:)
+  def damage_roll
+    "1d4"
+  end
+
+  def get_attacked(attack_roll:)
     if attack_roll.total >= armor_class
-      take_damage(amount: damage_roll.total, damage_type: :bludgeoning)
-      { success: true, attack_roll: attack_roll.total, damage: damage_roll.total, message: "Hit!" }
+      take_damage(amount: attack_roll.damage, damage_type: :bludgeoning)
+      { success: true, attack_roll: attack_roll, message: "Hit!" }
     else
       { success: false, attack_roll: attack_roll, message: "Miss!" }
     end
@@ -62,8 +63,16 @@ class PlayerCharacter < ApplicationRecord
 
   def take_damage(amount:, damage_type:)
     raise ArgumentError, "Amount must be a positive Integer" unless amount.is_a?(Integer) && amount.positive?
+    return if immune_to?(damage_type:)
 
-    self.current_hit_points ||= max_hit_points
+    if resistant_to?(damage_type:)
+      amount = amount / 2
+    end
+
+    if vulnerable_to?(damage_type:)
+      amount = amount * 2
+    end
+
     self.current_hit_points -= amount
 
     if current_hit_points <= 0

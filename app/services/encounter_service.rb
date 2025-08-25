@@ -77,8 +77,8 @@ class EncounterService
         target_party = @party_one.include?(combatant) ? @party_two : @party_one
         target = target_party.reject { |m| m.dead? }.sample
 
-        attack_roll, damage_roll = combatant.roll_an_attack
-        attack_result = target.get_attacked(attack_roll:, damage_roll:)
+        attack_roll = combatant.roll_an_attack
+        attack_result = target.get_attacked(attack_roll:)
 
         round_result = {
           initiative: initiative_roll,
