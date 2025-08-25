@@ -45,7 +45,7 @@ class PlayerCharacter < ApplicationRecord
   end
 
   def roll_an_attack
-    Dice::AttackRoll.new(damage_dice: damage_roll)
+    Dice::AttackRoll.new(damage_dice: damage_roll, damage_modifier: strength_modifier)
   end
 
   def damage_roll
