@@ -1,0 +1,47 @@
+# Documentação - D&D Character Manager
+
+Bem-vindo à documentação do **D&D Character Manager**, um sistema de gerenciamento de personagens e combates para Dungeons & Dragons construído em Rails com Phlex.
+
+## 📚 Índice
+
+### Arquitetura
+- [Visão Geral](architecture/overview.md) - Estrutura geral da aplicação
+- [Sistema de Classes](architecture/class-system.md) - Como funciona a progressão de classes
+- [Sistema de Combate](architecture/combat-system.md) - Motor de combate e encontros
+
+### Modelos
+- [Modelos de Dados](models/data-model.md) - Descrição dos modelos principais
+
+### Guias
+- [Setup do Projeto](guides/setup.md) - Como instalar e rodar localmente
+- [Criando Personagens](guides/creating-characters.md) - Fluxo de criação
+
+### Componentes
+- [Componentes UI](components/overview.md) - Phlex components e RubyUI
+
+## 🎯 Começar Rápido
+
+1. **Setup**: Veja [Setup do Projeto](guides/setup.md)
+2. **Entender a Arquitetura**: Comece com [Visão Geral](architecture/overview.md)
+3. **Explorar Modelos**: Consulte [Modelos de Dados](models/data-model.md)
+
+## 🛠️ Para Agentes IA
+
+Se você é um agente de IA (Copilot, Claude, etc):
+- Consulte [.instructions.md](../.instructions.md) na raiz do projeto
+- Este arquivo contém instruções específicas para navegação e desenvolvimento
+
+## 📞 Estrutura de Diretórios
+
+```
+/docs
+├── architecture/          # Decisões e sistemas principais
+├── models/               # Documentação de modelos
+├── guides/               # Tutoriais e howtos
+├── components/           # Documentação de componentes UI
+└── README.md            # Este arquivo
+```
+
+---
+
+**Última atualização**: Março 2026
