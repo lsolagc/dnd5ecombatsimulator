@@ -48,9 +48,10 @@ development:
 test:
   <<: *default
   database: dnd_test
-  username: <%= ENV["DB_USER"] %>
+  username: <%= ENV["DND_TEST_USER"] %>
   # The password associated with the PostgreSQL role (username).
-  password: <%= ENV["DB_PASS"] %>
+  password: <%= ENV["DND_TEST_PASS"] %>
+  host: localhost
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
 # ever seen by anyone, they now have access to your database.
