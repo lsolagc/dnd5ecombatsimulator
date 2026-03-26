@@ -23,3 +23,9 @@ elora:
   level: 1
   player_class: cleric
   # max_hit_points: 10 (d8 + 2 CON)
+
+thorin:
+  name: Thorin
+  level: 5
+  player_class: fighter
+  # max_hit_points: proficiency_bonus +3 at level 5

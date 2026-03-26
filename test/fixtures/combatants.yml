@@ -55,3 +55,16 @@ elora_combatant:
   proficiency_bonus: 2
   max_hit_points: 10
   combatable: elora (PlayerCharacter)
+
+thorin_combatant:
+  armor_class: 16
+  strength: 17
+  dexterity: 12
+  constitution: 14
+  intelligence: 10
+  wisdom: 10
+  charisma: 8
+  speed: 30
+  proficiency_bonus: 3
+  max_hit_points: 52
+  combatable: thorin (PlayerCharacter)

@@ -4,8 +4,14 @@ class PlayerClass < ApplicationRecord
   enum :spellcasting_modifier, [ :intelligence, :wisdom, :charisma ]
   enum :hit_die, [ :d4, :d6, :d8, :d10, :d12 ]
 
+  has_many :class_level_progressions, dependent: :destroy
+
   validates :name, presence: true, uniqueness: true
   validates :hit_die, presence: true
+
+  def progression_at(level)
+    class_level_progressions.find_by(level: level)
+  end
 
   ##
   # Returns all available hit dice for player classes

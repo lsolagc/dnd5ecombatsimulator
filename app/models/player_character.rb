@@ -83,4 +83,20 @@ class PlayerCharacter < ApplicationRecord
   def initialize_combatant
     self.combatant = Combatant.new(combatable: self)
   end
+
+  def class_progression
+    player_class.progression_at(level)
+  end
+
+  def proficiency_bonus
+    class_progression&.proficiency_bonus || 2
+  end
+
+  def can_improve_ability_scores?
+    class_progression&.grants_ability_score_improvement? || false
+  end
+
+  def level_up!
+    increment!(:level)
+  end
 end

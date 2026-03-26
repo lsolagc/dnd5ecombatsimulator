@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_28_205140) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_23_235522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "class_level_progressions", force: :cascade do |t|
+    t.bigint "player_class_id", null: false
+    t.integer "level", null: false
+    t.integer "proficiency_bonus", null: false
+    t.boolean "grants_ability_score_improvement", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["player_class_id", "level"], name: "index_class_level_progressions_on_player_class_id_and_level", unique: true
+    t.index ["player_class_id"], name: "index_class_level_progressions_on_player_class_id"
+  end
 
   create_table "combatants", force: :cascade do |t|
     t.integer "armor_class", default: 10, null: false
@@ -53,5 +64,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_28_205140) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "class_level_progressions", "player_classes"
   add_foreign_key "player_characters", "player_classes"
 end
