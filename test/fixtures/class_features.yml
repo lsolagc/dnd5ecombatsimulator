@@ -1,0 +1,37 @@
+fighter_second_wind:
+  player_class: fighter
+  name: Second Wind
+  slug: second-wind
+  description: Limited self-healing feature.
+  feature_type: core
+  action_type: bonus_action
+  resource_name: Second Wind
+  recharge_type: short_or_long_rest
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Fighter 1
+
+fighter_action_surge:
+  player_class: fighter
+  name: Action Surge
+  slug: action-surge
+  description: Gain one additional action on your turn.
+  feature_type: core
+  action_type: no_action
+  resource_name: Action Surge
+  recharge_type: short_or_long_rest
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Fighter 2
+
+wizard_spellcasting:
+  player_class: wizard
+  name: Spellcasting
+  slug: spellcasting
+  description: Access to class spellcasting progression; spells are stored separately.
+  feature_type: core
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: true
+  source_book: PHB 2014
+  source_reference: Wizard 1

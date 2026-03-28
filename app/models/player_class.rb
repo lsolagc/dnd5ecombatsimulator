@@ -5,6 +5,7 @@ class PlayerClass < ApplicationRecord
   enum :hit_die, [ :d4, :d6, :d8, :d10, :d12 ]
 
   has_many :class_level_progressions, dependent: :destroy
+  has_many :class_features, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
   validates :hit_die, presence: true

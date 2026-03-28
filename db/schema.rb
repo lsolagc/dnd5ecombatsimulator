@@ -10,18 +10,53 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_26_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_28_211100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "class_feature_unlocks", force: :cascade do |t|
+    t.bigint "class_feature_id", null: false
+    t.integer "level", null: false
+    t.integer "action_type"
+    t.integer "recharge_type"
+    t.integer "uses"
+    t.string "uses_formula"
+    t.string "resource_name"
+    t.text "description"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["class_feature_id", "level"], name: "index_class_feature_unlocks_on_class_feature_id_and_level", unique: true
+    t.index ["class_feature_id"], name: "index_class_feature_unlocks_on_class_feature_id"
+  end
+
+  create_table "class_features", force: :cascade do |t|
+    t.bigint "player_class_id", null: false
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.text "description", null: false
+    t.integer "feature_type", default: 0, null: false
+    t.integer "action_type", default: 0, null: false
+    t.string "resource_name"
+    t.integer "recharge_type", default: 0, null: false
+    t.boolean "grants_spellcasting", default: false, null: false
+    t.string "source_book", default: "PHB 2014", null: false
+    t.string "source_reference"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["player_class_id", "slug"], name: "index_class_features_on_player_class_id_and_slug", unique: true
+    t.index ["player_class_id"], name: "index_class_features_on_player_class_id"
+  end
 
   create_table "class_level_progressions", force: :cascade do |t|
     t.bigint "player_class_id", null: false
     t.integer "level", null: false
     t.integer "proficiency_bonus", null: false
     t.boolean "grants_ability_score_improvement", default: false, null: false
-    t.integer "attacks_per_action", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "attacks_per_action", default: 1, null: false
     t.index ["player_class_id", "level"], name: "index_class_level_progressions_on_player_class_id_and_level", unique: true
     t.index ["player_class_id"], name: "index_class_level_progressions_on_player_class_id"
   end
@@ -65,6 +100,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_26_120000) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "class_feature_unlocks", "class_features"
+  add_foreign_key "class_features", "player_classes"
   add_foreign_key "class_level_progressions", "player_classes"
   add_foreign_key "player_characters", "player_classes"
 end
