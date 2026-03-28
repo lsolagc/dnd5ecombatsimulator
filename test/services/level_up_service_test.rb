@@ -5,13 +5,14 @@ class LevelUpServiceTest < ActiveSupport::TestCase
     fighter = player_classes(:fighter)
 
     [
-      { level: 2, proficiency_bonus: 2, grants_ability_score_improvement: false },
-      { level: 4, proficiency_bonus: 2, grants_ability_score_improvement: true },
-      { level: 6, proficiency_bonus: 3, grants_ability_score_improvement: true }
+      { level: 2, proficiency_bonus: 2, grants_ability_score_improvement: false, attacks_per_action: 1 },
+      { level: 4, proficiency_bonus: 2, grants_ability_score_improvement: true, attacks_per_action: 1 },
+      { level: 6, proficiency_bonus: 3, grants_ability_score_improvement: true, attacks_per_action: 2 }
     ].each do |attrs|
       ClassLevelProgression.find_or_create_by!(player_class: fighter, level: attrs[:level]) do |progression|
         progression.proficiency_bonus = attrs[:proficiency_bonus]
         progression.grants_ability_score_improvement = attrs[:grants_ability_score_improvement]
+        progression.attacks_per_action = attrs[:attacks_per_action]
       end
     end
   end
@@ -54,5 +55,12 @@ class LevelUpServiceTest < ActiveSupport::TestCase
     character = player_characters(:aragorn) # 1→2, no ASI
     result = LevelUpService.new(player_character: character).call
     assert_not result.can_improve_ability_scores
+  end
+
+  test "returns attacks_per_action for the new level" do
+    character = player_characters(:thorin) # level 5→6, fighter keeps 2 attacks per action
+    result = LevelUpService.new(player_character: character).call
+
+    assert_equal 2, result.attacks_per_action
   end
 end

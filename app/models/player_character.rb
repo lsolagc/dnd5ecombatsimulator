@@ -92,6 +92,10 @@ class PlayerCharacter < ApplicationRecord
     class_progression&.proficiency_bonus || 2
   end
 
+  def attacks_per_action
+    class_progression&.attacks_per_action || 1
+  end
+
   def can_improve_ability_scores?
     class_progression&.grants_ability_score_improvement? || false
   end

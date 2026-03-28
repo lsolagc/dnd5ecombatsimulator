@@ -1,5 +1,5 @@
 class LevelUpService
-  Result = Data.define(:player_character, :new_level, :proficiency_bonus, :can_improve_ability_scores)
+  Result = Data.define(:player_character, :new_level, :proficiency_bonus, :can_improve_ability_scores, :attacks_per_action)
 
   def initialize(player_character:)
     @player_character = player_character
@@ -17,7 +17,8 @@ class LevelUpService
       player_character: @player_character,
       new_level: @player_character.level,
       proficiency_bonus: progression&.proficiency_bonus || @player_character.proficiency_bonus,
-      can_improve_ability_scores: @player_character.can_improve_ability_scores?
+      can_improve_ability_scores: @player_character.can_improve_ability_scores?,
+      attacks_per_action: @player_character.attacks_per_action
     )
   end
 end

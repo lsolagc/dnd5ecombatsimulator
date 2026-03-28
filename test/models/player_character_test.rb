@@ -5,14 +5,15 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     fighter = player_classes(:fighter)
 
     [
-      { level: 1, proficiency_bonus: 2, grants_ability_score_improvement: false },
-      { level: 4, proficiency_bonus: 2, grants_ability_score_improvement: true },
-      { level: 5, proficiency_bonus: 3, grants_ability_score_improvement: false },
-      { level: 6, proficiency_bonus: 3, grants_ability_score_improvement: true }
+      { level: 1, proficiency_bonus: 2, grants_ability_score_improvement: false, attacks_per_action: 1 },
+      { level: 4, proficiency_bonus: 2, grants_ability_score_improvement: true, attacks_per_action: 1 },
+      { level: 5, proficiency_bonus: 3, grants_ability_score_improvement: false, attacks_per_action: 2 },
+      { level: 6, proficiency_bonus: 3, grants_ability_score_improvement: true, attacks_per_action: 2 }
     ].each do |attrs|
       ClassLevelProgression.find_or_create_by!(player_class: fighter, level: attrs[:level]) do |progression|
         progression.proficiency_bonus = attrs[:proficiency_bonus]
         progression.grants_ability_score_improvement = attrs[:grants_ability_score_improvement]
+        progression.attacks_per_action = attrs[:attacks_per_action]
       end
     end
   end
@@ -27,6 +28,16 @@ class PlayerCharacterTest < ActiveSupport::TestCase
   test "proficiency_bonus returns value from class progression" do
     character = player_characters(:thorin) # level 5 fighter
     assert_equal 3, character.proficiency_bonus
+  end
+
+  test "attacks_per_action falls back to 1 when no progression is defined" do
+    character = player_characters(:merlin)
+    assert_equal 1, character.attacks_per_action
+  end
+
+  test "attacks_per_action returns value from class progression" do
+    character = player_characters(:thorin) # level 5 fighter
+    assert_equal 2, character.attacks_per_action
   end
 
   # class_progression
