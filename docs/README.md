@@ -6,11 +6,11 @@ Bem-vindo à documentação do **D&D Character Manager**, um sistema de gerencia
 
 ### Arquitetura
 - [Visão Geral](architecture/overview.md) - Estrutura geral da aplicação
-- [Sistema de Classes](architecture/class-system.md) - Como funciona a progressão de classes
+- [Sistema de Classes](architecture/class-system.md) - Como funciona a progressão de classes e o multiataque do Guerreiro
 - [Sistema de Combate](architecture/combat-system.md) - Motor de combate e encontros
 
 ### Modelos
-- [Modelos de Dados](models/data-model.md) - Descrição dos modelos principais
+- [Modelos de Dados](models/data-model.md) - Descrição dos modelos principais e progressão de ataques por nível
 
 ### Guias
 - [Setup do Projeto](guides/setup.md) - Como instalar e rodar localmente

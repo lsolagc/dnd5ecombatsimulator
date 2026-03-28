@@ -41,6 +41,8 @@ end
 - `player_class_id` - FK para classe
 - `level` - Nível (1-20, integer)
 - `proficiency_bonus` - Bônus de proficiência por nível (integer)
+- `grants_ability_score_improvement` - Indica se o nível concede ASI (boolean)
+- `attacks_per_action` - Número de ataques por Ação de Ataque (integer, padrão: 1)
 
 **Dados tipicamente:**
 ```
@@ -84,24 +86,19 @@ LevelUpService.new(combatant).call
 ```
 
 **Responsabilidades:**
-1. Incrementar `combatant.current_level`
+1. Incrementar `player_character.level`
 2. Buscar nova `ClassLevelProgression` do nível
 3. Atualizar `proficiency_bonus` do combatant
-4. Rolar novo hit die e adicionar HP
-5. Persists alterações
+4. Retornar flags de progressão (`can_improve_ability_scores`, `attacks_per_action`)
 
 **Fluxo:**
-```
-combatant.current_level = 1
-    ↓
-LevelUpService.call
-    ↓
-current_level = 2
-proficiency_bonus = ClassLevelProgression.find(level: 2).proficiency_bonus
-max_hp += new_hit_die_roll + CON_mod
-current_hp = max_hp
-    ↓
-Save changes
+```ruby
+result = LevelUpService.new(player_character: character).call
+
+result.new_level
+result.proficiency_bonus
+result.can_improve_ability_scores
+result.attacks_per_action
 ```
 
 ## Dados de Progressão
@@ -121,6 +118,11 @@ progression.proficiency_bonus
 - Hit Die: d10
 - Spellcasting Modifier: none
 - Progressão: +2, +2, +2, +2, +3, +3, +3, +3, +4, +4, +4, +4, +5, +5, +5, +5, +6, +6, +6, +6
+- Multiataque (Ataque Extra):
+  - Níveis 1-4: 1 ataque por ação
+  - Níveis 5-10: 2 ataques por ação
+  - Níveis 11-19: 3 ataques por ação
+  - Nível 20: 4 ataques por ação
 
 ### Wizard
 - Hit Die: d6
@@ -133,6 +135,8 @@ Durante combate, o `proficiency_bonus` é usado para:
 - Calcular bônus de ataque com armas de proficiência
 - Calcular DC para salvaguardas de magia (9 + INT + proficiency)
 
+O `attacks_per_action` define quantas rolagens de ataque o combatente executa no turno.
+
 ---
 
-Consulte [Sistema de Combate](combat-system.md) para como HP e proficiência são usados em combate.
+Consulte [Sistema de Combate](combat-system.md) para como ataques, HP e proficiência são usados em combate.

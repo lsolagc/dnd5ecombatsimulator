@@ -19,6 +19,8 @@ ClassLevelProgression
 ├─ player_class_id (FK)
 ├─ level (1-20)
 ├─ proficiency_bonus
+├─ grants_ability_score_improvement
+├─ attacks_per_action (default: 1)
 └─ created_at, updated_at
 
 PlayerCharacter
@@ -76,8 +78,16 @@ Combatant (Polimórfico)
 | player_class_id | integer | FK para player_classes |
 | level | integer | 1-20 |
 | proficiency_bonus | integer | +2 a +6 |
+| grants_ability_score_improvement | boolean | Nível concede ASI |
+| attacks_per_action | integer | Quantos ataques por ação (padrão: 1) |
 | created_at | datetime | |
 | updated_at | datetime | |
+
+**Regra atual do Guerreiro (D&D 5e):**
+- Níveis 1-4: `attacks_per_action = 1`
+- Níveis 5-10: `attacks_per_action = 2`
+- Níveis 11-19: `attacks_per_action = 3`
+- Nível 20: `attacks_per_action = 4`
 
 ### player_characters
 
