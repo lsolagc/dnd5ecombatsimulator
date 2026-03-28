@@ -11,7 +11,8 @@ class ClassLevelProgressionTest < ActiveSupport::TestCase
       player_class: @fighter,
       level: 10,
       proficiency_bonus: 4,
-      grants_ability_score_improvement: false
+      grants_ability_score_improvement: false,
+      attacks_per_action: 2
     )
     assert progression.valid?
   end
@@ -43,6 +44,18 @@ class ClassLevelProgressionTest < ActiveSupport::TestCase
     )
     assert_not progression.valid?
     assert_includes progression.errors[:proficiency_bonus], "can't be blank"
+  end
+
+  test "invalid when attacks_per_action is less than 1" do
+    progression = ClassLevelProgression.new(
+      player_class: @fighter,
+      level: 3,
+      proficiency_bonus: 2,
+      attacks_per_action: 0
+    )
+
+    assert_not progression.valid?
+    assert_includes progression.errors[:attacks_per_action], "must be greater than or equal to 1"
   end
 
   test "level must be unique per player class" do

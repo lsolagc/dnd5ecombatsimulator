@@ -104,18 +104,29 @@ fighter_progression = (1..20).map do |level|
   when 17..20 then 6
   end
 
+  attacks_per_action = case level
+  when 1..4 then 1
+  when 5..10 then 2
+  when 11..19 then 3
+  when 20 then 4
+  end
+
   {
     level: level,
     proficiency_bonus: proficiency_bonus,
-    grants_ability_score_improvement: fighter_asi_levels.include?(level)
+    grants_ability_score_improvement: fighter_asi_levels.include?(level),
+    attacks_per_action: attacks_per_action
   }
 end
 
 fighter = PlayerClass.find_by!(name: "Guerreiro")
 
 fighter_progression.each do |attrs|
-  ClassLevelProgression.find_or_create_by!(player_class: fighter, level: attrs[:level]) do |clp|
-    clp.proficiency_bonus = attrs[:proficiency_bonus]
-    clp.grants_ability_score_improvement = attrs[:grants_ability_score_improvement]
-  end
+  progression = ClassLevelProgression.find_or_initialize_by(player_class: fighter, level: attrs[:level])
+  progression.assign_attributes(
+    proficiency_bonus: attrs[:proficiency_bonus],
+    grants_ability_score_improvement: attrs[:grants_ability_score_improvement],
+    attacks_per_action: attrs[:attacks_per_action]
+  )
+  progression.save! if progression.changed?
 end

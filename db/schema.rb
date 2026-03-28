@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_23_235522) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_26_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -19,6 +19,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_23_235522) do
     t.integer "level", null: false
     t.integer "proficiency_bonus", null: false
     t.boolean "grants_ability_score_improvement", default: false, null: false
+    t.integer "attacks_per_action", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["player_class_id", "level"], name: "index_class_level_progressions_on_player_class_id_and_level", unique: true
