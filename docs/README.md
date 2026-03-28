@@ -8,9 +8,11 @@ Bem-vindo à documentação do **D&D Character Manager**, um sistema de gerencia
 - [Visão Geral](architecture/overview.md) - Estrutura geral da aplicação
 - [Sistema de Classes](architecture/class-system.md) - Como funciona a progressão de classes e o multiataque do Guerreiro
 - [Sistema de Combate](architecture/combat-system.md) - Motor de combate e encontros
+- [Habilidades do Guerreiro (5e)](architecture/fighter-abilities-5e.md) - Lista completa de habilidades de classe até o nível 20
 
 ### Modelos
 - [Modelos de Dados](models/data-model.md) - Descrição dos modelos principais e progressão de ataques por nível
+- [Esquema de Habilidades de Classe](models/class-features-schema.md) - Modelagem de habilidades para todas as classes básicas (feitiços separados)
 
 ### Guias
 - [Setup do Projeto](guides/setup.md) - Como instalar e rodar localmente
@@ -24,6 +26,16 @@ Bem-vindo à documentação do **D&D Character Manager**, um sistema de gerencia
 1. **Setup**: Veja [Setup do Projeto](guides/setup.md)
 2. **Entender a Arquitetura**: Comece com [Visão Geral](architecture/overview.md)
 3. **Explorar Modelos**: Consulte [Modelos de Dados](models/data-model.md)
+
+## 🧭 Convenções do Projeto
+
+### Migrations (Regra Global)
+
+Para qualquer mudança de banco no projeto inteiro:
+
+1. Gere a migration com gerador do Rails (`bin/rails generate migration ...`).
+2. Edite o arquivo gerado para adicionar/ajustar tabelas, colunas, índices e chaves.
+3. Não crie migrations manualmente escrevendo nome/timestamp do arquivo à mão.
 
 ## 🛠️ Para Agentes IA
 
