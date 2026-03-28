@@ -8,9 +8,19 @@ O sistema de combate orquestra encontros entre equipes de combatentes. A `Encoun
 - Ataques e dano
 - Condições especiais (imunidade, resistência, vulnerabilidade)
 
+## Status Atual
+
+`EncounterService` existe hoje como uma implementação intencionalmente simples para viabilizar o fluxo de combate atual.
+
+Ela ainda está fortemente acoplada ao restante do sistema de combate e ao modelo de dados disponível neste momento. Por isso, mudanças estruturais neste serviço tendem a exigir ajustes em outras partes da aplicação.
+
+Enquanto a refatoração mais ampla do sistema de combate não acontecer, `EncounterService` deve ser tratado como código congelado: use-o como referência do comportamento atual, mas não expanda nem reestruture esse serviço sem que a refatoração maior faça parte do escopo.
+
 ## EncounterService
 
 ### Inicialização
+
+Observação: a API atual do serviço documenta o comportamento existente, não um contrato definitivo para a arquitetura futura.
 
 ```ruby
 encounter = EncounterService.new(team_1, team_2)

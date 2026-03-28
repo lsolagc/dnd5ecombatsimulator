@@ -45,7 +45,7 @@
 - `HomeController` - Página inicial
 
 ### 3. **Serviços**
-- `EncounterService` - Orquestra combates completos
+- `EncounterService` - Orquestra combates completos no estado atual do sistema; implementação provisória e prevista para refatoração futura
 - `LevelUpService` - Aplica aumentos de nível
 
 ### 4. **Componentes UI** (Phlex)
@@ -94,6 +94,8 @@ Retornar time vencedor
 
 ### Serviços
 Lógica complexa (combate, level-up) fica em `app/services/` separada dos modelos.
+
+No caso de `EncounterService`, essa separação ainda representa um passo intermediário da arquitetura. O serviço atual sustenta o fluxo existente, mas não deve ser alterado fora de um esforço explícito de refatoração do sistema de combate.
 
 ### Validadores Customizados
 `ConditionAndDamageTypeFormatValidator` valida formato de dano/condição.
