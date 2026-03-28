@@ -75,24 +75,53 @@ class EncounterService
         next if combatant.dead?
 
         target_party = @party_one.include?(combatant) ? @party_two : @party_one
-        target = target_party.reject { |m| m.dead? }.sample
+        attacks = execute_attacks_for_turn(combatant:, target_party:)
+        next if attacks.empty?
 
-        attack_roll = combatant.roll_an_attack
-        attack_result = target.get_attacked(attack_roll:)
+        first_attack = attacks.first
 
         round_result = {
           initiative: initiative_roll,
           combatant: combatant.name,
           combatant_hit_points: combatant.current_hit_points,
+          target: first_attack[:target],
+          attack_roll: first_attack[:attack_roll],
+          success: first_attack[:success],
+          damage: first_attack[:damage],
+          message: first_attack[:message],
+          attacks: attacks
+        }
+
+        @encounter_log[:rounds][@round_number] << round_result
+      end
+    end
+
+    def execute_attacks_for_turn(combatant:, target_party:)
+      attack_count = if combatant.respond_to?(:attacks_per_action)
+        [ combatant.attacks_per_action.to_i, 1 ].max
+      else
+        1
+      end
+
+      attacks = []
+
+      attack_count.times do
+        target = target_party.reject(&:dead?).sample
+        break if target.nil?
+
+        attack_roll = combatant.roll_an_attack
+        attack_result = target.get_attacked(attack_roll:)
+
+        attacks << {
           target: target.name,
           attack_roll: attack_result[:attack_roll],
           success: attack_result[:success],
           damage: attack_result[:damage],
           message: attack_result[:message]
         }
-
-        @encounter_log[:rounds][@round_number] << round_result
       end
+
+      attacks
     end
 
     def encounter_over?
