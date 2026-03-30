@@ -103,4 +103,15 @@ class PlayerCharacter < ApplicationRecord
   def level_up!
     increment!(:level)
   end
+
+  def use_class_feature(slug:, targets: [])
+    feature = player_class.class_features.find_by!(slug: slug)
+    action = Combat::CombatAction.new(
+      source_type: :class_feature,
+      source_id:   feature.id,
+      actor:       self,
+      targets:     targets
+    )
+    Combat::ActionRunner.call(action: action)
+  end
 end
