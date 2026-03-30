@@ -4,6 +4,10 @@ second_wind_level_1:
   uses: 1
   resource_name: Second Wind
   description: Regain 1d10 + fighter level hit points.
+  effect_payload:
+    kind: heal
+    roll: "1d10 + actor_level"
+    target: self
 
 action_surge_level_2:
   class_feature: fighter_action_surge
