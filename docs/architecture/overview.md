@@ -47,6 +47,7 @@
 ### 3. **Serviços**
 - `EncounterService` - Orquestra combates completos no estado atual do sistema; implementação provisória e prevista para refatoração futura
 - `LevelUpService` - Aplica aumentos de nível
+- `Combat::*` - Pipeline incremental de execução de efeitos (`CombatAction`, `EffectResolver`, `EffectExecutor`, `ActionRunner`)
 
 ### 4. **Componentes UI** (Phlex)
 - `Components::Base` - Base com helpers Rails
@@ -119,4 +120,4 @@ HTML response
 
 ---
 
-Consulte [Sistema de Classes](class-system.md) e [Sistema de Combate](combat-system.md) para detalhes específicos.
+Consulte [Sistema de Classes](class-system.md), [Sistema de Combate](combat-system.md) e [Execução de Efeitos em Combate](combat-effect-execution.md) para detalhes específicos.

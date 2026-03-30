@@ -9,6 +9,7 @@ Bem-vindo à documentação do **D&D Character Manager**, um sistema de gerencia
 - [Sistema de Classes](architecture/class-system.md) - Como funciona a progressão de classes e o multiataque do Guerreiro
 - [Sistema de Combate](architecture/combat-system.md) - Motor de combate e encontros
 - [Habilidades do Guerreiro (5e)](architecture/fighter-abilities-5e.md) - Lista completa de habilidades de classe até o nível 20
+- [Execução de Efeitos em Combate](architecture/combat-effect-execution.md) - Arquitetura e implementação inicial do pipeline de efeitos (Second Wind)
 
 ### Modelos
 - [Modelos de Dados](models/data-model.md) - Descrição dos modelos principais e progressão de ataques por nível
