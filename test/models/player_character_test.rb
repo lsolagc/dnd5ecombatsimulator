@@ -70,4 +70,68 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     character.level_up!
     assert_equal original_level + 1, character.reload.level
   end
+
+  # Champion subclass passives
+
+  test "critical_hit_threshold is 20 when Champion critical features are not unlocked" do
+    character = player_characters(:aragorn) # level 1 fighter
+    assert_equal 20, character.critical_hit_threshold
+  end
+
+  test "critical_hit_threshold is 19 when Improved Critical is unlocked" do
+    character = player_characters(:thorin) # level 5 fighter
+    assert_equal 19, character.critical_hit_threshold
+  end
+
+  test "critical_hit_threshold is 18 when Superior Critical is unlocked" do
+    fighter = player_classes(:fighter)
+    character = PlayerCharacter.create!(name: "Champion 15", level: 15, player_class: fighter)
+
+    assert_equal 18, character.critical_hit_threshold
+  end
+
+  test "passive_effect_payloads returns only turn_start passives for current level" do
+    fighter = player_classes(:fighter)
+    character = PlayerCharacter.create!(name: "Champion 18 Passive List", level: 18, player_class: fighter)
+
+    payloads = character.passive_effect_payloads(trigger: "turn_start")
+
+    assert_equal 1, payloads.size
+    assert_equal "champion-survivor", payloads.first["feature_slug"]
+    assert_equal "turn_start", payloads.first["trigger"]
+  end
+
+  test "passive_effect_payloads returns always-on modifier payloads" do
+    fighter = player_classes(:fighter)
+    character = PlayerCharacter.create!(name: "Champion 15 Passive Mod", level: 15, player_class: fighter)
+
+    payloads = character.passive_effect_payloads(trigger: "always")
+    modifiers = payloads.select { |payload| payload["kind"] == "modifier" }
+
+    assert modifiers.any? { |payload| payload["value"] == 19 }
+    assert modifiers.any? { |payload| payload["value"] == 18 }
+  end
+
+  test "apply_start_of_turn_passives! heals with Survivor when eligible" do
+    fighter = player_classes(:fighter)
+    character = PlayerCharacter.create!(name: "Champion 18", level: 18, player_class: fighter)
+
+    character.current_hit_points = [ (character.max_hit_points / 2), 1 ].max
+    results = character.apply_start_of_turn_passives!
+
+    assert_equal 1, results.size
+    assert_equal :heal, results.first.kind
+    assert_equal 5, results.first.amount
+    assert_equal [ character.max_hit_points, (character.max_hit_points / 2) + 5 ].min, character.current_hit_points
+  end
+
+  test "apply_start_of_turn_passives! does not heal with Survivor above half HP" do
+    fighter = player_classes(:fighter)
+    character = PlayerCharacter.create!(name: "Champion 18 No Heal", level: 18, player_class: fighter)
+
+    character.current_hit_points = (character.max_hit_points / 2) + 1
+    results = character.apply_start_of_turn_passives!
+
+    assert_empty results
+  end
 end
