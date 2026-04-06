@@ -45,7 +45,34 @@ class PlayerCharacter < ApplicationRecord
   end
 
   def roll_an_attack
-    Dice::AttackRoll.new(damage_dice: damage_roll, damage_modifier: strength_modifier)
+    Dice::AttackRoll.new(
+      damage_dice: damage_roll,
+      damage_modifier: strength_modifier,
+      critical_hit_threshold: critical_hit_threshold
+    )
+  end
+
+  def critical_hit_threshold
+    thresholds = passive_effect_payloads(trigger: "always")
+      .select { |payload| payload["kind"] == "modifier" && payload["modifier"] == "critical_hit_threshold" }
+      .map { |payload| payload["value"].to_i }
+      .select { |value| value.between?(1, 20) }
+
+    thresholds.min || 20
+  end
+
+  def passive_effect_payloads(trigger:)
+    unlocked_class_feature_unlocks.filter_map do |unlock|
+      payload = unlock.effect_payload&.deep_stringify_keys
+      next if payload.blank?
+      next unless payload["trigger"] == trigger
+
+      payload.merge(
+        "feature_slug" => unlock.class_feature.slug,
+        "feature_name" => unlock.class_feature.name,
+        "unlock_level" => unlock.level
+      )
+    end
   end
 
   def damage_roll
@@ -114,4 +141,14 @@ class PlayerCharacter < ApplicationRecord
     )
     Combat::ActionRunner.call(action: action)
   end
+
+  private
+
+    def unlocked_class_feature_unlocks
+      ClassFeatureUnlock
+        .joins(:class_feature)
+        .includes(:class_feature)
+        .where(class_features: { player_class_id: player_class_id })
+        .where("class_feature_unlocks.level <= ?", level)
+    end
 end
