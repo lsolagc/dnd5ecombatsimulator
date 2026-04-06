@@ -130,3 +130,141 @@ fighter_progression.each do |attrs|
   )
   progression.save! if progression.changed?
 end
+
+# Fighter subclass modeling: Champion (PHB 2014)
+fighter_champion_features = [
+  {
+    name: "Martial Archetype: Champion",
+    slug: "martial-archetype-champion",
+    description: "Escolha do arquétipo marcial Champion.",
+    feature_type: :subclass,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Fighter 3",
+    notes: "Marca a escolha de subclasse e organiza marcos de progressão do Champion.",
+    unlocks: [
+      {
+        level: 3,
+        description: "Escolhe Champion como arquétipo marcial."
+      }
+    ]
+  },
+  {
+    name: "Improved Critical",
+    slug: "champion-improved-critical",
+    description: "Seus ataques com arma causam acerto crítico com 19 ou 20.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Champion 3",
+    unlocks: [
+      {
+        level: 3,
+        description: "Sua margem de crítico com ataque de arma passa a 19-20.",
+        effect_payload: {
+          kind: "modifier",
+          trigger: "always",
+          modifier: "critical_hit_threshold",
+          value: 19
+        }
+      }
+    ]
+  },
+  {
+    name: "Remarkable Athlete",
+    slug: "champion-remarkable-athlete",
+    description: "Adiciona metade da proficiência em testes de FOR, DES e CON sem proficiência e melhora salto em distância.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Champion 7",
+    unlocks: [
+      {
+        level: 7,
+        description: "Ganha bônus atlético parcial e melhora salto em distância."
+      }
+    ]
+  },
+  {
+    name: "Additional Fighting Style",
+    slug: "champion-additional-fighting-style",
+    description: "Você pode escolher um segundo Fighting Style entre as opções disponíveis ao Guerreiro.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Champion 10",
+    unlocks: [
+      {
+        level: 10,
+        description: "Escolhe um Fighting Style adicional."
+      }
+    ]
+  },
+  {
+    name: "Superior Critical",
+    slug: "champion-superior-critical",
+    description: "Seus ataques com arma causam acerto crítico com 18, 19 ou 20.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Champion 15",
+    notes: "Substitui a faixa de crítico do Improved Critical quando desbloqueado.",
+    unlocks: [
+      {
+        level: 15,
+        description: "Sua margem de crítico com ataque de arma passa a 18-20.",
+        effect_payload: {
+          kind: "modifier",
+          trigger: "always",
+          modifier: "critical_hit_threshold",
+          value: 18
+        }
+      }
+    ]
+  },
+  {
+    name: "Survivor",
+    slug: "champion-survivor",
+    description: "No início de cada turno, recupera PV iguais a 5 + modificador de CON se tiver metade dos PV ou menos e ao menos 1 PV.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Champion 18",
+    notes: "Recuperação automática por turno; exige suporte de gatilhos de início de turno no motor de combate.",
+    unlocks: [
+      {
+        level: 18,
+        description: "Regenera 5 + CON no início do turno sob as condições da habilidade.",
+        effect_payload: {
+          kind: "heal",
+          trigger: "turn_start",
+          roll: "5 + constitution_modifier",
+          target: "self",
+          conditions: {
+            current_hp_gt: 0,
+            current_hp_lte_max_hp_fraction: 0.5
+          }
+        }
+      }
+    ]
+  }
+]
+
+fighter_champion_features.each do |feature_attrs|
+  unlocks = feature_attrs.delete(:unlocks)
+
+  feature = ClassFeature.find_or_initialize_by(player_class: fighter, slug: feature_attrs[:slug])
+  feature.assign_attributes(
+    feature_attrs.merge(
+      grants_spellcasting: false,
+      source_book: "PHB 2014"
+    )
+  )
+  feature.save! if feature.changed?
+
+  unlocks.each do |unlock_attrs|
+    unlock = ClassFeatureUnlock.find_or_initialize_by(class_feature: feature, level: unlock_attrs[:level])
+    unlock.assign_attributes(unlock_attrs)
+    unlock.save! if unlock.changed?
+  end
+end
