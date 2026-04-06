@@ -61,6 +61,14 @@ class PlayerCharacter < ApplicationRecord
     thresholds.min || 20
   end
 
+  def apply_start_of_turn_passives!
+    apply_turn_passives!(trigger: "turn_start")
+  end
+
+  def apply_end_of_turn_passives!
+    apply_turn_passives!(trigger: "turn_end")
+  end
+
   def passive_effect_payloads(trigger:)
     unlocked_class_feature_unlocks.filter_map do |unlock|
       payload = unlock.effect_payload&.deep_stringify_keys
@@ -150,5 +158,44 @@ class PlayerCharacter < ApplicationRecord
         .includes(:class_feature)
         .where(class_features: { player_class_id: player_class_id })
         .where("class_feature_unlocks.level <= ?", level)
+    end
+
+    def apply_turn_passives!(trigger:)
+      passive_effect_payloads(trigger:).filter_map do |payload|
+        next unless passive_payload_actionable?(payload)
+        next unless passive_conditions_met?(payload["conditions"])
+
+        apply_passive_effect_payload(payload)
+      end
+    end
+
+    def passive_payload_actionable?(payload)
+      payload["kind"].in?([ "heal", "damage" ])
+    end
+
+    def apply_passive_effect_payload(payload)
+      effect = Combat::EffectInstance.from_payload(payload)
+      return nil unless effect.target_type == "self"
+
+      Combat::EffectExecutor.call(effect:, actor: self, target: self)
+    end
+
+    def passive_conditions_met?(conditions)
+      cond = (conditions || {}).deep_stringify_keys
+
+      current_hp = current_hit_points.to_i
+      max_hp = max_hit_points.to_i
+
+      return false if cond.key?("current_hp_gt") && !(current_hp > cond["current_hp_gt"].to_i)
+      return false if cond.key?("current_hp_gte") && !(current_hp >= cond["current_hp_gte"].to_i)
+      return false if cond.key?("current_hp_lt") && !(current_hp < cond["current_hp_lt"].to_i)
+      return false if cond.key?("current_hp_lte") && !(current_hp <= cond["current_hp_lte"].to_i)
+
+      if cond.key?("current_hp_lte_max_hp_fraction")
+        threshold = max_hp * cond["current_hp_lte_max_hp_fraction"].to_f
+        return false unless current_hp <= threshold
+      end
+
+      true
     end
 end
