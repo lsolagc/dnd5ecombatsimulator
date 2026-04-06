@@ -25,6 +25,54 @@ action_surge_level_17:
   recharge_type: short_or_long_rest
   description: You can use Action Surge twice between rests, but only once on the same turn.
 
+champion_archetype_level_3:
+  class_feature: fighter_champion_archetype
+  level: 3
+  description: Select Champion as your martial archetype.
+
+champion_improved_critical_level_3:
+  class_feature: fighter_champion_improved_critical
+  level: 3
+  description: Weapon attacks now crit on 19-20.
+  effect_payload:
+    kind: modifier
+    trigger: always
+    modifier: critical_hit_threshold
+    value: 19
+
+champion_remarkable_athlete_level_7:
+  class_feature: fighter_champion_remarkable_athlete
+  level: 7
+  description: Gain half proficiency on non-proficient STR/DEX/CON checks and improve long jump.
+
+champion_additional_fighting_style_level_10:
+  class_feature: fighter_champion_additional_fighting_style
+  level: 10
+  description: Choose one additional Fighting Style.
+
+champion_superior_critical_level_15:
+  class_feature: fighter_champion_superior_critical
+  level: 15
+  description: Weapon attacks now crit on 18-20.
+  effect_payload:
+    kind: modifier
+    trigger: always
+    modifier: critical_hit_threshold
+    value: 18
+
+champion_survivor_level_18:
+  class_feature: fighter_champion_survivor
+  level: 18
+  description: Regain 5 + CON modifier HP at turn start while below half HP and above 0 HP.
+  effect_payload:
+    kind: heal
+    trigger: turn_start
+    roll: "5 + constitution_modifier"
+    target: self
+    conditions:
+      current_hp_gt: 0
+      current_hp_lte_max_hp_fraction: 0.5
+
 wizard_spellcasting_level_1:
   class_feature: wizard_spellcasting
   level: 1

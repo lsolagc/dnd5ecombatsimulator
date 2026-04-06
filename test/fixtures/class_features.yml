@@ -24,6 +24,78 @@ fighter_action_surge:
   source_book: PHB 2014
   source_reference: Fighter 2
 
+fighter_champion_archetype:
+  player_class: fighter
+  name: "Martial Archetype: Champion"
+  slug: martial-archetype-champion
+  description: Select Champion as your martial archetype.
+  feature_type: subclass
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Fighter 3
+
+fighter_champion_improved_critical:
+  player_class: fighter
+  name: Improved Critical
+  slug: champion-improved-critical
+  description: Your weapon attacks score a critical hit on a roll of 19 or 20.
+  feature_type: subclass_progression
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Champion 3
+
+fighter_champion_remarkable_athlete:
+  player_class: fighter
+  name: Remarkable Athlete
+  slug: champion-remarkable-athlete
+  description: Add half proficiency to STR, DEX and CON checks without proficiency and improve long jumps.
+  feature_type: subclass_progression
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Champion 7
+
+fighter_champion_additional_fighting_style:
+  player_class: fighter
+  name: Additional Fighting Style
+  slug: champion-additional-fighting-style
+  description: You can choose a second Fighting Style.
+  feature_type: subclass_progression
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Champion 10
+
+fighter_champion_superior_critical:
+  player_class: fighter
+  name: Superior Critical
+  slug: champion-superior-critical
+  description: Your weapon attacks score a critical hit on a roll of 18 to 20.
+  feature_type: subclass_progression
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Champion 15
+
+fighter_champion_survivor:
+  player_class: fighter
+  name: Survivor
+  slug: champion-survivor
+  description: At the start of each turn, regain 5 + CON modifier HP if below half HP and not at 0 HP.
+  feature_type: subclass_progression
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Champion 18
+
 wizard_spellcasting:
   player_class: wizard
   name: Spellcasting
