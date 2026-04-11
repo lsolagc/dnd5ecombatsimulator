@@ -1,24 +1,75 @@
-# README
+# D&D Combat Simulator
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Projeto Rails para modelar personagens de Dungeons & Dragons 5e e simular combates entre equipes, com foco em avaliar dificuldade prática de encounters por meio de execuções repetidas, logs e métricas de resultado.
 
-Things you may want to cover:
+## Objetivo
 
-* Ruby version
+O objetivo principal deste repositório não é apenas cadastrar personagens ou classes, mas evoluir um simulador de combate que permita responder perguntas como:
+- qual a taxa de vitória de uma composição contra outra;
+- quantas rodadas um encontro costuma durar;
+- que mecânicas alteram mais o resultado agregado de um combate.
 
-* System dependencies
+## Stack
 
-* Configuration
+- Ruby on Rails 8
+- Phlex para UI
+- Tailwind CSS
+- SQLite no desenvolvimento, com suporte a PostgreSQL
 
-* Database creation
+## Estado atual da arquitetura
 
-* Database initialization
+- `EncounterService` sustenta o fluxo de combate atual e deve ser tratado como implementação provisória e congelada fora de refatorações explícitas.
+- O caminho de evolução do combate está no pipeline `Combat::*`, que introduz ações, resolução de efeitos e execução estruturada.
+- A documentação arquitetural descreve tanto o comportamento atual quanto a direção incremental de refatoração.
 
-* How to run the test suite
+Pontos de entrada recomendados:
+- [docs/README.md](docs/README.md)
+- [docs/architecture/overview.md](docs/architecture/overview.md)
+- [docs/architecture/combat-system.md](docs/architecture/combat-system.md)
+- [docs/architecture/combat-effect-execution.md](docs/architecture/combat-effect-execution.md)
 
-* Services (job queues, cache servers, search engines, etc.)
+## Setup rápido
 
-* Deployment instructions
+```bash
+bundle install
+yarn install
+bin/rails db:create db:migrate
+./bin/dev
+```
 
-* ...
+## Rodando testes
+
+```bash
+bin/rails test
+```
+
+Para focar em uma área específica:
+
+```bash
+bin/rails test test/models
+bin/rails test test/services
+bin/rails test test/integration
+```
+
+## Navegação rápida por intenção
+
+Se você quer:
+
+- entender a arquitetura geral: [docs/architecture/overview.md](docs/architecture/overview.md)
+- entender o combate atual: [docs/architecture/combat-system.md](docs/architecture/combat-system.md)
+- trabalhar no pipeline novo de habilidades e efeitos: [docs/architecture/combat-effect-execution.md](docs/architecture/combat-effect-execution.md)
+- entender os modelos e persistência: [docs/models/data-model.md](docs/models/data-model.md)
+- entender a modelagem de habilidades: [docs/models/class-features-schema.md](docs/models/class-features-schema.md)
+- seguir instruções para agentes de IA: [.instructions.md](.instructions.md)
+
+## Restrições importantes
+
+- Não expanda `EncounterService` fora de uma refatoração explícita do sistema de combate.
+- Prefira o pipeline `Combat::*` para novas mecânicas executáveis.
+- Ao alterar regras de combate, valide comportamento mecânico e não apenas estrutura de código.
+
+## Status da documentação
+
+O diretório [docs](docs) concentra a documentação oficial do projeto.
+
+O diretório [tmp](tmp) pode conter checkpoints de trabalho e notas de pesquisa usadas durante sessões com IA. Esses arquivos não devem ser tratados automaticamente como documentação oficial do sistema.
