@@ -189,7 +189,6 @@ Mostra:
 
 - **Editar**: Botão "Editar" na página do personagem
 - **Combate**: Veja [Sistema de Combate](../architecture/combat-system.md)
-- **Level Up**: Após combate vencido, o personagem pode fazer level up
 
 ---
 

@@ -62,15 +62,6 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     assert_not character.can_improve_ability_scores?
   end
 
-  # level_up!
-
-  test "level_up! increments the level by 1" do
-    character = player_characters(:aragorn)
-    original_level = character.level
-    character.level_up!
-    assert_equal original_level + 1, character.reload.level
-  end
-
   # Champion subclass passives
 
   test "critical_hit_threshold is 20 when Champion critical features are not unlocked" do

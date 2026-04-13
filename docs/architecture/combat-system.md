@@ -157,7 +157,7 @@ damage = base_damage * 2
 ### Rastreamento
 
 Cada combatente tem:
-- `max_hp` - HP total (calculado na criação/level up)
+- `max_hp` - HP total calculado na criação do personagem
 - `current_hp` - HP atual em combate
 
 ### Morte

@@ -46,7 +46,6 @@
 
 ### 3. **Serviços**
 - `EncounterService` - Orquestra combates completos no estado atual do sistema; implementação provisória e prevista para refatoração futura
-- `LevelUpService` - Aplica aumentos de nível
 - `Combat::*` - Pipeline incremental de execução de efeitos (`CombatAction`, `EffectResolver`, `EffectExecutor`, `ActionRunner`)
 
 ### 4. **Componentes UI** (Phlex)

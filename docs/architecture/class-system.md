@@ -77,30 +77,6 @@ Exemplo (nível 2):
 - HP novo: 12 + (7 + 2) = 21
 ```
 
-## Progressão de Personagem
-
-### LevelUpService
-
-```ruby
-LevelUpService.new(combatant).call
-```
-
-**Responsabilidades:**
-1. Incrementar `player_character.level`
-2. Buscar nova `ClassLevelProgression` do nível
-3. Atualizar `proficiency_bonus` do combatant
-4. Retornar flags de progressão (`can_improve_ability_scores`, `attacks_per_action`)
-
-**Fluxo:**
-```ruby
-result = LevelUpService.new(player_character: character).call
-
-result.new_level
-result.proficiency_bonus
-result.can_improve_ability_scores
-result.attacks_per_action
-```
-
 ## Dados de Progressão
 
 A tabela `ClassLevelProgression` é congelada (`freeze`) após ser recuperada do banco de dados, garantindo dados imutáveis durante execução.
