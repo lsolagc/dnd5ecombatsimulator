@@ -23,10 +23,10 @@ O objetivo principal deste repositório não é apenas cadastrar personagens ou 
 - A documentação arquitetural descreve tanto o comportamento atual quanto a direção incremental de refatoração.
 
 Pontos de entrada recomendados:
-- [docs/README.md](docs/README.md)
-- [docs/architecture/overview.md](docs/architecture/overview.md)
-- [docs/architecture/combat-system.md](docs/architecture/combat-system.md)
-- [docs/architecture/combat-effect-execution.md](docs/architecture/combat-effect-execution.md)
+- [.okf/index.md](.okf/index.md)
+- [.okf/architecture/overview.md](.okf/architecture/overview.md)
+- [.okf/architecture/encounter-service.md](.okf/architecture/encounter-service.md)
+- [.okf/architecture/combat-effect-pipeline.md](.okf/architecture/combat-effect-pipeline.md)
 
 ## Setup rápido
 
@@ -55,11 +55,11 @@ bin/rails test test/integration
 
 Se você quer:
 
-- entender a arquitetura geral: [docs/architecture/overview.md](docs/architecture/overview.md)
-- entender o combate atual: [docs/architecture/combat-system.md](docs/architecture/combat-system.md)
-- trabalhar no pipeline novo de habilidades e efeitos: [docs/architecture/combat-effect-execution.md](docs/architecture/combat-effect-execution.md)
-- entender os modelos e persistência: [docs/models/data-model.md](docs/models/data-model.md)
-- entender a modelagem de habilidades: [docs/models/class-features-schema.md](docs/models/class-features-schema.md)
+- entender a arquitetura geral: [.okf/architecture/overview.md](.okf/architecture/overview.md)
+- entender o combate atual: [.okf/architecture/encounter-service.md](.okf/architecture/encounter-service.md)
+- trabalhar no pipeline novo de habilidades e efeitos: [.okf/architecture/combat-effect-pipeline.md](.okf/architecture/combat-effect-pipeline.md)
+- entender os modelos e persistência: [.okf/models/index.md](.okf/models/index.md)
+- entender a modelagem de habilidades: [.okf/models/class-feature.md](.okf/models/class-feature.md)
 - seguir instruções para agentes de IA: [.instructions.md](.instructions.md)
 
 ## Restrições importantes
