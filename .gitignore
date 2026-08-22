@@ -37,3 +37,7 @@
 !/app/assets/builds/.keep
 
 /resources/**
+
+# Claude Code skills are fetched per-machine from skills-lock.json; don't commit the fetched content.
+/.agents/skills/*
+/.claude/skills/*
