@@ -39,6 +39,9 @@ bundle exec rubocop          # lint (Omakase Ruby style)
 - Estilo Ruby: Rubocop Omakase (`.rubocop.yml`), não introduzir regras próprias sem necessidade.
 - Preferir alterações cirúrgicas; não tocar em código não relacionado à tarefa.
 - Atualizar `.okf/` (bundle OKF) quando a mudança afetar arquitetura documentada.
+- Um hook `agentStop` ([.github/hooks/okf-maintain.json](.github/hooks/okf-maintain.json)) força
+  automaticamente um turno extra pedindo `/okf maintain` sempre que um turno termina com alterações
+  de código não commitadas fora de `.okf/` — não é preciso lembrar manualmente de rodar o maintain.
 
 ## Para inicializadores de IA específicos
 
