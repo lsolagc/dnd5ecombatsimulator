@@ -38,6 +38,10 @@
 
 /resources/**
 
-# Claude Code skills are fetched per-machine from skills-lock.json; don't commit the fetched content.
+# Claude Code skills are fetched per-machine; skills-lock.json has no in-repo restore step yet.
 /.agents/skills/*
 /.claude/skills/*
+/skills-lock.json
+
+# Claude Code worktrees created for background/agent sessions.
+/.claude/worktrees/
