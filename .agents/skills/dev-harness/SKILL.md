@@ -11,7 +11,7 @@ critério de aceite verificável, iterando até passar ou esgotar o orçamento d
 ## Fases
 
 ### 1. Especificação
-Siga o procedimento de `.github/agents/task-specification.agent.md`: ler README mínimo primeiro,
+Siga o procedimento de `.github/skills/task-specification/SKILL.md`: ler README mínimo primeiro,
 perguntar só o essencial não documentado, consolidar Demanda, Escopo (dentro/fora), Decomposição e
 **Critérios de Aceite verificáveis**. Não implemente nesta fase.
 
