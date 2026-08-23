@@ -23,8 +23,13 @@
   </head>
 
   <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
-    </main>
+    <div class="d-flex">
+      <nav class="d-flex flex-column p-3 bg-dark" style="width: 16rem; min-height: 100vh;">
+        <%= link_to "Player classes", player_classes_path, class: "nav-link text-white" %>
+      </nav>
+      <main class="container-fluid mt-4 p-4">
+        <%= yield %>
+      </main>
+    </div>
   </body>
 </html>
