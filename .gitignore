@@ -70,3 +70,6 @@
 
 # Claude Code worktrees created for background/agent sessions.
 /.claude/worktrees/
+
+# Claude Code per-machine local settings (not shared with the team).
+/.claude/settings.local.json
