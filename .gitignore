@@ -52,6 +52,7 @@
 !/.agents/skills/safe-change-sensitive-area/
 !/.agents/skills/simulation-evaluation-metrics/
 !/.agents/skills/task-specification/
+!/.agents/skills/ui-system-test/
 /.claude/skills/*
 !/.claude/skills/okf
 !/.claude/skills/dev-harness
@@ -64,6 +65,7 @@
 !/.claude/skills/safe-change-sensitive-area
 !/.claude/skills/simulation-evaluation-metrics
 !/.claude/skills/task-specification
+!/.claude/skills/ui-system-test
 /skills-lock.json
 
 # Claude Code worktrees created for background/agent sessions.

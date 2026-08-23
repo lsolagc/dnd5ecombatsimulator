@@ -39,7 +39,7 @@ Some o(s) critério(s) específico(s) do tipo de tarefa:
   (contratos declarados não podem quebrar).
 - Balanceamento → `.agents/skills/canonical-combat-scenario/SKILL.md` +
   `.agents/skills/simulation-evaluation-metrics/SKILL.md` (limiar aprovado/reprovado explícito).
-- UI/frontend → `.github/skills/ui-system-test/SKILL.md` (teste de sistema + screenshot revisado).
+- UI/frontend → `.agents/skills/ui-system-test/SKILL.md` (teste de sistema + screenshot revisado).
 - Qualquer RNG envolvido → `.agents/skills/reproducible-rolls/SKILL.md` (seed controlada).
 
 Fitness atingida = piso verde + critério(s) específico(s) verde(s) + review não-bloqueante.
