@@ -11,7 +11,7 @@ critério de aceite verificável, iterando até passar ou esgotar o orçamento d
 ## Fases
 
 ### 1. Especificação
-Siga o procedimento de `.github/skills/task-specification/SKILL.md`: ler README mínimo primeiro,
+Siga o procedimento de `.agents/skills/task-specification/SKILL.md`: ler README mínimo primeiro,
 perguntar só o essencial não documentado, consolidar Demanda, Escopo (dentro/fora), Decomposição e
 **Critérios de Aceite verificáveis**. Não implemente nesta fase.
 
@@ -25,7 +25,7 @@ anterior (achados bloqueantes da revisão + falhas de teste) para ele resolver a
 
 ### 3. Revisão adversarial
 Spawn subagent **fresco** (sem contexto da fase 2 — evita revisar as próprias justificativas do
-builder) seguindo `.github/skills/adversarial-review/SKILL.md`, contestando especificamente se os
+builder) seguindo `.agents/skills/adversarial-review/SKILL.md`, contestando especificamente se os
 **Critérios de Aceite** da fase 1 foram atendidos — não é revisão de qualidade de código genérica.
 Saída: conclusão inicial, hipóteses alternativas, evidências, limites, recomendação final marcada
 como bloqueante ou não-bloqueante.
@@ -34,13 +34,13 @@ como bloqueante ou não-bloqueante.
 Piso, sempre: `bundle exec rubocop` + `bin/rails test` (ao menos os arquivos/diretórios tocados).
 
 Some o(s) critério(s) específico(s) do tipo de tarefa:
-- Efeito/habilidade de combate → `.github/skills/combat-mechanics-testing/SKILL.md`.
-- Mudança perto de `EncounterService` → `.github/skills/safe-change-sensitive-area/SKILL.md`
+- Efeito/habilidade de combate → `.agents/skills/combat-mechanics-testing/SKILL.md`.
+- Mudança perto de `EncounterService` → `.agents/skills/safe-change-sensitive-area/SKILL.md`
   (contratos declarados não podem quebrar).
-- Balanceamento → `.github/skills/canonical-combat-scenario/SKILL.md` +
-  `.github/skills/simulation-evaluation-metrics/SKILL.md` (limiar aprovado/reprovado explícito).
+- Balanceamento → `.agents/skills/canonical-combat-scenario/SKILL.md` +
+  `.agents/skills/simulation-evaluation-metrics/SKILL.md` (limiar aprovado/reprovado explícito).
 - UI/frontend → `.github/skills/ui-system-test/SKILL.md` (teste de sistema + screenshot revisado).
-- Qualquer RNG envolvido → `.github/skills/reproducible-rolls/SKILL.md` (seed controlada).
+- Qualquer RNG envolvido → `.agents/skills/reproducible-rolls/SKILL.md` (seed controlada).
 
 Fitness atingida = piso verde + critério(s) específico(s) verde(s) + review não-bloqueante.
 
@@ -51,7 +51,7 @@ sucesso a fórceps.
 
 ## Ao concluir
 Se a mudança afetou comportamento de combate, feche com
-`.github/skills/mechanics-impact-report/SKILL.md`. Caso contrário, resumo curto: o que mudou, o que
+`.agents/skills/mechanics-impact-report/SKILL.md`. Caso contrário, resumo curto: o que mudou, o que
 passou (testes/revisão), quais critérios de aceite foram atendidos.
 
 ## Argumentos

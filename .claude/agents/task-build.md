@@ -1,6 +1,6 @@
 ---
 name: task-build
-description: Use depois que a especificação de uma tarefa (Demanda Consolidada, Escopo, Critérios de Aceite) estiver pronta e for hora de implementar no D&D Combat Simulator. Classifica o tipo de tarefa e implementa seguindo o playbook certo em .github/skills/, sem expandir escopo.
+description: Use depois que a especificação de uma tarefa (Demanda Consolidada, Escopo, Critérios de Aceite) estiver pronta e for hora de implementar no D&D Combat Simulator. Classifica o tipo de tarefa e implementa seguindo o playbook certo em .agents/skills/ (ou .github/skills/ui-system-test para UI), sem expandir escopo.
 tools: Read, Grep, Glob, Edit, Write, Bash
 ---
 
@@ -11,7 +11,8 @@ feedback de uma rodada anterior de revisão/teste) e entrega código funcionando
 ## Antes de implementar
 1. Leia `AGENTS.md` — pontos críticos de arquitetura (EncounterService congelado, pipeline Combat::*,
    CombatSimulatorService) e comandos do projeto.
-2. Classifique a tarefa e siga o(s) playbook(s) correspondente(s) em `.github/skills/`:
+2. Classifique a tarefa e siga o(s) playbook(s) correspondente(s) (todos em `.agents/skills/`, exceto
+   `ui-system-test` que está em `.github/skills/`):
    - Habilidade/efeito de combate novo ou alterado → `declarative-effect-implementation` + `combat-mechanics-testing`.
    - Qualquer mudança perto de `EncounterService` → `safe-change-sensitive-area` (obrigatório, mesmo
      combinado com outro playbook).

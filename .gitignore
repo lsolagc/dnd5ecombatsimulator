@@ -39,8 +39,31 @@
 /resources/**
 
 # Claude Code skills are fetched per-machine; skills-lock.json has no in-repo restore step yet.
+# Hand-authored project skills are explicit exceptions below and stay tracked.
 /.agents/skills/*
+!/.agents/skills/okf/
+!/.agents/skills/dev-harness/
+!/.agents/skills/adversarial-review/
+!/.agents/skills/canonical-combat-scenario/
+!/.agents/skills/combat-mechanics-testing/
+!/.agents/skills/declarative-effect-implementation/
+!/.agents/skills/mechanics-impact-report/
+!/.agents/skills/reproducible-rolls/
+!/.agents/skills/safe-change-sensitive-area/
+!/.agents/skills/simulation-evaluation-metrics/
+!/.agents/skills/task-specification/
 /.claude/skills/*
+!/.claude/skills/okf
+!/.claude/skills/dev-harness
+!/.claude/skills/adversarial-review
+!/.claude/skills/canonical-combat-scenario
+!/.claude/skills/combat-mechanics-testing
+!/.claude/skills/declarative-effect-implementation
+!/.claude/skills/mechanics-impact-report
+!/.claude/skills/reproducible-rolls
+!/.claude/skills/safe-change-sensitive-area
+!/.claude/skills/simulation-evaluation-metrics
+!/.claude/skills/task-specification
 /skills-lock.json
 
 # Claude Code worktrees created for background/agent sessions.
