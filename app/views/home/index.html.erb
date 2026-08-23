@@ -1,0 +1,10 @@
+<h1>Home::Index</h1>
+<p class="text-primary">Se você está vendo isso, Tailwind está funcionando </p>
+
+<h1>Ping com Turbo Frame</h1>
+
+<%= turbo_frame_tag "ping" do %>
+  <p>Ainda não clicou.</p>
+<% end %>
+
+<%= link_to "Ping!", "/ping", data: { turbo_frame: "ping" }, class: "btn btn-primary" %>
