@@ -2,7 +2,7 @@ require "application_system_test_case"
 
 class PlayerClassesTest < ApplicationSystemTestCase
   setup do
-    @player_class = player_classes(:one)
+    @player_class = player_classes(:barbarian)
   end
 
   test "visiting the index" do
@@ -11,6 +11,8 @@ class PlayerClassesTest < ApplicationSystemTestCase
   end
 
   test "should create player class" do
+    @player_class.name = "New Class"
+
     visit player_classes_url
     click_on "New player class"
 

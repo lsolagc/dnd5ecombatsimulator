@@ -1,0 +1,15 @@
+<% content_for :title, "Showing player class" %>
+
+<div class="w-100">
+  <% if notice.present? %>
+    <p class="alert alert-success d-inline-block mb-3" id="notice"><%= notice %></p>
+  <% end %>
+
+  <h1 class="fw-bold">Showing player class</h1>
+
+  <%= render @player_class %>
+
+  <%= link_to "Edit this player class", edit_player_class_path(@player_class), class: "btn btn-outline-secondary" %>
+  <%= link_to "Back to player classes", player_classes_path, class: "btn btn-outline-secondary mt-2 mt-sm-0 ms-sm-2" %>
+  <%= button_to "Destroy this player class", @player_class, method: :delete, form_class: "d-sm-inline-block mt-2 mt-sm-0 ms-sm-2", class: "btn btn-danger w-100", data: { turbo_confirm: "Are you sure?" } %>
+</div>

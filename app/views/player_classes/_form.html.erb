@@ -1,0 +1,37 @@
+<%= form_with(model: player_class) do |form| %>
+  <% if player_class.errors.any? %>
+    <div id="error_explanation" class="alert alert-danger mt-3">
+      <h2><%= pluralize(player_class.errors.count, "error") %> prohibited this player_class from being saved:</h2>
+
+      <ul>
+        <% player_class.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: ["form-control", { "is-invalid": player_class.errors[:name].any? }] %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :hit_die, class: "form-label" %>
+    <%= form.text_field :hit_die, class: ["form-control", { "is-invalid": player_class.errors[:hit_die].any? }] %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :description, class: "form-label" %>
+    <%= form.text_area :description, rows: 4, class: ["form-control", { "is-invalid": player_class.errors[:description].any? }] %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :spellcasting_modifier, class: "form-label" %>
+    <%= form.text_field :spellcasting_modifier, class: ["form-control", { "is-invalid": player_class.errors[:spellcasting_modifier].any? }] %>
+  </div>
+
+  <div class="d-inline">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

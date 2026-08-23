@@ -1,0 +1,9 @@
+<% content_for :title, "New player class" %>
+
+<div class="w-100">
+  <h1 class="fw-bold">New player class</h1>
+
+  <%= render "form", player_class: @player_class %>
+
+  <%= link_to "Back to player classes", player_classes_path, class: "btn btn-outline-secondary mt-2 mt-sm-0 ms-sm-2" %>
+</div>

@@ -1,27 +1,22 @@
 class PlayerClassesController < ApplicationController
   before_action :set_player_class, only: %i[ show edit update destroy ]
-  before_action :set_notice
 
   # GET /player_classes or /player_classes.json
   def index
     @player_classes = PlayerClass.all
-    render Views::PlayerClasses::Index.new(player_classes: @player_classes, notice: @notice)
   end
 
   # GET /player_classes/1 or /player_classes/1.json
   def show
-    render Views::PlayerClasses::Show.new(player_class: @player_class, notice: @notice)
   end
 
   # GET /player_classes/new
   def new
-    render Views::PlayerClasses::New
-    # @player_class = PlayerClass.new # não necessário para o Phlex
+    @player_class = PlayerClass.new
   end
 
   # GET /player_classes/1/edit
   def edit
-    render Views::PlayerClasses::Edit.new(player_class: @player_class)
   end
 
   # POST /player_classes or /player_classes.json
@@ -33,7 +28,7 @@ class PlayerClassesController < ApplicationController
         format.html { redirect_to @player_class, notice: "Player class was successfully created." }
         format.json { render :show, status: :created, location: @player_class }
       else
-        format.html { render Views::PlayerClasses::New.new(player_class: @player_class), status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @player_class.errors, status: :unprocessable_entity }
       end
     end
@@ -46,7 +41,7 @@ class PlayerClassesController < ApplicationController
         format.html { redirect_to @player_class, notice: "Player class was successfully updated." }
         format.json { render :show, status: :ok, location: @player_class }
       else
-        format.html { render Views::PlayerClasses::Edit.new(player_class: @player_class), status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @player_class.errors, status: :unprocessable_entity }
       end
     end
@@ -71,9 +66,5 @@ class PlayerClassesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def player_class_params
       params.expect(player_class: [ :name, :hit_die, :description, :spellcasting_modifier ])
-    end
-
-    def set_notice
-      @notice = flash[:notice]
     end
 end
