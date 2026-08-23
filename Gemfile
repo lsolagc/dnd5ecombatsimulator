@@ -14,8 +14,10 @@ gem "importmap-rails"
 gem "turbo-rails"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
-# Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
-gem "tailwindcss-rails"
+# Use Bootstrap CSS [https://github.com/twbs/bootstrap-rubygem]
+gem "bootstrap", "~> 5.3"
+# Compile Sass (needed to build Bootstrap's Sass sources) [https://github.com/rails/dartsass-rails]
+gem "dartsass-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
@@ -63,9 +65,3 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
-
-gem "ruby_ui", "~> 1.0", group: :development, require: false
-
-gem "phlex-rails", "~> 2.2"
-
-gem "tailwind_merge", "~> 1.2"

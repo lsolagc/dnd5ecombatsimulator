@@ -5,3 +5,7 @@ Rails.application.config.assets.version = "1.0"
 
 # Add additional assets to the asset load path.
 # Rails.application.config.assets.paths << Emoji.images_path
+
+# Bootstrap's JS (and its popper.js dependency) are pinned via importmap; make sure
+# Propshaft precompiles the underlying files those pins point to.
+Rails.application.config.assets.precompile += %w[bootstrap.min.js popper.js]
