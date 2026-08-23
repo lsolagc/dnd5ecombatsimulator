@@ -1,6 +1,6 @@
 # Contexto do Projeto
 
-D&D Combat Simulator: projeto Rails 8 (Phlex + Tailwind, SQLite em dev) para modelar personagens de D&D 5e
+D&D Combat Simulator: projeto Rails 8 (ERB + Bootstrap, SQLite em dev) para modelar personagens de D&D 5e
 e simular combates entre equipes, medindo taxa de vitória, duração e impacto de mecânicas.
 
 ## Leitura obrigatória antes de qualquer tarefa

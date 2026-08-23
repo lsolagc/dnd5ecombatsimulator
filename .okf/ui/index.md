@@ -1,3 +1,3 @@
 # UI
 
-* [Phlex UI components](phlex-components.md) - The Phlex-based view-component layer and RubyUI widgets.
+* [ERB + Bootstrap views](erb-bootstrap-views.md) - The ERB view layer styled with Bootstrap 5, which replaced the previous Phlex/RubyUI component layer.

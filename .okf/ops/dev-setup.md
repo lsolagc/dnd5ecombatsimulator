@@ -30,7 +30,7 @@ This is the environment used to run and test the system described in
 ```bash
 bundle install && yarn install
 bin/rails db:create db:migrate
-./bin/dev                    # starts Rails server + Tailwind watch + JS bundler on :3000
+./bin/dev                    # starts Rails server + Bootstrap Sass watch (dartsass) on :3000
 ```
 
 # Testing and linting

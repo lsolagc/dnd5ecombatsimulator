@@ -18,10 +18,10 @@ The D&D Combat Simulator is a Rails 8 application for managing D&D 5e
 characters and classes, and for simulating combat encounters between teams to
 measure win rate, encounter duration, and the impact of specific mechanics.
 
-It is layered as: a presentation layer (controllers + Phlex view components),
-a business-logic layer (services + validators), a persistence layer
-(ActiveRecord models), and a database (SQLite in development, with PostgreSQL
-support).
+It is layered as: a presentation layer (controllers + ERB views styled with
+Bootstrap), a business-logic layer (services + validators), a persistence
+layer (ActiveRecord models), and a database (SQLite in development, with
+PostgreSQL support).
 
 Three combat systems coexist and are **not** interchangeable — see
 [encounter-service.md](/architecture/encounter-service.md) (the frozen
@@ -77,8 +77,8 @@ affects — they are not interchangeable, and none of them defers to another.
 - **Service objects**: complex logic (combat orchestration) lives under
   `app/services/`, separate from models; the level-up service has since
   been removed (see [models/player-character.md](/models/player-character.md)).
-- **Phlex view components**: views are reusable Ruby components under
-  `app/components/` — see [ui/phlex-components.md](/ui/phlex-components.md).
+- **ERB views**: plain Rails views under `app/views/`, styled with Bootstrap
+  — see [ui/erb-bootstrap-views.md](/ui/erb-bootstrap-views.md).
 
 For installing dependencies, running the dev server, and running tests
 locally, see [ops/dev-setup.md](/ops/dev-setup.md).

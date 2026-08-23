@@ -1,5 +1,14 @@
 # Update Log
 
+## 2026-08-23
+* **Update**: The Phlex/RubyUI view-component layer (`app/components/`, `app/views/base.rb`) was removed;
+  every view is now plain ERB styled with Bootstrap 5 (via `dartsass-rails`). Renamed and rewrote
+  [ui/phlex-components.md](ui/phlex-components.md) → [ui/erb-bootstrap-views.md](ui/erb-bootstrap-views.md)
+  to describe the ERB + Bootstrap layer instead of the removed Phlex components, and updated the inbound
+  reference in [architecture/overview.md](architecture/overview.md), the [ui/index.md](ui/index.md) listing,
+  and the top-level [index.md](index.md) rollup. Corrected the Tailwind-watch mention in
+  [ops/dev-setup.md](ops/dev-setup.md) to the current `dartsass:watch` process.
+
 ## 2026-08-21
 * **Creation**: Initial OKF bundle produced from the codebase and existing `docs/` architecture, covering combat architecture, persisted models, the UI component layer, and local dev setup — [architecture/overview.md](architecture/overview.md), [architecture/encounter-service.md](architecture/encounter-service.md), [architecture/combat-effect-pipeline.md](architecture/combat-effect-pipeline.md), [architecture/combat-migration-strategy.md](architecture/combat-migration-strategy.md), [models/player-character.md](models/player-character.md), [models/player-class.md](models/player-class.md), [models/class-level-progression.md](models/class-level-progression.md), [models/combatant.md](models/combatant.md), [models/class-feature.md](models/class-feature.md), [models/class-feature-unlock.md](models/class-feature-unlock.md), [ui/phlex-components.md](ui/phlex-components.md), [ops/dev-setup.md](ops/dev-setup.md).
 * **Update**: Corrected [models/player-character.md](models/player-character.md), [models/combatant.md](models/combatant.md), and [models/player-class.md](models/player-class.md) — the initial pass had inherited stale claims from `docs/` (ability scores/HP/armor class were described as living on `PlayerCharacter`; they actually live on `Combatant`, which uses `delegated_type`, not a raw polymorphic association; `PlayerClass` has no `has_many :player_characters`; `spellcasting_modifier` has no `none` enum value; there is no `LevelUpService` — it was removed).

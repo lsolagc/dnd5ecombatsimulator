@@ -12,8 +12,7 @@ O objetivo principal deste repositório não é apenas cadastrar personagens ou 
 ## Stack
 
 - Ruby on Rails 8
-- Phlex para UI
-- Tailwind CSS
+- ERB + Bootstrap para UI
 - SQLite no desenvolvimento, com suporte a PostgreSQL
 
 ## Estado atual da arquitetura
