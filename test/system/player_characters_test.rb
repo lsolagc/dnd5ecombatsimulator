@@ -2,7 +2,7 @@ require "application_system_test_case"
 
 class PlayerCharactersTest < ApplicationSystemTestCase
   setup do
-    @player_character = player_characters(:one)
+    @player_character = player_characters(:aragorn)
   end
 
   test "visiting the index" do
