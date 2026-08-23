@@ -17,7 +17,7 @@ class PlayerCharactersControllerTest < ActionDispatch::IntegrationTest
 
   test "should create player_character" do
     assert_difference("PlayerCharacter.count") do
-      post player_characters_url, params: { player_character: { level: @player_character.level, name: @player_character.name, player_class_id: @player_character.player_class_id, combatant: @player_character.combatant } }
+      post player_characters_url, params: { player_character: { level: @player_character.level, name: @player_character.name, player_class_id: @player_character.player_class_id, combatant_attributes: { armor_class: 15, strength: 14 } } }
     end
 
     assert_redirected_to player_character_url(PlayerCharacter.last)

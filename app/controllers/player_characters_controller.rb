@@ -1,5 +1,9 @@
 class PlayerCharactersController < ApplicationController
+  DAMAGE_TYPES = Combatant.column_defaults["resistances"]["damage_types"].keys.freeze
+  DAMAGE_FLAG_TO_COLUMN = { "R" => :resistances, "I" => :immunities, "V" => :vulnerabilities }.freeze
+
   before_action :set_player_character, only: %i[ show edit update destroy ]
+  before_action :set_player_classes, only: %i[ new create ]
 
   # GET /player_characters or /player_characters.json
   def index
@@ -13,6 +17,7 @@ class PlayerCharactersController < ApplicationController
   # GET /player_characters/new
   def new
     @player_character = PlayerCharacter.new
+    @player_character.build_combatant
   end
 
   # GET /player_characters/1/edit
@@ -22,6 +27,7 @@ class PlayerCharactersController < ApplicationController
   # POST /player_characters or /player_characters.json
   def create
     @player_character = PlayerCharacter.new(player_character_params)
+    assign_damage_type_flags(@player_character)
 
     respond_to do |format|
       if @player_character.save
@@ -63,8 +69,33 @@ class PlayerCharactersController < ApplicationController
       @player_character = PlayerCharacter.find(params.expect(:id))
     end
 
+    def set_player_classes
+      @player_classes = PlayerClass.includes(:class_level_progressions, class_features: :class_feature_unlocks).order(:name)
+    end
+
     # Only allow a list of trusted parameters through.
     def player_character_params
-      params.expect(player_character: [ :name, :level, :player_class_id ])
+      params.expect(
+        player_character: [
+          :name, :level, :player_class_id,
+          combatant_attributes: [ :armor_class, :speed, :strength, :dexterity, :constitution, :intelligence, :wisdom, :charisma ]
+        ]
+      )
+    end
+
+    # Damage chips submit a single R/I/V/"" flag per damage type (player_character[damage_type_flags][fire]),
+    # translated here into the three boolean jsonb maps the Combatant model actually stores.
+    def assign_damage_type_flags(player_character)
+      flags = params.dig(:player_character, :damage_type_flags)
+      return if flags.blank?
+
+      combatant = player_character.combatant || player_character.build_combatant
+      DAMAGE_TYPES.each do |damage_type|
+        flag = flags[damage_type].presence
+
+        DAMAGE_FLAG_TO_COLUMN.each do |symbol, column|
+          combatant.public_send(column)["damage_types"][damage_type] = (flag == symbol)
+        end
+      end
     end
 end

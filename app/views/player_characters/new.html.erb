@@ -1,9 +1,219 @@
-<% content_for :title, "New player character" %>
+<% content_for :title, "Novo personagem" %>
+
+<% ability_labels = { "strength" => "Força", "dexterity" => "Destreza", "constitution" => "Constituição", "intelligence" => "Inteligência", "wisdom" => "Sabedoria", "charisma" => "Carisma" } %>
+<% damage_type_labels = { "acid" => "Ácido", "cold" => "Frio", "fire" => "Fogo", "force" => "Força", "poison" => "Veneno", "psychic" => "Psíquico", "radiant" => "Radiante", "thunder" => "Trovejante", "necrotic" => "Necrótico", "piercing" => "Perfurante", "slashing" => "Cortante", "lightning" => "Elétrico", "bludgeoning" => "Concussão" } %>
 
 <div class="w-100">
-  <h1 class="fw-bold">New player character</h1>
+  <% if @player_character.errors.any? %>
+    <div id="error_explanation" class="alert alert-danger mb-3">
+      <h2><%= pluralize(@player_character.errors.count, "erro") %> impediram a criação do personagem:</h2>
+      <ul class="mb-0">
+        <% @player_character.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-  <%= render "form", player_character: @player_character %>
+  <%= form_with model: @player_character, data: { controller: "wizard" } do |form| %>
+    <div class="d-flex border rounded bg-body" style="min-height: 34rem;">
+      <div class="wizard-rail border-end p-3 d-flex flex-column" style="width: 15rem; flex-shrink: 0;">
+        <h1 class="h6 fw-bold mb-3">Novo personagem</h1>
 
-  <%= link_to "Back to player characters", player_characters_path, class: "btn btn-outline-secondary mt-2 mt-sm-0 ms-sm-2" %>
+        <div class="list-group list-group-flush mb-auto">
+          <div class="list-group-item active" data-wizard-target="railItem" data-step="1" data-action="click->wizard#goTo" role="button">1. Atributos</div>
+          <div class="list-group-item" data-wizard-target="railItem" data-step="2" data-action="click->wizard#goTo" role="button">2. Combate</div>
+          <div class="list-group-item" data-wizard-target="railItem" data-step="3" data-action="click->wizard#goTo" role="button">3. Features</div>
+          <div class="list-group-item" data-wizard-target="railItem" data-step="4" data-action="click->wizard#goTo" role="button">4. Revisão</div>
+        </div>
+
+        <div class="card bg-body-tertiary mt-3">
+          <div class="card-body p-2">
+            <p class="small text-uppercase text-body-secondary mb-1">Resumo</p>
+            <p class="small fw-semibold mb-0" data-wizard-target="outName">Sem nome</p>
+            <p class="small text-body-secondary mb-1" data-wizard-target="outClassLevel">Sem classe · nível 1</p>
+            <p class="small mb-0">HP <span data-wizard-target="outHp">—</span> · CA <span data-wizard-target="outAc">—</span> · <span data-wizard-target="outAttacks">1</span> ataque(s)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-fill d-flex flex-column p-4">
+        <div class="flex-fill">
+          <%# Etapa 1: Atributos %>
+          <div data-wizard-target="panel" data-step="1">
+            <h2 class="h5 fw-bold mb-1">Atributos</h2>
+            <p class="small text-body-secondary mb-3">Copie os valores da ficha do jogador. O modificador é calculado ao lado; Constituição altera o HP máximo.</p>
+
+            <div class="row g-2 mb-4">
+              <div class="col-6">
+                <%= form.label :name, "Identificação do combatente", class: "form-label small" %>
+                <%= form.text_field :name, class: "form-control", data: { wizard_target: "nameInput", action: "input->wizard#refreshPreview" } %>
+              </div>
+              <div class="col-4">
+                <label class="form-label small" for="player_character_player_class_id">Classe</label>
+                <select name="player_character[player_class_id]" id="player_character_player_class_id" class="form-select" data-wizard-target="classSelect" data-action="change->wizard#refreshPreview change->wizard#toggleFeatureGroup">
+                  <option value="">Selecione uma classe</option>
+                  <% @player_classes.each do |player_class| %>
+                    <% progression = player_class.class_level_progressions.map { |p| { level: p.level, proficiency_bonus: p.proficiency_bonus, attacks_per_action: p.attacks_per_action } } %>
+                    <option value="<%= player_class.id %>" data-hit-die-value="<%= player_class.hit_die.delete("d").to_i %>" data-progression="<%= progression.to_json %>" <%= "selected" if @player_character.player_class_id == player_class.id %>>
+                      <%= player_class.name %>
+                    </option>
+                  <% end %>
+                </select>
+              </div>
+              <div class="col-2">
+                <%= form.label :level, "Nível", class: "form-label small" %>
+                <%= form.number_field :level, min: 1, max: 20, value: @player_character.level || 1, class: "form-control", data: { wizard_target: "levelInput", action: "input->wizard#refreshPreview" } %>
+              </div>
+            </div>
+
+            <%= form.fields_for :combatant do |cf| %>
+              <div class="row row-cols-3 g-2">
+                <% ability_labels.each do |ability, label| %>
+                  <div class="col">
+                    <div class="border rounded p-2 d-flex justify-content-between align-items-center">
+                      <div>
+                        <p class="small fw-semibold mb-0"><%= label %></p>
+                        <p class="small text-body-secondary font-monospace mb-0">MOD <span data-wizard-target="abilityModifier" data-ability="<%= ability %>">+0</span></p>
+                      </div>
+                      <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-outline-secondary" data-action="wizard#decrementAbility" data-ability="<%= ability %>">−</button>
+                        <%= cf.number_field ability, min: 1, max: 30, class: "form-control text-center font-monospace", style: "width: 4.2rem;", data: { wizard_target: "abilityInput", ability: ability, action: "input->wizard#refreshAbilityModifiers input->wizard#refreshPreview" } %>
+                        <button type="button" class="btn btn-outline-secondary" data-action="wizard#incrementAbility" data-ability="<%= ability %>">+</button>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+
+          <%# Etapa 2: Combate %>
+          <div class="d-none" data-wizard-target="panel" data-step="2">
+            <h2 class="h5 fw-bold mb-1">Combate</h2>
+            <p class="small text-body-secondary mb-3">Estes valores entram direto no bloco do combatente usado pela simulação.</p>
+
+            <%= form.fields_for :combatant do |cf| %>
+              <div class="row g-2 mb-4">
+                <div class="col-4">
+                  <%= cf.label :armor_class, "Classe de armadura", class: "form-label small" %>
+                  <%= cf.number_field :armor_class, class: "form-control font-monospace", data: { wizard_target: "armorClassInput", action: "input->wizard#refreshPreview" } %>
+                </div>
+                <div class="col-4">
+                  <label class="form-label small">Armadura</label>
+                  <input type="text" class="form-control" placeholder="Cota de malha">
+                  <div class="form-text">Visual — ainda sem model de equipamento.</div>
+                </div>
+                <div class="col-4">
+                  <%= cf.label :speed, "Deslocamento (ft)", class: "form-label small" %>
+                  <%= cf.number_field :speed, class: "form-control font-monospace" %>
+                </div>
+              </div>
+            <% end %>
+
+            <p class="small fw-semibold mb-2">Armas <span class="text-body-secondary fw-normal">— visual, ainda sem persistência</span></p>
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <div class="border rounded">
+                  <div class="bg-body-tertiary small text-uppercase px-2 py-1">Arma principal</div>
+                  <div class="row g-2 p-2">
+                    <div class="col-12"><input type="text" class="form-control form-control-sm" placeholder="Espada longa"></div>
+                    <div class="col-4"><input type="text" class="form-control form-control-sm font-monospace" placeholder="1d8"></div>
+                    <div class="col-4"><input type="text" class="form-control form-control-sm font-monospace" placeholder="+3"></div>
+                    <div class="col-4">
+                      <select class="form-select form-select-sm">
+                        <option>Cortante</option>
+                        <option>Perfurante</option>
+                        <option>Concussão</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="border rounded">
+                  <div class="bg-body-tertiary small text-uppercase px-2 py-1">Arma secundária (offhand) <span class="fw-normal">opcional</span></div>
+                  <div class="row g-2 p-2">
+                    <div class="col-12"><input type="text" class="form-control form-control-sm" placeholder="Nenhuma" data-wizard-target="offhandName" data-action="input->wizard#toggleOffhand"></div>
+                    <div class="col-4"><input type="text" class="form-control form-control-sm font-monospace" placeholder="1d—" disabled data-wizard-target="offhandField"></div>
+                    <div class="col-4"><input type="text" class="form-control form-control-sm font-monospace" placeholder="+0" disabled data-wizard-target="offhandField"></div>
+                    <div class="col-4">
+                      <select class="form-select form-select-sm" disabled data-wizard-target="offhandField">
+                        <option>—</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="small fw-semibold mb-1">Resistências, imunidades e vulnerabilidades</p>
+            <p class="small text-body-secondary mb-2">Clique no chip para alternar — / R / I / V.</p>
+            <div class="d-flex flex-wrap gap-2">
+              <% damage_type_labels.each do |type, label| %>
+                <span class="badge rounded-pill border wizard-chip" data-wizard-target="damageChip" data-damage-type="<%= type %>" data-action="click->wizard#cycleFlag">
+                  <%= label %> <span class="font-monospace" data-wizard-chip-tag>—</span>
+                </span>
+                <%= hidden_field_tag "player_character[damage_type_flags][#{type}]", "", data: { wizard_target: "damageFlagInput", damage_type: type } %>
+              <% end %>
+            </div>
+          </div>
+
+          <%# Etapa 3: Features %>
+          <div class="d-none" data-wizard-target="panel" data-step="3">
+            <h2 class="h5 fw-bold mb-1">Features</h2>
+            <p class="small text-body-secondary mb-3">Features da classe escolhida (somente leitura — derivadas de <code>class_features</code>/<code>class_level_progressions</code>).</p>
+
+            <% if @player_classes.empty? %>
+              <p class="small text-body-secondary">Nenhuma classe cadastrada.</p>
+            <% end %>
+            <% @player_classes.each do |player_class| %>
+              <div class="d-none" data-wizard-target="featureGroup" data-player-class-id="<%= player_class.id %>">
+                <% if player_class.class_features.any? %>
+                  <div class="d-flex flex-wrap gap-2">
+                    <% player_class.class_features.each do |feature| %>
+                      <% earliest_level = feature.class_feature_unlocks.map(&:level).min %>
+                      <span class="badge rounded-pill <%= feature.action_type_passive? ? "bg-body-secondary text-body-secondary border" : "border border-2 text-body bg-body" %>">
+                        <%= feature.name %><% if earliest_level %> <span class="font-monospace small">nv <%= earliest_level %></span><% end %>
+                      </span>
+                    <% end %>
+                  </div>
+                <% else %>
+                  <p class="small text-body-secondary">Sem features cadastradas para <%= player_class.name %>.</p>
+                <% end %>
+              </div>
+            <% end %>
+            <p class="small text-body-secondary" data-wizard-target="featureGroup" data-player-class-id="">Selecione uma classe na etapa Atributos.</p>
+          </div>
+
+          <%# Etapa 4: Revisão %>
+          <div class="d-none" data-wizard-target="panel" data-step="4">
+            <h2 class="h5 fw-bold mb-1">Revisão</h2>
+            <p class="small text-body-secondary mb-3">Confira os valores nas etapas anteriores. O combatente só é gravado ao confirmar abaixo.</p>
+
+            <div class="card bg-body-tertiary" style="max-width: 24rem;">
+              <div class="card-body">
+                <p class="fw-semibold mb-0" data-wizard-target="outName">Sem nome</p>
+                <p class="text-body-secondary mb-2" data-wizard-target="outClassLevel">Sem classe · nível 1</p>
+                <p class="mb-0">HP máx. <span class="fw-semibold" data-wizard-target="outHp">—</span></p>
+                <p class="mb-0">CA <span class="fw-semibold" data-wizard-target="outAc">—</span></p>
+                <p class="mb-0">Ataques por ação <span class="fw-semibold" data-wizard-target="outAttacks">1</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+          <span class="small text-body-secondary" data-wizard-target="stepsRemaining">3 de 4 etapas restantes</span>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary" data-action="wizard#back" data-wizard-target="backButton" disabled>← Voltar</button>
+            <button type="button" class="btn btn-primary" data-action="wizard#next" data-wizard-target="nextButton">Continuar</button>
+            <%= form.submit "Criar personagem", class: "btn btn-primary d-none", data: { wizard_target: "submitButton" } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%= link_to "Voltar para personagens", player_characters_path, class: "btn btn-outline-secondary mt-3" %>
 </div>

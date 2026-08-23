@@ -1,2 +1,29 @@
 // Custom bootstrap variables must be set or imported *before* bootstrap.
+// Approximation of the design handoff's terracotta accent (oklch(0.52 0.13 32)) as a
+// Sass color, so Bootstrap's darken()/lighten() color functions keep working.
+$primary: #b3563c;
+
 @import "bootstrap";
+
+.wizard-rail .list-group-item.active {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+.wizard-rail .list-group-item:not(.active):not(.wizard-step--visited) {
+  color: var(--bs-secondary-color);
+  pointer-events: none;
+}
+
+.wizard-chip {
+  // Override .badge's default white text — these chips have no background color.
+  color: var(--bs-body-color);
+  cursor: pointer;
+  user-select: none;
+}
+
+.wizard-chip--active {
+  border-color: var(--bs-primary);
+  color: var(--bs-primary);
+  font-weight: 600;
+}

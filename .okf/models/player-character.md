@@ -40,6 +40,11 @@ start of an encounter rather than reading a stored value.
 
 `has_one :combatant, as: :combatable, touch: true` creates the `Combatant`
 automatically on `before_create` if one is not already present.[^player-character-rb]
+`accepts_nested_attributes_for :combatant` additionally lets callers build and
+populate that `Combatant` up front, via a `combatant_attributes` hash — this
+is how the [character-creation wizard](/ui/erb-bootstrap-views.md) writes
+ability scores, `armor_class`, and `speed` in the same form submit that
+creates the `PlayerCharacter`.[^player-character-rb]
 
 # HP and leveling
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-bs-theme="<%= cookies[:theme] == "dark" ? "dark" : "light" %>">
   <head>
     <title><%= content_for(:title) || "Dnd" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -23,13 +23,35 @@
   </head>
 
   <body>
-    <div class="d-flex">
-      <nav class="d-flex flex-column p-3 bg-dark" style="width: 16rem; min-height: 100vh;">
-        <%= link_to "Player classes", player_classes_path, class: "nav-link text-white" %>
-      </nav>
-      <main class="container-fluid mt-4 p-4">
-        <%= yield %>
-      </main>
-    </div>
+    <nav class="navbar navbar-expand border-bottom py-3">
+      <div class="container-fluid">
+        <%= link_to "D20 · SIM", root_path, class: "navbar-brand fw-bold text-uppercase small" %>
+
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <%= link_to "Início", root_path, class: "nav-link#{" active fw-semibold" if current_page?(root_path)}" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Personagens", player_characters_path, class: "nav-link#{" active fw-semibold" if controller_name == "player_characters"}" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Classes", player_classes_path, class: "nav-link#{" active fw-semibold" if controller_name == "player_classes"}" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Simulações", "#", class: "nav-link disabled", aria: { disabled: true }, tabindex: "-1" %>
+          </li>
+        </ul>
+
+        <div class="btn-group btn-group-sm" role="group" data-controller="theme" data-theme-preference-value="<%= cookies[:theme] || "system" %>">
+          <button type="button" class="btn btn-outline-secondary" data-theme-target="option" data-action="theme#choose" data-theme-value="light">Claro</button>
+          <button type="button" class="btn btn-outline-secondary" data-theme-target="option" data-action="theme#choose" data-theme-value="dark">Escuro</button>
+          <button type="button" class="btn btn-outline-secondary" data-theme-target="option" data-action="theme#choose" data-theme-value="system">Sistema</button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container-fluid p-4">
+      <%= yield %>
+    </main>
   </body>
 </html>

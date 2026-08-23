@@ -3,7 +3,12 @@ class PlayerClassesController < ApplicationController
 
   # GET /player_classes or /player_classes.json
   def index
-    @player_classes = PlayerClass.all
+    @player_classes = PlayerClass.includes(:class_level_progressions, class_features: :class_feature_unlocks).order(:name)
+    @player_classes = @player_classes.where("name LIKE ?", "%#{PlayerClass.sanitize_sql_like(params[:q])}%") if params[:q].present?
+    @player_classes = @player_classes.where(hit_die: params[:hit_die]) if params[:hit_die].present?
+    @player_classes = @player_classes.where(spellcasting_modifier: params[:spellcasting_modifier]) if params[:spellcasting_modifier].present?
+
+    @total_features_count = ClassFeature.count
   end
 
   # GET /player_classes/1 or /player_classes/1.json

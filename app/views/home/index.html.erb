@@ -1,10 +1,67 @@
-<h1>Home::Index</h1>
-<p class="text-primary">Se você está vendo isso, Bootstrap está funcionando </p>
+<% content_for :title, "Início" %>
 
-<h1>Ping com Turbo Frame</h1>
+<div class="py-4 px-2 mb-5">
+  <p class="text-uppercase small text-primary fw-semibold mb-2" style="letter-spacing: .14em;">D&D 5E · Encounter math</p>
+  <h1 class="fw-bold mb-3" style="max-width: 40rem;">Descubra a dificuldade real de um encontro antes de levá-lo para a mesa.</h1>
+  <p class="text-body-secondary mb-4" style="max-width: 36rem;">
+    Monte a party e os monstros, rode o combate centenas de vezes e veja a porcentagem de vitórias, derrotas e empates.
+  </p>
+  <div class="d-flex gap-2">
+    <button type="button" class="btn btn-primary disabled" disabled title="Em breve">Nova simulação</button>
+    <%= link_to "Ver personagens", player_characters_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
 
-<%= turbo_frame_tag "ping" do %>
-  <p>Ainda não clicou.</p>
-<% end %>
+<div class="row border-top border-bottom py-4 mb-5">
+  <div class="col-md-4 mb-3 mb-md-0">
+    <p class="small text-body-secondary fw-semibold mb-1">01</p>
+    <h2 class="h6 fw-bold">Monte a party</h2>
+    <p class="small text-body-secondary mb-0">Cadastre personagens a partir da ficha do jogador: atributos, CA e resistências.</p>
+  </div>
+  <div class="col-md-4 mb-3 mb-md-0">
+    <p class="small text-body-secondary fw-semibold mb-1">02</p>
+    <h2 class="h6 fw-bold">Monte os monstros</h2>
+    <p class="small text-body-secondary mb-0">Escolha os oponentes que vão enfrentar a party na simulação.</p>
+  </div>
+  <div class="col-md-4">
+    <p class="small text-body-secondary fw-semibold mb-1">03</p>
+    <h2 class="h6 fw-bold">Rode N simulações</h2>
+    <p class="small text-body-secondary mb-0">Veja a taxa de vitória, derrota e empate ao longo de centenas de combates.</p>
+  </div>
+</div>
 
-<%= link_to "Ping!", "/ping", data: { turbo_frame: "ping" }, class: "btn btn-primary" %>
+<div class="row g-3">
+  <div class="col-md-4">
+    <%= link_to player_characters_path, class: "card text-decoration-none text-body h-100" do %>
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h2 class="h6 fw-bold mb-0">Personagens</h2>
+          <span class="fs-4 fw-bold"><%= @player_characters_count %></span>
+        </div>
+        <p class="small text-body-secondary mb-0">Personagens cadastrados a partir de fichas de jogador.</p>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-md-4">
+    <%= link_to player_classes_path, class: "card text-decoration-none text-body h-100" do %>
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h2 class="h6 fw-bold mb-0">Classes</h2>
+          <span class="fs-4 fw-bold"><%= @player_classes_count %></span>
+        </div>
+        <p class="small text-body-secondary mb-0">Classes disponíveis, com progressão e features por nível.</p>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 text-body-secondary">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h2 class="h6 fw-bold mb-0">Simulações</h2>
+          <span class="fs-4 fw-bold">—</span>
+        </div>
+        <p class="small mb-0">Em breve.</p>
+      </div>
+    </div>
+  </div>
+</div>

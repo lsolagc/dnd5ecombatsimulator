@@ -1,6 +1,18 @@
 # Update Log
 
 ## 2026-08-23
+* **Update**: Implemented the three screens from the D&D 5e design handoff (home, player_classes#index,
+  player_characters#new) and wired up Stimulus for the first time. Rewrote
+  [ui/erb-bootstrap-views.md](ui/erb-bootstrap-views.md) — the shared layout moved from a bare sidebar to a
+  horizontal navbar with a Claro/Escuro/Sistema theme toggle (Bootstrap's native `data-bs-theme` dark mode),
+  Stimulus is no longer just an installed-but-unused gem (`theme_controller.js`, `class_row_controller.js`,
+  `wizard_controller.js` now exist), and the three screens are described concretely (filterable expandable
+  class table, 4-step character-creation wizard). Updated [models/player-character.md](models/player-character.md)
+  for the new `accepts_nested_attributes_for :combatant`, which the wizard uses to write ability
+  scores/armor_class/speed in one form submit. Noted that the wizard's weapon fields are visual only — there is
+  still no `Weapon` model in the schema.
+
+## 2026-08-23
 * **Update**: The Phlex/RubyUI view-component layer (`app/components/`, `app/views/base.rb`) was removed;
   every view is now plain ERB styled with Bootstrap 5 (via `dartsass-rails`). Renamed and rewrote
   [ui/phlex-components.md](ui/phlex-components.md) → [ui/erb-bootstrap-views.md](ui/erb-bootstrap-views.md)

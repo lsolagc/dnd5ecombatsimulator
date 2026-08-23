@@ -8,6 +8,7 @@ class PlayerCharacter < ApplicationRecord
   has_one :combatant, as: :combatable, touch: true
   behave_as_combatant
   delegate_ability_scores_to :combatant
+  accepts_nested_attributes_for :combatant
 
   before_create :initialize_combatant, if: -> { combatant.nil? }
   before_create :setup_hit_points

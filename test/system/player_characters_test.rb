@@ -14,13 +14,16 @@ class PlayerCharactersTest < ApplicationSystemTestCase
     visit player_characters_url
     click_on "New player character"
 
-    fill_in "Level", with: @player_character.level
-    fill_in "Name", with: @player_character.name
-    fill_in "Player class", with: @player_character.player_class_id
-    click_on "Create Player character"
+    fill_in "Identificação do combatente", with: "Gimli"
+    select @player_character.player_class.name, from: "Classe"
+    fill_in "Nível", with: @player_character.level
+
+    click_on "Continuar"
+    click_on "Continuar"
+    click_on "Continuar"
+    click_on "Criar personagem"
 
     assert_text "Player character was successfully created"
-    click_on "Back"
   end
 
   test "should update Player character" do

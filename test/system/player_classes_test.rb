@@ -7,14 +7,14 @@ class PlayerClassesTest < ApplicationSystemTestCase
 
   test "visiting the index" do
     visit player_classes_url
-    assert_selector "h1", text: "Player classes"
+    assert_selector "h1", text: "Classes disponíveis"
   end
 
   test "should create player class" do
     @player_class.name = "New Class"
 
     visit player_classes_url
-    click_on "New player class"
+    click_on "Nova classe"
 
     fill_in "Description", with: @player_class.description
     fill_in "Hit die", with: @player_class.hit_die
