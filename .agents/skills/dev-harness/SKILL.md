@@ -72,8 +72,11 @@ sucesso a fórceps.
 
 ## Ao concluir
 Se a mudança afetou comportamento de combate, feche com
-`.agents/skills/mechanics-impact-report/SKILL.md`. Caso contrário, resumo curto: o que mudou, o que
-passou (testes/revisão), quais critérios de aceite foram atendidos.
+`.agents/skills/mechanics-impact-report/SKILL.md`. Se a mudança envolveu UI, feche (também, se as
+duas se aplicarem) com `.agents/skills/ui-test-report/SKILL.md` — reaproveita os screenshots já
+capturados na fase de fitness (`ui-system-test`) para gerar o doc de teste manual. Caso nenhuma das
+duas se aplique, resumo curto: o que mudou, o que passou (testes/revisão), quais critérios de aceite
+foram atendidos.
 
 ## Argumentos
 - Demanda (texto livre, qualquer nível de detalhe).

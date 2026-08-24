@@ -42,3 +42,6 @@ O navegador do Playwright MCP roda dentro do WSL, com binário próprio baixado 
 - Resultado da execução (`bin/rails test test/system/...`).
 - Screenshots capturados e o que foi observado neles.
 - Riscos ou pontos de UX não cobertos, se houver.
+
+Ao final, se a tarefa exigir um entregável de QA manual (humano validando, não a IA), gere-o com
+`.agents/skills/ui-test-report/SKILL.md`, reaproveitando os screenshots capturados aqui.

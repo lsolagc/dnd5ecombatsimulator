@@ -53,6 +53,7 @@
 !/.agents/skills/simulation-evaluation-metrics/
 !/.agents/skills/task-specification/
 !/.agents/skills/ui-system-test/
+!/.agents/skills/ui-test-report/
 /.claude/skills/*
 !/.claude/skills/okf
 !/.claude/skills/dev-harness
