@@ -1,29 +1,52 @@
-<% content_for :title, "Player characters" %>
+<% content_for :title, "Personagens" %>
 
 <div class="w-100">
   <% if notice.present? %>
     <p class="alert alert-success d-inline-block mb-3" id="notice"><%= notice %></p>
   <% end %>
 
-  <div class="d-flex justify-content-between align-items-center">
-    <h1 class="fw-bold">Player characters</h1>
-    <%= link_to "New player character", new_player_character_path, class: "btn btn-primary" %>
+  <div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+      <h1 class="fw-bold mb-1">Personagens</h1>
+      <p class="small text-body-secondary mb-0"><%= pluralize(@player_characters.count, "personagem cadastrado", plural: "personagens cadastrados") %></p>
+    </div>
+    <%= link_to "Novo personagem", new_player_character_path, class: "btn btn-primary" %>
   </div>
 
-  <div id="player_characters" class="d-flex flex-column gap-3">
+  <div id="player_characters">
     <% if @player_characters.any? %>
-      <% @player_characters.each do |player_character| %>
-        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center pb-3 pb-sm-0">
-          <%= render player_character %>
-          <div class="d-flex flex-column flex-sm-row gap-2">
-            <%= link_to "Show", player_character, class: "btn btn-outline-secondary" %>
-            <%= link_to "Edit", edit_player_character_path(player_character), class: "btn btn-outline-secondary" %>
-            <%= button_to "Destroy", player_character, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Are you sure?" } %>
-          </div>
-        </div>
-      <% end %>
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr class="small text-uppercase text-body-secondary">
+            <th>Nome</th>
+            <th>Classe</th>
+            <th>Nível</th>
+            <th>HP</th>
+            <th>CA</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @player_characters.each do |player_character| %>
+            <tr id="<%= dom_id(player_character) %>">
+              <td class="fw-semibold"><%= link_to player_character.name, player_character, class: "text-body text-decoration-none" %></td>
+              <td><%= player_character.player_class.name %></td>
+              <td><%= player_character.level %></td>
+              <td class="font-monospace"><%= player_character.max_hit_points %></td>
+              <td class="font-monospace"><%= player_character.armor_class %></td>
+              <td class="text-end">
+                <div class="d-inline-flex gap-2">
+                  <%= link_to "Ver", player_character, class: "btn btn-sm btn-outline-secondary" %>
+                  <%= link_to "Editar", edit_player_character_path(player_character), class: "btn btn-sm btn-outline-secondary" %>
+                  <%= button_to "Excluir", player_character, method: :delete, class: "btn btn-sm btn-danger", data: { turbo_confirm: "Tem certeza?" } %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% else %>
-      <p class="text-center my-5">No player characters found.</p>
+      <p class="text-center my-5"><b>Nenhum personagem encontrado.</b></p>
     <% end %>
   </div>
 </div>

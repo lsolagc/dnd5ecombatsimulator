@@ -7,12 +7,12 @@ class PlayerCharactersTest < ApplicationSystemTestCase
 
   test "visiting the index" do
     visit player_characters_url
-    assert_selector "h1", text: "Player characters"
+    assert_selector "h1", text: "Personagens"
   end
 
   test "should create player character" do
     visit player_characters_url
-    click_on "New player character"
+    click_on "Novo personagem"
 
     fill_in "Identificação do combatente", with: "Gimli"
     select @player_character.player_class.name, from: "Classe"
@@ -28,7 +28,7 @@ class PlayerCharactersTest < ApplicationSystemTestCase
 
   test "should update Player character" do
     visit player_character_url(@player_character)
-    click_on "Edit this player character", match: :first
+    click_on "Editar", match: :first
 
     fill_in "Level", with: @player_character.level
     fill_in "Name", with: @player_character.name
@@ -36,12 +36,12 @@ class PlayerCharactersTest < ApplicationSystemTestCase
     click_on "Update Player character"
 
     assert_text "Player character was successfully updated"
-    click_on "Back"
+    click_on "Voltar para personagens"
   end
 
   test "should destroy Player character" do
     visit player_character_url(@player_character)
-    accept_confirm { click_on "Destroy this player character", match: :first }
+    accept_confirm { click_on "Excluir", match: :first }
 
     assert_text "Player character was successfully destroyed"
   end

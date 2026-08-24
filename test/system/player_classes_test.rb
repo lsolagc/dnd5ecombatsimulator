@@ -16,28 +16,28 @@ class PlayerClassesTest < ApplicationSystemTestCase
     visit player_classes_url
     click_on "Nova classe"
 
-    fill_in "Description", with: @player_class.description
-    fill_in "Hit die", with: @player_class.hit_die
-    fill_in "Name", with: @player_class.name
-    fill_in "Spellcasting modifier", with: @player_class.spellcasting_modifier
-    click_on "Create Player class"
+    fill_in "Descrição", with: @player_class.description
+    select @player_class.hit_die, from: "Dado de vida"
+    fill_in "Nome", with: @player_class.name
+    select "Nenhuma", from: "Conjuração"
+    click_on "Criar classe"
 
     assert_text "Player class was successfully created"
-    click_on "Back"
+    click_on "Back to player classes"
   end
 
   test "should update Player class" do
     visit player_class_url(@player_class)
     click_on "Edit this player class", match: :first
 
-    fill_in "Description", with: @player_class.description
-    fill_in "Hit die", with: @player_class.hit_die
-    fill_in "Name", with: @player_class.name
-    fill_in "Spellcasting modifier", with: @player_class.spellcasting_modifier
-    click_on "Update Player class"
+    fill_in "Descrição", with: @player_class.description
+    select @player_class.hit_die, from: "Dado de vida"
+    fill_in "Nome", with: @player_class.name
+    select "Nenhuma", from: "Conjuração"
+    click_on "Salvar alterações"
 
     assert_text "Player class was successfully updated"
-    click_on "Back"
+    click_on "Back to player classes"
   end
 
   test "should destroy Player class" do

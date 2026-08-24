@@ -6,7 +6,7 @@ resource: app/views
 tags: [ui, bootstrap]
 generated:
   by: copilot-cli/claude-sonnet-5
-  at: 2026-08-23T23:30:00Z
+  at: 2026-08-24T01:00:00Z
 sources:
   - id: application-layout
     title: app/views/layouts/application.html.erb
@@ -60,7 +60,7 @@ None of them make network requests — all client-side state and DOM
 toggling, with the actual persistence happening on normal Rails form
 submits.
 
-# The three screens
+# The screens
 
 - **`home#index`**: a hero explaining the simulator, a 3-step "how it works"
   strip, and three shortcut cards (Personagens/Classes counts pulled from
@@ -72,6 +72,25 @@ submits.
   class's `class_level_progressions` table and a chip list of its
   `class_features`, styled by `action_type` and whether any
   `class_feature_unlock` on the feature carries an `effect_payload`.
+- **`player_classes#new`/`#edit`**: a single Bootstrap form (`_form.html.erb`)
+  with `hit_die` and `spellcasting_modifier` as `form.select`s sourced from
+  `PlayerClass.hit_dice`/`PlayerClass.spellcasting_modifiers` (the latter with
+  a "Nenhuma" blank option, since not every class casts spells) instead of the
+  scaffold's raw text fields. `player_classes#show` was left as the
+  English-language scaffold — it wasn't part of this design pass.
+- **`player_characters#index`**: a table (Nome/Classe/Nível/HP/CA, eager-loading
+  `:player_class` and `:combatant`) styled like `player_classes#index` but
+  without row-expansion or filters — each row links to `#show` plus
+  Editar/Excluir actions.
+- **`player_characters#show`**: a read-only character sheet — stat tiles
+  (HP máx./CA/Deslocamento/Bônus prof./Ataques), the six ability scores with
+  their modifiers, R/I/V chips for any flagged damage type (reusing the
+  `.wizard-chip`/`.wizard-chip--active` CSS from the wizard, read-only here),
+  and the owning class's `class_features` as badges — the same feature-badge
+  markup as `player_classes#index`'s expanded row and the wizard's Features
+  step, duplicated a third time rather than extracted into a partial (no
+  screen shares a controller with the others, so there's nowhere natural to
+  put a shared partial yet).
 - **`player_characters#new`**: a 4-step wizard (Atributos / Combate /
   Features / Revisão) navigated client-side by `wizard_controller.js`[^wizard-controller] — no
   server round-trip between steps, one form submitted on the last step.

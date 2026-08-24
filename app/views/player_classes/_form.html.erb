@@ -1,9 +1,10 @@
+<% spellcasting_labels = { "intelligence" => "Inteligência", "wisdom" => "Sabedoria", "charisma" => "Carisma" } %>
+
 <%= form_with(model: player_class) do |form| %>
   <% if player_class.errors.any? %>
-    <div id="error_explanation" class="alert alert-danger mt-3">
-      <h2><%= pluralize(player_class.errors.count, "error") %> prohibited this player_class from being saved:</h2>
-
-      <ul>
+    <div id="error_explanation" class="alert alert-danger mb-3">
+      <h2 class="h6 fw-bold"><%= pluralize(player_class.errors.count, "erro") %> impediram que esta classe fosse salva:</h2>
+      <ul class="mb-0">
         <% player_class.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,27 +12,29 @@
     </div>
   <% end %>
 
-  <div class="mb-3">
-    <%= form.label :name, class: "form-label" %>
-    <%= form.text_field :name, class: ["form-control", { "is-invalid": player_class.errors[:name].any? }] %>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <%= form.label :name, "Nome", class: "form-label" %>
+      <%= form.text_field :name, class: ["form-control", { "is-invalid": player_class.errors[:name].any? }] %>
+    </div>
+
+    <div class="col-md-3">
+      <%= form.label :hit_die, "Dado de vida", class: "form-label" %>
+      <%= form.select :hit_die, options_for_select(PlayerClass.hit_dice.keys.zip(PlayerClass.hit_dice.keys), player_class.hit_die), {}, class: ["form-select", { "is-invalid": player_class.errors[:hit_die].any? }] %>
+    </div>
+
+    <div class="col-md-3">
+      <%= form.label :spellcasting_modifier, "Conjuração", class: "form-label" %>
+      <%= form.select :spellcasting_modifier, options_for_select(PlayerClass.spellcasting_modifiers.keys.map { |key| [ spellcasting_labels[key], key ] }, player_class.spellcasting_modifier), { include_blank: "Nenhuma" }, class: ["form-select", { "is-invalid": player_class.errors[:spellcasting_modifier].any? }] %>
+    </div>
+
+    <div class="col-12">
+      <%= form.label :description, "Descrição", class: "form-label" %>
+      <%= form.text_area :description, rows: 4, class: ["form-control", { "is-invalid": player_class.errors[:description].any? }] %>
+    </div>
   </div>
 
-  <div class="mb-3">
-    <%= form.label :hit_die, class: "form-label" %>
-    <%= form.text_field :hit_die, class: ["form-control", { "is-invalid": player_class.errors[:hit_die].any? }] %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :description, class: "form-label" %>
-    <%= form.text_area :description, rows: 4, class: ["form-control", { "is-invalid": player_class.errors[:description].any? }] %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :spellcasting_modifier, class: "form-label" %>
-    <%= form.text_field :spellcasting_modifier, class: ["form-control", { "is-invalid": player_class.errors[:spellcasting_modifier].any? }] %>
-  </div>
-
-  <div class="d-inline">
-    <%= form.submit class: "btn btn-primary" %>
+  <div class="mt-3">
+    <%= form.submit player_class.persisted? ? "Salvar alterações" : "Criar classe", class: "btn btn-primary" %>
   </div>
 <% end %>

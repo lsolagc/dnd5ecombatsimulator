@@ -7,7 +7,7 @@ class PlayerCharactersController < ApplicationController
 
   # GET /player_characters or /player_characters.json
   def index
-    @player_characters = PlayerCharacter.all
+    @player_characters = PlayerCharacter.includes(:player_class, :combatant).order(:name)
   end
 
   # GET /player_characters/1 or /player_characters/1.json
@@ -66,7 +66,9 @@ class PlayerCharactersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_player_character
-      @player_character = PlayerCharacter.find(params.expect(:id))
+      @player_character = PlayerCharacter
+        .includes(:combatant, player_class: [ :class_level_progressions, { class_features: :class_feature_unlocks } ])
+        .find(params.expect(:id))
     end
 
     def set_player_classes

@@ -1,5 +1,15 @@
 # Update Log
 
+## 2026-08-24
+* **Update**: Styled `player_characters#index`/`#show` and the `player_classes#new`/`#edit` creation
+  form to match the Bootstrap design system established by the previous pass — replacing the
+  scaffold-generated English markup with the same Portuguese, card/table/chip vocabulary used by
+  `home` and `player_classes#index`. The character show page is a read-only sheet reusing the
+  wizard's stat-tile and R/I/V-chip styling; the class form swaps `hit_die`/`spellcasting_modifier`
+  from raw text fields to `form.select`s. `player_classes#show` and `player_characters#edit` were
+  left as-is (out of scope for this pass). Rewrote [ui/erb-bootstrap-views.md](ui/erb-bootstrap-views.md)
+  to describe every screen now, not just the original three.
+
 ## 2026-08-23
 * **Update**: Implemented the three screens from the D&D 5e design handoff (home, player_classes#index,
   player_characters#new) and wired up Stimulus for the first time. Rewrote

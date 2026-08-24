@@ -1,15 +1,96 @@
-<% content_for :title, "Showing player character" %>
+<% content_for :title, @player_character.name %>
+
+<% ability_labels = { "strength" => "Força", "dexterity" => "Destreza", "constitution" => "Constituição", "intelligence" => "Inteligência", "wisdom" => "Sabedoria", "charisma" => "Carisma" } %>
+<% damage_type_labels = { "acid" => "Ácido", "cold" => "Frio", "fire" => "Fogo", "force" => "Força", "poison" => "Veneno", "psychic" => "Psíquico", "radiant" => "Radiante", "thunder" => "Trovejante", "necrotic" => "Necrótico", "piercing" => "Perfurante", "slashing" => "Cortante", "lightning" => "Elétrico", "bludgeoning" => "Concussão" } %>
 
 <div class="w-100">
   <% if notice.present? %>
     <p class="alert alert-success d-inline-block mb-3" id="notice"><%= notice %></p>
   <% end %>
 
-  <h1 class="fw-bold">Showing player character</h1>
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+      <h1 class="fw-bold mb-1"><%= @player_character.name %></h1>
+      <p class="text-body-secondary mb-0"><%= @player_character.player_class.name %> · nível <%= @player_character.level %></p>
+    </div>
+    <div class="d-flex gap-2">
+      <%= link_to "Editar", edit_player_character_path(@player_character), class: "btn btn-outline-secondary" %>
+      <%= button_to "Excluir", @player_character, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Tem certeza?" } %>
+    </div>
+  </div>
 
-  <%= render @player_character %>
+  <div class="row row-cols-2 row-cols-md-5 g-2 mb-4">
+    <div class="col">
+      <div class="border rounded p-2 text-center">
+        <p class="small text-uppercase text-body-secondary mb-1">HP máx.</p>
+        <p class="fw-semibold font-monospace mb-0"><%= @player_character.max_hit_points %></p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="border rounded p-2 text-center">
+        <p class="small text-uppercase text-body-secondary mb-1">CA</p>
+        <p class="fw-semibold font-monospace mb-0"><%= @player_character.armor_class %></p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="border rounded p-2 text-center">
+        <p class="small text-uppercase text-body-secondary mb-1">Deslocamento</p>
+        <p class="fw-semibold font-monospace mb-0"><%= @player_character.combatant.speed %> ft</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="border rounded p-2 text-center">
+        <p class="small text-uppercase text-body-secondary mb-1">Bônus prof.</p>
+        <p class="fw-semibold font-monospace mb-0">+<%= @player_character.proficiency_bonus %></p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="border rounded p-2 text-center">
+        <p class="small text-uppercase text-body-secondary mb-1">Ataques</p>
+        <p class="fw-semibold font-monospace mb-0"><%= @player_character.attacks_per_action %></p>
+      </div>
+    </div>
+  </div>
 
-  <%= link_to "Edit this player character", edit_player_character_path(@player_character), class: "btn btn-outline-secondary" %>
-  <%= link_to "Back to player characters", player_characters_path, class: "btn btn-outline-secondary mt-2 mt-sm-0 ms-sm-2" %>
-  <%= button_to "Destroy this player character", @player_character, method: :delete, form_class: "d-sm-inline-block mt-2 mt-sm-0 ms-sm-2", class: "btn btn-danger w-100", data: { turbo_confirm: "Are you sure?" } %>
+  <p class="small text-uppercase text-body-secondary fw-semibold mb-2">Atributos</p>
+  <div class="row row-cols-3 row-cols-md-6 g-2 mb-4">
+    <% ability_labels.each do |ability, label| %>
+      <div class="col">
+        <div class="border rounded p-2 text-center">
+          <p class="small fw-semibold mb-0"><%= label %></p>
+          <p class="font-monospace mb-0"><%= @player_character.public_send(ability) %></p>
+          <p class="small text-body-secondary font-monospace mb-0">MOD <%= "%+d" % @player_character.public_send("#{ability}_modifier") %></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <p class="small text-uppercase text-body-secondary fw-semibold mb-2">Resistências, imunidades e vulnerabilidades</p>
+  <% flagged_damage_types = damage_type_labels.select { |type, _| @player_character.resistant_to?(damage_type: type) || @player_character.immune_to?(damage_type: type) || @player_character.vulnerable_to?(damage_type: type) } %>
+  <% if flagged_damage_types.any? %>
+    <div class="d-flex flex-wrap gap-2 mb-4">
+      <% flagged_damage_types.each do |type, label| %>
+        <% flag = @player_character.immune_to?(damage_type: type) ? "I" : (@player_character.resistant_to?(damage_type: type) ? "R" : "V") %>
+        <span class="badge rounded-pill border wizard-chip wizard-chip--active"><%= label %> <span class="font-monospace"><%= flag %></span></span>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="small text-body-secondary mb-4">Nenhuma resistência, imunidade ou vulnerabilidade registrada.</p>
+  <% end %>
+
+  <p class="small text-uppercase text-body-secondary fw-semibold mb-2">Features de <%= @player_character.player_class.name %></p>
+  <% if @player_character.player_class.class_features.any? %>
+    <div class="d-flex flex-wrap gap-2 mb-4">
+      <% @player_character.player_class.class_features.each do |feature| %>
+        <% earliest_level = feature.class_feature_unlocks.map(&:level).min %>
+        <span class="badge rounded-pill <%= feature.action_type_passive? ? "bg-body-secondary text-body-secondary border" : "border border-2 text-body bg-body" %>">
+          <%= feature.name %><% if earliest_level %> <span class="font-monospace small">nv <%= earliest_level %></span><% end %>
+        </span>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="small text-body-secondary mb-4">Sem features cadastradas.</p>
+  <% end %>
+
+  <%= link_to "Voltar para personagens", player_characters_path, class: "btn btn-outline-secondary" %>
 </div>
