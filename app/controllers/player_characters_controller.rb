@@ -3,7 +3,7 @@ class PlayerCharactersController < ApplicationController
   DAMAGE_FLAG_TO_COLUMN = { "R" => :resistances, "I" => :immunities, "V" => :vulnerabilities }.freeze
 
   before_action :set_player_character, only: %i[ show edit update destroy ]
-  before_action :set_player_classes, only: %i[ new create ]
+  before_action :set_player_classes, only: %i[ new create edit update ]
 
   # GET /player_characters or /player_characters.json
   def index
@@ -42,6 +42,8 @@ class PlayerCharactersController < ApplicationController
 
   # PATCH/PUT /player_characters/1 or /player_characters/1.json
   def update
+    assign_damage_type_flags(@player_character)
+
     respond_to do |format|
       if @player_character.update(player_character_params)
         format.html { redirect_to @player_character, notice: "Player character was successfully updated." }
@@ -80,7 +82,7 @@ class PlayerCharactersController < ApplicationController
       params.expect(
         player_character: [
           :name, :level, :player_class_id, :max_hit_points_input,
-          combatant_attributes: [ :armor_class, :speed, :strength, :dexterity, :constitution, :intelligence, :wisdom, :charisma ]
+          combatant_attributes: [ :id, :armor_class, :speed, :strength, :dexterity, :constitution, :intelligence, :wisdom, :charisma ]
         ]
       )
     end

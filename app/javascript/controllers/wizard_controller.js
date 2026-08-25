@@ -17,8 +17,13 @@ export default class extends Controller {
     "outName", "outClassLevel", "outHp", "outAc", "outAttacks"
   ]
 
+  static values = { editMode: Boolean }
+
   connect() {
-    this.visited = [1]
+    // Editing an existing character already has valid data on every step, so
+    // all rail items are clickable from the start. Creation still gates
+    // navigation to steps visited in order (this.visited starts at [1]).
+    this.visited = this.editModeValue ? this.panelTargets.map((panel) => parseInt(panel.dataset.step, 10)) : [1]
     this.showStep(1)
     this.refreshAbilityModifiers()
     this.refreshDamageChips()
@@ -132,6 +137,17 @@ export default class extends Controller {
       chip.querySelector("[data-wizard-chip-tag]").textContent = value || "—"
       chip.classList.toggle("wizard-chip--active", value !== "")
     })
+  }
+
+  // --- class change ---
+
+  // Editing pre-fills the HP override with the character's current stored HP (tied to
+  // its old class' hit die), so switching class would otherwise silently keep showing
+  // that stale number instead of recalculating for the new class. Creating a character
+  // leaves this alone: there the override only ever holds something the user typed
+  // themselves this session, and clearing it on class change would just be surprising.
+  clearHpOverrideOnClassChange() {
+    if (this.editModeValue) this.maxHpOverrideInputTarget.value = ""
   }
 
   // --- features step (read-only, filtered by the selected class) ---

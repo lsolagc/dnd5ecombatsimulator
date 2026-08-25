@@ -1,10 +1,3 @@
-<% content_for :title, "Editing player character" %>
+<% content_for :title, "Editar #{@player_character.name.presence || "personagem"}" %>
 
-<div class="w-100">
-  <h1 class="fw-bold">Editing player character</h1>
-
-  <%= render "form", player_character: @player_character %>
-
-  <%= link_to "Show this player character", @player_character, class: "btn btn-outline-secondary mt-2 mt-sm-0 ms-sm-2" %>
-  <%= link_to "Back to player characters", player_characters_path, class: "btn btn-outline-secondary mt-2 mt-sm-0 ms-sm-2" %>
-</div>
+<%= render "wizard_form", player_character: @player_character, player_classes: @player_classes %>
