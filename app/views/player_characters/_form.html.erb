@@ -26,6 +26,13 @@
     <%= form.text_field :player_class_id, class: ["form-control", { "is-invalid": player_character.errors[:player_class_id].any? }] %>
   </div>
 
+  <div class="mb-3">
+    <%= form.label :max_hit_points_input, "HP máximo", class: "form-label" %>
+    <%= form.number_field :max_hit_points_input,
+          value: player_character.max_hit_points_input.presence || player_character.combatant&.max_hit_points,
+          class: ["form-control", { "is-invalid": player_character.errors[:max_hit_points_input].any? }] %>
+  </div>
+
   <div class="d-inline">
     <%= form.submit class: "btn btn-primary" %>
   </div>

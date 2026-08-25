@@ -10,16 +10,33 @@ class PlayerCharacter < ApplicationRecord
   delegate_ability_scores_to :combatant
   accepts_nested_attributes_for :combatant
 
+  MAX_HIT_POINTS_INPUT_CEILING = 2_147_483_647
+
+  attr_accessor :max_hit_points_input
+
+  validates :max_hit_points_input, numericality: {
+    only_integer: true,
+    greater_than: 0,
+    less_than_or_equal_to: MAX_HIT_POINTS_INPUT_CEILING
+  }, allow_blank: true
+
   before_create :initialize_combatant, if: -> { combatant.nil? }
   before_create :setup_hit_points
+  before_update :apply_hit_points_override, if: -> { max_hit_points_input.present? }
 
   def setup_hit_points
+    return apply_hit_points_override if max_hit_points_input.present?
+
     case level
     when 1
       self.max_hit_points = hit_points_at_level_one
     else
       self.max_hit_points = hit_points_at_level_one + roll_hit_points(for_level: level)
     end
+  end
+
+  def apply_hit_points_override
+    self.max_hit_points = max_hit_points_input.to_i
   end
 
   def roll_hit_points(for_level: 1)

@@ -125,4 +125,45 @@ class PlayerCharacterTest < ActiveSupport::TestCase
 
     assert_empty results
   end
+
+  # max_hit_points_input override
+
+  test "setup_hit_points uses the override instead of the automatic calculation when present" do
+    fighter = player_classes(:fighter)
+    character = PlayerCharacter.create!(name: "HP Override", level: 5, player_class: fighter, max_hit_points_input: 999)
+
+    assert_equal 999, character.reload.max_hit_points
+  end
+
+  test "setup_hit_points falls back to the automatic calculation when the override is blank" do
+    fighter = player_classes(:fighter)
+    character = PlayerCharacter.create!(name: "HP Auto", level: 1, player_class: fighter)
+
+    assert_equal character.hit_points_at_level_one, character.reload.max_hit_points
+  end
+
+  test "updating max_hit_points_input persists the override on the associated combatant" do
+    character = player_characters(:aragorn)
+
+    character.update!(max_hit_points_input: 42)
+
+    assert_equal 42, PlayerCharacter.includes(:combatant).find(character.id).max_hit_points
+  end
+
+  test "max_hit_points_input rejects zero, negative, non-integer, and values above the Postgres integer ceiling" do
+    fighter = player_classes(:fighter)
+
+    [ 0, -1, 1.5, PlayerCharacter::MAX_HIT_POINTS_INPUT_CEILING + 1 ].each do |bad_value|
+      character = PlayerCharacter.new(name: "Bad HP", level: 1, player_class: fighter, max_hit_points_input: bad_value)
+      assert_not character.valid?, "expected #{bad_value.inspect} to be invalid"
+      assert_includes character.errors.attribute_names, :max_hit_points_input
+    end
+  end
+
+  test "max_hit_points_input allows a blank value" do
+    fighter = player_classes(:fighter)
+    character = PlayerCharacter.new(name: "Blank HP", level: 1, player_class: fighter)
+
+    assert character.valid?
+  end
 end

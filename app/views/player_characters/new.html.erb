@@ -111,6 +111,13 @@
               </div>
             <% end %>
 
+            <div class="row g-2 mb-4">
+              <div class="col-4">
+                <%= form.label :max_hit_points_input, "HP máximo (opcional — substitui o cálculo automático)", class: "form-label small" %>
+                <%= form.number_field :max_hit_points_input, class: ["form-control font-monospace", { "is-invalid": @player_character.errors[:max_hit_points_input].any? }], data: { wizard_target: "maxHpOverrideInput", action: "input->wizard#refreshPreview" } %>
+              </div>
+            </div>
+
             <p class="small fw-semibold mb-2">Armas <span class="text-body-secondary fw-normal">— visual, ainda sem persistência</span></p>
             <div class="row g-3 mb-4">
               <div class="col-md-6">

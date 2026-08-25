@@ -10,7 +10,7 @@ const FLAG_CYCLE = ["", "R", "I", "V"]
 export default class extends Controller {
   static targets = [
     "railItem", "panel", "backButton", "nextButton", "submitButton", "stepsRemaining",
-    "nameInput", "levelInput", "classSelect", "armorClassInput",
+    "nameInput", "levelInput", "classSelect", "armorClassInput", "maxHpOverrideInput",
     "abilityInput", "abilityModifier",
     "offhandName", "offhandField",
     "damageChip", "damageFlagInput", "featureGroup",
@@ -161,7 +161,8 @@ export default class extends Controller {
 
     const progression = this.progressionFor(option, level)
     const attacks = progression ? progression.attacks_per_action : 1
-    const hp = this.hpPreview(option, level)
+    const hpOverride = parseInt(this.maxHpOverrideInputTarget.value, 10)
+    const hp = hpOverride > 0 ? hpOverride : this.hpPreview(option, level)
 
     this.outNameTargets.forEach((el) => { el.textContent = name })
     this.outClassLevelTargets.forEach((el) => { el.textContent = `${className} · nível ${level}` })
