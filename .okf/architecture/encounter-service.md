@@ -69,7 +69,8 @@ encounter.encounter_log   # => { rounds: { 1 => [...], ... }, end_of_encounter: 
 Attacks and damage go through the same `PlayerCharacter#roll_an_attack` /
 `#get_attacked` / `#take_damage` path described in
 [player-character.md](/models/player-character.md): a `Dice::AttackRoll`
-built from a fixed `"1d4"` damage die, STR modifier, and
-`critical_hit_threshold`, compared against `armor_class`; a hit always
-applies `damage_type: :bludgeoning` (weapon typing is not yet modeled),
-adjusted by the target's resistance/immunity/vulnerability.[^encounter-service-rb]
+built from the combatant's configured `attack_bonus`, `damage_dice` (default
+`"1d4"`), STR modifier, and `critical_hit_threshold`, compared against
+`armor_class`; a hit applies `damage_type:` read from the combatant's
+configured `damage_type` (default `"bludgeoning"`), adjusted by the target's
+resistance/immunity/vulnerability.[^encounter-service-rb]

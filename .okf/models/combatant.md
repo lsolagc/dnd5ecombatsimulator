@@ -21,9 +21,12 @@ status: stable
 
 `Combatant` holds every stat combat mechanics read: the six ability scores,
 `armor_class` (default 10), `speed` (default 30), `proficiency_bonus`
-(default 2), and `max_hit_points` (default 1) — plus `resistances`,
-`vulnerabilities`, and `immunities` as nested jsonb maps keyed by
-`"conditions"` and `"damage_types"` (each a fixed set of D&D 5e condition
+(default 2), `max_hit_points` (default 1), and the basic-attack fields
+`attack_bonus` (integer, default 0), `damage_dice` (string, default `"1d4"`),
+and `damage_type` (string, default `"bludgeoning"`, validated against the
+same damage-type set as `resistances`/`vulnerabilities`/`immunities`) — plus
+`resistances`, `vulnerabilities`, and `immunities` as nested jsonb maps keyed
+by `"conditions"` and `"damage_types"` (each a fixed set of D&D 5e condition
 and damage-type keys, default `false`).[^combatant-rb] This is the opposite
 of what the legacy data-model doc describes: ability scores and defenses are
 **not** on `PlayerCharacter` — they are here, and `PlayerCharacter` reaches
@@ -59,4 +62,7 @@ documentation described — resistances/vulnerabilities/immunities are
 | speed | integer | Default 30 |
 | proficiency_bonus | integer | Default 2 |
 | max_hit_points | integer | Default 1 |
+| attack_bonus | integer | Default 0 — basic-attack to-hit modifier |
+| damage_dice | string | Default `"1d4"` — basic-attack damage dice notation |
+| damage_type | string | Default `"bludgeoning"` — basic-attack damage type, validated against the known damage-type set |
 | resistances / vulnerabilities / immunities | jsonb | `{ "conditions" => {...}, "damage_types" => {...} }`, all keys default `false` |

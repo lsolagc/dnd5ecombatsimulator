@@ -122,23 +122,26 @@
               </div>
             </div>
 
-            <p class="small fw-semibold mb-2">Armas <span class="text-body-secondary fw-normal">— visual, ainda sem persistência</span></p>
+            <p class="small fw-semibold mb-2">Armas <span class="text-body-secondary fw-normal">— nome ainda visual, sem persistência</span></p>
             <div class="row g-3 mb-4">
               <div class="col-md-6">
                 <div class="border rounded">
                   <div class="bg-body-tertiary small text-uppercase px-2 py-1">Arma principal</div>
-                  <div class="row g-2 p-2">
-                    <div class="col-12"><input type="text" class="form-control form-control-sm" placeholder="Espada longa"></div>
-                    <div class="col-4"><input type="text" class="form-control form-control-sm font-monospace" placeholder="1d8"></div>
-                    <div class="col-4"><input type="text" class="form-control form-control-sm font-monospace" placeholder="+3"></div>
-                    <div class="col-4">
-                      <select class="form-select form-select-sm">
-                        <option>Cortante</option>
-                        <option>Perfurante</option>
-                        <option>Concussão</option>
-                      </select>
+                  <%= form.fields_for :combatant do |cf| %>
+                    <div class="row g-2 p-2">
+                      <div class="col-12"><input type="text" class="form-control form-control-sm" placeholder="Espada longa"></div>
+                      <div class="col-3">
+                        <%= cf.number_field :attack_bonus, class: "form-control form-control-sm font-monospace", placeholder: "Acerto +0" %>
+                      </div>
+                      <div class="col-3">
+                        <%= cf.text_field :damage_dice, class: "form-control form-control-sm font-monospace", placeholder: "1d8" %>
+                      </div>
+                      <div class="col-3"><input type="text" class="form-control form-control-sm font-monospace" placeholder="+3" disabled></div>
+                      <div class="col-3">
+                        <%= cf.select :damage_type, damage_type_labels.map { |type, label| [ label, type ] }, {}, class: "form-select form-select-sm" %>
+                      </div>
                     </div>
-                  </div>
+                  <% end %>
                 </div>
               </div>
               <div class="col-md-6">

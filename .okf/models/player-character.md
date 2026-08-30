@@ -56,15 +56,18 @@ creation and not changed by application code today.
 
 # Attacks and damage
 
-`roll_an_attack` builds a `Dice::AttackRoll` from a fixed `damage_roll`
-(`"1d4"`), `strength_modifier`, and `critical_hit_threshold` — **not** the
+`roll_an_attack` builds a `Dice::AttackRoll` from the combatant's configured
+`attack_bonus` (as `to_hit_modifier:`), `damage_roll` (delegated to
+`Combatant#damage_dice`, default `"1d4"`), `strength_modifier` (as
+`damage_modifier:`), and `critical_hit_threshold` — **not** the
 `ability_modifier`/`proficiency_bonus`/`advantage`/`disadvantage` shape
 described in the legacy combat-system docs; the current `Dice::AttackRoll`
 contract is `to_hit_modifier:`, `damage_dice:`, `damage_modifier:`,
 `critical_hit_threshold:`.[^player-character-rb] `get_attacked` compares the
 roll's total to `armor_class` (delegated from `Combatant`) and, on a hit,
-calls `take_damage` with a **hardcoded** `damage_type: :bludgeoning` — weapon
-damage typing is not yet wired into this path. `take_damage` applies the
+calls `take_damage` with `damage_type:` read from the combatant's own
+`damage_type` field (default `"bludgeoning"`) — configured per character via
+the creation/edit wizard rather than hardcoded. `take_damage` applies the
 target's immunity/resistance/vulnerability (delegated to `Combatant`, see
 [combatant.md](/models/combatant.md)) before subtracting from
 `current_hit_points`, floored at 0.

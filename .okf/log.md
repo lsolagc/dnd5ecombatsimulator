@@ -1,5 +1,21 @@
 # Update Log
 
+## 2026-08-30
+* **Update**: Made the basic weapon attack configurable per character instead of hardcoded. Added
+  `attack_bonus` (integer, default 0), `damage_dice` (string, default `"1d4"`), and `damage_type`
+  (string, default `"bludgeoning"`, validated against the existing damage-type set) columns on
+  `combatants`; `PlayerCharacter#roll_an_attack`/`#damage_roll`/`#get_attacked` now read these
+  instead of the previous fixed `d20+0`/`"1d4"`/`:bludgeoning` values. `EncounterService` and
+  `CombatSimulatorService` needed no changes — both already call the same
+  `roll_an_attack`/`get_attacked` pair, so the new fields (and multiattack) flow through
+  automatically. The wizard's "Arma principal" box gained a real attack-bonus input and turned its
+  dado-de-dano/tipo-de-dano inputs from decorative to real (`form.fields_for :combatant`), with the
+  damage-type `<select>` listing the full damage-type set (matching the resistance chips); weapon
+  name and the offhand weapon box remain visual-only, unchanged. Updated
+  [models/combatant.md](models/combatant.md), [models/player-character.md](models/player-character.md),
+  and [architecture/encounter-service.md](architecture/encounter-service.md) to describe the
+  configurable fields instead of the old hardcoded values.
+
 ## 2026-08-24
 * **Update**: Styled `player_characters#index`/`#show` and the `player_classes#new`/`#edit` creation
   form to match the Bootstrap design system established by the previous pass — replacing the

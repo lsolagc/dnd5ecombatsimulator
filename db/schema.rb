@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_30_000001) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_30_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -80,6 +80,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_30_000001) do
     t.string "combatable_type", null: false
     t.bigint "combatable_id", null: false
     t.integer "max_hit_points", default: 1, null: false
+    t.integer "attack_bonus", default: 0, null: false
+    t.string "damage_dice", default: "1d4", null: false
+    t.string "damage_type", default: "bludgeoning", null: false
     t.index ["combatable_type", "combatable_id"], name: "index_combatants_on_combatable"
   end
 

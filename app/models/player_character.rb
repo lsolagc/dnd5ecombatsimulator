@@ -64,6 +64,7 @@ class PlayerCharacter < ApplicationRecord
 
   def roll_an_attack
     Dice::AttackRoll.new(
+      to_hit_modifier: attack_bonus,
       damage_dice: damage_roll,
       damage_modifier: strength_modifier,
       critical_hit_threshold: critical_hit_threshold
@@ -102,12 +103,12 @@ class PlayerCharacter < ApplicationRecord
   end
 
   def damage_roll
-    "1d4"
+    damage_dice
   end
 
   def get_attacked(attack_roll:)
     if attack_roll.total >= armor_class
-      take_damage(amount: attack_roll.damage, damage_type: :bludgeoning)
+      take_damage(amount: attack_roll.damage, damage_type: damage_type.to_sym)
       { success: true, attack_roll: attack_roll, message: "Hit!" }
     else
       { success: false, attack_roll: attack_roll, message: "Miss!" }

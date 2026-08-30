@@ -82,7 +82,7 @@ class PlayerCharactersController < ApplicationController
       params.expect(
         player_character: [
           :name, :level, :player_class_id, :max_hit_points_input,
-          combatant_attributes: [ :id, :armor_class, :speed, :strength, :dexterity, :constitution, :intelligence, :wisdom, :charisma ]
+          combatant_attributes: [ :id, :armor_class, :speed, :strength, :dexterity, :constitution, :intelligence, :wisdom, :charisma, :attack_bonus, :damage_dice, :damage_type ]
         ]
       )
     end

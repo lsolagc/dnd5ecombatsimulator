@@ -166,4 +166,59 @@ class PlayerCharacterTest < ActiveSupport::TestCase
 
     assert character.valid?
   end
+
+  # basic attack configuration
+
+  test "roll_an_attack applies the combatant's configured attack_bonus as the to-hit modifier" do
+    character = player_characters(:aragorn)
+    character.combatant.update!(attack_bonus: 100)
+
+    attack_roll = character.roll_an_attack
+
+    assert attack_roll.total >= 101
+  end
+
+  test "roll_an_attack defaults the to-hit modifier to zero when attack_bonus is not configured" do
+    character = player_characters(:aragorn)
+
+    attack_roll = character.roll_an_attack
+
+    assert attack_roll.total <= 20
+  end
+
+  test "damage_roll returns the combatant's configured damage_dice" do
+    character = player_characters(:aragorn)
+    character.combatant.update!(damage_dice: "1d8+3")
+
+    assert_equal "1d8+3", character.damage_roll
+  end
+
+  test "damage_roll defaults to 1d4 when damage_dice is not configured" do
+    character = player_characters(:aragorn)
+
+    assert_equal "1d4", character.damage_roll
+  end
+
+  test "get_attacked applies the combatant's configured damage_type on a hit" do
+    character = player_characters(:aragorn)
+    character.combatant.update!(damage_type: "piercing")
+    character.combatant.immunities["damage_types"]["piercing"] = true
+    character.current_hit_points = character.max_hit_points
+    attack_roll = Struct.new(:total, :damage).new(999, 10)
+
+    character.get_attacked(attack_roll: attack_roll)
+
+    assert_equal character.max_hit_points, character.current_hit_points, "expected the configured piercing immunity to block all damage"
+  end
+
+  test "get_attacked defaults to bludgeoning damage_type when not configured" do
+    character = player_characters(:aragorn)
+    character.combatant.vulnerabilities["damage_types"]["bludgeoning"] = true
+    character.current_hit_points = character.max_hit_points
+    attack_roll = Struct.new(:total, :damage).new(999, 3)
+
+    character.get_attacked(attack_roll: attack_roll)
+
+    assert_equal character.max_hit_points - 6, character.current_hit_points, "expected the default bludgeoning type to trigger vulnerability (double damage)"
+  end
 end
