@@ -177,6 +177,33 @@ fighter_core_features = [
         description: "Pode usar Surto de Ação duas vezes entre descansos, mas somente uma vez no mesmo turno."
       }
     ]
+  },
+  {
+    name: "Indomitable",
+    slug: "indomitable",
+    description: "Permite rolar novamente um teste de resistência que tenha falhado.",
+    feature_type: :core,
+    action_type: :special,
+    recharge_type: :long_rest,
+    resource_name: "Indomitable",
+    source_reference: "Fighter 9",
+    unlocks: [
+      {
+        level: 9,
+        uses: 1,
+        description: "Ao falhar um teste de resistência, pode rolar novamente e deve usar o novo resultado. Só pode usar antes de terminar um descanso longo."
+      },
+      {
+        level: 13,
+        uses: 2,
+        description: "Pode usar Indomável duas vezes entre descansos longos."
+      },
+      {
+        level: 17,
+        uses: 3,
+        description: "Pode usar Indomável três vezes entre descansos longos."
+      }
+    ]
   }
 ]
 
