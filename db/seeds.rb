@@ -199,6 +199,67 @@ fighter_core_features.each do |feature_attrs|
   end
 end
 
+# Fighter Fighting Style options (PHB 2014) — chosen once at level 1
+fighter_fighting_styles = [
+  {
+    name: "Fighting Style: Archery",
+    slug: "fighting-style-archery",
+    description: "Ganha +2 de bônus nas jogadas de ataque realizadas com armas de ataque à distância."
+  },
+  {
+    name: "Fighting Style: Defense",
+    slug: "fighting-style-defense",
+    description: "Ganha +1 de bônus na Classe de Armadura enquanto estiver usando armadura."
+  },
+  {
+    name: "Fighting Style: Dueling",
+    slug: "fighting-style-dueling",
+    description: "Ganha +2 de bônus nas jogadas de dano ao empunhar uma arma corpo-a-corpo em uma mão e nenhuma outra arma."
+  },
+  {
+    name: "Fighting Style: Great Weapon Fighting",
+    slug: "fighting-style-great-weapon-fighting",
+    description: "Ao rolar 1 ou 2 no dado de dano de um ataque corpo-a-corpo com arma empunhada com duas mãos, pode rolar novamente e usar o novo resultado. A arma deve ter a propriedade duas mãos ou versátil."
+  },
+  {
+    name: "Fighting Style: Protection",
+    slug: "fighting-style-protection",
+    description: "Ao usar um escudo, pode gastar a reação para impor desvantagem na jogada de ataque de uma criatura que ataque um alvo a até 1,5 metro de você."
+  },
+  {
+    name: "Fighting Style: Two-Weapon Fighting",
+    slug: "fighting-style-two-weapon-fighting",
+    description: "Ao lutar com duas armas, pode adicionar seu modificador de habilidade de dano na jogada de dano do segundo ataque."
+  }
+].map do |attrs|
+  attrs.merge(
+    feature_type: :core,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Fighter 1",
+    unlocks: [ { level: 1, description: attrs[:description] } ]
+  )
+end
+
+fighter_fighting_styles.each do |feature_attrs|
+  unlocks = feature_attrs.delete(:unlocks)
+
+  feature = ClassFeature.find_or_initialize_by(player_class: fighter, slug: feature_attrs[:slug])
+  feature.assign_attributes(
+    feature_attrs.merge(
+      grants_spellcasting: false,
+      source_book: "PHB 2014"
+    )
+  )
+  feature.save! if feature.changed?
+
+  unlocks.each do |unlock_attrs|
+    unlock = ClassFeatureUnlock.find_or_initialize_by(class_feature: feature, level: unlock_attrs[:level])
+    unlock.assign_attributes(unlock_attrs)
+    unlock.save! if unlock.changed?
+  end
+end
+
 # Fighter subclass modeling: Champion (PHB 2014)
 fighter_champion_features = [
   {
