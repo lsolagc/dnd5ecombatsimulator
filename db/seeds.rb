@@ -131,6 +131,74 @@ fighter_progression.each do |attrs|
   progression.save! if progression.changed?
 end
 
+# Fighter core features (PHB 2014)
+fighter_core_features = [
+  {
+    name: "Second Wind",
+    slug: "second-wind",
+    description: "Reserva de estamina usada para se proteger contra danos, recuperando pontos de vida.",
+    feature_type: :core,
+    action_type: :bonus_action,
+    recharge_type: :short_or_long_rest,
+    resource_name: "Second Wind",
+    source_reference: "Fighter 1",
+    unlocks: [
+      {
+        level: 1,
+        uses: 1,
+        resource_name: "Second Wind",
+        description: "Usa uma ação bônus para recuperar pontos de vida iguais a 1d10 + seu nível de guerreiro.",
+        effect_payload: {
+          kind: "heal",
+          roll: "1d10 + actor_level",
+          target: "self"
+        }
+      }
+    ]
+  },
+  {
+    name: "Action Surge",
+    slug: "action-surge",
+    description: "Força seu limite além do normal por um momento, realizando uma ação adicional no turno.",
+    feature_type: :core,
+    action_type: :no_action,
+    recharge_type: :short_or_long_rest,
+    resource_name: "Action Surge",
+    source_reference: "Fighter 2",
+    unlocks: [
+      {
+        level: 2,
+        uses: 1,
+        description: "Realiza uma ação adicional junto com sua ação e possível ação bônus."
+      },
+      {
+        level: 17,
+        uses: 2,
+        description: "Pode usar Surto de Ação duas vezes entre descansos, mas somente uma vez no mesmo turno."
+      }
+    ]
+  }
+]
+
+fighter_core_features.each do |feature_attrs|
+  unlocks = feature_attrs.delete(:unlocks)
+
+  feature = ClassFeature.find_or_initialize_by(player_class: fighter, slug: feature_attrs[:slug])
+  feature.assign_attributes(
+    feature_attrs.merge(
+      grants_spellcasting: false,
+      source_book: "PHB 2014"
+    )
+  )
+  feature.save! if feature.changed?
+
+  unlocks.each do |unlock_attrs|
+    unlock = ClassFeatureUnlock.find_or_initialize_by(class_feature: feature, level: unlock_attrs[:level])
+    unlock.assign_attributes(unlock_attrs)
+    unlock.save! if unlock.changed?
+  end
+end
+
 # Fighter subclass modeling: Champion (PHB 2014)
 fighter_champion_features = [
   {
