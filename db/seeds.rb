@@ -424,3 +424,279 @@ fighter_champion_features.each do |feature_attrs|
     unlock.save! if unlock.changed?
   end
 end
+
+# Fighter subclass modeling: Battle Master (PHB 2014)
+fighter_battle_master_features = [
+  {
+    name: "Martial Archetype: Battle Master",
+    slug: "martial-archetype-battle-master",
+    description: "Escolha do arquétipo marcial Battle Master.",
+    feature_type: :subclass,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Fighter 3",
+    unlocks: [
+      { level: 3, description: "Escolhe Battle Master como arquétipo marcial." }
+    ]
+  },
+  {
+    name: "Combat Superiority",
+    slug: "battle-master-combat-superiority",
+    description: "Aprende manobras abastecidas por dados de superioridade (d8), gastos ao usar e recuperados em um descanso curto ou longo.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :short_or_long_rest,
+    resource_name: "Superiority Dice",
+    source_reference: "Battle Master 3",
+    unlocks: [
+      { level: 3, uses: 4, description: "Aprende três manobras, à sua escolha. Tem quatro dados de superioridade (d8)." },
+      { level: 7, uses: 5, description: "Aprende duas manobras adicionais (cinco no total). Ganha mais um dado de superioridade (cinco no total)." },
+      { level: 10, uses: 5, description: "Aprende duas manobras adicionais (sete no total)." },
+      { level: 15, uses: 6, description: "Aprende duas manobras adicionais (nove no total). Ganha mais um dado de superioridade (seis no total)." }
+    ]
+  },
+  {
+    name: "Student of War",
+    slug: "battle-master-student-of-war",
+    description: "Ganha proficiência com um tipo de ferramenta de artesão, à sua escolha.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Battle Master 3",
+    unlocks: [
+      { level: 3, description: "Escolhe uma ferramenta de artesão para ganhar proficiência." }
+    ]
+  },
+  {
+    name: "Know Your Enemy",
+    slug: "battle-master-know-your-enemy",
+    description: "Ao observar ou interagir com uma criatura por ao menos 1 minuto fora de combate, aprende como duas de suas capacidades se comparam às suas.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Battle Master 7",
+    unlocks: [
+      { level: 7, description: "Escolhe duas características (FOR, DES, CON, CA, PV atuais, nível total ou nível de guerreiro) para comparar com uma criatura observada." }
+    ]
+  },
+  {
+    name: "Improved Combat Superiority",
+    slug: "battle-master-improved-combat-superiority",
+    description: "Seus dados de superioridade aumentam de tamanho.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Battle Master 10",
+    unlocks: [
+      { level: 10, description: "Seus dados de superioridade se tornam d10s." },
+      { level: 18, description: "Seus dados de superioridade se tornam d12s." }
+    ]
+  },
+  {
+    name: "Relentless",
+    slug: "battle-master-relentless",
+    description: "Ao rolar iniciativa sem nenhum dado de superioridade restante, recupera um dado de superioridade.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Battle Master 15",
+    unlocks: [
+      { level: 15, description: "Recupera um dado de superioridade ao rolar iniciativa sem dados restantes." }
+    ]
+  },
+  {
+    name: "Maneuver: Parry",
+    slug: "battle-master-maneuver-parry",
+    description: "Quando outra criatura causar dano a você com um ataque corpo-a-corpo, usa a reação e gasta um dado de superioridade para reduzir o dano recebido em uma quantidade igual ao número rolado no dado + seu modificador de Destreza.",
+    feature_type: :subclass_progression,
+    action_type: :reaction,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Menacing Attack",
+    slug: "battle-master-maneuver-menacing-attack",
+    description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano; o alvo faz um teste de resistência de Sabedoria ou fica amedrontado até o final do seu próximo turno.",
+    feature_type: :subclass_progression,
+    action_type: :no_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Pushing Attack",
+    slug: "battle-master-maneuver-pushing-attack",
+    description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano; se o alvo for Grande ou menor, faz um teste de resistência de Força ou é empurrado até 4,5 metros.",
+    feature_type: :subclass_progression,
+    action_type: :no_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Feinting Attack",
+    slug: "battle-master-maneuver-feinting-attack",
+    description: "Gasta um dado de superioridade e uma ação bônus para fintar uma criatura a 1,5 metro; ganha vantagem na próxima jogada de ataque contra ela nesse turno e, se acertar, adiciona o dado ao dano.",
+    feature_type: :subclass_progression,
+    action_type: :bonus_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Maneuvering Attack",
+    slug: "battle-master-maneuver-maneuvering-attack",
+    description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano e permite que um aliado use a reação para se mover até metade do deslocamento sem provocar ataques de oportunidade do alvo.",
+    feature_type: :subclass_progression,
+    action_type: :no_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Precision Attack",
+    slug: "battle-master-maneuver-precision-attack",
+    description: "Ao realizar uma jogada de ataque com arma, gasta um dado de superioridade para adicioná-lo à jogada, antes ou depois de rolar, mas antes de aplicar qualquer efeito do ataque.",
+    feature_type: :subclass_progression,
+    action_type: :no_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Disarming Attack",
+    slug: "battle-master-maneuver-disarming-attack",
+    description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano; o alvo faz um teste de resistência de Força ou deixa cair um item à sua escolha.",
+    feature_type: :subclass_progression,
+    action_type: :no_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Lunging Attack",
+    slug: "battle-master-maneuver-lunging-attack",
+    description: "Ao atingir uma criatura com um ataque corpo-a-corpo com arma, gasta um dado de superioridade para aumentar o alcance do ataque em 1,5 metro e adicionar o dado ao dano.",
+    feature_type: :subclass_progression,
+    action_type: :no_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Goading Attack",
+    slug: "battle-master-maneuver-goading-attack",
+    description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano; o alvo faz um teste de resistência de Sabedoria ou fica com desvantagem em ataques contra alvos diferentes de você até o final do seu próximo turno.",
+    feature_type: :subclass_progression,
+    action_type: :no_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Sweeping Attack",
+    slug: "battle-master-maneuver-sweeping-attack",
+    description: "Ao atingir uma criatura com um ataque corpo-a-corpo com arma, gasta um dado de superioridade para causar dano igual ao número rolado a uma segunda criatura a até 1,5 metro do alvo original e dentro do seu alcance.",
+    feature_type: :subclass_progression,
+    action_type: :no_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Riposte",
+    slug: "battle-master-maneuver-riposte",
+    description: "Quando uma criatura erra um ataque corpo-a-corpo contra você, usa a reação e gasta um dado de superioridade para realizar um ataque corpo-a-corpo com arma contra ela, adicionando o dado ao dano se acertar.",
+    feature_type: :subclass_progression,
+    action_type: :reaction,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Trip Attack",
+    slug: "battle-master-maneuver-trip-attack",
+    description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano; se o alvo for Grande ou menor, faz um teste de resistência de Força ou fica caído.",
+    feature_type: :subclass_progression,
+    action_type: :no_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Distracting Strike",
+    slug: "battle-master-maneuver-distracting-strike",
+    description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano; a próxima jogada de ataque contra o alvo, feita por outra criatura antes do início do seu próximo turno, tem vantagem.",
+    feature_type: :subclass_progression,
+    action_type: :no_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Commander's Strike",
+    slug: "battle-master-maneuver-commanders-strike",
+    description: "Na ação de Ataque, desiste de um dos ataques e usa uma ação bônus para gastar um dado de superioridade e permitir que um aliado use a reação para atacar, adicionando o dado ao dano do aliado.",
+    feature_type: :subclass_progression,
+    action_type: :bonus_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Rally",
+    slug: "battle-master-maneuver-rally",
+    description: "Usa uma ação bônus e gasta um dado de superioridade para conceder a um aliado pontos de vida temporários iguais ao número rolado no dado + seu modificador de Carisma.",
+    feature_type: :subclass_progression,
+    action_type: :bonus_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  },
+  {
+    name: "Maneuver: Evasive Footwork",
+    slug: "battle-master-maneuver-evasive-footwork",
+    description: "Ao se mover, pode gastar um dado de superioridade, rolar o dado e adicionar o resultado à sua CA até terminar o deslocamento.",
+    feature_type: :subclass_progression,
+    action_type: :no_action,
+    recharge_type: :none,
+    resource_name: "Superiority Die",
+    source_reference: "Battle Master 3",
+    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+  }
+]
+
+fighter_battle_master_features.each do |feature_attrs|
+  unlocks = feature_attrs.delete(:unlocks)
+
+  feature = ClassFeature.find_or_initialize_by(player_class: fighter, slug: feature_attrs[:slug])
+  feature.assign_attributes(
+    feature_attrs.merge(
+      grants_spellcasting: false,
+      source_book: "PHB 2014"
+    )
+  )
+  feature.save! if feature.changed?
+
+  unlocks.each do |unlock_attrs|
+    unlock = ClassFeatureUnlock.find_or_initialize_by(class_feature: feature, level: unlock_attrs[:level])
+    unlock.assign_attributes(unlock_attrs)
+    unlock.save! if unlock.changed?
+  end
+end
