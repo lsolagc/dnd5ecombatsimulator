@@ -123,12 +123,14 @@ fighter = PlayerClass.find_by!(name: "Guerreiro")
 
 fighter_progression.each do |attrs|
   progression = ClassLevelProgression.find_or_initialize_by(player_class: fighter, level: attrs[:level])
+  next unless progression.new_record? # ClassLevelProgression freezes itself after_find; existing rows are immutable
+
   progression.assign_attributes(
     proficiency_bonus: attrs[:proficiency_bonus],
     grants_ability_score_improvement: attrs[:grants_ability_score_improvement],
     attacks_per_action: attrs[:attacks_per_action]
   )
-  progression.save! if progression.changed?
+  progression.save!
 end
 
 # Fighter core features (PHB 2014)
