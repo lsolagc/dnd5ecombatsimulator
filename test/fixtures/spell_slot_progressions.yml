@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+wizard_spellcasting_level_1:
+  class_feature: wizard_spellcasting
+  level: 1
+  cantrips_known: 3
+  spells_known: 6
+  spell_slots_1: 2
+  spell_slots_2: 0
+  spell_slots_3: 0
+  spell_slots_4: 0

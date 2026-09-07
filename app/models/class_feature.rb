@@ -1,6 +1,7 @@
 class ClassFeature < ApplicationRecord
   belongs_to :player_class
   has_many :class_feature_unlocks, dependent: :destroy
+  has_many :spell_slot_progressions, dependent: :destroy
 
   enum :feature_type, [ :core, :optional, :subclass, :subclass_progression ], prefix: true
   enum :action_type, [ :passive, :action, :bonus_action, :reaction, :no_action, :special ], prefix: true

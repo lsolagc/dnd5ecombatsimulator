@@ -1,0 +1,32 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+fire_bolt:
+  name: Fire Bolt
+  slug: fire-bolt
+  level: 0
+  school: evocation
+  description: Ranged spell attack; hurls a mote of fire at a creature or object.
+  effect_payload:
+    kind: damage
+    roll: "1d10"
+    target: target
+    damage_type: fire
+
+magic_missile:
+  name: Magic Missile
+  slug: magic-missile
+  level: 1
+  school: evocation
+  description: Creates three darts of magical force that automatically hit their target.
+  effect_payload:
+    kind: damage
+    roll: "3d4 + 3"
+    target: target
+    damage_type: force
+
+shield:
+  name: Shield
+  slug: shield
+  level: 1
+  school: abjuration
+  description: Reaction that grants +5 AC until the start of your next turn.

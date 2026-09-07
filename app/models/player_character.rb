@@ -10,9 +10,13 @@ class PlayerCharacter < ApplicationRecord
   delegate_ability_scores_to :combatant
   accepts_nested_attributes_for :combatant
 
+  has_many :player_character_spells, dependent: :destroy
+  has_many :spells, through: :player_character_spells
+
   MAX_HIT_POINTS_INPUT_CEILING = 2_147_483_647
 
   attr_accessor :max_hit_points_input
+  attr_writer :available_spell_slots
 
   validates :max_hit_points_input, numericality: {
     only_integer: true,
@@ -165,7 +169,47 @@ class PlayerCharacter < ApplicationRecord
     Combat::ActionRunner.call(action: action)
   end
 
+  def spellcasting_feature
+    player_class.class_features.find_by(grants_spellcasting: true)
+  end
+
+  def available_spell_slots
+    @available_spell_slots ||= build_available_spell_slots
+  end
+
+  def cast_spell(slug:, targets: [])
+    spell = spells.find_by!(slug: slug)
+    consume_spell_slot!(spell.level) if spell.level.positive?
+
+    action = Combat::CombatAction.new(
+      source_type: :spell,
+      source_id:   spell.id,
+      actor:       self,
+      targets:     targets
+    )
+    Combat::ActionRunner.call(action: action)
+  end
+
   private
+
+    def build_available_spell_slots
+      feature = spellcasting_feature
+      return {} unless feature
+
+      progression = feature.spell_slot_progressions
+                            .where("level <= ?", level)
+                            .order(level: :desc)
+                            .first
+
+      progression ? progression.slots_by_level : {}
+    end
+
+    def consume_spell_slot!(spell_level)
+      remaining = available_spell_slots[spell_level].to_i
+      raise "No level #{spell_level} spell slots remaining for #{name}" if remaining <= 0
+
+      available_spell_slots[spell_level] = remaining - 1
+    end
 
     def unlocked_class_feature_unlocks
       ClassFeatureUnlock

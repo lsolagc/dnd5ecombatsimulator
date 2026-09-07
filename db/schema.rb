@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_30_000000) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_06_120002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -86,6 +86,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_30_000000) do
     t.index ["combatable_type", "combatable_id"], name: "index_combatants_on_combatable"
   end
 
+  create_table "player_character_spells", force: :cascade do |t|
+    t.bigint "player_character_id", null: false
+    t.bigint "spell_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["player_character_id", "spell_id"], name: "index_pc_spells_on_character_and_spell", unique: true
+    t.index ["player_character_id"], name: "index_player_character_spells_on_player_character_id"
+    t.index ["spell_id"], name: "index_player_character_spells_on_spell_id"
+  end
+
   create_table "player_characters", force: :cascade do |t|
     t.string "name", null: false
     t.integer "level", default: 1
@@ -104,8 +114,39 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_30_000000) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "spell_slot_progressions", force: :cascade do |t|
+    t.bigint "class_feature_id", null: false
+    t.integer "level", null: false
+    t.integer "cantrips_known", default: 0, null: false
+    t.integer "spells_known", default: 0, null: false
+    t.integer "spell_slots_1", default: 0, null: false
+    t.integer "spell_slots_2", default: 0, null: false
+    t.integer "spell_slots_3", default: 0, null: false
+    t.integer "spell_slots_4", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["class_feature_id", "level"], name: "index_spell_slot_progressions_on_class_feature_id_and_level", unique: true
+    t.index ["class_feature_id"], name: "index_spell_slot_progressions_on_class_feature_id"
+  end
+
+  create_table "spells", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.integer "level", null: false
+    t.string "school", null: false
+    t.text "description", null: false
+    t.text "notes"
+    t.jsonb "effect_payload"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_spells_on_slug", unique: true
+  end
+
   add_foreign_key "class_feature_unlocks", "class_features"
   add_foreign_key "class_features", "player_classes"
   add_foreign_key "class_level_progressions", "player_classes"
+  add_foreign_key "player_character_spells", "player_characters"
+  add_foreign_key "player_character_spells", "spells"
   add_foreign_key "player_characters", "player_classes"
+  add_foreign_key "spell_slot_progressions", "class_features"
 end

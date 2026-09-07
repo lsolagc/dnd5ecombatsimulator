@@ -221,4 +221,26 @@ class PlayerCharacterTest < ActiveSupport::TestCase
 
     assert_equal character.max_hit_points - 6, character.current_hit_points, "expected the default bludgeoning type to trigger vulnerability (double damage)"
   end
+
+  # Spellcasting
+
+  test "spellcasting_feature returns the class feature that grants spellcasting" do
+    merlin = player_characters(:merlin)
+    assert_equal "spellcasting", merlin.spellcasting_feature.slug
+  end
+
+  test "spellcasting_feature is nil for a class with no spellcasting-granting feature" do
+    aragorn = player_characters(:aragorn)
+    assert_nil aragorn.spellcasting_feature
+  end
+
+  test "available_spell_slots reads from the matching SpellSlotProgression" do
+    merlin = player_characters(:merlin)
+    assert_equal({ 1 => 2, 2 => 0, 3 => 0, 4 => 0 }, merlin.available_spell_slots)
+  end
+
+  test "available_spell_slots is empty when the character has no spellcasting feature" do
+    aragorn = player_characters(:aragorn)
+    assert_equal({}, aragorn.available_spell_slots)
+  end
 end

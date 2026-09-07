@@ -700,3 +700,69 @@ fighter_battle_master_features.each do |feature_attrs|
     unlock.save! if unlock.changed?
   end
 end
+
+# Spell catalog (minimal, evocation/abjuration focus for Eldritch Knight)
+spells = [
+  {
+    name: "Fire Bolt",
+    slug: "fire-bolt",
+    level: 0,
+    school: "evocation",
+    description: "Trote de fogo lançado como ataque de magia à distância.",
+    effect_payload: { kind: "damage", roll: "1d10", target: "target", damage_type: "fire" }
+  },
+  {
+    name: "Ray of Frost",
+    slug: "ray-of-frost",
+    level: 0,
+    school: "evocation",
+    description: "Um raio de luz azul-branca gélida atinge uma criatura.",
+    effect_payload: { kind: "damage", roll: "1d8", target: "target", damage_type: "cold" }
+  },
+  {
+    name: "Chromatic Orb",
+    slug: "chromatic-orb",
+    level: 1,
+    school: "evocation",
+    description: "Arremessa uma esfera de energia contra uma criatura em um ataque de magia à distância.",
+    effect_payload: { kind: "damage", roll: "3d8", target: "target", damage_type: "force" }
+  },
+  {
+    name: "Shield",
+    slug: "shield",
+    level: 1,
+    school: "abjuration",
+    description: "Reação que concede +5 de bônus na CA até o início do seu próximo turno."
+  },
+  {
+    name: "Scorching Ray",
+    slug: "scorching-ray",
+    level: 2,
+    school: "evocation",
+    description: "Cria três raios de fogo; todos podem ser direcionados ao mesmo alvo.",
+    notes: "Simplificado para um único alvo somando o dano dos três raios (6d6); o motor de combate ainda não modela múltiplos alvos por magia.",
+    effect_payload: { kind: "damage", roll: "6d6", target: "target", damage_type: "fire" }
+  },
+  {
+    name: "Fireball",
+    slug: "fireball",
+    level: 3,
+    school: "evocation",
+    description: "Uma explosão de fogo que afeta uma área.",
+    notes: "Simplificado para um único alvo (8d6); a magia original afeta uma área e não é modelada como AoE ainda.",
+    effect_payload: { kind: "damage", roll: "8d6", target: "target", damage_type: "fire" }
+  },
+  {
+    name: "Stoneskin",
+    slug: "stoneskin",
+    level: 4,
+    school: "abjuration",
+    description: "Concede resistência a dano de armas não-mágicas para uma criatura tocada."
+  }
+]
+
+spells.each do |spell_attrs|
+  spell = Spell.find_or_initialize_by(slug: spell_attrs[:slug])
+  spell.assign_attributes(spell_attrs)
+  spell.save! if spell.changed?
+end

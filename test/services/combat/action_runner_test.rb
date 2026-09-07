@@ -52,7 +52,7 @@ class Combat::ActionRunnerTest < ActiveSupport::TestCase
 
   test "raises when source_type is unsupported" do
     action = Combat::CombatAction.new(
-      source_type: :spell,
+      source_type: :weapon_attack,
       source_id:   0,
       actor:       @fighter
     )
@@ -85,5 +85,47 @@ class Combat::ActionRunnerTest < ActiveSupport::TestCase
     assert_equal 1, results.size
     assert_equal :heal, results.first.kind
     assert results.first.hp_after > 3
+  end
+
+  test "PlayerCharacter#cast_spell delegates to ActionRunner and consumes a spell slot" do
+    merlin = player_characters(:merlin) # level 1 wizard, 2 level-1 slots
+    target = player_characters(:aragorn)
+    target.current_hit_points = 10
+
+    assert_equal 2, merlin.available_spell_slots[1]
+
+    results = merlin.cast_spell(slug: "magic-missile", targets: [ target ])
+
+    assert_equal 1, results.size
+    assert_equal :damage, results.first.kind
+    assert_equal 1, merlin.available_spell_slots[1]
+  end
+
+  test "cast_spell does not consume a slot for cantrips" do
+    merlin = player_characters(:merlin)
+    target = player_characters(:aragorn)
+    target.current_hit_points = 10
+    slots_before = merlin.available_spell_slots.dup
+
+    merlin.cast_spell(slug: "fire-bolt", targets: [ target ])
+
+    assert_equal slots_before, merlin.available_spell_slots
+  end
+
+  test "cast_spell raises when no spell slots remain for that level" do
+    merlin = player_characters(:merlin)
+    merlin.available_spell_slots = { 1 => 0 }
+
+    assert_raises(RuntimeError) do
+      merlin.cast_spell(slug: "magic-missile", targets: [ player_characters(:aragorn) ])
+    end
+  end
+
+  test "cast_spell raises when the spell has no effect_payload" do
+    merlin = player_characters(:merlin)
+
+    assert_raises(RuntimeError) do
+      merlin.cast_spell(slug: "shield")
+    end
   end
 end

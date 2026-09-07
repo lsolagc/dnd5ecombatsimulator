@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+merlin_fire_bolt:
+  player_character: merlin
+  spell: fire_bolt
+
+merlin_magic_missile:
+  player_character: merlin
+  spell: magic_missile
+
+merlin_shield:
+  player_character: merlin
+  spell: shield
