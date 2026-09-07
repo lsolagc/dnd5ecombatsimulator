@@ -766,3 +766,149 @@ spells.each do |spell_attrs|
   spell.assign_attributes(spell_attrs)
   spell.save! if spell.changed?
 end
+
+# Fighter subclass modeling: Eldritch Knight (PHB 2014)
+fighter_eldritch_knight_features = [
+  {
+    name: "Martial Archetype: Eldritch Knight",
+    slug: "martial-archetype-eldritch-knight",
+    description: "Escolha do arquétipo marcial Eldritch Knight.",
+    feature_type: :subclass,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Fighter 3",
+    unlocks: [
+      { level: 3, description: "Escolhe Eldritch Knight como arquétipo marcial." }
+    ]
+  },
+  {
+    name: "Spellcasting",
+    slug: "eldritch-knight-spellcasting",
+    description: "Amplia seu poderio marcial com a habilidade de conjurar magias de mago, focadas em abjuração e evocação.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Eldritch Knight 3",
+    grants_spellcasting: true,
+    unlocks: [
+      { level: 3, description: "Ganha acesso a truques e magias de 1º nível de mago, restritas a abjuração e evocação (algumas magias de qualquer escola nos níveis 8, 14 e 20)." }
+    ]
+  },
+  {
+    name: "Weapon Bond",
+    slug: "eldritch-knight-weapon-bond",
+    description: "Cria um vínculo mágico com até duas armas; não pode ser desarmado delas a menos que incapacitado, e pode invocar uma delas com uma ação bônus.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Eldritch Knight 3",
+    unlocks: [
+      { level: 3, description: "Realiza o ritual de vínculo com até duas armas." }
+    ]
+  },
+  {
+    name: "War Magic",
+    slug: "eldritch-knight-war-magic",
+    description: "Ao usar a ação para conjurar um truque, pode realizar um ataque com arma com uma ação bônus.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Eldritch Knight 7",
+    unlocks: [
+      { level: 7, description: "Conjurar um truque como ação permite um ataque com arma como ação bônus." }
+    ]
+  },
+  {
+    name: "Eldritch Strike",
+    slug: "eldritch-knight-eldritch-strike",
+    description: "Ao atingir uma criatura com um ataque com arma, ela fica com desvantagem no próximo teste de resistência contra uma magia sua até o final do seu próximo turno.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Eldritch Knight 10",
+    unlocks: [
+      { level: 10, description: "Um ataque com arma impõe desvantagem no próximo teste de resistência contra suas magias." }
+    ]
+  },
+  {
+    name: "Arcane Charge",
+    slug: "eldritch-knight-arcane-charge",
+    description: "Ao usar Surto de Ação, pode se teletransportar até 9 metros para um espaço desocupado que possa ver.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Eldritch Knight 15",
+    unlocks: [
+      { level: 15, description: "Teletransporte de até 9 metros ao usar Surto de Ação." }
+    ]
+  },
+  {
+    name: "Improved War Magic",
+    slug: "eldritch-knight-improved-war-magic",
+    description: "Ao usar a ação para conjurar qualquer magia, pode realizar um ataque com arma com uma ação bônus.",
+    feature_type: :subclass_progression,
+    action_type: :passive,
+    recharge_type: :none,
+    source_reference: "Eldritch Knight 18",
+    unlocks: [
+      { level: 18, description: "Conjurar qualquer magia como ação permite um ataque com arma como ação bônus." }
+    ]
+  }
+]
+
+fighter_eldritch_knight_features.each do |feature_attrs|
+  unlocks = feature_attrs.delete(:unlocks)
+  grants_spellcasting = feature_attrs.delete(:grants_spellcasting) || false
+
+  feature = ClassFeature.find_or_initialize_by(player_class: fighter, slug: feature_attrs[:slug])
+  feature.assign_attributes(
+    feature_attrs.merge(
+      grants_spellcasting: grants_spellcasting,
+      source_book: "PHB 2014"
+    )
+  )
+  feature.save! if feature.changed?
+
+  unlocks.each do |unlock_attrs|
+    unlock = ClassFeatureUnlock.find_or_initialize_by(class_feature: feature, level: unlock_attrs[:level])
+    unlock.assign_attributes(unlock_attrs)
+    unlock.save! if unlock.changed?
+  end
+end
+
+# Eldritch Knight spell slot progression (PHB 2014, "Conjuração de Cavaleiro Arcano")
+eldritch_knight_spellcasting = ClassFeature.find_by!(player_class: fighter, slug: "eldritch-knight-spellcasting")
+
+eldritch_knight_slot_table = [
+  { level: 3,  cantrips_known: 2, spells_known: 3,  slots: [ 2, 0, 0, 0 ] },
+  { level: 4,  cantrips_known: 2, spells_known: 4,  slots: [ 3, 0, 0, 0 ] },
+  { level: 5,  cantrips_known: 2, spells_known: 4,  slots: [ 3, 0, 0, 0 ] },
+  { level: 6,  cantrips_known: 2, spells_known: 4,  slots: [ 3, 0, 0, 0 ] },
+  { level: 7,  cantrips_known: 2, spells_known: 5,  slots: [ 4, 2, 0, 0 ] },
+  { level: 8,  cantrips_known: 2, spells_known: 6,  slots: [ 4, 2, 0, 0 ] },
+  { level: 9,  cantrips_known: 2, spells_known: 6,  slots: [ 4, 2, 0, 0 ] },
+  { level: 10, cantrips_known: 3, spells_known: 7,  slots: [ 4, 3, 0, 0 ] },
+  { level: 11, cantrips_known: 3, spells_known: 8,  slots: [ 4, 3, 0, 0 ] },
+  { level: 12, cantrips_known: 3, spells_known: 8,  slots: [ 4, 3, 0, 0 ] },
+  { level: 13, cantrips_known: 3, spells_known: 9,  slots: [ 4, 3, 2, 0 ] },
+  { level: 14, cantrips_known: 3, spells_known: 10, slots: [ 4, 3, 2, 0 ] },
+  { level: 15, cantrips_known: 3, spells_known: 10, slots: [ 4, 3, 2, 0 ] },
+  { level: 16, cantrips_known: 3, spells_known: 11, slots: [ 4, 3, 3, 0 ] },
+  { level: 17, cantrips_known: 3, spells_known: 11, slots: [ 4, 3, 3, 0 ] },
+  { level: 18, cantrips_known: 3, spells_known: 11, slots: [ 4, 3, 3, 0 ] },
+  { level: 19, cantrips_known: 3, spells_known: 12, slots: [ 4, 3, 3, 1 ] },
+  { level: 20, cantrips_known: 3, spells_known: 13, slots: [ 4, 3, 3, 1 ] }
+]
+
+eldritch_knight_slot_table.each do |attrs|
+  progression = SpellSlotProgression.find_or_initialize_by(class_feature: eldritch_knight_spellcasting, level: attrs[:level])
+  progression.assign_attributes(
+    cantrips_known: attrs[:cantrips_known],
+    spells_known: attrs[:spells_known],
+    spell_slots_1: attrs[:slots][0],
+    spell_slots_2: attrs[:slots][1],
+    spell_slots_3: attrs[:slots][2],
+    spell_slots_4: attrs[:slots][3]
+  )
+  progression.save! if progression.changed?
+end
