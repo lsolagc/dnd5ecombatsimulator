@@ -6,3 +6,4 @@
 * [Combatant](combatant.md) - Polymorphic in-combat participant, tracking in-combat HP.
 * [ClassFeature](class-feature.md) - Identity/base behavior of a class ability, separate from spells.
 * [ClassFeatureUnlock](class-feature-unlock.md) - Per-level unlock/scaling row; bridge to the combat effect pipeline via effect_payload.
+* [Spell, SpellSlotProgression, PlayerCharacterSpell](spell.md) - Minimal spellcasting subsystem (catalog, per-ClassFeature slot table, prepared spells) built for the Eldritch Knight.

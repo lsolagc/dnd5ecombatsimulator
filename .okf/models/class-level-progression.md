@@ -28,6 +28,12 @@ current model; [PlayerClass#progression_at](/models/player-class.md) fetches
 a single row directly by level rather than loading and sorting the whole
 table.
 
+This freeze has a consequence for `db/seeds.rb`: `find_or_initialize_by`
+returns an already-frozen record on a re-run once a row exists, so seed code
+must skip `assign_attributes`/`save!` for existing rows (`next unless
+progression.new_record?`) rather than reassigning them — a progression row
+is meant to be set once, not updated in place.
+
 Proficiency bonus follows the standard 5e table (+2 at levels 1-4, +3 at
 5-8, +4 at 9-12, +5 at 13-16, +6 at 17-20).[^progression-rb] It feeds weapon
 attack rolls; a code-implemented spell-save DC formula

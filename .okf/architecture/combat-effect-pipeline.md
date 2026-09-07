@@ -29,10 +29,18 @@ Delivered in this phase: the `CombatAction` → `EffectResolver` →
 `effect_payload` JSONB field on `class_feature_unlocks` that lets a class
 feature declare an executable effect declaratively.[^combat-pipeline-rb]
 
+A later increment (September 2026) added a minimal `:spell` source_type
+alongside `:class_feature` — see [spell.md](/models/spell.md) — proven
+end-to-end the same way Second Wind was: through `Combat::ActionRunner` and
+`PlayerCharacter#cast_spell`, with a real, enforced spell-slot resource. It
+is scoped to a single class (Fighter's Eldritch Knight): no spell lists,
+upcasting, or control conditions.
+
 Out of scope for this phase: migrating the basic attack from
-`EncounterService` onto `CombatAction`, spells and control conditions in the
-same pipeline, and full transactional resource/recharge management (Action
-Surge, Ki, spell slots).[^combat-pipeline-rb] See
+`EncounterService` onto `CombatAction`, control conditions in the pipeline,
+`CombatSimulatorService` autonomously choosing to cast a prepared spell, and
+full transactional rest-based resource/recharge management (Action Surge,
+Ki).[^combat-pipeline-rb] See
 [combat-migration-strategy.md](/architecture/combat-migration-strategy.md)
 for the phased plan that gets there.
 
