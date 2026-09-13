@@ -16,15 +16,8 @@ module Dice
 
     private
       def roll(to_hit_modifier:, advantage:, disadvantage:)
-        first = Dice.d20(modifier: to_hit_modifier)
-
-        roll_result =
-          if advantage ^ disadvantage
-            second = Dice.d20(modifier: to_hit_modifier)
-            advantage ? [ first, second ].max_by(&:total) : [ first, second ].min_by(&:total)
-          else
-            first
-          end
+        roll_result = Dice.d20(modifier: to_hit_modifier)
+        roll_result = advantage ? roll_result.with_advantage : roll_result.with_disadvantage if advantage ^ disadvantage
 
         @crit = true if roll_result.natural >= @critical_hit_threshold
         @total = roll_result.total

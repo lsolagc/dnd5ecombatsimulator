@@ -53,15 +53,16 @@ module Dice
     Dice::RollResult.new(natural: dice_rolls, total: total_roll_value)
   end
 
-  # Rola um dado d20 com modificador opcional.
+  # Rola um dado d20 com modificador opcional. O resultado sabe se re-rolar uma
+  # vez com vantagem/desvantagem (ver Dice::D20Roll#with_advantage/#with_disadvantage).
   #
   # @param modifier [Integer] Modificador a ser somado ao resultado
-  # @return [Dice::RollResult]
+  # @return [Dice::D20Roll]
   def self.d20(modifier: 0)
     roll_result = roll(dice: "1d20", modifier:)
     total = roll_result.natural + modifier
 
-    Dice::RollResult.new(natural: roll_result.natural, total:)
+    Dice::D20Roll.new(natural: roll_result.natural, total:, modifier:)
   end
 
   # Rola um dado d12 com modificador opcional.

@@ -19,18 +19,11 @@ module Combat
 
       def roll(advantage:, disadvantage:)
         modifier = @actor.public_send("#{@ability}_modifier")
-        first = Dice.d20(modifier:)
+        roll_result = Dice.d20(modifier:)
+        roll_result = advantage ? roll_result.with_advantage : roll_result.with_disadvantage if advantage ^ disadvantage
 
-        chosen =
-          if advantage ^ disadvantage
-            second = Dice.d20(modifier:)
-            advantage ? [ first, second ].max_by(&:total) : [ first, second ].min_by(&:total)
-          else
-            first
-          end
-
-        @natural = chosen.natural
-        @total = chosen.total
+        @natural = roll_result.natural
+        @total = roll_result.total
       end
   end
 end
