@@ -10,7 +10,11 @@ module Combat
   #     "roll"        => "<roll expression>",   # e.g. "1d10 + actor_level"
   #     "target"      => "self" | "target",
   #     "damage_type" => "<type>",              # optional, for :damage kind
-  #     "save"        => nil                    # reserved for future saving throws
+  #     "save"        => {                      # optional, for :heal / :damage kind
+  #       "ability"    => "<ability name>",     #   e.g. "dexterity"
+  #       "dc"         => <Integer>,
+  #       "on_success" => "half" | "negate"
+  #     }
   #   }
   class EffectInstance
     attr_reader :kind, :roll_expression, :target_type, :damage_type, :save
@@ -20,7 +24,7 @@ module Combat
       @roll_expression = roll_expression
       @target_type     = target_type.to_s
       @damage_type     = damage_type
-      @save            = save
+      @save            = save&.deep_stringify_keys
     end
 
     def self.from_payload(payload)

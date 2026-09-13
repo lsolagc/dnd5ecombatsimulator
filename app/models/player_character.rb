@@ -69,12 +69,14 @@ class PlayerCharacter < ApplicationRecord
     hit_die.to_s.delete("d").to_i
   end
 
-  def roll_an_attack
+  def roll_an_attack(advantage: false, disadvantage: false)
     Dice::AttackRoll.new(
       to_hit_modifier: attack_bonus,
       damage_dice: damage_roll,
       damage_modifier: strength_modifier,
-      critical_hit_threshold: critical_hit_threshold
+      critical_hit_threshold: critical_hit_threshold,
+      advantage: advantage,
+      disadvantage: disadvantage
     )
   end
 

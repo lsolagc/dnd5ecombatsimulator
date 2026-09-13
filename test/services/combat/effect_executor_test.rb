@@ -86,4 +86,67 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
       Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: @fighter)
     end
   end
+
+  test "damage effect with a save applies full damage when the target fails" do
+    Random.srand(1) # 1d10 roll = 6, target's dexterity save total = 13
+    effect = Combat::EffectInstance.new(
+      kind: :damage,
+      roll_expression: "1d10",
+      target_type: "target",
+      save: { "ability" => "dexterity", "dc" => 20, "on_success" => "half" }
+    )
+    target = player_characters(:aragorn_copy)
+    target.current_hit_points = target.max_hit_points
+
+    result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target)
+
+    refute result.saving_throw.success
+    assert_equal 6, result.amount
+    assert_includes result.message, "fails the dexterity save"
+  end
+
+  test "damage effect with a save applies half damage when the target succeeds" do
+    Random.srand(1) # 1d10 roll = 6, target's dexterity save total = 13
+    effect = Combat::EffectInstance.new(
+      kind: :damage,
+      roll_expression: "1d10",
+      target_type: "target",
+      save: { "ability" => "dexterity", "dc" => 5, "on_success" => "half" }
+    )
+    target = player_characters(:aragorn_copy)
+    target.current_hit_points = target.max_hit_points
+
+    result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target)
+
+    assert result.saving_throw.success
+    assert_equal 3, result.amount
+    assert_includes result.message, "succeeds the dexterity save"
+  end
+
+  test "damage effect with a save negates damage entirely on success" do
+    Random.srand(1) # 1d10 roll = 6, target's dexterity save total = 13
+    effect = Combat::EffectInstance.new(
+      kind: :damage,
+      roll_expression: "1d10",
+      target_type: "target",
+      save: { "ability" => "dexterity", "dc" => 5, "on_success" => "negate" }
+    )
+    target = player_characters(:aragorn_copy)
+    hp_before = target.current_hit_points = target.max_hit_points
+
+    result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target)
+
+    assert result.saving_throw.success
+    assert_equal 0, result.amount
+    assert_equal hp_before, result.hp_after
+  end
+
+  test "heal effect without a save leaves saving_throw nil" do
+    Random.srand(1)
+    effect = Combat::EffectInstance.new(kind: :heal, roll_expression: "1d4", target_type: "self")
+
+    result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: @fighter)
+
+    assert_nil result.saving_throw
+  end
 end
