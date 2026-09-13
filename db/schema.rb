@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_06_120002) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_13_162152) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -46,8 +46,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_06_120002) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "subclass_marker_id"
     t.index ["player_class_id", "slug"], name: "index_class_features_on_player_class_id_and_slug", unique: true
     t.index ["player_class_id"], name: "index_class_features_on_player_class_id"
+    t.index ["subclass_marker_id"], name: "index_class_features_on_subclass_marker_id"
   end
 
   create_table "class_level_progressions", force: :cascade do |t|
@@ -102,6 +104,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_06_120002) do
     t.bigint "player_class_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "martial_archetype_id"
+    t.index ["martial_archetype_id"], name: "index_player_characters_on_martial_archetype_id"
     t.index ["player_class_id"], name: "index_player_characters_on_player_class_id"
   end
 
@@ -143,10 +147,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_06_120002) do
   end
 
   add_foreign_key "class_feature_unlocks", "class_features"
+  add_foreign_key "class_features", "class_features", column: "subclass_marker_id"
   add_foreign_key "class_features", "player_classes"
   add_foreign_key "class_level_progressions", "player_classes"
   add_foreign_key "player_character_spells", "player_characters"
   add_foreign_key "player_character_spells", "spells"
+  add_foreign_key "player_characters", "class_features", column: "martial_archetype_id"
   add_foreign_key "player_characters", "player_classes"
   add_foreign_key "spell_slot_progressions", "class_features"
 end

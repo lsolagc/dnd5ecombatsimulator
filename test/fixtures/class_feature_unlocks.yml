@@ -73,6 +73,26 @@ champion_survivor_level_18:
       current_hp_gt: 0
       current_hp_lte_max_hp_fraction: 0.5
 
+battle_master_archetype_level_3:
+  class_feature: fighter_battle_master_archetype
+  level: 3
+  description: Select Battle Master as your martial archetype.
+
+battle_master_combat_superiority_level_3:
+  class_feature: fighter_battle_master_combat_superiority
+  level: 3
+  description: Gain superiority dice and learn three maneuvers.
+
+eldritch_knight_archetype_level_3:
+  class_feature: fighter_eldritch_knight_archetype
+  level: 3
+  description: Select Eldritch Knight as your martial archetype.
+
+eldritch_knight_spellcasting_level_3:
+  class_feature: fighter_eldritch_knight_spellcasting
+  level: 3
+  description: Learn wizard cantrips and spells.
+
 wizard_spellcasting_level_1:
   class_feature: wizard_spellcasting
   level: 1

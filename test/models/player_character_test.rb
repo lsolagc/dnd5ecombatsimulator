@@ -76,14 +76,16 @@ class PlayerCharacterTest < ActiveSupport::TestCase
 
   test "critical_hit_threshold is 18 when Superior Critical is unlocked" do
     fighter = player_classes(:fighter)
-    character = PlayerCharacter.create!(name: "Champion 15", level: 15, player_class: fighter)
+    character = PlayerCharacter.create!(name: "Champion 15", level: 15, player_class: fighter,
+                                         martial_archetype: class_features(:fighter_champion_archetype))
 
     assert_equal 18, character.critical_hit_threshold
   end
 
   test "passive_effect_payloads returns only turn_start passives for current level" do
     fighter = player_classes(:fighter)
-    character = PlayerCharacter.create!(name: "Champion 18 Passive List", level: 18, player_class: fighter)
+    character = PlayerCharacter.create!(name: "Champion 18 Passive List", level: 18, player_class: fighter,
+                                         martial_archetype: class_features(:fighter_champion_archetype))
 
     payloads = character.passive_effect_payloads(trigger: "turn_start")
 
@@ -94,7 +96,8 @@ class PlayerCharacterTest < ActiveSupport::TestCase
 
   test "passive_effect_payloads returns always-on modifier payloads" do
     fighter = player_classes(:fighter)
-    character = PlayerCharacter.create!(name: "Champion 15 Passive Mod", level: 15, player_class: fighter)
+    character = PlayerCharacter.create!(name: "Champion 15 Passive Mod", level: 15, player_class: fighter,
+                                         martial_archetype: class_features(:fighter_champion_archetype))
 
     payloads = character.passive_effect_payloads(trigger: "always")
     modifiers = payloads.select { |payload| payload["kind"] == "modifier" }
@@ -105,7 +108,8 @@ class PlayerCharacterTest < ActiveSupport::TestCase
 
   test "apply_start_of_turn_passives! heals with Survivor when eligible" do
     fighter = player_classes(:fighter)
-    character = PlayerCharacter.create!(name: "Champion 18", level: 18, player_class: fighter)
+    character = PlayerCharacter.create!(name: "Champion 18", level: 18, player_class: fighter,
+                                         martial_archetype: class_features(:fighter_champion_archetype))
 
     character.current_hit_points = [ (character.max_hit_points / 2), 1 ].max
     results = character.apply_start_of_turn_passives!

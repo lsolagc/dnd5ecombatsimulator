@@ -408,6 +408,7 @@ fighter_champion_features = [
   }
 ]
 
+champion_marker = nil
 fighter_champion_features.each do |feature_attrs|
   unlocks = feature_attrs.delete(:unlocks)
 
@@ -415,10 +416,12 @@ fighter_champion_features.each do |feature_attrs|
   feature.assign_attributes(
     feature_attrs.merge(
       grants_spellcasting: false,
-      source_book: "PHB 2014"
+      source_book: "PHB 2014",
+      subclass_marker: (champion_marker if feature_attrs[:feature_type] == :subclass_progression)
     )
   )
   feature.save! if feature.changed?
+  champion_marker = feature if feature_attrs[:feature_type] == :subclass
 
   unlocks.each do |unlock_attrs|
     unlock = ClassFeatureUnlock.find_or_initialize_by(class_feature: feature, level: unlock_attrs[:level])
@@ -684,6 +687,7 @@ fighter_battle_master_features = [
   }
 ]
 
+battle_master_marker = nil
 fighter_battle_master_features.each do |feature_attrs|
   unlocks = feature_attrs.delete(:unlocks)
 
@@ -691,10 +695,12 @@ fighter_battle_master_features.each do |feature_attrs|
   feature.assign_attributes(
     feature_attrs.merge(
       grants_spellcasting: false,
-      source_book: "PHB 2014"
+      source_book: "PHB 2014",
+      subclass_marker: (battle_master_marker if feature_attrs[:feature_type] == :subclass_progression)
     )
   )
   feature.save! if feature.changed?
+  battle_master_marker = feature if feature_attrs[:feature_type] == :subclass
 
   unlocks.each do |unlock_attrs|
     unlock = ClassFeatureUnlock.find_or_initialize_by(class_feature: feature, level: unlock_attrs[:level])
@@ -858,6 +864,7 @@ fighter_eldritch_knight_features = [
   }
 ]
 
+eldritch_knight_marker = nil
 fighter_eldritch_knight_features.each do |feature_attrs|
   unlocks = feature_attrs.delete(:unlocks)
   grants_spellcasting = feature_attrs.delete(:grants_spellcasting) || false
@@ -866,10 +873,12 @@ fighter_eldritch_knight_features.each do |feature_attrs|
   feature.assign_attributes(
     feature_attrs.merge(
       grants_spellcasting: grants_spellcasting,
-      source_book: "PHB 2014"
+      source_book: "PHB 2014",
+      subclass_marker: (eldritch_knight_marker if feature_attrs[:feature_type] == :subclass_progression)
     )
   )
   feature.save! if feature.changed?
+  eldritch_knight_marker = feature if feature_attrs[:feature_type] == :subclass
 
   unlocks.each do |unlock_attrs|
     unlock = ClassFeatureUnlock.find_or_initialize_by(class_feature: feature, level: unlock_attrs[:level])

@@ -38,6 +38,7 @@ fighter_champion_archetype:
 
 fighter_champion_improved_critical:
   player_class: fighter
+  subclass_marker: fighter_champion_archetype
   name: Improved Critical
   slug: champion-improved-critical
   description: Your weapon attacks score a critical hit on a roll of 19 or 20.
@@ -50,6 +51,7 @@ fighter_champion_improved_critical:
 
 fighter_champion_remarkable_athlete:
   player_class: fighter
+  subclass_marker: fighter_champion_archetype
   name: Remarkable Athlete
   slug: champion-remarkable-athlete
   description: Add half proficiency to STR, DEX and CON checks without proficiency and improve long jumps.
@@ -62,6 +64,7 @@ fighter_champion_remarkable_athlete:
 
 fighter_champion_additional_fighting_style:
   player_class: fighter
+  subclass_marker: fighter_champion_archetype
   name: Additional Fighting Style
   slug: champion-additional-fighting-style
   description: You can choose a second Fighting Style.
@@ -74,6 +77,7 @@ fighter_champion_additional_fighting_style:
 
 fighter_champion_superior_critical:
   player_class: fighter
+  subclass_marker: fighter_champion_archetype
   name: Superior Critical
   slug: champion-superior-critical
   description: Your weapon attacks score a critical hit on a roll of 18 to 20.
@@ -86,6 +90,7 @@ fighter_champion_superior_critical:
 
 fighter_champion_survivor:
   player_class: fighter
+  subclass_marker: fighter_champion_archetype
   name: Survivor
   slug: champion-survivor
   description: At the start of each turn, regain 5 + CON modifier HP if below half HP and not at 0 HP.
@@ -95,6 +100,56 @@ fighter_champion_survivor:
   grants_spellcasting: false
   source_book: PHB 2014
   source_reference: Champion 18
+
+fighter_battle_master_archetype:
+  player_class: fighter
+  name: "Martial Archetype: Battle Master"
+  slug: martial-archetype-battle-master
+  description: Select Battle Master as your martial archetype.
+  feature_type: subclass
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Fighter 3
+
+fighter_battle_master_combat_superiority:
+  player_class: fighter
+  subclass_marker: fighter_battle_master_archetype
+  name: Combat Superiority
+  slug: battle-master-combat-superiority
+  description: Gain superiority dice and learn maneuvers.
+  feature_type: subclass_progression
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Battle Master 3
+
+fighter_eldritch_knight_archetype:
+  player_class: fighter
+  name: "Martial Archetype: Eldritch Knight"
+  slug: martial-archetype-eldritch-knight
+  description: Select Eldritch Knight as your martial archetype.
+  feature_type: subclass
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Fighter 3
+
+fighter_eldritch_knight_spellcasting:
+  player_class: fighter
+  subclass_marker: fighter_eldritch_knight_archetype
+  name: Spellcasting
+  slug: eldritch-knight-spellcasting
+  description: Access to a limited selection of wizard spells.
+  feature_type: subclass_progression
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: true
+  source_book: PHB 2014
+  source_reference: Eldritch Knight 3
 
 wizard_spellcasting:
   player_class: wizard

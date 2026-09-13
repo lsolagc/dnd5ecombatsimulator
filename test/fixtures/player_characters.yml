@@ -28,4 +28,28 @@ thorin:
   name: Thorin
   level: 5
   player_class: fighter
+  martial_archetype: fighter_champion_archetype
   # max_hit_points: proficiency_bonus +3 at level 5
+
+champion_seven:
+  name: Champion Seven
+  level: 7
+  player_class: fighter
+  martial_archetype: fighter_champion_archetype
+
+battle_master_seven:
+  name: Battle Master Seven
+  level: 7
+  player_class: fighter
+  martial_archetype: fighter_battle_master_archetype
+
+eldritch_knight_seven:
+  name: Eldritch Knight Seven
+  level: 7
+  player_class: fighter
+  martial_archetype: fighter_eldritch_knight_archetype
+
+fighter_no_archetype_seven:
+  name: Fighter No Archetype Seven
+  level: 7
+  player_class: fighter

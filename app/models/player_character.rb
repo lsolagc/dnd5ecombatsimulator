@@ -3,7 +3,10 @@ class PlayerCharacter < ApplicationRecord
   include CombatantBehavior
 
   belongs_to :player_class
+  belongs_to :martial_archetype, class_name: "ClassFeature", optional: true
   delegate :hit_die, :spellcasting_modifier, to: :player_class
+
+  validate :martial_archetype_matches_player_class
 
   has_one :combatant, as: :combatable, touch: true
   behave_as_combatant
@@ -170,7 +173,10 @@ class PlayerCharacter < ApplicationRecord
   end
 
   def spellcasting_feature
-    player_class.class_features.find_by(grants_spellcasting: true)
+    feature = player_class.class_features.find_by(grants_spellcasting: true)
+    return nil unless feature && ClassFeature.visible_for?(feature, martial_archetype: martial_archetype)
+
+    feature
   end
 
   def available_spell_slots
@@ -217,6 +223,17 @@ class PlayerCharacter < ApplicationRecord
         .includes(:class_feature)
         .where(class_features: { player_class_id: player_class_id })
         .where("class_feature_unlocks.level <= ?", level)
+        .select { |unlock| ClassFeature.visible_for?(unlock.class_feature, martial_archetype: martial_archetype) }
+    end
+
+    def martial_archetype_matches_player_class
+      return unless martial_archetype
+
+      errors.add(:martial_archetype, "must be a subclass-type class feature") unless martial_archetype.feature_type_subclass?
+
+      if martial_archetype.player_class_id != player_class_id
+        errors.add(:martial_archetype, "must belong to the character's class")
+      end
     end
 
     def apply_turn_passives!(trigger:)

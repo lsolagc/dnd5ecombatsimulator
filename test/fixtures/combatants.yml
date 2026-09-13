@@ -68,3 +68,55 @@ thorin_combatant:
   proficiency_bonus: 3
   max_hit_points: 52
   combatable: thorin (PlayerCharacter)
+
+champion_seven_combatant:
+  armor_class: 16
+  strength: 17
+  dexterity: 12
+  constitution: 14
+  intelligence: 10
+  wisdom: 10
+  charisma: 8
+  speed: 30
+  proficiency_bonus: 3
+  max_hit_points: 58
+  combatable: champion_seven (PlayerCharacter)
+
+battle_master_seven_combatant:
+  armor_class: 16
+  strength: 17
+  dexterity: 12
+  constitution: 14
+  intelligence: 10
+  wisdom: 10
+  charisma: 8
+  speed: 30
+  proficiency_bonus: 3
+  max_hit_points: 58
+  combatable: battle_master_seven (PlayerCharacter)
+
+eldritch_knight_seven_combatant:
+  armor_class: 16
+  strength: 17
+  dexterity: 12
+  constitution: 14
+  intelligence: 10
+  wisdom: 10
+  charisma: 8
+  speed: 30
+  proficiency_bonus: 3
+  max_hit_points: 58
+  combatable: eldritch_knight_seven (PlayerCharacter)
+
+fighter_no_archetype_seven_combatant:
+  armor_class: 16
+  strength: 17
+  dexterity: 12
+  constitution: 14
+  intelligence: 10
+  wisdom: 10
+  charisma: 8
+  speed: 30
+  proficiency_bonus: 3
+  max_hit_points: 58
+  combatable: fighter_no_archetype_seven (PlayerCharacter)
