@@ -31,10 +31,11 @@ class ClassFeature < ApplicationRecord
 
   ##
   # Whether +feature+ should be visible to a character with the given +martial_archetype+
-  # choice (a ClassFeature of feature_type :subclass, or nil). Non-subclass features (core,
-  # optional) are always visible; subclass and subclass_progression features require the
-  # character to have chosen the matching archetype.
-  def self.visible_for?(feature, martial_archetype:)
+  # and +fighting_style+ choices. Core features are always visible; optional features (e.g.
+  # Fighting Styles) require the character to have chosen that exact feature; subclass and
+  # subclass_progression features require the character to have chosen the matching archetype.
+  def self.visible_for?(feature, martial_archetype:, fighting_style: nil)
+    return feature.id == fighting_style&.id if feature.feature_type_optional?
     return true unless feature.feature_type_subclass? || feature.feature_type_subclass_progression?
     return false if martial_archetype.nil?
 

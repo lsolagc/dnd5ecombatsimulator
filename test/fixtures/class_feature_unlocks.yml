@@ -25,6 +25,36 @@ action_surge_level_17:
   recharge_type: short_or_long_rest
   description: You can use Action Surge twice between rests, but only once on the same turn.
 
+fighting_style_archery_level_1:
+  class_feature: fighter_fighting_style_archery
+  level: 1
+  description: Gain +2 to attack rolls made with ranged weapons.
+  effect_payload:
+    kind: modifier
+    trigger: always
+    modifier: attack_bonus
+    value: 2
+
+fighting_style_defense_level_1:
+  class_feature: fighter_fighting_style_defense
+  level: 1
+  description: Gain +1 to Armor Class while wearing armor.
+  effect_payload:
+    kind: modifier
+    trigger: always
+    modifier: armor_class
+    value: 1
+
+fighting_style_dueling_level_1:
+  class_feature: fighter_fighting_style_dueling
+  level: 1
+  description: Gain +2 to damage rolls while wielding a one-handed melee weapon and no other weapon.
+  effect_payload:
+    kind: modifier
+    trigger: always
+    modifier: damage_bonus
+    value: 2
+
 champion_archetype_level_3:
   class_feature: fighter_champion_archetype
   level: 3

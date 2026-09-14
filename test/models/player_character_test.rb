@@ -190,6 +190,36 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     assert attack_roll.total <= 20
   end
 
+  test "armor_class includes the +1 bonus from Fighting Style: Defense" do
+    character = player_characters(:fighter_defender)
+
+    assert_equal character.combatant.armor_class + 1, character.armor_class
+  end
+
+  test "armor_class has no bonus without a chosen fighting style" do
+    character = player_characters(:aragorn)
+
+    assert_equal character.combatant.armor_class, character.armor_class
+  end
+
+  test "roll_an_attack applies the +2 to-hit bonus from Fighting Style: Archery" do
+    character = player_characters(:fighter_archer)
+    character.combatant.update!(attack_bonus: 100)
+
+    attack_roll = character.roll_an_attack
+
+    assert attack_roll.total >= 103 # 100 (configured) + 2 (Archery) + 1 (minimum d20 roll)
+  end
+
+  test "roll_an_attack applies the +2 damage bonus from Fighting Style: Dueling" do
+    duelist = player_characters(:fighter_duelist)
+    duelist.combatant.update!(damage_dice: "1d1")
+    no_style = player_characters(:aragorn)
+    no_style.combatant.update!(damage_dice: "1d1")
+
+    assert_equal no_style.roll_an_attack.damage + 2, duelist.roll_an_attack.damage
+  end
+
   test "damage_roll returns the combatant's configured damage_dice" do
     character = player_characters(:aragorn)
     character.combatant.update!(damage_dice: "1d8+3")

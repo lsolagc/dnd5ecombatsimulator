@@ -24,6 +24,42 @@ fighter_action_surge:
   source_book: PHB 2014
   source_reference: Fighter 2
 
+fighter_fighting_style_archery:
+  player_class: fighter
+  name: "Fighting Style: Archery"
+  slug: fighting-style-archery
+  description: Gain +2 to attack rolls made with ranged weapons.
+  feature_type: optional
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Fighter 1
+
+fighter_fighting_style_defense:
+  player_class: fighter
+  name: "Fighting Style: Defense"
+  slug: fighting-style-defense
+  description: Gain +1 to Armor Class while wearing armor.
+  feature_type: optional
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Fighter 1
+
+fighter_fighting_style_dueling:
+  player_class: fighter
+  name: "Fighting Style: Dueling"
+  slug: fighting-style-dueling
+  description: Gain +2 to damage rolls while wielding a one-handed melee weapon and no other weapon.
+  feature_type: optional
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Fighter 1
+
 fighter_champion_archetype:
   player_class: fighter
   name: "Martial Archetype: Champion"

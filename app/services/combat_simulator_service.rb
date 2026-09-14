@@ -283,7 +283,7 @@ class CombatSimulatorService
                   .includes(:class_feature)
                   .where(class_features: { player_class_id: combatant.player_class_id })
                   .where("class_feature_unlocks.level <= ?", combatant.level)
-                  .select { |unlock| ClassFeature.visible_for?(unlock.class_feature, martial_archetype: combatant.martial_archetype) }
+                  .select { |unlock| ClassFeature.visible_for?(unlock.class_feature, martial_archetype: combatant.martial_archetype, fighting_style: combatant.fighting_style) }
 
       unlocks
         .group_by(&:class_feature_id)

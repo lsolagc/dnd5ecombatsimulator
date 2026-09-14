@@ -233,17 +233,23 @@ fighter_fighting_styles = [
   {
     name: "Fighting Style: Archery",
     slug: "fighting-style-archery",
-    description: "Ganha +2 de bônus nas jogadas de ataque realizadas com armas de ataque à distância."
+    description: "Ganha +2 de bônus nas jogadas de ataque realizadas com armas de ataque à distância.",
+    effect_payload: { kind: "modifier", trigger: "always", modifier: "attack_bonus", value: 2 },
+    notes: "Aplicado a todo ataque (não só à distância) porque o motor não distingue arma corpo-a-corpo de arma à distância."
   },
   {
     name: "Fighting Style: Defense",
     slug: "fighting-style-defense",
-    description: "Ganha +1 de bônus na Classe de Armadura enquanto estiver usando armadura."
+    description: "Ganha +1 de bônus na Classe de Armadura enquanto estiver usando armadura.",
+    effect_payload: { kind: "modifier", trigger: "always", modifier: "armor_class", value: 1 },
+    notes: "Aplicado incondicionalmente porque o uso de armadura não é rastreado pelo motor."
   },
   {
     name: "Fighting Style: Dueling",
     slug: "fighting-style-dueling",
-    description: "Ganha +2 de bônus nas jogadas de dano ao empunhar uma arma corpo-a-corpo em uma mão e nenhuma outra arma."
+    description: "Ganha +2 de bônus nas jogadas de dano ao empunhar uma arma corpo-a-corpo em uma mão e nenhuma outra arma.",
+    effect_payload: { kind: "modifier", trigger: "always", modifier: "damage_bonus", value: 2 },
+    notes: "Aplicado independente de quantas armas o personagem empunha, pois isso não é rastreado pelo motor."
   },
   {
     name: "Fighting Style: Great Weapon Fighting",
@@ -261,12 +267,18 @@ fighter_fighting_styles = [
     description: "Ao lutar com duas armas, pode adicionar seu modificador de habilidade de dano na jogada de dano do segundo ataque."
   }
 ].map do |attrs|
+  effect_payload = attrs.delete(:effect_payload)
+  notes = attrs.delete(:notes)
+  unlock = { level: 1, description: attrs[:description] }
+  unlock[:effect_payload] = effect_payload if effect_payload
+  unlock[:notes] = notes if notes
+
   attrs.merge(
-    feature_type: :core,
+    feature_type: :optional,
     action_type: :passive,
     recharge_type: :none,
     source_reference: "Fighter 1",
-    unlocks: [ { level: 1, description: attrs[:description] } ]
+    unlocks: [ unlock ]
   )
 end
 

@@ -24,6 +24,24 @@ elora:
   player_class: cleric
   # max_hit_points: 10 (d8 + 2 CON)
 
+fighter_archer:
+  name: Fighter Archer
+  level: 1
+  player_class: fighter
+  fighting_style: fighter_fighting_style_archery
+
+fighter_defender:
+  name: Fighter Defender
+  level: 1
+  player_class: fighter
+  fighting_style: fighter_fighting_style_defense
+
+fighter_duelist:
+  name: Fighter Duelist
+  level: 1
+  player_class: fighter
+  fighting_style: fighter_fighting_style_dueling
+
 thorin:
   name: Thorin
   level: 5

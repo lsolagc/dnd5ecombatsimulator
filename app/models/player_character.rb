@@ -4,9 +4,11 @@ class PlayerCharacter < ApplicationRecord
 
   belongs_to :player_class
   belongs_to :martial_archetype, class_name: "ClassFeature", optional: true
+  belongs_to :fighting_style, class_name: "ClassFeature", optional: true
   delegate :hit_die, :spellcasting_modifier, to: :player_class
 
   validate :martial_archetype_matches_player_class
+  validate :fighting_style_matches_player_class
 
   has_one :combatant, as: :combatable, touch: true
   behave_as_combatant
@@ -71,13 +73,17 @@ class PlayerCharacter < ApplicationRecord
 
   def roll_an_attack(advantage: false, disadvantage: false)
     Dice::AttackRoll.new(
-      to_hit_modifier: attack_bonus,
+      to_hit_modifier: attack_bonus + modifier_bonus("attack_bonus"),
       damage_dice: damage_roll,
-      damage_modifier: strength_modifier,
+      damage_modifier: strength_modifier + modifier_bonus("damage_bonus"),
       critical_hit_threshold: critical_hit_threshold,
       advantage: advantage,
       disadvantage: disadvantage
     )
+  end
+
+  def armor_class
+    combatant.armor_class + modifier_bonus("armor_class")
   end
 
   def critical_hit_threshold
@@ -176,7 +182,7 @@ class PlayerCharacter < ApplicationRecord
 
   def spellcasting_feature
     feature = player_class.class_features.find_by(grants_spellcasting: true)
-    return nil unless feature && ClassFeature.visible_for?(feature, martial_archetype: martial_archetype)
+    return nil unless feature && ClassFeature.visible_for?(feature, martial_archetype: martial_archetype, fighting_style: fighting_style)
 
     feature
   end
@@ -225,7 +231,13 @@ class PlayerCharacter < ApplicationRecord
         .includes(:class_feature)
         .where(class_features: { player_class_id: player_class_id })
         .where("class_feature_unlocks.level <= ?", level)
-        .select { |unlock| ClassFeature.visible_for?(unlock.class_feature, martial_archetype: martial_archetype) }
+        .select { |unlock| ClassFeature.visible_for?(unlock.class_feature, martial_archetype: martial_archetype, fighting_style: fighting_style) }
+    end
+
+    def modifier_bonus(name)
+      passive_effect_payloads(trigger: "always")
+        .select { |payload| payload["kind"] == "modifier" && payload["modifier"] == name }
+        .sum { |payload| payload["value"].to_i }
     end
 
     def martial_archetype_matches_player_class
@@ -235,6 +247,16 @@ class PlayerCharacter < ApplicationRecord
 
       if martial_archetype.player_class_id != player_class_id
         errors.add(:martial_archetype, "must belong to the character's class")
+      end
+    end
+
+    def fighting_style_matches_player_class
+      return unless fighting_style
+
+      errors.add(:fighting_style, "must be an optional-type class feature") unless fighting_style.feature_type_optional?
+
+      if fighting_style.player_class_id != player_class_id
+        errors.add(:fighting_style, "must belong to the character's class")
       end
     end
 
