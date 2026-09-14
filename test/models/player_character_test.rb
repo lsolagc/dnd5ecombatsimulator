@@ -203,12 +203,16 @@ class PlayerCharacterTest < ActiveSupport::TestCase
   end
 
   test "roll_an_attack applies the +2 to-hit bonus from Fighting Style: Archery" do
-    character = player_characters(:fighter_archer)
-    character.combatant.update!(attack_bonus: 100)
+    archer = player_characters(:fighter_archer)
+    no_style = player_characters(:aragorn)
 
-    attack_roll = character.roll_an_attack
+    Random.srand(42) # to-hit natural: 7 (no crit)
+    archer_total = archer.roll_an_attack.total
 
-    assert attack_roll.total >= 103 # 100 (configured) + 2 (Archery) + 1 (minimum d20 roll)
+    Random.srand(42) # same natural roll again, so Archery's bonus is the only difference
+    no_style_total = no_style.roll_an_attack.total
+
+    assert_equal no_style_total + 2, archer_total
   end
 
   test "roll_an_attack applies the +2 damage bonus from Fighting Style: Dueling" do
@@ -217,7 +221,13 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     no_style = player_characters(:aragorn)
     no_style.combatant.update!(damage_dice: "1d1")
 
-    assert_equal no_style.roll_an_attack.damage + 2, duelist.roll_an_attack.damage
+    Random.srand(42) # to-hit natural: 7 (no crit), so damage isn't doubled
+    duelist_damage = duelist.roll_an_attack.damage
+
+    Random.srand(42) # same rolls again, so Dueling's bonus is the only difference
+    no_style_damage = no_style.roll_an_attack.damage
+
+    assert_equal no_style_damage + 2, duelist_damage
   end
 
   test "damage_roll returns the combatant's configured damage_dice" do
