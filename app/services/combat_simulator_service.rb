@@ -103,15 +103,36 @@ class CombatSimulatorService
         next if actor.dead?
         break if combat_over?
 
-        available = available_actions_for(actor:)
-        next if available.empty?
+        start_log = turn_passive_log(actor:, trigger: :turn_start, round_number:, turn_index: turn_index + 1)
+        turns << start_log if start_log
+        next if actor.dead?
 
-        chosen_action = available.sample(random: @rng)
-        turn_log = execute_action(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
-        turns << turn_log
+        available = available_actions_for(actor:)
+        unless available.empty?
+          chosen_action = available.sample(random: @rng)
+          turns << execute_action(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
+        end
+
+        end_log = turn_passive_log(actor:, trigger: :turn_end, round_number:, turn_index: turn_index + 1)
+        turns << end_log if end_log
       end
 
       turns
+    end
+
+    def turn_passive_log(actor:, trigger:, round_number:, turn_index:)
+      results = trigger == :turn_start ? actor.apply_start_of_turn_passives! : actor.apply_end_of_turn_passives!
+      return nil if results.empty?
+
+      {
+        round: round_number,
+        turn: turn_index,
+        actor_id: actor.id,
+        actor_name: actor.name,
+        actor_party: party_for(actor),
+        action: { type: :turn_passive, trigger: trigger.to_s },
+        results: serialize_effect_results(results:)
+      }
     end
 
     def available_actions_for(actor:)

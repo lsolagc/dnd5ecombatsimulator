@@ -53,3 +53,9 @@ fighter_no_archetype_seven:
   name: Fighter No Archetype Seven
   level: 7
   player_class: fighter
+
+champion_eighteen:
+  name: Champion Eighteen
+  level: 18
+  player_class: fighter
+  martial_archetype: fighter_champion_archetype

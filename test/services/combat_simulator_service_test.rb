@@ -64,6 +64,26 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_equal 1, result[:total_rounds]
   end
 
+  test "Survivor heals a Champion at half HP or below at the start of their turn" do
+    champion = fresh_character(:champion_eighteen)
+    champion.current_hit_points = champion.max_hit_points / 2
+    starting_hit_points = champion.current_hit_points
+
+    result = CombatSimulatorService.new(
+      party_one: [ champion ],
+      party_two: [ fresh_character(:aragorn) ],
+      seed: 99,
+      max_rounds: 1
+    ).call
+
+    passive_entries = result[:round_log].flat_map { |round| round[:turns] }
+      .select { |turn| turn[:actor_id] == champion.id && turn.dig(:action, :type) == :turn_passive && turn.dig(:action, :trigger) == "turn_start" }
+
+    assert_equal 1, passive_entries.size
+    assert_equal :heal, passive_entries.first[:results].first[:kind]
+    assert_operator champion.current_hit_points, :>, starting_hit_points
+  end
+
   test "non integer uses values are floored" do
     service = CombatSimulatorService.new(
       party_one: [ fresh_character(:merlin) ],

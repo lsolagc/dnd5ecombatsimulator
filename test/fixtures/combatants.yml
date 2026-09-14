@@ -120,3 +120,16 @@ fighter_no_archetype_seven_combatant:
   proficiency_bonus: 3
   max_hit_points: 58
   combatable: fighter_no_archetype_seven (PlayerCharacter)
+
+champion_eighteen_combatant:
+  armor_class: 18
+  strength: 20
+  dexterity: 12
+  constitution: 14
+  intelligence: 10
+  wisdom: 10
+  charisma: 8
+  speed: 30
+  proficiency_bonus: 6
+  max_hit_points: 148
+  combatable: champion_eighteen (PlayerCharacter)
