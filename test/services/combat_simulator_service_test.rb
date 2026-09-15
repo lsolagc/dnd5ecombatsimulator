@@ -84,6 +84,43 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_operator champion.current_hit_points, :>, starting_hit_points
   end
 
+  test "Precision Attack maneuver consumes a superiority die, adds its roll to damage, and disappears once dice are spent" do
+    battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
+    target = fresh_character(:aragorn)
+
+    service = CombatSimulatorService.new(party_one: [ battle_master ], party_two: [ target ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+
+    maneuver_action = precision_attack_action(service:, actor: battle_master)
+    assert maneuver_action, "expected Precision Attack to be available to a Battle Master who knows it"
+    assert_equal 4, maneuver_action[:uses_remaining]
+
+    Random.srand(1) # 1d8 natural roll: 6
+    turn = service.send(:execute_class_feature_action, actor: battle_master, chosen_action: maneuver_action, round_number: 1, turn_index: 1)
+
+    damage_result = turn[:results].first
+    assert_equal :damage, damage_result[:kind]
+    assert_equal 6, damage_result[:amount]
+
+    remaining_action = precision_attack_action(service:, actor: battle_master)
+    assert_equal 3, remaining_action[:uses_remaining]
+
+    combat_superiority_id = class_features(:fighter_battle_master_combat_superiority).id
+    service.send(:instance_variable_get, :@uses_remaining)[battle_master.id][combat_superiority_id] = 0
+
+    assert_nil precision_attack_action(service:, actor: battle_master)
+  end
+
+  test "a Battle Master who does not know Precision Attack does not see it as an available action" do
+    battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
+    battle_master.player_character_maneuvers.destroy_all
+
+    service = CombatSimulatorService.new(party_one: [ battle_master ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+
+    assert_nil precision_attack_action(service:, actor: battle_master)
+  end
+
   test "non integer uses values are floored" do
     service = CombatSimulatorService.new(
       party_one: [ fresh_character(:merlin) ],
@@ -101,5 +138,20 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
       character.id = player_characters(fixture_name).id
       character.current_hit_points = character.max_hit_points
       character
+    end
+
+    # Uses the fixture record directly (no #dup): a has_many :through association like
+    # #known_maneuvers only queries the database for a persisted owner, and .dup always
+    # resets new_record? to true even after manually re-assigning the original id.
+    def battle_master_with_known_maneuvers(fixture_name)
+      character = player_characters(fixture_name)
+      character.current_hit_points = character.max_hit_points
+      character
+    end
+
+    def precision_attack_action(service:, actor:)
+      service.send(:available_actions_for, actor:).find do |action|
+        action[:type] == :class_feature && action[:class_feature].slug == "battle-master-maneuver-precision-attack"
+      end
     end
 end

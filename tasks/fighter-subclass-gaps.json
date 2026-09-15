@@ -1,0 +1,308 @@
+{
+  "titulo_backlog": "Lacunas para o Guerreiro e suas subclasses (Champion, Battle Master, Eldritch Knight) serem simuláveis",
+  "gerado_em": "2026-09-13",
+  "contexto": "Investigação de app/models/{player_class,class_feature,class_feature_unlock,player_character}.rb, app/services/combat_simulator_service.rb, app/services/combat/*.rb, db/seeds.rb e .okf/architecture/{combat-effect-pipeline,passive-effect-triggers,combat-migration-strategy}.md. O Guerreiro e as três subclasses já existem como dados (ClassFeature/ClassFeatureUnlock/SpellSlotProgression), mas faltam as peças abaixo para uma simulação de combate exercitá-los de forma correta e isolada.",
+  "campos": {
+    "id": "slug estável da tarefa, referenciado em 'dependencias'",
+    "concluida": "true | false — se true, a tarefa já foi implementada, revisada (build + revisão adversarial não-bloqueante) e commitada. Um agente sem contexto algum deve escolher como próxima tarefa a de menor 'ordem_sugerida' com concluida=false cujas 'dependencias' estejam todas com concluida=true",
+    "prioridade": "alta | media | baixa — impacto na correção da simulação",
+    "ordem_sugerida": "ordem de execução recomendada considerando dependências e esforço",
+    "categoria": "arquitetura | dados | engine | integracao",
+    "demanda_consolidada": "o problema e por que importa (o gap observado)",
+    "escopo": "o que entra e o que fica fora desta tarefa especificamente",
+    "criterios_aceite": "condições verificáveis para considerar a tarefa pronta",
+    "arquivos_relevantes": "arquivos a ler/tocar antes de implementar",
+    "dependencias": "ids de tarefas que devem ser resolvidas antes",
+    "riscos_e_notas": "armadilhas conhecidas, decisões em aberto",
+    "referencias": "docs OKF ou trechos de código que já documentam o gap"
+  },
+  "tarefas": [
+    {
+      "id": "subclass_selection",
+      "concluida": true,
+      "prioridade": "alta",
+      "ordem_sugerida": 1,
+      "categoria": "arquitetura",
+      "demanda_consolidada": "PlayerCharacter não tem nenhum campo indicando qual arquétipo marcial foi escolhido. Todas as subclasses do Guerreiro são apenas ClassFeature com player_class_id = Guerreiro, então qualquer personagem nível 3+ herda Champion + Battle Master + Eldritch Knight simultaneamente (crítico em 19, dados de superioridade e conjuração de mago ao mesmo tempo), o que contraria a regra de escolher um único arquétipo e impede testar uma subclasse isoladamente.",
+      "escopo": {
+        "inclui": [
+          "Adicionar associação entre PlayerCharacter e a subclasse escolhida (ex.: FK para o ClassFeature do tipo :subclass, ou coluna própria)",
+          "Restringir a leitura de features/unlocks de subclasse (feature_type :subclass e :subclass_progression) ao arquétipo escolhido pelo personagem, mantendo features :core visíveis para todo Guerreiro",
+          "Atualizar PlayerCharacter#unlocked_class_feature_unlocks, #spellcasting_feature e CombatSimulatorService#highest_unlock_per_feature para respeitar essa escolha",
+          "Migração de banco + seed/fixture de teste com um personagem por arquétipo"
+        ],
+        "exclui": [
+          "UI de criação de personagem para escolher arquétipo (pode ficar como tarefa futura de interface)",
+          "Suporte a multiclasse"
+        ]
+      },
+      "criterios_aceite": [
+        "Um PlayerCharacter Guerreiro sem arquétimo escolhido não recebe nenhuma feature :subclass/:subclass_progression",
+        "Um PlayerCharacter Champion nível 7 não tem acesso a Combat Superiority nem a Spellcasting do Eldritch Knight",
+        "PlayerCharacter#spellcasting_feature só retorna algo para um Eldritch Knight",
+        "Teste automatizado cobrindo os três arquétipos confirmando isolamento mútuo"
+      ],
+      "arquivos_relevantes": [
+        "app/models/player_character.rb",
+        "app/models/class_feature.rb",
+        "app/services/combat_simulator_service.rb",
+        "db/schema.rb",
+        "db/seeds.rb"
+      ],
+      "dependencias": [],
+      "riscos_e_notas": "Concluída via /dev-harness em 2026-09-13 (commit ea7ec86 na main): FK martial_archetype em PlayerCharacter + FK subclass_marker em ClassFeature (substituindo uma convenção de slug inicial, corrigida a pedido de revisão). Build + revisão adversarial (2 rodadas, ambas não-bloqueantes) + fitness (rubocop limpo, 117 testes) verificados com execução real, não só alegação. Dívida não-bloqueante registrada: falta teste unitário dedicado para as validações de ClassFeature#subclass_marker em test/models/class_feature_test.rb; has_many :subclass_progressions existe mas não é usado no código e não tem dependent:.",
+      "referencias": [
+        ".okf/models/player-character.md",
+        ".okf/models/class-feature.md"
+      ]
+    },
+    {
+      "id": "saving_throws_and_advantage_engine",
+      "concluida": true,
+      "prioridade": "alta",
+      "ordem_sugerida": 2,
+      "categoria": "engine",
+      "demanda_consolidada": "Não existe no motor nenhum conceito de teste de resistência (saving throw) nem de vantagem/desvantagem (nenhuma ocorrência de saving_throw/advantage/disadvantage em app/). Indomitable e várias manobras do Battle Master (Menacing, Pushing, Trip, Goading Attack) dependem de o alvo falhar um teste de resistência de SAB/FOR, e Eldritch Strike/Feinting Attack dependem de vantagem/desvantagem em jogadas de ataque.",
+      "escopo": {
+        "inclui": [
+          "Primitiva de teste de resistência (Combat::SavingThrow ou similar): habilidade, CD, resultado sucesso/falha",
+          "Suporte a vantagem/desvantagem em Dice::AttackRoll e no novo saving throw",
+          "Extensão do vocabulário de effect_payload para expressar 'força teste de resistência' com CD e efeito em caso de falha"
+        ],
+        "exclui": [
+          "Modelagem completa de todas as perícias/testes de habilidade do 5e",
+          "Condições de status além das já existentes em Combatant (vulnerabilities/resistances/immunities)"
+        ]
+      },
+      "criterios_aceite": [
+        "Combat::SavingThrow resolve sucesso/falha corretamente (ability vs. DC), incluindo advantage+disadvantage simultâneos se cancelando em uma única rolagem",
+        "Dice::AttackRoll aceita advantage/disadvantage e rola 2d20 de acerto corretamente, com uma única rolagem de dano",
+        "Combat::EffectExecutor aplica o campo save (já reservado em effect_payload) de heal/damage: efeito integral na falha do alvo, half ou negate no sucesso conforme on_success",
+        "Teste automatizado cobrindo sucesso e falha de um saving throw através de Combat::EffectExecutor (não só a classe isolada)"
+      ],
+      "arquivos_relevantes": [
+        "app/services/combat/effect_resolver.rb",
+        "app/services/combat/effect_executor.rb",
+        "app/services/combat/effect_instance.rb",
+        "app/services/combat/saving_throw.rb",
+        "lib/dice/attack_roll.rb",
+        "lib/dice/d20_roll.rb"
+      ],
+      "dependencias": [],
+      "riscos_e_notas": "Concluída via /dev-harness em 2026-09-13 (commit fba62ed na main, fast-forward de um branch de build). Refinamento em relação ao texto original desta tarefa: em vez de um novo kind: \"saving_throw\", a implementação reaproveitou o campo save já reservado (e nunca lido) em EffectInstance/effect_payload — heal/damage aceitam save: {ability, dc, on_success: \"half\"|\"negate\"}. Também corrigiu um bug pré-existente e não relacionado descoberto durante a leitura do código: Dice::AttackRoll.with_advantage/.with_disadvantage chamavam new sem o damage_dice: obrigatório e quebravam com ArgumentError se alguém os chamasse (ninguém chamava) — foram removidos e substituídos por kwargs advantage:/disadvantage: funcionais. Follow-up feito na mesma sessão (commit bbd9038): extraído Dice::D20Roll (Dice.d20 agora devolve um objeto com #with_advantage/#with_disadvantage) para eliminar a duplicação dessa lógica entre AttackRoll e SavingThrow — ambos agora só chamam Dice.d20(modifier:).with_advantage/.with_disadvantage. Build + revisão adversarial (não-bloqueante) + fitness (rubocop limpo, 130 testes, baseline 117 confirmado via git stash pelo revisor) verificados com execução real. Dívida não-bloqueante registrada: kwarg actor: em SavingThrow.new deveria se chamar roller:/combatant: (recebe o alvo do efeito, não quem usa a habilidade — funciona, mas o nome confunde); effect_payload.save não suporta advantage/disadvantage no teste do alvo (decisão deliberada, não lacuna); on_success com valor fora de half/negate cai silenciosamente em efeito integral, sem validação.",
+      "referencias": [
+        ".okf/architecture/combat-effect-pipeline.md",
+        ".okf/architecture/passive-effect-triggers.md"
+      ]
+    },
+    {
+      "id": "wire_turn_passives_into_simulator",
+      "concluida": true,
+      "prioridade": "alta",
+      "ordem_sugerida": 3,
+      "categoria": "integracao",
+      "demanda_consolidada": "PlayerCharacter#apply_start_of_turn_passives!/#apply_end_of_turn_passives! já existem e o effect_payload do Champion (Survivor, nível 18) já está correto, mas nem CombatSimulatorService nem EncounterService chamam esses métodos durante o loop de rodada — a própria documentação OKF (.okf/architecture/passive-effect-triggers.md) confirma que ambos os hooks estão 'implementados mas não conectados'. Resultado: a regeneração do Survivor nunca dispara numa simulação real hoje.",
+      "escopo": {
+        "inclui": [
+          "Chamar apply_start_of_turn_passives! (e/ou apply_end_of_turn_passives!, conforme o design de turno) para cada combatente vivo no início/fim do seu turno em CombatSimulatorService#execute_round",
+          "Registrar no round_log quando uma passiva de turno é aplicada, para visibilidade no resultado da simulação"
+        ],
+        "exclui": [
+          "Alterar EncounterService (é fluxo congelado, ver AGENTS.md)",
+          "Novos triggers além de turn_start/turn_end"
+        ]
+      },
+      "criterios_aceite": [
+        "Um Champion nível 18 com metade do PV ou menos regenera 5 + CON no início do seu turno numa simulação via CombatSimulatorService",
+        "Combatentes sem passiva de turno não são afetados (sem regressão de performance/comportamento)",
+        "Teste automatizado de uma simulação de poucas rodadas confirmando a cura aplicada"
+      ],
+      "arquivos_relevantes": [
+        "app/services/combat_simulator_service.rb",
+        "app/models/player_character.rb"
+      ],
+      "dependencias": [],
+      "riscos_e_notas": "Concluída via /dev-harness em 2026-09-14 (commit 7b34cc7 na main, fast-forward de um branch de build). execute_round agora chama apply_start_of_turn_passives! antes da ação do ator (com nova checagem de actor.dead? logo depois, reaproveitando o guard já existente, para o caso hipotético de uma passiva de dano por turno) e apply_end_of_turn_passives! depois; ambas só geram entrada no round_log (action: {type: :turn_passive, trigger:}) quando há resultado, via serialize_effect_results já existente. Fixture nova de nível 18 (champion_eighteen/champion_eighteen_combatant) criada para o teste de aceite, já que a fixture de Champion existente (champion_seven) era nível 7, insuficiente para o Survivor (desbloqueia no 18). Build + revisão adversarial (não-bloqueante) + fitness (rubocop limpo, 135 testes, baseline 134 confirmado via git stash pelo revisor, cura de 7 PV = 5+CON confirmada rodando a simulação de verdade) verificados com execução real. Dívida não-bloqueante registrada: nenhuma cobertura automatizada para o caso hipotético de uma passiva de turno causar dano e matar o ator no meio do turno (não existe tal feature no seeds.rb hoje); campo turn: do round_log é reaproveitado (mesmo valor) entre a entrada de passiva de início, a ação e a passiva de fim do mesmo ator — cosmético, sem consumidor que dependa de unicidade.",
+      "referencias": [
+        ".okf/architecture/passive-effect-triggers.md"
+      ]
+    },
+    {
+      "id": "fighting_styles_effects",
+      "concluida": true,
+      "prioridade": "media",
+      "ordem_sugerida": 4,
+      "categoria": "dados",
+      "demanda_consolidada": "Os 6 Fighting Styles (db/seeds.rb) são features :core desbloqueadas no nível 1 só com texto descritivo, sem effect_payload. Hoje todo Guerreiro tem os 6 'ativos' ao mesmo tempo e nenhum produz efeito mecânico: nada em PlayerCharacter#roll_an_attack, Combatant#armor_class ou #damage_roll lê essas bonificações.",
+      "escopo": {
+        "inclui": [
+          "Adicionar effect_payload (trigger: 'always', kind: 'modifier') para os estilos que só somam um número fixo: Defense (+1 CA), Dueling (+2 dano em ataque corpo-a-corpo com uma mão), Archery (+2 acerto à distância)",
+          "Modelar seleção de um único Fighting Style por personagem (reaproveitando o mecanismo de escolha criado em 'subclass_selection' ou um análogo mais simples, já que Fighting Style não é subclasse)",
+          "Estender PlayerCharacter#roll_an_attack/Combatant#armor_class para somar os modifiers 'always' relevantes, do mesmo jeito que já é feito para critical_hit_threshold"
+        ],
+        "exclui": [
+          "Great Weapon Fighting (rerolar 1s/2s) e Two-Weapon Fighting (somar mod de dano no segundo ataque) — dependem de lógica de rolagem mais rica que 'modifier' simples; tratar como extensão futura do vocabulário de effect_payload",
+          "Protection (gasta reação) — depende de um sistema de reações que não existe"
+        ]
+      },
+      "criterios_aceite": [
+        "Um Guerreiro com Defense escolhido tem +1 de CA efetivo numa simulação",
+        "Um Guerreiro com Dueling escolhido tem +2 de dano numa simulação",
+        "Um Guerreiro só pode ter um Fighting Style ativo por vez",
+        "Teste automatizado por estilo coberto"
+      ],
+      "arquivos_relevantes": [
+        "db/seeds.rb",
+        "app/models/player_character.rb",
+        "app/models/concerns/combatant_behavior.rb"
+      ],
+      "dependencias": [
+        "subclass_selection"
+      ],
+      "riscos_e_notas": "Concluída via /dev-harness em 2026-09-14 (commit e014be9 na main, fast-forward de um branch de build, 2 commits: implementação + fix de teste). Reaproveitou o valor feature_type: :optional do enum de ClassFeature, declarado mas nunca usado antes — vira o vocabulário de 'escolha exclusiva' (visible_for? só mostra a feature :optional escolhida). fighting_style_id (FK opcional em player_characters, mesmo padrão de martial_archetype_id/subclass_marker_id) + modifier_bonus(name) (soma payloads always/modifier, ao contrário de critical_hit_threshold que pega o mínimo) + override de armor_class e ajuste de roll_an_attack. Archery/Dueling/Defense aplicados incondicionalmente (motor não distingue arma corpo-a-corpo/à distância nem rastreia armadura/nº de armas), documentado via notes no unlock, seguindo o precedente já usado em Fireball/Scorching Ray. Great Weapon Fighting/Protection/Two-Weapon Fighting continuam só descritivos, conforme excluído no escopo. 1ª rodada de revisão adversarial foi BLOQUEANTE: os testes de Dueling e Archery (não a implementação, que já estava correta) tinham defeito de qualidade — Dueling ~10% flaky (crit em d20 dobrando dano com damage_dice 1d1, quebrando a comparação '+2' esperada) e Archery com assert fraco (>= 103) que passaria 91% das vezes mesmo sem a feature implementada, ambos medidos empiricamente pela revisão. 2ª iteração do build corrigiu ambos usando Random.srand(42) fixo dos dois lados da comparação (mesmo natural do d20, sem crit) + assert_equal exato, mesmo padrão de test/lib/dice/attack_roll_test.rb; 2ª revisão confirmou determinismo (60 execuções isoladas + 3 rodadas completas da suíte, 0 falhas) e que os testes realmente falham quando a feature é sabotada (não são falsos positivos) — NÃO-BLOQUEANTE. Fitness final: rubocop limpo (106 arquivos), 145 testes/353 assertions (baseline 135/324), confirmado rodando no checkout principal após o merge. Dívida não-bloqueante registrada: PlayerCharacter#use_class_feature (invocação direta por slug) não passa por ClassFeature.visible_for?, então nada impede chamar uma feature de outro estilo/arquétipo programaticamente (mesma lacuna já registrada em subclass_selection); os testes de Dueling/Archery assumem critical_hit_threshold == 20 dos personagens usados — se um desses fixtures ganhar um archetype que reduza esse limiar no futuro, o teste pode voltar a ficar frágil silenciosamente.",
+      "referencias": [
+        ".okf/architecture/passive-effect-triggers.md"
+      ]
+    },
+    {
+      "id": "battle_master_maneuvers",
+      "concluida": true,
+      "prioridade": "media",
+      "ordem_sugerida": 5,
+      "categoria": "dados",
+      "demanda_consolidada": "Combat Superiority já modela o recurso corretamente (Superiority Dice com uses por nível), mas nenhuma das 18 features 'Maneuver: *' (db/seeds.rb) tem effect_payload. CombatSimulatorService#available_actions_for só transforma em ação selecionável payloads com kind em ['heal','damage'] sem trigger, então nenhuma manobra é jogável hoje — o recurso existe mas não há nada para gastá-lo. Também não existe um modelo de 'quais manobras este personagem conhece' (equivalente a PlayerCharacterSpell, mas para manobras).",
+      "escopo": {
+        "inclui": [
+          "effect_payload para as manobras que só somam dano (ex.: Precision Attack, Menacing/Pushing/Trip/Goading/Distracting/Sweeping/Lunging/Disarming Attack) reaproveitando kind: 'damage' e o dado de superioridade como parte da rolagem",
+          "Modelo de seleção de manobras conhecidas por personagem (3 no nível 3, crescendo conforme a tabela em Combat Superiority)",
+          "Consumo do dado de superioridade ao usar uma manobra (já há rastreio de uses; falta ligar ao uso real)"
+        ],
+        "exclui": [
+          "Manobras que exigem teste de resistência do alvo (Menacing/Pushing/Trip/Goading Attack) — agora que 'saving_throws_and_advantage_engine' está pronta (effect_payload.save), essas manobras podem usar full/negate; reavaliar escopo ao entrar nesta tarefa",
+          "Manobras que exigem reação de terceiros (Commander's Strike, Rally, Riposte, Parry) — dependem de um sistema de reação de aliados/inimigos fora do turno do ator",
+          "Aumento do tamanho do dado (d8→d10→d12 via Improved Combat Superiority) — pode ser feito como ajuste simples de 'roll' no unlock correspondente, mas listado à parte para não inflar esta tarefa"
+        ]
+      },
+      "criterios_aceite": [
+        "Um Battle Master pode escolher N manobras dentre as 18 (N conforme nível) e apenas essas aparecem como ações disponíveis na simulação",
+        "Usar uma manobra de dano consome um dado de superioridade e soma seu resultado ao dano do ataque",
+        "Sem dados de superioridade restantes, a manobra não aparece mais em available_actions_for",
+        "Teste automatizado cobrindo pelo menos uma manobra de dano simples do início ao fim"
+      ],
+      "arquivos_relevantes": [
+        "db/seeds.rb",
+        "app/services/combat_simulator_service.rb",
+        "app/services/combat/effect_resolver.rb"
+      ],
+      "dependencias": [
+        "subclass_selection"
+      ],
+      "riscos_e_notas": "Concluída via /dev-harness em 2026-09-14 (build local, ainda não commitada — commit pendente após revisão adversarial). Escopo fatiado conforme sugerido: apenas as 5 manobras de dano puro sem rider de terceiro/teste de resistência (Precision Attack, Disarming Attack, Lunging Attack, Sweeping Attack, Distracting Strike) ganharam effect_payload (kind: damage, roll: 1d8, target: target); as 13 restantes (as com teste de resistência, reação de terceiros, Parry e Evasive Footwork) continuam só descritivas, dívida já prevista no escopo original. damage_type fixado em bludgeoning nas 5 manobras (mesmo default de Combatant#damage_type e do fallback de Combat::EffectExecutor), documentado via notes no unlock de cada manobra — simplificação análoga ao precedente de Fighting Styles/Fireball (riders de desarmar/alcance/segundo alvo/vantagem a aliado tratados como dano puro contra o alvo já escolhido, sem modelar o rider). resource_name unificado para 'Superiority Dice' apenas nas 5 manobras tocadas + na feature Combat Superiority (que já usava esse valor); as 13 manobras não tocadas mantêm 'Superiority Die' (singular) — efeito colateral usado como mecanismo de identificação: PlayerCharacterManeuver só aceita como 'manobra conhecida' features cujo resource_name bate com o de Combat Superiority, então apenas as 5 manobras implementadas podem ser marcadas como conhecidas hoje (as outras 13 ficariam com erro de validação se alguém tentasse); documentado aqui como dívida não-bloqueante, não uma lacuna descoberta em revisão. Modelo novo PlayerCharacterManeuver (join table player_character_maneuvers, migration via generator) com validações: precisa ser feature_type_subclass_progression? + resource_name igual ao de Combat Superiority (forma de identificar 'é manobra', já que não há enum próprio), mesma player_class do personagem, e respeita a tabela de manobras conhecidas por nível (3/7/10/15 → 3/5/7/9), tudo no model de junção. CombatSimulatorService#available_actions_for/#consume_feature_use! ganharam resource_class_feature_id/combat_superiority_unlock_for para resolver o 'uses remaining' de uma manobra através do class_feature_id de Combat Superiority (pool compartilhado) em vez do da própria manobra (que nunca tem uses), e a gating por known_maneuvers só é aplicada quando resource_class_feature_id aponta para o pool de Combat Superiority (não afeta Second Wind ou outras features de dano/cura sem relação com manobras). Teste automatizado (test/services/combat_simulator_service_test.rb) cobre Precision Attack do início ao fim com seeds fixos (Random.srand(1) para o 1d8 da manobra, seed:1 do serviço para o rng interno de seleção de alvo) e assert_equal exato, seguindo o padrão de determinismo corrigido na revisão de fighting_styles_effects; mais um teste cobrindo o caso 'não conhece a manobra' e 4 testes de modelo (test/models/player_character_maneuver_test.rb) para as validações. Fitness: rubocop limpo (109 arquivos), 151 testes/375 assertions (baseline 145/353 confirmado rodando a suíte antes de implementar), e simulação real rodada via bin/rails runner confirmando a manobra sendo escolhida, consumindo dado e aplicando dano 1d8 (execução real, não só alegação). Dívida não-bloqueante adicional: resolve_feature_target (código pré-existente, não tocado nesta tarefa) pode selecionar o próprio ator como alvo de uma ação de classe com target:'target' — observado na simulação real rodada para validar esta tarefa (a manobra acertou o próprio Battle Master duas vezes em 10 rodadas); é a mesma lacuna já seria compartilhada por qualquer outra feature de dano com target:'target' (ex. um futuro spell de dano usado como class_feature), não introduzida por esta tarefa.",
+      "referencias": [
+        ".okf/architecture/combat-effect-pipeline.md"
+      ]
+    },
+    {
+      "id": "action_surge_and_indomitable",
+      "concluida": false,
+      "prioridade": "media",
+      "ordem_sugerida": 6,
+      "categoria": "dados",
+      "demanda_consolidada": "Action Surge e Indomitable (db/seeds.rb) rastreiam usos corretamente mas não têm effect_payload: o motor não tem conceito de 'ação extra no turno' nem de 'rerolar um teste de resistência que falhou', então essas duas features core do Guerreiro nunca produzem efeito numa simulação.",
+      "escopo": {
+        "inclui": [
+          "Indomitable: usar a primitiva de 'saving_throws_and_advantage_engine' (Combat::SavingThrow, já concluída) para permitir reroll de um saving throw falho",
+          "Action Surge: estender CombatSimulatorService/Combat::CombatAction para conceder uma ação extra no turno atual do ator (ex.: permitir um segundo execute_attack_action ou execute_class_feature_action no mesmo turno)"
+        ],
+        "exclui": [
+          "Interação entre Action Surge e Arcane Charge do Eldritch Knight (teletransporte ao usar Action Surge) — tratar junto de 'niche_subclass_passives'"
+        ]
+      },
+      "criterios_aceite": [
+        "Um Guerreiro pode usar Action Surge e realizar uma ação de ataque adicional no mesmo turno, respeitando o limite de usos por descanso",
+        "Indomitable permite rerolar um saving throw falho até o limite de usos por descanso longo",
+        "Teste automatizado cobrindo uma simulação onde cada feature é usada pelo menos uma vez"
+      ],
+      "arquivos_relevantes": [
+        "app/services/combat_simulator_service.rb",
+        "app/services/combat/combat_action.rb",
+        "app/services/combat/saving_throw.rb",
+        "db/seeds.rb"
+      ],
+      "dependencias": [
+        "saving_throws_and_advantage_engine"
+      ],
+      "riscos_e_notas": "Action Surge é a feature mais 'estrutural' do Guerreiro (define sua identidade de dano) e provavelmente a que mais afeta métricas de simulação (taxa de vitória); vale medir o impacto no fitness/benchmark de combate depois de implementada. Dependência 'saving_throws_and_advantage_engine' já concluída — esta tarefa está desbloqueada.",
+      "referencias": [
+        ".okf/architecture/combat-effect-pipeline.md"
+      ]
+    },
+    {
+      "id": "eldritch_knight_spellcasting_ai",
+      "concluida": false,
+      "prioridade": "media",
+      "ordem_sugerida": 7,
+      "categoria": "integracao",
+      "demanda_consolidada": "PlayerCharacter#cast_spell e #available_spell_slots já funcionam e são testáveis manualmente, mas CombatSimulatorService#available_actions_for nunca oferece 'conjurar magia' como ação — o próprio .okf/architecture/combat-effect-pipeline.md lista isso como fora de escopo da fase atual. Além disso, player_character_spells não valida que as magias vinculadas respeitam a restrição do Eldritch Knight (abjuração/evocação, truques + 1º nível na maior parte dos níveis) nem o limite de spells_known da progressão.",
+      "escopo": {
+        "inclui": [
+          "CombatSimulatorService oferecer ação 'cast_spell' quando o ator for um conjurador com magia preparada e slot disponível",
+          "Validação em PlayerCharacterSpell (ou no formulário/serviço que a popula) contra escola permitida e spells_known do nível atual"
+        ],
+        "exclui": [
+          "Upcasting, listas de magias por classe além do Eldritch Knight, condições de controle (fora de escopo também no doc do pipeline)"
+        ]
+      },
+      "criterios_aceite": [
+        "Um Eldritch Knight com magia preparada e slot disponível pode conjurá-la autonomamente numa simulação via CombatSimulatorService",
+        "Tentar vincular uma magia de escola não permitida ou além do limite de spells_known falha com erro claro",
+        "Teste automatizado cobrindo uma simulação onde o Eldritch Knight conjura pelo menos uma magia"
+      ],
+      "arquivos_relevantes": [
+        "app/services/combat_simulator_service.rb",
+        "app/models/player_character.rb",
+        "app/models/player_character_spell.rb"
+      ],
+      "dependencias": [
+        "subclass_selection"
+      ],
+      "riscos_e_notas": "Depende de uma heurística de IA de turno (quando o simulador deve preferir conjurar em vez de atacar) — decidir isso é tão importante quanto o encanamento técnico.",
+      "referencias": [
+        ".okf/architecture/combat-effect-pipeline.md",
+        ".okf/models/spell.md"
+      ]
+    },
+    {
+      "id": "niche_subclass_passives",
+      "concluida": false,
+      "prioridade": "baixa",
+      "ordem_sugerida": 8,
+      "categoria": "dados",
+      "demanda_consolidada": "Várias features das três subclasses são puramente descritivas e sem effect_payload: Weapon Bond, War Magic, Eldritch Strike, Arcane Charge (Eldritch Knight), Remarkable Athlete e Additional Fighting Style (Champion), Know Your Enemy e Student of War (Battle Master). Nenhuma delas tem prioridade alta isoladamente porque o motor ainda não tem as primitivas necessárias (ataque bônus condicionado a conjurar, vantagem/desvantagem, teleporte, perícias/testes de habilidade fora de combate).",
+      "escopo": {
+        "inclui": [
+          "Priorizar War Magic/Improved War Magic e Eldritch Strike — vantagem/desvantagem já existe (Dice::AttackRoll, Combat::SavingThrow), falta o motor ter conceito de ação bônus condicional",
+          "Arcane Charge (teleporte) depende de um sistema de posicionamento/distância que não existe hoje — avaliar se vale a pena para uma simulação sem grade/posição"
+        ],
+        "exclui": [
+          "Know Your Enemy, Student of War, Remarkable Athlete: são utilitárias/fora de combate ou de teste de perícia; baixo valor para métricas de taxa de vitória/duração do combate que o simulador mede"
+        ]
+      },
+      "criterios_aceite": [
+        "Cada feature marcada como 'incluída' tem effect_payload funcional e teste automatizado próprio",
+        "Features fora de escopo continuam documentadas como descritivas (notes), sem promessa de comportamento mecânico"
+      ],
+      "arquivos_relevantes": [
+        "db/seeds.rb"
+      ],
+      "dependencias": [
+        "saving_throws_and_advantage_engine",
+        "action_surge_and_indomitable"
+      ],
+      "riscos_e_notas": "Tarefa 'guarda-chuva' de menor prioridade; recomenda-se revisitar após as demais estarem prontas e reavaliar se alguma dessas features realmente move a métrica de simulação o suficiente para justificar o esforço (ver skill simulation-evaluation-metrics). Dependência 'saving_throws_and_advantage_engine' já concluída.",
+      "referencias": [
+        "db/seeds.rb"
+      ]
+    }
+  ]
+}

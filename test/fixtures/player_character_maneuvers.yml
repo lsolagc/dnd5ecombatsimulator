@@ -1,0 +1,5 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+battle_master_seven_precision_attack:
+  player_character: battle_master_seven
+  maneuver: fighter_battle_master_maneuver_precision_attack

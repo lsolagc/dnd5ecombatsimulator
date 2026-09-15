@@ -111,7 +111,18 @@ battle_master_archetype_level_3:
 battle_master_combat_superiority_level_3:
   class_feature: fighter_battle_master_combat_superiority
   level: 3
+  uses: 4
   description: Gain superiority dice and learn three maneuvers.
+
+battle_master_maneuver_precision_attack_level_3:
+  class_feature: fighter_battle_master_maneuver_precision_attack
+  level: 3
+  description: Maneuver available for the Battle Master to choose.
+  effect_payload:
+    kind: damage
+    roll: "1d8"
+    target: target
+    damage_type: bludgeoning
 
 eldritch_knight_archetype_level_3:
   class_feature: fighter_eldritch_knight_archetype

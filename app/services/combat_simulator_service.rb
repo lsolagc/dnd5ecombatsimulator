@@ -137,6 +137,7 @@ class CombatSimulatorService
 
     def available_actions_for(actor:)
       actions = [ { type: :attack } ]
+      combat_superiority_unlock = combat_superiority_unlock_for(actor:)
 
       highest_unlock_per_feature(combatant: actor).each do |unlock|
         next if unlock.effect_payload.blank?
@@ -145,7 +146,10 @@ class CombatSimulatorService
         next unless payload["kind"].in?([ "heal", "damage" ])
         next if payload["trigger"].present?
 
-        uses = @uses_remaining.dig(actor.id, unlock.class_feature_id)
+        resource_feature_id = resource_class_feature_id(feature: unlock.class_feature, combat_superiority_unlock:)
+        next if resource_feature_id == combat_superiority_unlock&.class_feature_id && !actor.known_maneuvers.exists?(id: unlock.class_feature_id)
+
+        uses = @uses_remaining.dig(actor.id, resource_feature_id)
         next if uses.is_a?(Integer) && uses <= 0
 
         actions << {
@@ -223,7 +227,8 @@ class CombatSimulatorService
       )
 
       results = Combat::ActionRunner.call(action:)
-      consume_feature_use!(actor:, class_feature_id: feature.id)
+      resource_feature_id = resource_class_feature_id(feature:, combat_superiority_unlock: combat_superiority_unlock_for(actor:))
+      consume_feature_use!(actor:, class_feature_id: resource_feature_id)
 
       {
         round: round_number,
@@ -275,6 +280,21 @@ class CombatSimulatorService
       return unless uses.is_a?(Integer)
 
       @uses_remaining[actor.id][class_feature_id] = [ uses - 1, 0 ].max
+    end
+
+    # A maneuver's "uses remaining" is tracked on the shared Combat Superiority pool
+    # (identified by matching resource_name), not on the maneuver's own class_feature_id,
+    # since maneuvers never carry their own uses.
+    def resource_class_feature_id(feature:, combat_superiority_unlock:)
+      return feature.id if combat_superiority_unlock.nil?
+      return feature.id if feature.resource_name.blank?
+      return feature.id unless feature.resource_name == combat_superiority_unlock.class_feature.resource_name
+
+      combat_superiority_unlock.class_feature_id
+    end
+
+    def combat_superiority_unlock_for(actor:)
+      highest_unlock_per_feature(combatant: actor).find { |unlock| unlock.class_feature.name == "Combat Superiority" }
     end
 
     def highest_unlock_per_feature(combatant:)

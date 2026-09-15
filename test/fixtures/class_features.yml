@@ -158,6 +158,21 @@ fighter_battle_master_combat_superiority:
   feature_type: subclass_progression
   action_type: passive
   recharge_type: none
+  resource_name: Superiority Dice
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Battle Master 3
+
+fighter_battle_master_maneuver_precision_attack:
+  player_class: fighter
+  subclass_marker: fighter_battle_master_archetype
+  name: "Maneuver: Precision Attack"
+  slug: battle-master-maneuver-precision-attack
+  description: Spend a superiority die to add it to a weapon attack's damage.
+  feature_type: subclass_progression
+  action_type: no_action
+  recharge_type: none
+  resource_name: Superiority Dice
   grants_spellcasting: false
   source_book: PHB 2014
   source_reference: Battle Master 3

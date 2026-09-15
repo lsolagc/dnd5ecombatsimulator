@@ -583,9 +583,16 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :no_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
-    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+    notes: "Simplificado como dano puro (kind: damage) somado ao ataque, em vez de somar à jogada de acerto: o motor não distingue ajuste de acerto de ajuste de dano nesta manobra. damage_type fixado em bludgeoning (mesmo default do motor em Combatant#damage_type e do fallback de Combat::EffectExecutor) por não haver como propagar dinamicamente o tipo de dano da arma do ator para um effect_payload estático.",
+    unlocks: [
+      {
+        level: 3,
+        description: "Manobra disponível para escolha do Battle Master.",
+        effect_payload: { kind: "damage", roll: "1d8", target: "target", damage_type: "bludgeoning" }
+      }
+    ]
   },
   {
     name: "Maneuver: Disarming Attack",
@@ -594,9 +601,16 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :no_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
-    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+    notes: "Rider de desarmar não modelado; tratado como dano puro (kind: damage) somado ao ataque. damage_type fixado em bludgeoning (mesmo default do motor), pelo mesmo motivo do Precision Attack.",
+    unlocks: [
+      {
+        level: 3,
+        description: "Manobra disponível para escolha do Battle Master.",
+        effect_payload: { kind: "damage", roll: "1d8", target: "target", damage_type: "bludgeoning" }
+      }
+    ]
   },
   {
     name: "Maneuver: Lunging Attack",
@@ -605,9 +619,16 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :no_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
-    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+    notes: "Aumento de alcance não modelado (motor não rastreia posição/distância); tratado como dano puro (kind: damage) somado ao ataque. damage_type fixado em bludgeoning (mesmo default do motor), pelo mesmo motivo do Precision Attack.",
+    unlocks: [
+      {
+        level: 3,
+        description: "Manobra disponível para escolha do Battle Master.",
+        effect_payload: { kind: "damage", roll: "1d8", target: "target", damage_type: "bludgeoning" }
+      }
+    ]
   },
   {
     name: "Maneuver: Goading Attack",
@@ -627,9 +648,16 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :no_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
-    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+    notes: "Rider de segundo alvo simultâneo não modelado (o motor resolve uma ação de classe contra um único alvo por vez); tratado como dano puro (kind: damage) contra um único alvo. damage_type fixado em bludgeoning (mesmo default do motor), pelo mesmo motivo do Precision Attack.",
+    unlocks: [
+      {
+        level: 3,
+        description: "Manobra disponível para escolha do Battle Master.",
+        effect_payload: { kind: "damage", roll: "1d8", target: "target", damage_type: "bludgeoning" }
+      }
+    ]
   },
   {
     name: "Maneuver: Riposte",
@@ -660,9 +688,16 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :no_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
-    unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
+    notes: "Rider de vantagem concedida a aliados não modelado (não há sistema de vantagem persistente entre turnos de atores distintos); tratado como dano puro (kind: damage) somado ao ataque. damage_type fixado em bludgeoning (mesmo default do motor), pelo mesmo motivo do Precision Attack.",
+    unlocks: [
+      {
+        level: 3,
+        description: "Manobra disponível para escolha do Battle Master.",
+        effect_payload: { kind: "damage", roll: "1d8", target: "target", damage_type: "bludgeoning" }
+      }
+    ]
   },
   {
     name: "Maneuver: Commander's Strike",

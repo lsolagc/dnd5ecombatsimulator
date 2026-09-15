@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_14_220526) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_14_231019) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -88,6 +88,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_14_220526) do
     t.index ["combatable_type", "combatable_id"], name: "index_combatants_on_combatable"
   end
 
+  create_table "player_character_maneuvers", force: :cascade do |t|
+    t.bigint "player_character_id", null: false
+    t.bigint "maneuver_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["maneuver_id"], name: "index_player_character_maneuvers_on_maneuver_id"
+    t.index ["player_character_id", "maneuver_id"], name: "index_pc_maneuvers_on_character_and_maneuver", unique: true
+    t.index ["player_character_id"], name: "index_player_character_maneuvers_on_player_character_id"
+  end
+
   create_table "player_character_spells", force: :cascade do |t|
     t.bigint "player_character_id", null: false
     t.bigint "spell_id", null: false
@@ -152,6 +162,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_14_220526) do
   add_foreign_key "class_features", "class_features", column: "subclass_marker_id"
   add_foreign_key "class_features", "player_classes"
   add_foreign_key "class_level_progressions", "player_classes"
+  add_foreign_key "player_character_maneuvers", "class_features", column: "maneuver_id"
+  add_foreign_key "player_character_maneuvers", "player_characters"
   add_foreign_key "player_character_spells", "player_characters"
   add_foreign_key "player_character_spells", "spells"
   add_foreign_key "player_characters", "class_features", column: "fighting_style_id"
