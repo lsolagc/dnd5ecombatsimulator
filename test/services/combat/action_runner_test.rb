@@ -76,6 +76,29 @@ class Combat::ActionRunnerTest < ActiveSupport::TestCase
     end
   end
 
+  test "reroll_saving_throw reflects the second saving throw when the first fails" do
+    feature = class_features(:barbarian_test_save_strike) # test fixture, see class_features.yml
+    fighter = player_characters(:fighter_indomitable_nine) # constitution: 12 (mod +1)
+    fighter.current_hit_points = fighter.max_hit_points
+    attacker = player_characters(:barbarian_test_striker)
+
+    action = Combat::CombatAction.new(
+      source_type: :class_feature,
+      source_id:   feature.id,
+      actor:       attacker,
+      targets:     [ fighter ]
+    )
+
+    Random.srand(46) # 1d6 roll = 6; 1st constitution save total 7 (fails dc 8); reroll total 10 (succeeds)
+    results = Combat::ActionRunner.call(action: action, reroll_saving_throw: true)
+
+    assert_equal 1, results.size
+    result = results.first
+
+    assert result.saving_throw.rerolled
+    assert_equal 3, result.amount # half of 6, since the reroll succeeded
+  end
+
   test "PlayerCharacter#use_class_feature delegates to ActionRunner" do
     Random.srand(1)
     @fighter.current_hit_points = 3

@@ -8,9 +8,9 @@ class ClassFeatureTest < ActiveSupport::TestCase
   test "valid feature" do
     feature = ClassFeature.new(
       player_class: @fighter,
-      name: "Indomitable",
-      slug: "indomitable",
-      description: "Reroll one failed saving throw.",
+      name: "Test Feature",
+      slug: "test-feature",
+      description: "A generic feature used only to test validity.",
       feature_type: :core,
       action_type: :no_action,
       recharge_type: :long_rest,

@@ -3,16 +3,22 @@ module Combat
   #
   # No proficiency bonus is modeled today — only the raw ability modifier.
   class SavingThrow
-    attr_reader :ability, :dc, :natural, :total, :success
+    attr_reader :ability, :dc, :natural, :total, :success, :rerolled
 
-    def initialize(actor:, ability:, dc:, advantage: false, disadvantage: false)
+    def initialize(actor:, ability:, dc:, advantage: false, disadvantage: false, reroll_if_failed: false)
       @actor = actor
       @ability = ability.to_s
       @dc = dc.to_i
+      @rerolled = false
 
       roll(advantage:, disadvantage:)
-
       @success = @total >= @dc
+
+      if !@success && reroll_if_failed
+        roll(advantage:, disadvantage:)
+        @success = @total >= @dc
+        @rerolled = true
+      end
     end
 
     private

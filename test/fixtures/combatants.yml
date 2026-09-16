@@ -172,3 +172,29 @@ champion_eighteen_combatant:
   proficiency_bonus: 6
   max_hit_points: 148
   combatable: champion_eighteen (PlayerCharacter)
+
+fighter_indomitable_nine_combatant:
+  armor_class: 16
+  strength: 15
+  dexterity: 12
+  constitution: 12
+  intelligence: 10
+  wisdom: 10
+  charisma: 8
+  speed: 30
+  proficiency_bonus: 4
+  max_hit_points: 76
+  combatable: fighter_indomitable_nine (PlayerCharacter)
+
+barbarian_test_striker_combatant:
+  armor_class: 12
+  strength: 16
+  dexterity: 12
+  constitution: 14
+  intelligence: 8
+  wisdom: 10
+  charisma: 8
+  speed: 30
+  proficiency_bonus: 2
+  max_hit_points: 14
+  combatable: barbarian_test_striker (PlayerCharacter)

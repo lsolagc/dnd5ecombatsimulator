@@ -113,11 +113,35 @@ class CombatSimulatorService
           turns << execute_action(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
         end
 
+        extra_turn = action_surge_turn(actor:, round_number:, turn_index: turn_index + 1)
+        turns << extra_turn if extra_turn
+
         end_log = turn_passive_log(actor:, trigger: :turn_end, round_number:, turn_index: turn_index + 1)
         turns << end_log if end_log
       end
 
       turns
+    end
+
+    # Action Surge: if the actor has an unused Action Surge, take one extra action right
+    # after their normal action. Not recursive — the extra action never grants another one.
+    def action_surge_turn(actor:, round_number:, turn_index:)
+      unlock = action_surge_unlock_for(actor:)
+      return nil unless unlock
+
+      uses = @uses_remaining.dig(actor.id, unlock.class_feature_id)
+      return nil unless uses.is_a?(Integer) && uses.positive?
+
+      available = available_actions_for(actor:)
+      return nil if available.empty?
+
+      chosen_action = available.sample(random: @rng)
+      consume_feature_use!(actor:, class_feature_id: unlock.class_feature_id)
+      execute_action(actor:, chosen_action:, round_number:, turn_index:).merge(extra: true)
+    end
+
+    def action_surge_unlock_for(actor:)
+      highest_unlock_per_feature(combatant: actor).find { |unlock| unlock.class_feature.name == "Action Surge" }
     end
 
     def turn_passive_log(actor:, trigger:, round_number:, turn_index:)
@@ -226,9 +250,20 @@ class CombatSimulatorService
         targets: target.nil? ? [] : [ target ]
       )
 
-      results = Combat::ActionRunner.call(action:)
+      indomitable_unlock = target && indomitable_unlock_for(combatant: target)
+      reroll_saving_throw = indomitable_unlock && indomitable_available?(combatant: target, unlock: indomitable_unlock)
+
+      results = Combat::ActionRunner.call(action:, reroll_saving_throw: !!reroll_saving_throw)
       resource_feature_id = resource_class_feature_id(feature:, combat_superiority_unlock: combat_superiority_unlock_for(actor:))
       consume_feature_use!(actor:, class_feature_id: resource_feature_id)
+
+      if reroll_saving_throw
+        results.each do |result|
+          next unless result.saving_throw&.rerolled
+
+          consume_feature_use!(actor: target, class_feature_id: indomitable_unlock.class_feature_id)
+        end
+      end
 
       {
         round: round_number,
@@ -291,6 +326,15 @@ class CombatSimulatorService
       return feature.id unless feature.resource_name == combat_superiority_unlock.class_feature.resource_name
 
       combat_superiority_unlock.class_feature_id
+    end
+
+    def indomitable_unlock_for(combatant:)
+      highest_unlock_per_feature(combatant:).find { |unlock| unlock.class_feature.name == "Indomitable" }
+    end
+
+    def indomitable_available?(combatant:, unlock:)
+      uses = @uses_remaining.dig(combatant.id, unlock.class_feature_id)
+      uses.is_a?(Integer) && uses.positive?
     end
 
     def combat_superiority_unlock_for(actor:)

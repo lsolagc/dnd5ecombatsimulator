@@ -13,15 +13,16 @@ module Combat
   class EffectExecutor
     Result = Data.define(:kind, :applied, :amount, :hp_before, :hp_after, :roll_outcome, :saving_throw, :message)
 
-    def self.call(effect:, actor:, target:, combat_state: {})
-      new(effect:, actor:, target:, combat_state:).execute
+    def self.call(effect:, actor:, target:, combat_state: {}, reroll_saving_throw: false)
+      new(effect:, actor:, target:, combat_state:, reroll_saving_throw:).execute
     end
 
-    def initialize(effect:, actor:, target:, combat_state: {})
-      @effect       = effect
-      @actor        = actor
-      @target       = target
-      @combat_state = combat_state
+    def initialize(effect:, actor:, target:, combat_state: {}, reroll_saving_throw: false)
+      @effect               = effect
+      @actor                = actor
+      @target               = target
+      @combat_state         = combat_state
+      @reroll_saving_throw  = reroll_saving_throw
     end
 
     def execute
@@ -95,7 +96,7 @@ module Combat
         save = @effect.save
         return [ full_amount, nil ] unless save
 
-        saving_throw = SavingThrow.new(actor: target, ability: save.fetch("ability"), dc: save.fetch("dc"))
+        saving_throw = SavingThrow.new(actor: target, ability: save.fetch("ability"), dc: save.fetch("dc"), reroll_if_failed: @reroll_saving_throw)
         return [ full_amount, saving_throw ] unless saving_throw.success
 
         amount =

@@ -121,6 +121,56 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_nil precision_attack_action(service:, actor: battle_master)
   end
 
+  test "Action Surge grants an extra action on the same turn and respects the uses limit" do
+    actor = fresh_character(:fighter_no_archetype_seven)
+    service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ fresh_character(:aragorn_copy) ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+
+    # Second Wind is otherwise available at this level; disable it so the extra action
+    # deterministically resolves to a plain attack (only remaining option).
+    uses_remaining = service.send(:instance_variable_get, :@uses_remaining)
+    uses_remaining[actor.id][class_features(:fighter_second_wind).id] = 0
+
+    action_surge_id = class_features(:fighter_action_surge).id
+    assert_equal 1, uses_remaining[actor.id][action_surge_id]
+
+    Random.srand(1)
+    extra_turn = service.send(:action_surge_turn, actor: actor, round_number: 1, turn_index: 1)
+
+    assert extra_turn, "expected Action Surge to grant an extra action"
+    assert_equal true, extra_turn[:extra]
+    assert_equal :attack, extra_turn.dig(:action, :type)
+    assert_equal 0, uses_remaining[actor.id][action_surge_id]
+
+    assert_nil service.send(:action_surge_turn, actor: actor, round_number: 1, turn_index: 2)
+  end
+
+  test "Indomitable rerolls a failed saving throw against the fighter and consumes a use" do
+    fighter = player_characters(:fighter_indomitable_nine) # constitution: 12 (mod +1)
+    attacker = player_characters(:barbarian_test_striker)
+
+    service = CombatSimulatorService.new(party_one: [ attacker ], party_two: [ fighter ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+
+    chosen_action = service.send(:available_actions_for, actor: attacker).find do |action|
+      action[:type] == :class_feature && action[:class_feature].slug == "test-save-strike"
+    end
+    assert chosen_action, "expected the test save-strike fixture to be available to the attacker"
+
+    indomitable_id = class_features(:fighter_indomitable).id
+    uses_remaining = service.send(:instance_variable_get, :@uses_remaining)
+    assert_equal 1, uses_remaining[fighter.id][indomitable_id]
+
+    Random.srand(46) # 1d6 roll = 6; 1st constitution save total 7 (fails dc 8); reroll total 10 (succeeds)
+    turn = service.send(:execute_class_feature_action, actor: attacker, chosen_action: chosen_action, round_number: 1, turn_index: 1)
+
+    damage_result = turn[:results].first
+    assert_equal :damage, damage_result[:kind]
+    assert_equal 3, damage_result[:amount] # half of 6, since the reroll succeeded
+
+    assert_equal 0, uses_remaining[fighter.id][indomitable_id]
+  end
+
   test "non integer uses values are floored" do
     service = CombatSimulatorService.new(
       party_one: [ fresh_character(:merlin) ],

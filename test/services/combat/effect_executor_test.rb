@@ -141,6 +141,41 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
     assert_equal hp_before, result.hp_after
   end
 
+  test "reroll_saving_throw reflects the second roll when the first save fails" do
+    Random.srand(26) # 1d10 roll = 6; 1st dexterity save total 8 (fails dc 10); reroll total 18 (succeeds)
+    effect = Combat::EffectInstance.new(
+      kind: :damage,
+      roll_expression: "1d10",
+      target_type: "target",
+      save: { "ability" => "dexterity", "dc" => 10, "on_success" => "half" }
+    )
+    target = player_characters(:aragorn_copy)
+    target.current_hit_points = target.max_hit_points
+
+    result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target, reroll_saving_throw: true)
+
+    assert result.saving_throw.rerolled
+    assert result.saving_throw.success
+    assert_equal 3, result.amount
+  end
+
+  test "reroll_saving_throw does not reroll a save that succeeds on the first attempt" do
+    Random.srand(1) # 1d10 roll = 6; dexterity save total 13, succeeds dc 5 on the first attempt
+    effect = Combat::EffectInstance.new(
+      kind: :damage,
+      roll_expression: "1d10",
+      target_type: "target",
+      save: { "ability" => "dexterity", "dc" => 5, "on_success" => "half" }
+    )
+    target = player_characters(:aragorn_copy)
+    target.current_hit_points = target.max_hit_points
+
+    result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target, reroll_saving_throw: true)
+
+    refute result.saving_throw.rerolled
+    assert_equal 3, result.amount
+  end
+
   test "heal effect without a save leaves saving_throw nil" do
     Random.srand(1)
     effect = Combat::EffectInstance.new(kind: :heal, roll_expression: "1d4", target_type: "self")

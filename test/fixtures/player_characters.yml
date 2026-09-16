@@ -77,3 +77,19 @@ champion_eighteen:
   level: 18
   player_class: fighter
   martial_archetype: fighter_champion_archetype
+
+fighter_indomitable_nine:
+  name: Fighter Indomitable Nine
+  level: 9
+  player_class: fighter
+  # constitution: 12 (mod +1)
+
+# Test-only: enemy with a save-based attack (barbarian_test_save_strike), used to
+# exercise Indomitable end-to-end. See class_features.yml for context.
+# player_class is monk, not barbarian: PlayerClassesControllerTest destroys the
+# :barbarian fixture, which fails with a foreign key violation once a PlayerCharacter
+# references it (player_characters has no dependent: :destroy on player_class).
+barbarian_test_striker:
+  name: Barbarian Test Striker
+  level: 1
+  player_class: monk

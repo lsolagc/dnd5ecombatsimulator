@@ -24,6 +24,19 @@ fighter_action_surge:
   source_book: PHB 2014
   source_reference: Fighter 2
 
+fighter_indomitable:
+  player_class: fighter
+  name: Indomitable
+  slug: indomitable
+  description: Reroll a failed saving throw and must use the new result.
+  feature_type: core
+  action_type: special
+  resource_name: Indomitable
+  recharge_type: long_rest
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Fighter 9
+
 fighter_fighting_style_archery:
   player_class: fighter
   name: "Fighting Style: Archery"
@@ -201,6 +214,24 @@ fighter_eldritch_knight_spellcasting:
   grants_spellcasting: true
   source_book: PHB 2014
   source_reference: Eldritch Knight 3
+
+# Test-only fixture: not a real game feature. Gives an enemy a damage effect with a
+# saving throw so Indomitable's reroll can be exercised end-to-end via
+# CombatSimulatorService (no seeded game feature currently has a `save` payload).
+# player_class must match barbarian_test_striker's (see player_characters.yml for why
+# it's monk, not barbarian) — available_actions_for filters unlocks by the actor's
+# own player_class_id.
+barbarian_test_save_strike:
+  player_class: monk
+  name: "Test Save Strike"
+  slug: test-save-strike
+  description: Test fixture only. A damage effect with a saving throw, used to exercise Indomitable in specs.
+  feature_type: core
+  action_type: action
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: "Test fixture"
+  source_reference: "N/A"
 
 wizard_spellcasting:
   player_class: wizard

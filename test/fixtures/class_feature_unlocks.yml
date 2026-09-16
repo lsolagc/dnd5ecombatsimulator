@@ -25,6 +25,24 @@ action_surge_level_17:
   recharge_type: short_or_long_rest
   description: You can use Action Surge twice between rests, but only once on the same turn.
 
+indomitable_level_9:
+  class_feature: fighter_indomitable
+  level: 9
+  uses: 1
+  description: Reroll a failed save; must use the new result.
+
+indomitable_level_13:
+  class_feature: fighter_indomitable
+  level: 13
+  uses: 2
+  description: Usable twice between long rests.
+
+indomitable_level_17:
+  class_feature: fighter_indomitable
+  level: 17
+  uses: 3
+  description: Usable three times between long rests.
+
 fighting_style_archery_level_1:
   class_feature: fighter_fighting_style_archery
   level: 1
@@ -133,6 +151,21 @@ eldritch_knight_spellcasting_level_3:
   class_feature: fighter_eldritch_knight_spellcasting
   level: 3
   description: Learn wizard cantrips and spells.
+
+# Test-only: see barbarian_test_save_strike in class_features.yml.
+test_save_strike_level_1:
+  class_feature: barbarian_test_save_strike
+  level: 1
+  description: Test fixture damage effect with a saving throw.
+  effect_payload:
+    kind: damage
+    roll: "1d6"
+    target: target
+    damage_type: bludgeoning
+    save:
+      ability: constitution
+      dc: 8
+      on_success: half
 
 wizard_spellcasting_level_1:
   class_feature: wizard_spellcasting
