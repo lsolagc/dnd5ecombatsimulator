@@ -215,6 +215,45 @@ fighter_eldritch_knight_spellcasting:
   source_book: PHB 2014
   source_reference: Eldritch Knight 3
 
+fighter_eldritch_knight_war_magic:
+  player_class: fighter
+  subclass_marker: fighter_eldritch_knight_archetype
+  name: War Magic
+  slug: eldritch-knight-war-magic
+  description: Casting a cantrip as your action lets you make a weapon attack as a bonus action.
+  feature_type: subclass_progression
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Eldritch Knight 7
+
+fighter_eldritch_knight_eldritch_strike:
+  player_class: fighter
+  subclass_marker: fighter_eldritch_knight_archetype
+  name: Eldritch Strike
+  slug: eldritch-knight-eldritch-strike
+  description: Hitting a creature with a weapon attack gives it disadvantage on its next save against one of your spells.
+  feature_type: subclass_progression
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Eldritch Knight 10
+
+fighter_eldritch_knight_improved_war_magic:
+  player_class: fighter
+  subclass_marker: fighter_eldritch_knight_archetype
+  name: Improved War Magic
+  slug: eldritch-knight-improved-war-magic
+  description: Casting any spell as your action lets you make a weapon attack as a bonus action.
+  feature_type: subclass_progression
+  action_type: passive
+  recharge_type: none
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Eldritch Knight 18
+
 # Test-only fixture: not a real game feature. Gives an enemy a damage effect with a
 # saving throw so Indomitable's reroll can be exercised end-to-end via
 # CombatSimulatorService (no seeded game feature currently has a `save` payload).

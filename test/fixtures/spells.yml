@@ -63,3 +63,21 @@ mage_hand:
   level: 0
   school: conjuration
   description: Test fixture only. A cantrip outside the schools allowed for an Eldritch Knight.
+
+# Test-only: a damage spell with a saving throw, used to exercise Eldritch Strike in
+# CombatSimulatorServiceTest (no seeded game spell currently has a `save` payload).
+test_save_spell:
+  name: Test Save Spell
+  slug: test-save-spell
+  level: 1
+  school: evocation
+  description: Test fixture only. A damage spell with a saving throw, used to exercise Eldritch Strike in specs.
+  effect_payload:
+    kind: damage
+    roll: "1d6"
+    target: target
+    damage_type: force
+    save:
+      ability: dexterity
+      dc: 8
+      on_success: half

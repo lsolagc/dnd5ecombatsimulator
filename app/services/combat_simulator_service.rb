@@ -14,6 +14,10 @@ class CombatSimulatorService
     @rng = @seed.nil? ? Random.new : Random.new(@seed)
     @round_log = []
     @uses_remaining = {}
+    # Eldritch Strike pending marks: target.id => attacker.id, consumed by the first
+    # saving throw the target rolls against a spell from that same attacker. No
+    # turn/round tracking — see notes on the Eldritch Strike class feature (db/seeds.rb).
+    @eldritch_strike_pending = {}
   end
 
   def call
@@ -111,6 +115,9 @@ class CombatSimulatorService
         unless available.empty?
           chosen_action = choose_turn_action(available:, actor:)
           turns << execute_action(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
+
+          bonus_turn = war_magic_turn(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
+          turns << bonus_turn if bonus_turn
         end
 
         extra_turn = action_surge_turn(actor:, round_number:, turn_index: turn_index + 1)
@@ -142,6 +149,29 @@ class CombatSimulatorService
 
     def action_surge_unlock_for(actor:)
       highest_unlock_per_feature(combatant: actor).find { |unlock| unlock.class_feature.name == "Action Surge" }
+    end
+
+    # War Magic / Improved War Magic: casting a spell as the turn's normal action grants
+    # a bonus weapon attack right after it. Not recursive (a plain attack, via
+    # execute_attack_action, never triggers another one) and never fired from the
+    # Action Surge extra action — only from the turn's normal chosen_action.
+    def war_magic_turn(actor:, chosen_action:, round_number:, turn_index:)
+      return nil unless war_magic_available?(actor:, chosen_action:)
+
+      execute_attack_action(actor:, round_number:, turn_index:).merge(bonus: true)
+    end
+
+    def war_magic_available?(actor:, chosen_action:)
+      return false unless chosen_action[:type] == :cast_spell
+
+      unlocks = highest_unlock_per_feature(combatant: actor)
+      return true if unlocks.any? { |unlock| unlock.class_feature.name == "Improved War Magic" }
+
+      unlocks.any? { |unlock| unlock.class_feature.name == "War Magic" } && chosen_action[:spell].cantrip?
+    end
+
+    def eldritch_strike_unlocked?(actor:)
+      highest_unlock_per_feature(combatant: actor).any? { |unlock| unlock.class_feature.name == "Eldritch Strike" }
     end
 
     def turn_passive_log(actor:, trigger:, round_number:, turn_index:)
@@ -235,6 +265,8 @@ class CombatSimulatorService
         attack_roll = actor.roll_an_attack
         attacked = target.get_attacked(attack_roll:)
 
+        @eldritch_strike_pending[target.id] = actor.id if attacked[:success] && eldritch_strike_unlocked?(actor:)
+
         attacks << {
           kind: :attack,
           target_id: target.id,
@@ -312,7 +344,10 @@ class CombatSimulatorService
       payload = chosen_action[:payload]
       target = resolve_feature_target(actor:, payload:)
 
-      results = actor.cast_spell(slug: spell.slug, targets: [ target ].compact)
+      disadvantage_on_save = target && @eldritch_strike_pending[target.id] == actor.id
+      @eldritch_strike_pending.delete(target.id) if disadvantage_on_save
+
+      results = actor.cast_spell(slug: spell.slug, targets: [ target ].compact, disadvantage_on_save: !!disadvantage_on_save)
 
       {
         round: round_number,

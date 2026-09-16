@@ -194,7 +194,7 @@ class PlayerCharacter < ApplicationRecord
     @available_spell_slots ||= build_available_spell_slots
   end
 
-  def cast_spell(slug:, targets: [])
+  def cast_spell(slug:, targets: [], disadvantage_on_save: false)
     spell = spells.find_by!(slug: slug)
     consume_spell_slot!(spell.level) if spell.level.positive?
 
@@ -204,7 +204,7 @@ class PlayerCharacter < ApplicationRecord
       actor:       self,
       targets:     targets
     )
-    Combat::ActionRunner.call(action: action)
+    Combat::ActionRunner.call(action: action, disadvantage_on_save:)
   end
 
   private

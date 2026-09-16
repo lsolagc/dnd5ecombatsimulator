@@ -152,6 +152,21 @@ eldritch_knight_spellcasting_level_3:
   level: 3
   description: Learn wizard cantrips and spells.
 
+eldritch_knight_war_magic_level_7:
+  class_feature: fighter_eldritch_knight_war_magic
+  level: 7
+  description: Casting a cantrip as your action lets you make a weapon attack as a bonus action.
+
+eldritch_knight_eldritch_strike_level_10:
+  class_feature: fighter_eldritch_knight_eldritch_strike
+  level: 10
+  description: A weapon attack imposes disadvantage on the target's next save against your spells.
+
+eldritch_knight_improved_war_magic_level_18:
+  class_feature: fighter_eldritch_knight_improved_war_magic
+  level: 18
+  description: Casting any spell as your action lets you make a weapon attack as a bonus action.
+
 # Test-only: see barbarian_test_save_strike in class_features.yml.
 test_save_strike_level_1:
   class_feature: barbarian_test_save_strike

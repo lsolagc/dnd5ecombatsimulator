@@ -869,6 +869,7 @@ fighter_eldritch_knight_features = [
     action_type: :passive,
     recharge_type: :none,
     source_reference: "Eldritch Knight 7",
+    notes: "Implementado em CombatSimulatorService: um ataque bônus com arma dispara sempre que a ação normal do turno for conjurar um truque (cast_spell com spell.cantrip? true), sem consumir recurso. Não encadeia com Action Surge nem com o próprio ataque bônus.",
     unlocks: [
       { level: 7, description: "Conjurar um truque como ação permite um ataque com arma como ação bônus." }
     ]
@@ -881,6 +882,7 @@ fighter_eldritch_knight_features = [
     action_type: :passive,
     recharge_type: :none,
     source_reference: "Eldritch Knight 10",
+    notes: "Simplificação deliberada: o RAW impõe a desvantagem \"até o final do seu próximo turno\", mas o motor não tem nenhum conceito de duração/expiração por turno. Implementado como consumo único (last-hit-wins se dois atores diferentes acertarem o mesmo alvo): o primeiro saving throw do alvo contra uma magia do MESMO ator que o atingiu recebe disadvantage_on_save, e a marca pendente é removida na hora, independentemente de quantos turnos realmente passaram.",
     unlocks: [
       { level: 10, description: "Um ataque com arma impõe desvantagem no próximo teste de resistência contra suas magias." }
     ]
@@ -905,6 +907,7 @@ fighter_eldritch_knight_features = [
     action_type: :passive,
     recharge_type: :none,
     source_reference: "Eldritch Knight 18",
+    notes: "Implementado em CombatSimulatorService: mesma regra do War Magic, mas sem restringir a truque — qualquer cast_spell na ação normal do turno dispara o ataque bônus.",
     unlocks: [
       { level: 18, description: "Conjurar qualquer magia como ação permite um ataque com arma como ação bônus." }
     ]

@@ -147,6 +147,35 @@ eldritch_knight_seven_combatant:
   max_hit_points: 58
   combatable: eldritch_knight_seven (PlayerCharacter)
 
+eldritch_knight_ten_combatant:
+  armor_class: 16
+  strength: 17
+  dexterity: 12
+  constitution: 14
+  intelligence: 10
+  wisdom: 10
+  charisma: 8
+  speed: 30
+  proficiency_bonus: 4
+  max_hit_points: 76
+  # Test-only: an unrealistically high attack_bonus guarantees weapon attacks hit,
+  # so the Eldritch Strike pending mark test doesn't depend on the attack roll.
+  attack_bonus: 50
+  combatable: eldritch_knight_ten (PlayerCharacter)
+
+eldritch_knight_eighteen_combatant:
+  armor_class: 18
+  strength: 20
+  dexterity: 12
+  constitution: 14
+  intelligence: 10
+  wisdom: 10
+  charisma: 8
+  speed: 30
+  proficiency_bonus: 6
+  max_hit_points: 148
+  combatable: eldritch_knight_eighteen (PlayerCharacter)
+
 fighter_no_archetype_seven_combatant:
   armor_class: 16
   strength: 17

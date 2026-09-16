@@ -31,3 +31,17 @@ eldritch_knight_seven_shield:
 eldritch_knight_seven_chromatic_orb:
   player_character: eldritch_knight_seven
   spell: chromatic_orb
+
+eldritch_knight_ten_test_save_spell:
+  player_character: eldritch_knight_ten
+  spell: test_save_spell
+
+eldritch_knight_eighteen_magic_missile:
+  player_character: eldritch_knight_eighteen
+  spell: magic_missile
+
+# A second caster who knows test_save_spell, used to prove Eldritch Strike's
+# disadvantage does not leak to an attacker other than the one who landed the hit.
+eldritch_knight_eighteen_test_save_spell:
+  player_character: eldritch_knight_eighteen
+  spell: test_save_spell

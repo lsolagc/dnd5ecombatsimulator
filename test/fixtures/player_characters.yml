@@ -67,6 +67,18 @@ eldritch_knight_seven:
   player_class: fighter
   martial_archetype: fighter_eldritch_knight_archetype
 
+eldritch_knight_ten:
+  name: Eldritch Knight Ten
+  level: 10
+  player_class: fighter
+  martial_archetype: fighter_eldritch_knight_archetype
+
+eldritch_knight_eighteen:
+  name: Eldritch Knight Eighteen
+  level: 18
+  player_class: fighter
+  martial_archetype: fighter_eldritch_knight_archetype
+
 fighter_no_archetype_seven:
   name: Fighter No Archetype Seven
   level: 7

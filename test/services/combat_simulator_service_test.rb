@@ -259,6 +259,148 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_equal 0, service.send(:normalize_uses_value, 0.8)
   end
 
+  test "War Magic grants a bonus weapon attack when the turn's normal action casts a cantrip" do
+    caster = spellcaster_with_known_spells(:eldritch_knight_seven)
+    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+
+    chosen_action = service.send(:available_actions_for, actor: caster).find do |action|
+      action[:type] == :cast_spell && action[:spell].slug == "fire-bolt"
+    end
+    assert chosen_action, "expected fire-bolt (a cantrip) to be an available action"
+
+    Random.srand(1)
+    bonus_turn = service.send(:war_magic_turn, actor: caster, chosen_action:, round_number: 1, turn_index: 1)
+
+    assert bonus_turn, "expected War Magic to grant a bonus weapon attack"
+    assert_equal true, bonus_turn[:bonus]
+    assert_equal :attack, bonus_turn.dig(:action, :type)
+  end
+
+  test "War Magic does not grant a bonus attack for a non-cantrip spell before Improved War Magic" do
+    caster = spellcaster_with_known_spells(:eldritch_knight_seven)
+    chosen_action = { type: :cast_spell, spell: spells(:magic_missile) }
+    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+
+    assert_nil service.send(:war_magic_turn, actor: caster, chosen_action:, round_number: 1, turn_index: 1)
+  end
+
+  test "Improved War Magic grants a bonus weapon attack even for a non-cantrip spell" do
+    caster = spellcaster_with_known_spells(:eldritch_knight_eighteen)
+    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+
+    chosen_action = service.send(:available_actions_for, actor: caster).find do |action|
+      action[:type] == :cast_spell && action[:spell].slug == "magic-missile"
+    end
+    assert chosen_action, "expected magic-missile to be an available action"
+
+    Random.srand(1)
+    bonus_turn = service.send(:war_magic_turn, actor: caster, chosen_action:, round_number: 1, turn_index: 1)
+
+    assert bonus_turn, "expected Improved War Magic to grant a bonus weapon attack for a non-cantrip spell"
+    assert_equal true, bonus_turn[:bonus]
+    assert_equal :attack, bonus_turn.dig(:action, :type)
+  end
+
+  test "a successful weapon attack from an Eldritch Knight with Eldritch Strike marks the target as pending" do
+    caster = spellcaster_with_known_spells(:eldritch_knight_ten)
+    target = fresh_character(:aragorn)
+
+    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ target ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+
+    Random.srand(1)
+    turn = service.send(:execute_attack_action, actor: caster, round_number: 1, turn_index: 1)
+
+    assert_equal true, turn[:results].first[:success], "expected the attack to hit (attack_bonus is set high for determinism)"
+    pending = service.send(:instance_variable_get, :@eldritch_strike_pending)
+    assert_equal caster.id, pending[target.id]
+  end
+
+  test "Eldritch Strike imposes disadvantage on the target's next save against the same caster's spell, then stops" do
+    caster = spellcaster_with_known_spells(:eldritch_knight_ten)
+    target = fresh_character(:aragorn) # dexterity 12 (mod +1)
+
+    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ target ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+    service.send(:instance_variable_get, :@eldritch_strike_pending)[target.id] = caster.id
+
+    chosen_action = service.send(:available_actions_for, actor: caster).find do |action|
+      action[:type] == :cast_spell && action[:spell].slug == "test-save-spell"
+    end
+    assert chosen_action, "expected test-save-spell to be an available action"
+
+    # seed 4: 1d6 damage roll = 3; disadvantage keeps the worse of two d20 saves
+    # (+1 dexterity modifier) = total 7, failing DC 8 -> full damage (3).
+    Random.srand(4)
+    first_turn = service.send(:execute_cast_spell_action, actor: caster, chosen_action:, round_number: 1, turn_index: 1)
+    assert_equal 3, first_turn[:results].first[:amount], "expected disadvantage to cause the save to fail (full damage)"
+
+    pending = service.send(:instance_variable_get, :@eldritch_strike_pending)
+    assert_nil pending[target.id], "expected the Eldritch Strike mark to be consumed by the first save"
+
+    # Same seed, no pending mark this time: only one d20 is rolled (total 16), the save
+    # succeeds against DC 8, halving the damage (3 / 2 = 1).
+    Random.srand(4)
+    second_turn = service.send(:execute_cast_spell_action, actor: caster, chosen_action:, round_number: 1, turn_index: 2)
+    assert_equal 1, second_turn[:results].first[:amount], "expected the second save, without disadvantage, to succeed and halve damage"
+  end
+
+  test "Eldritch Strike's disadvantage does not leak to a different attacker or a different target" do
+    marked_target = fresh_character(:aragorn) # dexterity 12 (mod +1)
+
+    # A different attacker must not benefit from someone else's mark on the target.
+    other_caster = spellcaster_with_known_spells(:eldritch_knight_eighteen)
+    attacker_leak_service = CombatSimulatorService.new(party_one: [ other_caster ], party_two: [ marked_target ], seed: 1, max_rounds: 1)
+    attacker_leak_service.send(:initialize_state)
+    attacker_leak_service.send(:instance_variable_get, :@eldritch_strike_pending)[marked_target.id] = player_characters(:eldritch_knight_ten).id
+
+    other_action = attacker_leak_service.send(:available_actions_for, actor: other_caster).find do |action|
+      action[:type] == :cast_spell && action[:spell].slug == "test-save-spell"
+    end
+    assert other_action, "expected test-save-spell to be available to the other caster"
+
+    # Same seed/roll math as the sibling test's "no disadvantage" branch: a single d20
+    # save succeeds, halving damage -> a different attacker never gets the disadvantage.
+    Random.srand(4)
+    leaked_turn = attacker_leak_service.send(:execute_cast_spell_action, actor: other_caster, chosen_action: other_action, round_number: 1, turn_index: 1)
+    assert_equal 1, leaked_turn[:results].first[:amount], "a different attacker must not receive the marked target's disadvantage"
+
+    # The same attacker must not get disadvantage against a target they haven't marked.
+    marker = spellcaster_with_known_spells(:eldritch_knight_ten)
+    unmarked_target = fresh_character(:aragorn_copy)
+    target_leak_service = CombatSimulatorService.new(party_one: [ marker ], party_two: [ unmarked_target ], seed: 1, max_rounds: 1)
+    target_leak_service.send(:initialize_state)
+    target_leak_service.send(:instance_variable_get, :@eldritch_strike_pending)[marked_target.id] = marker.id # a mark on someone else entirely
+
+    marker_action = target_leak_service.send(:available_actions_for, actor: marker).find do |action|
+      action[:type] == :cast_spell && action[:spell].slug == "test-save-spell"
+    end
+    assert marker_action, "expected test-save-spell to be available to the marking attacker"
+
+    Random.srand(4)
+    unmarked_turn = target_leak_service.send(:execute_cast_spell_action, actor: marker, chosen_action: marker_action, round_number: 1, turn_index: 1)
+    assert_equal 1, unmarked_turn[:results].first[:amount], "the same attacker casting against an unmarked target must not get disadvantage"
+  end
+
+  test "war_magic_available? and eldritch_strike_unlocked? never consume @rng" do
+    # Both are queried on every actor's turn/attack (not just Eldritch Knights), so any
+    # accidental @rng draw here would desync every other seeded test in the suite.
+    actor = fresh_character(:aragorn) # no spellcasting, no Eldritch Knight features
+    service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ fresh_character(:aragorn_copy) ], seed: 5, max_rounds: 1)
+    service.send(:initialize_state)
+    rng = service.send(:instance_variable_get, :@rng)
+
+    before = Marshal.dump(rng)
+    service.send(:war_magic_available?, actor: actor, chosen_action: { type: :attack })
+    service.send(:eldritch_strike_unlocked?, actor: actor)
+    after = Marshal.dump(rng)
+
+    assert_equal before, after, "availability checks for War Magic/Eldritch Strike must never consume @rng"
+  end
+
   private
 
     def fresh_character(fixture_name)
