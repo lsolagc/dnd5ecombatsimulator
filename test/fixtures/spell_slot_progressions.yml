@@ -9,3 +9,17 @@ wizard_spellcasting_level_1:
   spell_slots_2: 0
   spell_slots_3: 0
   spell_slots_4: 0
+
+# Matches db/seeds.rb's level 3 entry for the real Eldritch Knight slot table.
+# eldritch_knight_seven is level 7, but the query picks the highest unlocked
+# level <= the character's level, so this is the one it resolves to (no level 7
+# entry seeded here on purpose, to keep the fixture minimal).
+fighter_eldritch_knight_spellcasting_level_3:
+  class_feature: fighter_eldritch_knight_spellcasting
+  level: 3
+  cantrips_known: 2
+  spells_known: 3
+  spell_slots_1: 2
+  spell_slots_2: 0
+  spell_slots_3: 0
+  spell_slots_4: 0

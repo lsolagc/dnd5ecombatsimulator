@@ -11,3 +11,23 @@ merlin_magic_missile:
 merlin_shield:
   player_character: merlin
   spell: shield
+
+# eldritch_knight_seven's progression (fighter_eldritch_knight_spellcasting_level_3
+# fixture) allows 2 cantrips and 3 spells known: 1 cantrip + 3 spells here, i.e. at
+# capacity on purpose, so tests can exercise the spells_known limit by trying to add
+# a 4th spell.
+eldritch_knight_seven_fire_bolt:
+  player_character: eldritch_knight_seven
+  spell: fire_bolt
+
+eldritch_knight_seven_magic_missile:
+  player_character: eldritch_knight_seven
+  spell: magic_missile
+
+eldritch_knight_seven_shield:
+  player_character: eldritch_knight_seven
+  spell: shield
+
+eldritch_knight_seven_chromatic_orb:
+  player_character: eldritch_knight_seven
+  spell: chromatic_orb

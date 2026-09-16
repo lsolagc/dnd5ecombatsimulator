@@ -171,6 +171,84 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_equal 0, uses_remaining[fighter.id][indomitable_id]
   end
 
+  test "an Eldritch Knight autonomously casts a spell during a simulated round" do
+    caster = spellcaster_with_known_spells(:eldritch_knight_seven)
+    target = fresh_character(:aragorn)
+
+    result = CombatSimulatorService.new(party_one: [ caster ], party_two: [ target ], seed: 2, max_rounds: 1).call
+
+    cast_turn = result[:round_log].flat_map { |round| round[:turns] }
+      .find { |turn| turn[:actor_id] == caster.id && turn.dig(:action, :type) == :cast_spell }
+
+    assert cast_turn, "expected the Eldritch Knight to autonomously cast a spell"
+    assert_equal "magic-missile", cast_turn.dig(:action, :spell_slug)
+    assert_equal :damage, cast_turn[:results].first[:kind]
+    assert_equal 12, cast_turn[:results].first[:amount]
+  end
+
+  test "choose_turn_action picks the physical branch when the coin flip favors it" do
+    caster = spellcaster_with_known_spells(:eldritch_knight_seven)
+    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+
+    available = service.send(:available_actions_for, actor: caster)
+    chosen = service.send(:choose_turn_action, available:, actor: caster)
+
+    assert_equal :attack, chosen[:type]
+  end
+
+  test "choose_turn_action picks the spell branch when the coin flip favors it" do
+    caster = spellcaster_with_known_spells(:eldritch_knight_seven)
+    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 3, max_rounds: 1)
+    service.send(:initialize_state)
+
+    available = service.send(:available_actions_for, actor: caster)
+    chosen = service.send(:choose_turn_action, available:, actor: caster)
+
+    assert_equal :cast_spell, chosen[:type]
+    assert_equal "magic-missile", chosen[:spell].slug
+  end
+
+  test "choose_turn_action does not consume extra randomness for a non-spellcasting actor" do
+    # Comparing only the chosen action is not a reliable regression guard: for some
+    # seeds/list sizes, an extra @rng draw before the real sample still lands on the
+    # same element by coincidence. Compare the RNG's internal state instead, which only
+    # matches if the exact same sequence of draws happened.
+    actor = fresh_character(:aragorn)
+    plain_service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ fresh_character(:aragorn_copy) ], seed: 5, max_rounds: 1)
+    heuristic_service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ fresh_character(:aragorn_copy) ], seed: 5, max_rounds: 1)
+
+    available = plain_service.send(:available_actions_for, actor: actor)
+    plain_rng = plain_service.send(:instance_variable_get, :@rng)
+    heuristic_rng = heuristic_service.send(:instance_variable_get, :@rng)
+
+    available.sample(random: plain_rng)
+    heuristic_service.send(:choose_turn_action, available:, actor: actor)
+
+    assert_equal Marshal.dump(plain_rng), Marshal.dump(heuristic_rng),
+      "choose_turn_action must consume @rng identically to a single available.sample(random: @rng) call"
+  end
+
+  test "cast_spell action disappears from available_actions_for once its spell slot is exhausted" do
+    wizard = spellcaster_with_known_spells(:merlin)
+    service = CombatSimulatorService.new(party_one: [ wizard ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+
+    cast_slugs = service.send(:available_actions_for, actor: wizard)
+      .select { |action| action[:type] == :cast_spell }
+      .map { |action| action[:spell].slug }
+    assert_includes cast_slugs, "magic-missile"
+    assert_includes cast_slugs, "fire-bolt"
+
+    wizard.available_spell_slots[1] = 0
+
+    remaining_cast_slugs = service.send(:available_actions_for, actor: wizard)
+      .select { |action| action[:type] == :cast_spell }
+      .map { |action| action[:spell].slug }
+    assert_not_includes remaining_cast_slugs, "magic-missile"
+    assert_includes remaining_cast_slugs, "fire-bolt" # cantrips never consume a slot
+  end
+
   test "non integer uses values are floored" do
     service = CombatSimulatorService.new(
       party_one: [ fresh_character(:merlin) ],
@@ -194,6 +272,15 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     # #known_maneuvers only queries the database for a persisted owner, and .dup always
     # resets new_record? to true even after manually re-assigning the original id.
     def battle_master_with_known_maneuvers(fixture_name)
+      character = player_characters(fixture_name)
+      character.current_hit_points = character.max_hit_points
+      character
+    end
+
+    # Uses the fixture record directly (no #dup), for the same reason as
+    # #battle_master_with_known_maneuvers: #spells is a has_many :through
+    # association, which only resolves for a persisted owner.
+    def spellcaster_with_known_spells(fixture_name)
       character = player_characters(fixture_name)
       character.current_hit_points = character.max_hit_points
       character

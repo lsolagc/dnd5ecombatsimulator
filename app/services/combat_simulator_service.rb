@@ -109,7 +109,7 @@ class CombatSimulatorService
 
         available = available_actions_for(actor:)
         unless available.empty?
-          chosen_action = available.sample(random: @rng)
+          chosen_action = choose_turn_action(available:, actor:)
           turns << execute_action(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
         end
 
@@ -185,7 +185,30 @@ class CombatSimulatorService
         }
       end
 
+      actor.spells.each do |spell|
+        next if spell.effect_payload.blank?
+        next unless spell.cantrip? || actor.available_spell_slots[spell.level].to_i.positive?
+
+        actions << { type: :cast_spell, spell: spell, payload: spell.effect_payload.deep_stringify_keys }
+      end
+
       actions
+    end
+
+    # Deliberately primitive turn AI: a spellcaster with at least one castable spell
+    # flips a coin between the "physical" branch (attack + class features, uniform)
+    # and the "spell" branch (cast_spell options, uniform). Non-casters, or casters
+    # with nothing castable right now, keep the original uniform sample over
+    # everything — no coin flip — so @rng draws stay unchanged for the vast majority
+    # of actors/tests.
+    def choose_turn_action(available:, actor:)
+      spell_options = available.select { |a| a[:type] == :cast_spell }
+      if actor.spellcasting_feature.present? && spell_options.any?
+        other_options = available - spell_options
+        (@rng.rand < 0.5 ? other_options : spell_options).sample(random: @rng)
+      else
+        available.sample(random: @rng)
+      end
     end
 
     def execute_action(actor:, chosen_action:, round_number:, turn_index:)
@@ -194,6 +217,8 @@ class CombatSimulatorService
         execute_attack_action(actor:, round_number:, turn_index:)
       when :class_feature
         execute_class_feature_action(actor:, chosen_action:, round_number:, turn_index:)
+      when :cast_spell
+        execute_cast_spell_action(actor:, chosen_action:, round_number:, turn_index:)
       else
         raise ArgumentError, "Unsupported action type: #{chosen_action[:type]}"
       end
@@ -276,6 +301,30 @@ class CombatSimulatorService
           feature_id: feature.id,
           feature_slug: feature.slug,
           feature_name: feature.name,
+          target_type: payload["target"]
+        },
+        results: serialize_effect_results(results:)
+      }
+    end
+
+    def execute_cast_spell_action(actor:, chosen_action:, round_number:, turn_index:)
+      spell = chosen_action[:spell]
+      payload = chosen_action[:payload]
+      target = resolve_feature_target(actor:, payload:)
+
+      results = actor.cast_spell(slug: spell.slug, targets: [ target ].compact)
+
+      {
+        round: round_number,
+        turn: turn_index,
+        actor_id: actor.id,
+        actor_name: actor.name,
+        actor_party: party_for(actor),
+        action: {
+          type: :cast_spell,
+          spell_id: spell.id,
+          spell_slug: spell.slug,
+          spell_name: spell.name,
           target_type: payload["target"]
         },
         results: serialize_effect_results(results:)

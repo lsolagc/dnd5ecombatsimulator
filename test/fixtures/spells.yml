@@ -30,3 +30,36 @@ shield:
   level: 1
   school: abjuration
   description: Reaction that grants +5 AC until the start of your next turn.
+
+chromatic_orb:
+  name: Chromatic Orb
+  slug: chromatic-orb
+  level: 1
+  school: evocation
+  description: Hurls a sphere of energy at a creature in a ranged spell attack.
+  effect_payload:
+    kind: damage
+    roll: "3d8"
+    target: target
+    damage_type: force
+
+fireball:
+  name: Fireball
+  slug: fireball
+  level: 3
+  school: evocation
+  description: A bright streak flashes to a point and explodes in flame.
+  effect_payload:
+    kind: damage
+    roll: "8d6"
+    target: target
+    damage_type: fire
+
+# Test-only: a school outside abjuration/evocation, used to exercise the
+# Eldritch Knight school restriction in PlayerCharacterSpellTest.
+mage_hand:
+  name: Mage Hand
+  slug: mage-hand
+  level: 0
+  school: conjuration
+  description: Test fixture only. A cantrip outside the schools allowed for an Eldritch Knight.
