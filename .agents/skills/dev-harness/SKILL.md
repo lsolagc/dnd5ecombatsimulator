@@ -15,8 +15,12 @@ Siga o procedimento de `.agents/skills/task-specification/SKILL.md`: ler README 
 perguntar só o essencial não documentado, consolidar Demanda, Escopo (dentro/fora), Decomposição e
 **Critérios de Aceite verificáveis**. Não implemente nesta fase.
 
-Se a demanda decompuser em subtarefas, rode as fases 2-4 para cada uma, na ordem de dependência
-declarada.
+Se a demanda decompuser em subtarefas, rode as fases 1-4 para cada uma, na ordem de dependência
+declarada: a especificação é refeita por subtarefa, não uma vez só para a demanda inteira.
+
+Não avance para a fase 2 enquanto o Encaminhamento da especificação for "Aguardando resposta do
+usuário". As "Decisões para Veto" aprovadas e as invariantes da especificação vão no briefing do
+build.
 
 ### 2. Build
 Spawn subagent `task-build` (Agent tool) com a demanda consolidada, escopo e critérios de aceite.
@@ -30,8 +34,14 @@ builder) seguindo `.agents/skills/adversarial-review/SKILL.md`, contestando espe
 Saída: conclusão inicial, hipóteses alternativas, evidências, limites, recomendação final marcada
 como bloqueante ou não-bloqueante.
 
+Se a especificação listou invariantes, o revisor executa (não só lê) e sabota cada uma, para
+confirmar que algum teste falha. Revisão apenas por leitura de código não conta como evidência.
+
 ### 4. Fitness
 Piso, sempre: `bundle exec rubocop` + `bin/rails test` (ao menos os arquivos/diretórios tocados).
+
+Rode de verdade e reporte a evidência (comando e números). Nunca dê como verde por leitura de
+código. Se o ambiente não permitir executar, pare e diga ao usuário quem vai rodar.
 
 Some o(s) critério(s) específico(s) do tipo de tarefa:
 - Efeito/habilidade de combate → `.agents/skills/combat-mechanics-testing/SKILL.md`.
