@@ -54,6 +54,15 @@ Ao contrário das skills, executam fora do modelo:
   com o trecho da falha. Falha de infraestrutura (banco indisponível) não bloqueia, mas avisa.
 - **Commit sem evidência** (`PreToolUse` em Bash): qualquer `git ... commit` (inclusive `git -C`,
   `git -c` e `bash -c`) roda a verificação e é negado se não estiver verde.
+- **Aprovação antes do build** (`PreToolUse` em `Agent`): o spawn do `task-build` exige a seção
+  "Decisões para Veto" no briefing e pergunta ao usuário (`ask`) antes de começar.
+- **Revisor que executa** (`SubagentStop` do agente `task-review`, `.claude/agents/task-review.md`): só
+  encerra com relatório completo, execução real da suíte, sabotagem comprovada (ou "Sem invariantes:
+  <razão>") e o código restaurado. Bloqueia no máximo 2 vezes por revisor.
+- **`/okf maintain` automático** (`Stop`): depois de um turno com código novo e verde, pede uma volta
+  extra para sincronizar `.okf/` (versão Claude Code do hook do Copilot, com estado próprio). O
+  dispatcher único (`stop-dispatch.sh`) roda o gate antes, para não pedir o okf com a suíte vermelha.
+- **Retomada** (`SessionStart` em `compact|resume`): reinjeta as garantias e se o estado atual está verificado.
 - A evidência (assinatura de conteúdo, comandos, contagem de testes) fica em
   `.git/claude-verify/evidence.json`. Os hooks só negam ou bloqueiam, nunca reescrevem comandos
   (rtk e caveman já reescrevem Bash e reescritas paralelas não são determinísticas).
