@@ -258,7 +258,7 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     character.combatant.update!(damage_type: "piercing")
     character.combatant.immunities["damage_types"]["piercing"] = true
     character.current_hit_points = character.max_hit_points
-    attack_roll = Struct.new(:total, :damage).new(999, 10)
+    attack_roll = Struct.new(:natural, :total, :damage).new(10, 999, 10)
 
     character.get_attacked(attack_roll: attack_roll)
 
@@ -269,11 +269,33 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     character = player_characters(:aragorn)
     character.combatant.vulnerabilities["damage_types"]["bludgeoning"] = true
     character.current_hit_points = character.max_hit_points
-    attack_roll = Struct.new(:total, :damage).new(999, 3)
+    attack_roll = Struct.new(:natural, :total, :damage).new(10, 999, 3)
 
     character.get_attacked(attack_roll: attack_roll)
 
     assert_equal character.max_hit_points - 6, character.current_hit_points, "expected the default bludgeoning type to trigger vulnerability (double damage)"
+  end
+
+  test "get_attacked always hits on a natural 20, even when the total is below the armor class" do
+    character = player_characters(:aragorn)
+    character.current_hit_points = character.max_hit_points
+    attack_roll = Struct.new(:natural, :total, :damage).new(20, 1, 4)
+
+    result = character.get_attacked(attack_roll: attack_roll)
+
+    assert result[:success]
+    assert_equal character.max_hit_points - 4, character.current_hit_points
+  end
+
+  test "get_attacked always misses on a natural 1, even when the total beats the armor class" do
+    character = player_characters(:aragorn)
+    character.current_hit_points = character.max_hit_points
+    attack_roll = Struct.new(:natural, :total, :damage).new(1, 999, 4)
+
+    result = character.get_attacked(attack_roll: attack_roll)
+
+    assert_not result[:success]
+    assert_equal character.max_hit_points, character.current_hit_points
   end
 
   # Spellcasting

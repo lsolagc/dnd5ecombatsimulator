@@ -1,6 +1,13 @@
 require "test_helper"
 
 class Dice::D20RollTest < ActiveSupport::TestCase
+  test "Dice.hit? follows the 5e rule: natural 20 always hits, natural 1 always misses, otherwise total >= AC" do
+    assert Dice.hit?(natural: 20, total: 1, armor_class: 30)
+    assert_not Dice.hit?(natural: 1, total: 99, armor_class: 5)
+    assert Dice.hit?(natural: 10, total: 15, armor_class: 15)
+    assert_not Dice.hit?(natural: 10, total: 14, armor_class: 15)
+  end
+
   test "Dice.d20 returns a plain roll when advantage/disadvantage are not requested" do
     Random.srand(42) # natural 7
 

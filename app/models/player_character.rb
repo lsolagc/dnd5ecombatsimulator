@@ -110,7 +110,7 @@ class PlayerCharacter < ApplicationRecord
   end
 
   def get_attacked(attack_roll:)
-    if attack_roll.total >= armor_class
+    if Dice.hit?(natural: attack_roll.natural, total: attack_roll.total, armor_class:)
       take_damage(amount: attack_roll.damage, damage_type: damage_type.to_sym)
       { success: true, attack_roll: attack_roll, message: "Hit!" }
     else

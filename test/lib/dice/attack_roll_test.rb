@@ -32,6 +32,15 @@ class Dice::AttackRollTest < ActiveSupport::TestCase
     assert_equal plain.damage, cancelled.damage
   end
 
+  test "exposes the natural d20 the total was built from" do
+    Random.srand(42) # natural 7
+
+    attack = Dice::AttackRoll.new(to_hit_modifier: 2, damage_dice: "1d4")
+
+    assert_equal 7, attack.natural
+    assert_equal 9, attack.total
+  end
+
   test "neither advantage nor disadvantage rolls a single to-hit d20" do
     attack = Dice::AttackRoll.new(to_hit_modifier: 2, damage_dice: "1d4")
 

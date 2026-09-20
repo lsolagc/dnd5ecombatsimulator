@@ -1,6 +1,6 @@
 module Dice
   class AttackRoll
-    attr_reader :total, :crit, :damage
+    attr_reader :natural, :total, :crit, :damage
 
     def initialize(to_hit_modifier: 0, damage_dice:, damage_modifier: 0, critical_hit_threshold: 20, advantage: false, disadvantage: false)
       @crit = false
@@ -19,7 +19,8 @@ module Dice
         roll_result = Dice.d20(modifier: to_hit_modifier)
         roll_result = advantage ? roll_result.with_advantage : roll_result.with_disadvantage if advantage ^ disadvantage
 
-        @crit = true if roll_result.natural >= @critical_hit_threshold
+        @natural = roll_result.natural
+        @crit = true if @natural >= @critical_hit_threshold
         @total = roll_result.total
       end
   end

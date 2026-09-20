@@ -274,6 +274,7 @@ class CombatSimulatorService
           success: attacked[:success],
           damage: attacked[:success] ? attack_roll.damage : 0,
           attack_roll: {
+            natural: attack_roll.natural,
             total: attack_roll.total,
             crit: attack_roll.crit,
             damage: attack_roll.damage

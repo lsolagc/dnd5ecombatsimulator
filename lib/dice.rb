@@ -53,6 +53,12 @@ module Dice
     Dice::RollResult.new(natural: dice_rolls, total: total_roll_value)
   end
 
+  # Regra de acerto de um ataque (5e): 20 natural sempre acerta, 1 natural sempre erra,
+  # nos demais casos acerta quando o total alcança a CA.
+  def self.hit?(natural:, total:, armor_class:)
+    natural == 20 || (natural != 1 && total >= armor_class)
+  end
+
   # Rola um dado d20 com modificador opcional. O resultado sabe se re-rolar uma
   # vez com vantagem/desvantagem (ver Dice::D20Roll#with_advantage/#with_disadvantage).
   #
