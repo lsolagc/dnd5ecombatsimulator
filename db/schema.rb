@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_09_20_152521) do
+ActiveRecord::Schema[8.0].define(version: 2026_09_20_153448) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -47,6 +47,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_09_20_152521) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "subclass_marker_id"
+    t.integer "spellcasting_ability"
     t.index ["player_class_id", "slug"], name: "index_class_features_on_player_class_id_and_slug", unique: true
     t.index ["player_class_id"], name: "index_class_features_on_player_class_id"
     t.index ["subclass_marker_id"], name: "index_class_features_on_subclass_marker_id"

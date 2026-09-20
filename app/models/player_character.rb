@@ -175,6 +175,12 @@ class PlayerCharacter < ApplicationRecord
     feature
   end
 
+  # Ability name ("intelligence"...) this character casts with: the chosen subclass's spellcasting
+  # feature wins over the class's, so an Eldritch Knight gets INT although Fighter has none.
+  def spellcasting_ability
+    spellcasting_feature&.spellcasting_ability || spellcasting_modifier
+  end
+
   def available_spell_slots
     @available_spell_slots ||= build_available_spell_slots
   end

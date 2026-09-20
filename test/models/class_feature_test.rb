@@ -21,6 +21,18 @@ class ClassFeatureTest < ActiveSupport::TestCase
     assert feature.valid?
   end
 
+  test "a spellcasting feature needs a spellcasting ability of its own when the class has none" do
+    attrs = { name: "Subclass Casting", slug: "subclass-casting", description: "Casts.", feature_type: :core,
+              action_type: :passive, recharge_type: :none, grants_spellcasting: true, source_book: "PHB 2014" }
+
+    feature = ClassFeature.new(attrs.merge(player_class: @fighter))
+    assert_not feature.valid?
+    assert_includes feature.errors.attribute_names, :spellcasting_ability
+
+    assert ClassFeature.new(attrs.merge(player_class: @fighter, spellcasting_ability: :intelligence)).valid?
+    assert ClassFeature.new(attrs.merge(player_class: player_classes(:wizard))).valid? # class supplies it
+  end
+
   test "requires name slug and description" do
     feature = ClassFeature.new(player_class: @fighter)
 

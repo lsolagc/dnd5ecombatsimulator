@@ -212,6 +212,7 @@ fighter_eldritch_knight_spellcasting:
   action_type: passive
   recharge_type: none
   grants_spellcasting: true
+  spellcasting_ability: intelligence
   source_book: PHB 2014
   source_reference: Eldritch Knight 3
 

@@ -845,6 +845,7 @@ fighter_eldritch_knight_features = [
     recharge_type: :none,
     source_reference: "Eldritch Knight 3",
     grants_spellcasting: true,
+    spellcasting_ability: :intelligence,
     unlocks: [
       { level: 3, description: "Ganha acesso a truques e magias de 1º nível de mago, restritas a abjuração e evocação (algumas magias de qualquer escola nos níveis 8, 14 e 20)." }
     ]

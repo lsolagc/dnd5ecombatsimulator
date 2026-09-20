@@ -49,6 +49,24 @@ class PlayerCharacterMartialArchetypeTest < ActiveSupport::TestCase
     assert_equal "eldritch-knight-spellcasting", character.spellcasting_feature.slug
   end
 
+  test "an Eldritch Knight casts with Intelligence even though Fighter has no spellcasting ability" do
+    assert_nil player_classes(:fighter).spellcasting_modifier
+    assert_equal "intelligence", player_characters(:eldritch_knight_seven).spellcasting_ability
+  end
+
+  test "a non-casting Fighter subclass has no spellcasting ability" do
+    assert_nil player_characters(:champion_seven).spellcasting_ability
+    assert_nil player_characters(:battle_master_seven).spellcasting_ability
+  end
+
+  test "a full caster falls back to its class's spellcasting ability, and a feature ability overrides it" do
+    wizard = player_characters(:merlin)
+    assert_equal "intelligence", wizard.spellcasting_ability
+
+    class_features(:wizard_spellcasting).update!(spellcasting_ability: :wisdom)
+    assert_equal "wisdom", PlayerCharacter.find(wizard.id).spellcasting_ability
+  end
+
   test "martial_archetype must be a subclass-type feature" do
     fighter = player_classes(:fighter)
     character = PlayerCharacter.new(

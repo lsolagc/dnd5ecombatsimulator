@@ -9,6 +9,8 @@ class ClassFeature < ApplicationRecord
   enum :feature_type, [ :core, :optional, :subclass, :subclass_progression ], prefix: true
   enum :action_type, [ :passive, :action, :bonus_action, :reaction, :no_action, :special ], prefix: true
   enum :recharge_type, [ :none, :short_rest, :long_rest, :short_or_long_rest, :turn, :round, :special ], prefix: true
+  # Ability of a subclass's spellcasting (e.g. Eldritch Knight uses INT); a feature without one falls back to the class's.
+  enum :spellcasting_ability, [ :intelligence, :wisdom, :charisma ], prefix: true
 
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: { scope: :player_class_id }
@@ -20,6 +22,7 @@ class ClassFeature < ApplicationRecord
   validates :grants_spellcasting, inclusion: { in: [ true, false ] }
   validates :subclass_marker, presence: true, if: :feature_type_subclass_progression?
   validate :subclass_marker_belongs_to_the_same_subclass_tree
+  validate :spellcasting_ability_is_known, if: :grants_spellcasting
 
   # A feature is part of this marker's subclass tree if it *is* the marker itself, or if it's a
   # subclass_progression pointing back at this marker via subclass_marker_id.
@@ -43,6 +46,12 @@ class ClassFeature < ApplicationRecord
   end
 
   private
+
+    def spellcasting_ability_is_known
+      return if spellcasting_ability.present? || player_class&.spellcasting_modifier.present?
+
+      errors.add(:spellcasting_ability, "must be set when the class has no spellcasting ability of its own")
+    end
 
     def subclass_marker_belongs_to_the_same_subclass_tree
       return if subclass_marker.nil?
