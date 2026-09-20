@@ -156,6 +156,26 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     assert_equal 4 * (10 + 2), character.reload.max_hit_points
   end
 
+  # spell save DC / spell attack
+
+  test "an Eldritch Knight's spell save DC and spell attack bonus use Intelligence and proficiency" do
+    character = PlayerCharacter.create!(
+      name: "EK Casting", level: 5, player_class: player_classes(:fighter),
+      martial_archetype: class_features(:fighter_eldritch_knight_archetype),
+      combatant_attributes: { intelligence: 16 } # +3, proficiency +3 at level 5
+    )
+
+    assert_equal 14, character.spell_save_dc # 8 + 3 + 3
+    assert_equal 6, character.spell_attack_bonus # 3 + 3
+  end
+
+  test "spell save DC and spell attack bonus raise for a character with no spellcasting ability" do
+    champion = player_characters(:champion_seven)
+
+    assert_raises(RuntimeError) { champion.spell_save_dc }
+    assert_raises(RuntimeError) { champion.spell_attack_bonus }
+  end
+
   test "updating max_hit_points_input persists the override on the associated combatant" do
     character = player_characters(:aragorn)
 

@@ -176,6 +176,65 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
     assert_equal 3, result.amount
   end
 
+  # spell attack / spell save DC
+
+  test "a spell attack that beats the target's AC deals damage and reports the attack roll" do
+    result = cast_spell_effect(attack: "spell", target_armor_class: 0, seed: 2) # d20 = 9 (total 15), 1d10 = 9
+
+    assert result.applied
+    assert result.attack_roll.hit
+    refute result.attack_roll.crit
+    assert_equal 6, result.attack_roll.total - result.attack_roll.natural # proficiency +3, INT +3
+    assert_equal 9, result.amount
+    assert_includes result.message, "Spell attack 15 vs AC 0: hit"
+  end
+
+  test "a spell attack that misses deals no damage" do
+    result = cast_spell_effect(attack: "spell", target_armor_class: 100, seed: 2) # d20 = 9 (total 15)
+
+    refute result.applied
+    refute result.attack_roll.hit
+    assert_equal 0, result.amount
+    assert_equal result.hp_before, result.hp_after
+    assert_includes result.message, "miss"
+  end
+
+  test "a natural 20 on a spell attack always hits, even past the target's AC, and doubles the damage dice" do
+    result = cast_spell_effect(attack: "spell", target_armor_class: 100, seed: 23) # d20 = 20 (total 26 < AC 100), 1d10 = 7
+
+    assert result.applied
+    assert result.attack_roll.hit
+    assert result.attack_roll.crit
+    assert_equal 14, result.amount
+    assert_includes result.message, "critical hit"
+  end
+
+  test "a natural 1 on a spell attack always misses, even when the total beats the target's AC" do
+    result = cast_spell_effect(attack: "spell", target_armor_class: 0, seed: 41) # d20 = 1 (total 7 > AC 0)
+
+    refute result.applied
+    refute result.attack_roll.hit
+    refute result.attack_roll.crit
+    assert_equal 0, result.amount
+    assert_includes result.message, "miss"
+  end
+
+  test "an effect without an attack type never rolls a spell attack" do
+    assert_nil cast_spell_effect(attack: nil, target_armor_class: 100).attack_roll
+  end
+
+  test "a save whose dc is 'spell' uses the caster's spell save DC" do
+    result = cast_spell_effect(save: { "ability" => "dexterity", "dc" => "spell", "on_success" => "half" })
+
+    assert_equal 14, result.saving_throw.dc # 8 + 3 + 3
+  end
+
+  test "an unsupported attack type is rejected" do
+    assert_raises(ArgumentError) do
+      Combat::EffectInstance.new(kind: :damage, roll_expression: "1d10", target_type: "target", attack: "melee")
+    end
+  end
+
   test "heal effect without a save leaves saving_throw nil" do
     Random.srand(1)
     effect = Combat::EffectInstance.new(kind: :heal, roll_expression: "1d4", target_type: "self")
@@ -184,4 +243,25 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
 
     assert_nil result.saving_throw
   end
+
+  private
+
+    # Casts a 1d10 damage effect from an Eldritch Knight (level 5: proficiency +3, INT 16 = +3).
+    def cast_spell_effect(attack: nil, save: nil, target_armor_class: 10, seed: nil)
+      caster = PlayerCharacter.create!(
+        name: "Caster", level: 5, player_class: player_classes(:fighter),
+        martial_archetype: class_features(:fighter_eldritch_knight_archetype),
+        combatant_attributes: { intelligence: 16 }
+      )
+      ClassLevelProgression.find_or_create_by!(player_class: caster.player_class, level: 5) do |progression|
+        progression.proficiency_bonus = 3
+      end
+      target = player_characters(:aragorn_copy)
+      target.combatant.update!(armor_class: target_armor_class)
+      target.current_hit_points = target.max_hit_points
+
+      effect = Combat::EffectInstance.new(kind: :damage, roll_expression: "1d10", target_type: "target", attack:, save:)
+      Random.srand(seed) if seed
+      Combat::EffectExecutor.call(effect:, actor: caster, target:)
+    end
 end

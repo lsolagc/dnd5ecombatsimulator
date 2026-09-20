@@ -16,6 +16,12 @@ class Combat::RollExpressionTest < ActiveSupport::TestCase
     assert_includes 1..10, outcome.total
   end
 
+  test "crit doubles the dice but not the flat modifier" do
+    outcome = Combat::RollExpression.new(expression: "2d1 + 3").resolve(context: @context, crit: true)
+
+    assert_equal 7, outcome.total # (1 + 1) * 2 + 3
+  end
+
   test "rolls dice with a numeric modifier" do
     Random.srand(1)
     outcome = Combat::RollExpression.new(expression: "1d6 + 3").resolve(context: @context)

@@ -19,7 +19,8 @@ module Combat
       @expression = expression.to_s.downcase.gsub(/\s+/, "")
     end
 
-    def resolve(context:)
+    # crit: doubles every dice term (a critical hit), never the flat modifiers.
+    def resolve(context:, crit: false)
       tokens = tokenize
 
       dice_terms       = []
@@ -31,7 +32,7 @@ module Combat
         multiplier = sign == "-" ? -1 : 1
 
         if term.match?(DICE_PATTERN)
-          result = Dice.roll(dice: term, modifier: 0)
+          result = Dice.roll(dice: term, modifier: 0, crit:)
           dice_terms  << term
           dice_rolls  << result.natural
           total       += result.natural * multiplier

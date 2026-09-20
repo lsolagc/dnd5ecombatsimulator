@@ -401,6 +401,25 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_equal before, after, "availability checks for War Magic/Eldritch Strike must never consume @rng"
   end
 
+  test "serialized results carry the spell attack roll only when the effect made one" do
+    caster = spellcaster_with_known_spells(:eldritch_knight_seven) # proficiency +2 (no progression), INT 10 (+0)
+    target = player_characters(:aragorn)
+    target.combatant.update!(armor_class: 100)
+    target.current_hit_points = target.max_hit_points
+    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ target ], seed: 1, max_rounds: 1)
+
+    attack_effect = Combat::EffectInstance.new(kind: :damage, roll_expression: "1d10", target_type: "target", attack: "spell")
+    plain_effect = Combat::EffectInstance.new(kind: :damage, roll_expression: "1d10", target_type: "target")
+    Random.srand(2) # first d20 = 9: neither an auto-hit nor an auto-miss against AC 100
+    results = [ attack_effect, plain_effect ].map { |effect| Combat::EffectExecutor.call(effect:, actor: caster, target:) }
+
+    with_attack, without_attack = service.send(:serialize_effect_results, results:)
+
+    assert_equal({ natural: with_attack.dig(:attack_roll, :natural), total: with_attack.dig(:attack_roll, :natural) + 2,
+                   armor_class: 100, hit: false, crit: with_attack.dig(:attack_roll, :natural) == 20 }, with_attack[:attack_roll])
+    assert_not_includes without_attack.keys, :attack_roll
+  end
+
   private
 
     def fresh_character(fixture_name)

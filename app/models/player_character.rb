@@ -181,6 +181,20 @@ class PlayerCharacter < ApplicationRecord
     spellcasting_feature&.spellcasting_ability || spellcasting_modifier
   end
 
+  def spellcasting_ability_modifier
+    ability = spellcasting_ability or raise "#{name} has no spellcasting ability"
+
+    public_send("#{ability}_modifier")
+  end
+
+  def spell_save_dc
+    8 + proficiency_bonus + spellcasting_ability_modifier
+  end
+
+  def spell_attack_bonus
+    proficiency_bonus + spellcasting_ability_modifier
+  end
+
   def available_spell_slots
     @available_spell_slots ||= build_available_spell_slots
   end

@@ -764,7 +764,7 @@ spells = [
     level: 0,
     school: "evocation",
     description: "Trote de fogo lançado como ataque de magia à distância.",
-    effect_payload: { kind: "damage", roll: "1d10", target: "target", damage_type: "fire" }
+    effect_payload: { kind: "damage", roll: "1d10", target: "target", damage_type: "fire", attack: "spell" }
   },
   {
     name: "Ray of Frost",
@@ -772,7 +772,7 @@ spells = [
     level: 0,
     school: "evocation",
     description: "Um raio de luz azul-branca gélida atinge uma criatura.",
-    effect_payload: { kind: "damage", roll: "1d8", target: "target", damage_type: "cold" }
+    effect_payload: { kind: "damage", roll: "1d8", target: "target", damage_type: "cold", attack: "spell" }
   },
   {
     name: "Chromatic Orb",
@@ -780,7 +780,7 @@ spells = [
     level: 1,
     school: "evocation",
     description: "Arremessa uma esfera de energia contra uma criatura em um ataque de magia à distância.",
-    effect_payload: { kind: "damage", roll: "3d8", target: "target", damage_type: "force" }
+    effect_payload: { kind: "damage", roll: "3d8", target: "target", damage_type: "force", attack: "spell" }
   },
   {
     name: "Shield",
@@ -795,8 +795,8 @@ spells = [
     level: 2,
     school: "evocation",
     description: "Cria três raios de fogo; todos podem ser direcionados ao mesmo alvo.",
-    notes: "Simplificado para um único alvo somando o dano dos três raios (6d6); o motor de combate ainda não modela múltiplos alvos por magia.",
-    effect_payload: { kind: "damage", roll: "6d6", target: "target", damage_type: "fire" }
+    notes: "Simplificado para um único alvo somando o dano dos três raios (6d6) sob UMA só jogada de ataque de magia (RAW: um ataque por raio, 2d6 cada); mesma média, mas tudo-ou-nada; o motor de combate ainda não modela múltiplos alvos por magia.",
+    effect_payload: { kind: "damage", roll: "6d6", target: "target", damage_type: "fire", attack: "spell" }
   },
   {
     name: "Fireball",
@@ -805,7 +805,7 @@ spells = [
     school: "evocation",
     description: "Uma explosão de fogo que afeta uma área.",
     notes: "Simplificado para um único alvo (8d6); a magia original afeta uma área e não é modelada como AoE ainda.",
-    effect_payload: { kind: "damage", roll: "8d6", target: "target", damage_type: "fire" }
+    effect_payload: { kind: "damage", roll: "8d6", target: "target", damage_type: "fire", save: { ability: "dexterity", dc: "spell", on_success: "half" } }
   },
   {
     name: "Stoneskin",

@@ -369,7 +369,7 @@ class CombatSimulatorService
 
     def serialize_effect_results(results:)
       results.map do |result|
-        {
+        serialized = {
           kind: result.kind,
           applied: result.applied,
           amount: result.amount,
@@ -385,6 +385,8 @@ class CombatSimulatorService
             total: result.roll_outcome.total
           }
         }
+        serialized[:attack_roll] = result.attack_roll.to_h if result.attack_roll
+        serialized
       end
     end
 
