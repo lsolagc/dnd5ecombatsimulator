@@ -528,7 +528,7 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :reaction,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
     unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
   },
@@ -539,7 +539,7 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :no_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
     unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
   },
@@ -550,7 +550,7 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :no_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
     unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
   },
@@ -561,7 +561,7 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :bonus_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
     unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
   },
@@ -572,7 +572,7 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :no_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
     unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
   },
@@ -637,7 +637,7 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :no_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
     unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
   },
@@ -666,7 +666,7 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :reaction,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
     unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
   },
@@ -677,7 +677,7 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :no_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
     unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
   },
@@ -706,7 +706,7 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :bonus_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
     unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
   },
@@ -717,7 +717,7 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :bonus_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
     unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
   },
@@ -728,7 +728,7 @@ fighter_battle_master_features = [
     feature_type: :subclass_progression,
     action_type: :no_action,
     recharge_type: :none,
-    resource_name: "Superiority Die",
+    resource_name: "Superiority Dice",
     source_reference: "Battle Master 3",
     unlocks: [ { level: 3, description: "Manobra disponível para escolha do Battle Master." } ]
   }
