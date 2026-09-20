@@ -146,6 +146,16 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     assert_equal character.hit_points_at_level_one, character.reload.max_hit_points
   end
 
+  test "setup_hit_points gives full HP for the level (max hit die + CON modifier at every level) when no override is given" do
+    fighter = player_classes(:fighter) # d10
+    character = PlayerCharacter.create!(
+      name: "Full HP", level: 4, player_class: fighter,
+      combatant_attributes: { constitution: 14 } # +2
+    )
+
+    assert_equal 4 * (10 + 2), character.reload.max_hit_points
+  end
+
   test "updating max_hit_points_input persists the override on the associated combatant" do
     character = player_characters(:aragorn)
 

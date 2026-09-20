@@ -39,31 +39,16 @@ class PlayerCharacter < ApplicationRecord
   def setup_hit_points
     return apply_hit_points_override if max_hit_points_input.present?
 
-    case level
-    when 1
-      self.max_hit_points = hit_points_at_level_one
-    else
-      self.max_hit_points = hit_points_at_level_one + roll_hit_points(for_level: level)
-    end
+    self.max_hit_points = full_hit_points
   end
 
   def apply_hit_points_override
     self.max_hit_points = max_hit_points_input.to_i
   end
 
-  def roll_hit_points(for_level: 1)
-    return ArgumentError.new("for_level must be an Integer") unless for_level.is_a?(Integer)
-    return ArgumentError.new("Hit points can only be rolled for levels greater than 1") if for_level && for_level < 1
-
-    additional_hit_points = 0
-    if for_level && for_level > 1
-      additional_levels = for_level - level
-      additional_levels.times do
-        additional_hit_points += Dice.send(hit_die) + constitution_modifier
-      end
-    end
-
-    additional_hit_points
+  # Full HP for the character's level: the hit die's maximum + CON modifier at every level.
+  def full_hit_points
+    hit_points_at_level_one + (level - 1) * (hit_die_value + constitution_modifier)
   end
 
   def hit_points_at_level_one

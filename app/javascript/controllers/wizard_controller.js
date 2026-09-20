@@ -200,8 +200,8 @@ export default class extends Controller {
   hpPreview(option, level) {
     const hitDieValue = option ? parseInt(option.dataset.hitDieValue, 10) : null
     if (!hitDieValue) return "—"
-    if (level === 1) return hitDieValue + this.modifierFor(this.abilityScore("constitution"))
 
-    return "rolado ao salvar"
+    // Mirrors PlayerCharacter#full_hit_points: max hit die + CON modifier at every level.
+    return level * (hitDieValue + this.modifierFor(this.abilityScore("constitution")))
   }
 }

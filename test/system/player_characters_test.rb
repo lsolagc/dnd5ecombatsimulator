@@ -153,6 +153,26 @@ class PlayerCharactersTest < ApplicationSystemTestCase
     assert_equal created.hit_points_at_level_one, created.max_hit_points
   end
 
+  test "wizard without HP override previews and persists full HP for a level above 1" do
+    visit new_player_character_url
+    fill_in "Identificação do combatente", with: "Gimli"
+    select @player_character.player_class.name, from: "Classe"
+    fill_in "Nível", with: 4
+
+    click_on "Continuar"
+    click_on "Continuar"
+    click_on "Continuar"
+    preview = find("[data-wizard-target='outHp']", match: :first, visible: true).text
+    page.save_screenshot(Rails.root.join("tmp/screenshots/wizard_hp_full_level_4_review_step.png"))
+
+    click_on "Criar personagem"
+
+    assert_text "Player character was successfully created"
+    created = PlayerCharacter.order(:created_at).last.reload
+    assert_operator created.max_hit_points, :>, created.hit_points_at_level_one
+    assert_equal created.max_hit_points, preview.to_i
+  end
+
   test "invalid HP máximo blocks saving and shows a visible error on the wizard" do
     visit new_player_character_url
     fill_in "Identificação do combatente", with: "Bad HP"
