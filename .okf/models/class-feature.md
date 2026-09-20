@@ -28,7 +28,13 @@ covers both passive and active abilities; `resource_name` +
 `recharge_type` (`none`/`short_rest`/`long_rest`/`short_or_long_rest`/`turn`/
 `round`/`special`) cover rest-based resources; `grants_spellcasting` flags
 abilities that grant casting (e.g. a Wizard's `Spellcasting`) without storing
-spells here.[^class-feature-rb]
+spells here.[^class-feature-rb] A casting feature carries the ability it casts
+with in `spellcasting_ability` (`intelligence`\|`wisdom`\|`charisma`): a subclass
+whose class has no ability of its own — the Fighter's Eldritch Knight, INT —
+sets it here, and validation requires it unless the class already supplies one
+(`PlayerClass#spellcasting_modifier`). See
+[PlayerCharacter#spellcasting_ability](/models/player-character.md) for the
+resolved value.
 
 `slug` is the stable key code and seeds use to reference a feature — unique
 per class (`index_class_features_on_player_class_id_and_slug`).
@@ -46,6 +52,7 @@ per class (`index_class_features_on_player_class_id_and_slug`).
 | resource_name | string | Optional, e.g. `Ki` |
 | recharge_type | enum | `none`\|`short_rest`\|`long_rest`\|`short_or_long_rest`\|`turn`\|`round`\|`special` |
 | grants_spellcasting | boolean | Marks casting-granting features |
+| spellcasting_ability | enum | `intelligence`\|`wisdom`\|`charisma`; optional, overrides the class's ability for this feature |
 | source_book | string | Default `PHB 2014` |
 | source_reference | string | Optional short reference |
 | notes | text | Optional |

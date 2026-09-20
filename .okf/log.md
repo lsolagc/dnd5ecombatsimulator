@@ -1,5 +1,36 @@
 # Update Log
 
+## 2026-09-20
+* **Update**: Attack rolls now follow the 5e natural-20/natural-1 rule for both spells and weapons through one shared
+  `Dice.hit?`: a natural 20 always hits (and is the critical hit that doubles the dice), a natural 1 always misses. Weapon
+  attacks previously only compared total to AC; `PlayerCharacter#get_attacked` (also used by the frozen EncounterService)
+  now applies the rule, `Dice::AttackRoll` exposes `natural`, and the `CombatSimulatorService` weapon-attack log carries it.
+  Updated [architecture/combat-effect-pipeline.md](architecture/combat-effect-pipeline.md), [architecture/encounter-service.md](architecture/encounter-service.md),
+  [architecture/combat-simulator-service.md](architecture/combat-simulator-service.md), [models/player-character.md](models/player-character.md)
+  and [models/spell.md](models/spell.md).
+* **Update**: Spells now use the caster's spellcasting ability. `PlayerCharacter#spell_save_dc` (8 + proficiency + ability
+  modifier) and `#spell_attack_bonus` feed the combat pipeline: a damage payload with `"attack": "spell"` rolls a spell attack
+  vs AC (miss = no damage, natural 20 doubles the dice via `RollExpression#resolve(crit:)`), and a save with `"dc": "spell"`
+  uses the caster's DC. Seeds: Fire Bolt, Ray of Frost, Chromatic Orb, Scorching Ray are spell attacks; Fireball is a DEX save
+  for half. `EffectExecutor::Result` gained `attack_roll`, also emitted in `CombatSimulatorService` round logs. Corrected the
+  stale "spell-save DC not implemented" (class-level-progression.md) and "simulator does not cast" (spell.md) claims. Updated
+  [architecture/combat-effect-pipeline.md](architecture/combat-effect-pipeline.md), [models/spell.md](models/spell.md),
+  [models/player-character.md](models/player-character.md) and [models/class-level-progression.md](models/class-level-progression.md).
+* **Update**: A spellcasting subclass can now declare its own spellcasting ability. New
+  `class_features.spellcasting_ability` enum (`intelligence`/`wisdom`/`charisma`), required on a
+  `grants_spellcasting` feature unless its class already has one; the Eldritch Knight's Spellcasting
+  seeds `intelligence`. `PlayerCharacter#spellcasting_ability` resolves feature-then-class. Updated
+  [models/class-feature.md](models/class-feature.md), [models/player-class.md](models/player-class.md)
+  and [models/player-character.md](models/player-character.md).
+* **Update**: Fixed three Fighter gaps. `PlayerCharacter#setup_hit_points` now gives full HP for the
+  level (max hit die + CON modifier every level; `roll_hit_points` removed, it computed
+  `for_level - level` = 0 extra levels) and the wizard preview mirrors it; seeded Battle Master
+  maneuvers now all use `resource_name` "Superiority Dice" so `PlayerCharacterManeuver` accepts any
+  of the 16; migration `BackfillFighterAttacksPerAction` corrects existing Fighter progression rows
+  (1/2/3/4 attacks at levels 1-4/5-10/11-19/20). Updated [models/player-character.md](models/player-character.md),
+  [models/player-class.md](models/player-class.md), [models/class-level-progression.md](models/class-level-progression.md)
+  and [ui/erb-bootstrap-views.md](ui/erb-bootstrap-views.md).
+
 ## 2026-08-30
 * **Update**: Made the basic weapon attack configurable per character instead of hardcoded. Added
   `attack_bonus` (integer, default 0), `damage_dice` (string, default `"1d4"`), and `damage_type`

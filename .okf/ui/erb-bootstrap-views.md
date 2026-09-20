@@ -93,7 +93,9 @@ submits.
   put a shared partial yet).
 - **`player_characters#new`**: a 4-step wizard (Atributos / Combate /
   Features / Revisão) navigated client-side by `wizard_controller.js`[^wizard-controller] — no
-  server round-trip between steps, one form submitted on the last step.
+  server round-trip between steps, one form submitted on the last step. The Revisão HP
+  preview (`hpPreview`) mirrors `PlayerCharacter#full_hit_points` (`level × (hit die + CON
+  modifier)`) and always shows a number, at any level, unless an HP override is typed.
   Ability score steppers, armor class, and speed write to
   `player_character[combatant_attributes][...]`, which
   [PlayerCharacter](/models/player-character.md) now accepts via

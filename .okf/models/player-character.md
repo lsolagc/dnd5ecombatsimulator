@@ -48,9 +48,12 @@ creates the `PlayerCharacter`.[^player-character-rb]
 
 # HP and leveling
 
-Level 1: `hit_points_at_level_one` = `hit_die_value + constitution_modifier`.
-Levels above 1: adds one hit-die roll + CON modifier per additional level
-(`roll_hit_points`). There is no `level_up!` method or `LevelUpService` in
+Without a `max_hit_points_input` override, `max_hit_points` is **full HP for the
+level** (`full_hit_points`): `hit_points_at_level_one` (`hit_die_value +
+constitution_modifier`) plus `hit_die_value + constitution_modifier` for every
+level above 1 — the maximum of the hit die at every level, no rolling, so it
+is deterministic. The wizard's HP preview (`hpPreview` in `wizard_controller.js`)
+mirrors the same formula. An override replaces the computed value. There is no `level_up!` method or `LevelUpService` in
 the current codebase — level-up support was removed; `level` is set at
 creation and not changed by application code today.
 
@@ -63,9 +66,11 @@ creation and not changed by application code today.
 `ability_modifier`/`proficiency_bonus`/`advantage`/`disadvantage` shape
 described in the legacy combat-system docs; the current `Dice::AttackRoll`
 contract is `to_hit_modifier:`, `damage_dice:`, `damage_modifier:`,
-`critical_hit_threshold:`.[^player-character-rb] `get_attacked` compares the
-roll's total to `armor_class` (delegated from `Combatant`) and, on a hit,
-calls `take_damage` with `damage_type:` read from the combatant's own
+`critical_hit_threshold:`.[^player-character-rb] `get_attacked` decides the hit
+with `Dice.hit?` — the 5e rule shared with spell attacks: a natural 20 always
+hits (and always crits), a natural 1 always misses, otherwise the roll's total
+must reach `armor_class` (delegated from `Combatant`); a crit that hits doubles
+the damage dice. On a hit it calls `take_damage` with `damage_type:` read from the combatant's own
 `damage_type` field (default `"bludgeoning"`) — configured per character via
 the creation/edit wizard rather than hardcoded. `take_damage` applies the
 target's immunity/resistance/vulnerability (delegated to `Combatant`, see
@@ -96,6 +101,17 @@ passive has no explicit actor intent to model.
 the character's class and delegates to
 [the combat effect-execution pipeline](/architecture/combat-effect-pipeline.md)
 via `Combat::CombatAction` + `Combat::ActionRunner`.
+
+`spellcasting_ability` returns the ability name the character casts with: the
+chosen subclass's spellcasting feature (`spellcasting_feature`) wins, falling
+back to the class's `spellcasting_modifier` — so an Eldritch Knight gets
+`"intelligence"` although Fighter has none, and non-casting subclasses get
+`nil`. It is an ability *name*; `spellcasting_ability_modifier` is the numeric
+modifier (raising when the character has no ability), and from it
+`spell_save_dc` = `8 + proficiency_bonus + modifier` and `spell_attack_bonus` =
+`proficiency_bonus + modifier`. The combat pipeline reads them for spell attacks
+and `"dc": "spell"` saves — see
+[combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md).
 
 # Schema
 

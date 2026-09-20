@@ -42,10 +42,11 @@ ordinary (mutable) ActiveRecord objects.[^player-class-rb]
 |-------|------|-------------|
 | name | string | Class name, unique |
 | hit_die | enum | `d4`\|`d6`\|`d8`\|`d10`\|`d12` |
-| spellcasting_modifier | enum | `intelligence`\|`wisdom`\|`charisma`; unset for non-casters |
+| spellcasting_modifier | enum | `intelligence`\|`wisdom`\|`charisma`; unset for non-casters and for classes whose casting comes from a subclass (a subclass casting feature's own `spellcasting_ability` covers those) |
 | description | text | Free text |
 
 # HP growth
 
-Level 1: `hit_die_value + CON_modifier`. Each level after: `+= roll(hit_die)
-+ CON_modifier` — see [player-character.md](/models/player-character.md).
+Level 1: `hit_die_value + CON_modifier`. Each level after: `+= hit_die_value
++ CON_modifier` (full HP for the level, no rolling) — see
+[player-character.md](/models/player-character.md).

@@ -64,13 +64,21 @@ directly.[^player-character-spell-rb]
 actions — no per-level unlock lookup, since a spell's effect doesn't scale
 with caster level in this minimal model.
 
-**Not covered**: `CombatSimulatorService`'s turn loop does not autonomously
-choose to cast a prepared spell — it still only offers `:attack` and
-`:class_feature` actions. Casting is proven end-to-end at the
-`Combat::ActionRunner` / model level (see `test/services/combat/action_runner_test.rb`),
-the same phase Second Wind was proven at before `CombatSimulatorService`
-integration happened separately. See
-[combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md).
+**Attack and save.** A spell's payload may carry `"attack": "spell"` (the caster
+rolls d20 + `PlayerCharacter#spell_attack_bonus` against the target's AC; a miss
+deals nothing, a natural 20 always hits and doubles the damage dice, a natural 1
+always misses) or a `save` whose `dc` is
+`"spell"` (the caster's `spell_save_dc`, `8 + proficiency + spellcasting-ability
+modifier`) — see [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md).
+The seeded catalog follows the 5e text: Fire Bolt, Ray of Frost, Chromatic Orb
+and Scorching Ray are spell attacks; Fireball is a DEX save for half. Scorching
+Ray is one all-or-nothing 6d6 attack (RAW: three 2d6 rays), and Shield/Stoneskin
+have no payload yet.
+
+`CombatSimulatorService`'s turn loop does offer castable spells as `:cast_spell`
+actions (see [combat-simulator-service.md](/architecture/combat-simulator-service.md));
+its round log carries an `attack_roll` (`natural`, `total`, `armor_class`, `hit`,
+`crit`) on results of spell-attack effects.
 
 # Schema
 

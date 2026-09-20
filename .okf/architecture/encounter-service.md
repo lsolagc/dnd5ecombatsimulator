@@ -71,6 +71,6 @@ Attacks and damage go through the same `PlayerCharacter#roll_an_attack` /
 [player-character.md](/models/player-character.md): a `Dice::AttackRoll`
 built from the combatant's configured `attack_bonus`, `damage_dice` (default
 `"1d4"`), STR modifier, and `critical_hit_threshold`, compared against
-`armor_class`; a hit applies `damage_type:` read from the combatant's
+`armor_class` with the 5e natural-20/natural-1 rule (`Dice.hit?`); a hit applies `damage_type:` read from the combatant's
 configured `damage_type` (default `"bludgeoning"`), adjusted by the target's
 resistance/immunity/vulnerability.[^encounter-service-rb]

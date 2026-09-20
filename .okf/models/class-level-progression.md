@@ -32,14 +32,18 @@ This freeze has a consequence for `db/seeds.rb`: `find_or_initialize_by`
 returns an already-frozen record on a re-run once a row exists, so seed code
 must skip `assign_attributes`/`save!` for existing rows (`next unless
 progression.new_record?`) rather than reassigning them — a progression row
-is meant to be set once, not updated in place.
+is meant to be set once, not updated in place. Correcting rows that already
+exist therefore takes a data migration (raw SQL, since the model's records
+can't be saved), e.g. `BackfillFighterAttacksPerAction`, which brought the
+Fighter's `attacks_per_action` in line with the seed after the column had been
+added with its default of 1.
 
 Proficiency bonus follows the standard 5e table (+2 at levels 1-4, +3 at
 5-8, +4 at 9-12, +5 at 13-16, +6 at 17-20).[^progression-rb] It feeds weapon
-attack rolls; a code-implemented spell-save DC formula
-(`9 + ability_modifier + proficiency_bonus`) was not found anywhere in the
-codebase as of this writing — treat spell-save DC as **not yet
-implemented**, not as a verified behavior.
+attack rolls and, through `PlayerCharacter#spell_save_dc` /
+`#spell_attack_bonus` (`8 + proficiency + ability modifier` and `proficiency +
+ability modifier`), spell save DCs and spell attacks — see
+[player-character.md](/models/player-character.md).
 
 `attacks_per_action` is what the Fighter's multiattack progression (1 attack
 at levels 1-4, 2 at 5-10, 3 at 11-19, 4 at 20) is modeled with — it is data,

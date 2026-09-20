@@ -75,6 +75,16 @@ action per turn:
    and still has uses remaining; the feature is run through
    `Combat::CombatAction` + `Combat::ActionRunner`, exactly like
    [PlayerCharacter#use_class_feature](/models/player-character.md).
+3. **Cast spell** actions are offered for each known [spell](/models/spell.md)
+   with an `effect_payload` that is a cantrip or has a spell slot left, via
+   `PlayerCharacter#cast_spell`. A payload with `"attack": "spell"` rolls a spell
+   attack against the target's AC and a `"dc": "spell"` save uses the caster's spell
+   save DC (both from the spellcasting ability, see
+   [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)); the
+   turn's result then carries an `attack_roll` (`natural`, `total`, `armor_class`,
+   `hit`, `crit`). Weapon attacks in the log carry `natural`, `total`, `crit` and
+   `damage`; both kinds decide the hit with `Dice.hit?` (natural 20 always hits,
+   natural 1 always misses), so an auto-hit can show a `total` below the AC.
 
 The available actions are collected into a list and one is picked with
 `.sample(random: @rng)` — action choice is random, not strategic.

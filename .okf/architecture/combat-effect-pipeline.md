@@ -82,6 +82,18 @@ breakdown instead of just a final number.[^combat-pipeline-rb]
 { "kind": "heal", "roll": "1d10 + fighter_level", "target": "self" }
 ```
 
+Damage effects can also declare `"attack": "spell"` (a spell attack roll against
+the target's AC, made by the actor with `PlayerCharacter#spell_attack_bonus`; a
+miss sets `applied: false` and deals 0; a natural 20 always hits and is a
+critical hit that doubles the dice via `RollExpression#resolve(crit: true)`, a
+natural 1 always misses, otherwise total >= AC — the same `Dice.hit?` rule as the
+weapon attack path) and a `save` whose `"dc"` is either a fixed
+integer or `"spell"`, meaning the actor's `spell_save_dc`. `EffectExecutor::Result`
+carries the rolled `attack_roll` (nil when the effect made none) next to
+`saving_throw`; both actors' numbers come from the spellcasting ability resolved
+by `PlayerCharacter#spellcasting_ability`. Unsupported `attack` values are rejected
+at `EffectInstance` construction.
+
 This is the field that connects the persisted class-feature model (see
 [models/class-feature-unlock.md](/models/class-feature-unlock.md)) to this
 pipeline: a class feature's unlock row describes an executable effect
