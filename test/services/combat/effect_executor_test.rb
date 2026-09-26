@@ -79,6 +79,15 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
     assert result.hp_after < hp_before
   end
 
+  test "a crit doubles the dice of an effect riding on a weapon attack" do
+    target = player_characters(:aragorn_copy)
+    target.current_hit_points = target.max_hit_points
+    effect = Combat::EffectInstance.new(kind: :damage, roll_expression: "1d1", target_type: "enemy")
+
+    assert_equal 1, Combat::EffectExecutor.call(effect:, actor: @fighter, target:).amount
+    assert_equal 2, Combat::EffectExecutor.call(effect:, actor: @fighter, target:, crit: true).amount
+  end
+
   test "raises for unknown effect kind" do
     effect = Combat::EffectInstance.new(kind: :unknown_kind, roll_expression: "1d4", target_type: "self")
 

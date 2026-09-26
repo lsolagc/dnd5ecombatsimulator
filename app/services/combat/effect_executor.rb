@@ -18,17 +18,19 @@ module Combat
     # A save "dc" of this value means the actor's spell save DC instead of a fixed number.
     SPELL_SAVE_DC = "spell"
 
-    def self.call(effect:, actor:, target:, combat_state: {}, reroll_saving_throw: false, disadvantage_on_save: false)
-      new(effect:, actor:, target:, combat_state:, reroll_saving_throw:, disadvantage_on_save:).execute
+    # crit: the effect rides on a weapon attack that was a critical hit (doubles its dice).
+    def self.call(effect:, actor:, target:, combat_state: {}, reroll_saving_throw: false, disadvantage_on_save: false, crit: false)
+      new(effect:, actor:, target:, combat_state:, reroll_saving_throw:, disadvantage_on_save:, crit:).execute
     end
 
-    def initialize(effect:, actor:, target:, combat_state: {}, reroll_saving_throw: false, disadvantage_on_save: false)
+    def initialize(effect:, actor:, target:, combat_state: {}, reroll_saving_throw: false, disadvantage_on_save: false, crit: false)
       @effect               = effect
       @actor                = actor
       @target               = target
       @combat_state         = combat_state
       @reroll_saving_throw  = reroll_saving_throw
       @disadvantage_on_save = disadvantage_on_save
+      @crit                 = crit
     end
 
     def execute
@@ -74,7 +76,7 @@ module Combat
         hp_before             = target.current_hit_points || target.max_hit_points
         attack_roll           = roll_spell_attack(target) if @effect.attack
         missed                = attack_roll && !attack_roll.hit
-        roll_outcome          = roll_for_effect(crit: attack_roll&.crit)
+        roll_outcome          = roll_for_effect(crit: attack_roll&.crit || @crit)
         full_amount           = missed ? 0 : [ roll_outcome.total, 0 ].max
         amount, saving_throw  = apply_save(full_amount:, target:)
         damage_type           = (@effect.damage_type || "bludgeoning").to_sym
