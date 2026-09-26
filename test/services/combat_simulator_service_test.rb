@@ -420,6 +420,29 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_not_includes without_attack.keys, :attack_roll
   end
 
+  test "a feature's target kind restricts who it may pick: enemy never self or allies, ally never enemies" do
+    actor = fresh_character(:aragorn)
+    ally = fresh_character(:aragorn_copy)
+    enemies = [ fresh_character(:merlin), fresh_character(:elora) ]
+    service = CombatSimulatorService.new(party_one: [ actor, ally ], party_two: enemies, seed: 1)
+
+    picks = ->(target) { 50.times.map { service.send(:resolve_feature_target, actor:, payload: { "target" => target }) }.uniq }
+
+    assert_empty picks.("enemy") - enemies
+    assert_empty picks.("ally") - [ actor, ally ]
+    assert_equal [ actor ], picks.("self")
+    assert_raises(ArgumentError) { picks.("target") }
+  end
+
+  test "an enemy-targeted feature has no target once every enemy is down" do
+    actor = fresh_character(:aragorn)
+    downed = fresh_character(:merlin)
+    downed.current_hit_points = 0
+    service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ downed ], seed: 1)
+
+    assert_nil service.send(:resolve_feature_target, actor:, payload: { "target" => "enemy" })
+  end
+
   private
 
     def fresh_character(fixture_name)

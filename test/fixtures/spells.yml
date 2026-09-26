@@ -9,7 +9,7 @@ fire_bolt:
   effect_payload:
     kind: damage
     roll: "1d10"
-    target: target
+    target: enemy
     damage_type: fire
 
 magic_missile:
@@ -21,7 +21,7 @@ magic_missile:
   effect_payload:
     kind: damage
     roll: "3d4 + 3"
-    target: target
+    target: enemy
     damage_type: force
 
 shield:
@@ -40,7 +40,7 @@ chromatic_orb:
   effect_payload:
     kind: damage
     roll: "3d8"
-    target: target
+    target: enemy
     damage_type: force
 
 fireball:
@@ -52,7 +52,7 @@ fireball:
   effect_payload:
     kind: damage
     roll: "8d6"
-    target: target
+    target: enemy
     damage_type: fire
 
 # Test-only: a school outside abjuration/evocation, used to exercise the
@@ -75,7 +75,7 @@ test_save_spell:
   effect_payload:
     kind: damage
     roll: "1d6"
-    target: target
+    target: enemy
     damage_type: force
     save:
       ability: dexterity

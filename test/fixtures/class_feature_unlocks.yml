@@ -139,7 +139,7 @@ battle_master_maneuver_precision_attack_level_3:
   effect_payload:
     kind: damage
     roll: "1d8"
-    target: target
+    target: enemy
     damage_type: bludgeoning
 
 eldritch_knight_archetype_level_3:
@@ -175,7 +175,7 @@ test_save_strike_level_1:
   effect_payload:
     kind: damage
     roll: "1d6"
-    target: target
+    target: enemy
     damage_type: bludgeoning
     save:
       ability: constitution

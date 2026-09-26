@@ -133,6 +133,8 @@ class CombatSimulatorService
     # Action Surge: if the actor has an unused Action Surge, take one extra action right
     # after their normal action. Not recursive — the extra action never grants another one.
     def action_surge_turn(actor:, round_number:, turn_index:)
+      return nil if combat_over?
+
       unlock = action_surge_unlock_for(actor:)
       return nil unless unlock
 
@@ -390,11 +392,17 @@ class CombatSimulatorService
       end
     end
 
+    # The payload's "target" says who may be picked: self, enemy (opposing party) or ally (own party,
+    # actor included). Nil when nobody valid is left alive.
     def resolve_feature_target(actor:, payload:)
-      return actor if payload["target"] == "self"
+      candidates = case payload["target"]
+      when "self" then [ actor ]
+      when "enemy" then alive_combatants(enemy_party_for(actor))
+      when "ally" then alive_combatants(own_party_for(actor))
+      else raise ArgumentError, "Unsupported target: #{payload["target"].inspect}"
+      end
 
-      # A target action can pick any alive combatant, including the actor.
-      alive_combatants(all_combatants).sample(random: @rng)
+      candidates.sample(random: @rng)
     end
 
     def consume_feature_use!(actor:, class_feature_id:)
@@ -488,5 +496,13 @@ class CombatSimulatorService
 
     def party_for(combatant)
       @party_one.include?(combatant) ? :party_one : :party_two
+    end
+
+    def own_party_for(combatant)
+      party_for(combatant) == :party_one ? @party_one : @party_two
+    end
+
+    def enemy_party_for(combatant)
+      party_for(combatant) == :party_one ? @party_two : @party_one
     end
 end

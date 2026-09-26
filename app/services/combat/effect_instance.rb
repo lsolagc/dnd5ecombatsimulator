@@ -8,7 +8,7 @@ module Combat
   #   {
   #     "kind"        => "heal" | "damage",
   #     "roll"        => "<roll expression>",   # e.g. "1d10 + actor_level"
-  #     "target"      => "self" | "target",
+  #     "target"      => "self" | "enemy" | "ally",   # who may be chosen; enemy/ally are relative to the actor's party
   #     "damage_type" => "<type>",              # optional, for :damage kind
   #     "attack"      => "spell",               # optional, for :damage kind: the actor rolls a spell
   #                                             #   attack against the target's AC; a miss deals nothing
