@@ -1,6 +1,16 @@
 # Update Log
 
 ## 2026-09-20
+* **Update**: Battle Master maneuvers are no longer standalone 1d8 actions. A payload with `"applies_to": "weapon_attack"` turns the turn into a normal weapon attack and, only on a hit, adds the maneuver die as extra damage (doubled on a critical hit) and spends a superiority die; a miss spends nothing. Distracting Strike also declares `"debuff": "next_attack_advantage"`: the target is marked, the next weapon attack against it by anyone but the marker has advantage, and the mark expires at the start of the marker's next turn. Simplifications: the die is its own damage instance rather than part of the weapon's roll, Precision Attack still adds damage instead of an attack-roll bonus, and spell attacks ignore marks. Documented in [architecture/combat-simulator-service.md](architecture/combat-simulator-service.md), [architecture/combat-effect-pipeline.md](architecture/combat-effect-pipeline.md) and [models/class-feature-unlock.md](models/class-feature-unlock.md).
+* **Update**: An `effect_payload`'s `"target"` is now an explicit valid-target indicator — `self`, `enemy` (opposing party) or `ally` (own party, actor included) — replacing the old `target`, which let `CombatSimulatorService` pick any living combatant, so a damage maneuver or spell could hit its own user and a heal could reach an enemy. The simulator draws only from the valid candidates, raises on an unknown kind, and skips Action Surge's extra action once the fight is over (no target left). Seeds and fixtures moved from `target: target` to `target: enemy`. Documented in [architecture/combat-effect-pipeline.md](architecture/combat-effect-pipeline.md) and [architecture/combat-simulator-service.md](architecture/combat-simulator-service.md).
+* **Update**: `db/seeds.rb` is now a one-liner (`SeedData.load_all`); the data moved to YAML under `db/seeds/`:
+  `classes/<class>.yml` (class + level progression + features/unlocks, with subclasses nested as `subclass_features` and
+  spell slots under `spell_slots`), `spells.yml` and `characters/*.yml` (a `PlayerCharacter` with its combatant stats,
+  fighting style, archetype, spells and maneuvers, referenced by slug). Documented templates live in `db/seeds/templates/`.
+  The loader (`lib/seed_data.rb`) keeps the old idempotency rules; the seeded catalog is byte-for-byte equivalent to the
+  previous Ruby seed, and `db:seed` now also creates three example Fighter characters (Champion, Battle Master, Eldritch
+  Knight). Updated [models/class-level-progression.md](models/class-level-progression.md) and
+  [architecture/passive-effect-triggers.md](architecture/passive-effect-triggers.md).
 * **Update**: Attack rolls now follow the 5e natural-20/natural-1 rule for both spells and weapons through one shared
   `Dice.hit?`: a natural 20 always hits (and is the critical hit that doubles the dice), a natural 1 always misses. Weapon
   attacks previously only compared total to AC; `PlayerCharacter#get_attacked` (also used by the frozen EncounterService)

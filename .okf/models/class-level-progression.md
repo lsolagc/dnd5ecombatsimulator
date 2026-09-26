@@ -5,8 +5,8 @@ description: The per-level table (1-20) of proficiency bonus, ability-score-impr
 resource: app/models/class_level_progression.rb
 tags: [model, class, progression, persistence]
 generated:
-  by: copilot-cli/claude-sonnet-5
-  at: 2026-08-21T23:39:26Z
+  by: claude-code/claude-sonnet-5
+  at: 2026-09-20T16:51:19Z
 sources:
   - id: progression-rb
     title: app/models/class_level_progression.rb
@@ -28,10 +28,10 @@ current model; [PlayerClass#progression_at](/models/player-class.md) fetches
 a single row directly by level rather than loading and sorting the whole
 table.
 
-This freeze has a consequence for `db/seeds.rb`: `find_or_initialize_by`
-returns an already-frozen record on a re-run once a row exists, so seed code
-must skip `assign_attributes`/`save!` for existing rows (`next unless
-progression.new_record?`) rather than reassigning them — a progression row
+This freeze has a consequence for the seed loader (`SeedData`, `lib/seed_data.rb`):
+`find_or_initialize_by` returns an already-frozen record on a re-run once a row
+exists, so it must skip `update!` for existing rows (`progression.update!(row)
+if progression.new_record?`) rather than reassigning them — a progression row
 is meant to be set once, not updated in place. Correcting rows that already
 exist therefore takes a data migration (raw SQL, since the model's records
 can't be saved), e.g. `BackfillFighterAttacksPerAction`, which brought the

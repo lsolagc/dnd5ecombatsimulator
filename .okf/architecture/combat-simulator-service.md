@@ -5,8 +5,8 @@ description: A new combat orchestrator (parallel to EncounterService) that runs 
 resource: app/services/combat_simulator_service.rb
 tags: [combat, evolution]
 generated:
-  by: copilot-cli/claude-sonnet-5
-  at: 2026-08-21T23:15:00Z
+  by: claude-code/claude-sonnet-5
+  at: 2026-09-20T18:31:57Z
 sources:
   - id: combat-simulator-rb
     title: app/services/combat_simulator_service.rb
@@ -75,6 +75,22 @@ action per turn:
    and still has uses remaining; the feature is run through
    `Combat::CombatAction` + `Combat::ActionRunner`, exactly like
    [PlayerCharacter#use_class_feature](/models/player-character.md).
+   A payload with `"applies_to": "weapon_attack"` (every Battle Master
+   maneuver) is *not* an action of its own: choosing it makes the turn a normal
+   weapon attack, and only if the attack hits is the maneuver's die rolled
+   through the same pipeline (doubled on a critical hit) and added as an extra
+   damage instance, spending one superiority die — a miss spends nothing. A
+   `"debuff": "next_attack_advantage"` (Distracting Strike) also marks the
+   target: the first weapon attack against it by anyone other than the marker
+   rolls with advantage and uses the mark up, and the mark expires at the start
+   of the marker's next turn (`@advantage_marks`). Weapon attacks only; spell
+   attacks ignore marks.
+   The target is picked at random from the payload's `"target"` kind
+   (`self`, `enemy` = opposing party, `ally` = own party): a damage feature or
+   spell never lands on the actor or their party, and a heal never on an enemy.
+   An unknown kind raises `ArgumentError`; with no valid target left alive
+   the target is `nil`, which is why Action Surge's extra action is skipped
+   once the fight is already over.
 3. **Cast spell** actions are offered for each known [spell](/models/spell.md)
    with an `effect_payload` that is a cantrip or has a spell slot left, via
    `PlayerCharacter#cast_spell`. A payload with `"attack": "spell"` rolls a spell

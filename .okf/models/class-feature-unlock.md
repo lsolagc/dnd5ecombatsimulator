@@ -5,8 +5,8 @@ description: Per-level unlock/scaling row for a ClassFeature, and the bridge to 
 resource: app/models/class_feature_unlock.rb
 tags: [model, class, feature, combat, persistence, passive]
 generated:
-  by: copilot-cli/claude-sonnet-5
-  at: 2026-08-21T23:39:26Z
+  by: claude-code/claude-sonnet-5
+  at: 2026-09-20T18:32:58Z
 sources:
   - id: unlock-rb
     title: app/models/class_feature_unlock.rb
@@ -27,7 +27,7 @@ variable resource pools.[^unlock-rb]
 `effect_payload` (jsonb) is the field that connects this persisted model to
 the [combat effect-execution pipeline](/architecture/combat-effect-pipeline.md):
 it lets an unlocked feature describe an executable effect (`kind`, `roll`,
-`target`, …) without pushing new logic into
+`target` — `self`, `enemy` or `ally`, the valid-target indicator — …) without pushing new logic into
 [EncounterService](/architecture/encounter-service.md).[^unlock-rb]
 `Combat::EffectResolver` reads this payload to build the runtime
 `EffectInstance`.
@@ -39,6 +39,11 @@ heals/damage) are declared without a `CombatAction`. See
 [passive-effect-triggers.md](/architecture/passive-effect-triggers.md) for
 the full trigger/condition contract, which `PlayerCharacter` reads directly
 rather than through `Combat::EffectResolver`.
+
+A Battle Master maneuver's payload also carries `applies_to: weapon_attack`
+(and Distracting Strike `debuff: next_attack_advantage`), which
+`CombatSimulatorService` reads to run the maneuver as a rider on a weapon attack
+— see [combat-simulator-service.md](/architecture/combat-simulator-service.md).
 
 **Persisted vs. executed** — the model defines *what* a feature is;
 [the pipeline](/architecture/combat-effect-pipeline.md) defines *how* it runs

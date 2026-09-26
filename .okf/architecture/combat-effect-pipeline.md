@@ -5,8 +5,8 @@ description: The incremental replacement path for combat mechanics — CombatAct
 resource: app/services/combat
 tags: [combat, pipeline, evolution]
 generated:
-  by: copilot-cli/claude-sonnet-5
-  at: 2026-08-21T23:39:26Z
+  by: claude-code/claude-sonnet-5
+  at: 2026-09-20T18:31:57Z
 sources:
   - id: combat-pipeline-rb
     title: app/services/combat/*.rb
@@ -81,6 +81,19 @@ breakdown instead of just a final number.[^combat-pipeline-rb]
 ```json
 { "kind": "heal", "roll": "1d10 + fighter_level", "target": "self" }
 ```
+
+`"target"` is the valid-target indicator: `"self"` (the actor), `"enemy"` (a
+member of the opposing party) or `"ally"` (a member of the actor's own party,
+actor included). The pipeline itself only distinguishes `self` from "the
+`targets` it was handed"; it is `CombatSimulatorService` that enforces
+`enemy`/`ally` when choosing the target.
+
+Two more optional keys are read only by `CombatSimulatorService`, not by the
+pipeline: `"applies_to": "weapon_attack"` (the effect rides on a weapon attack
+instead of being an action of its own) and `"debuff": "next_attack_advantage"`
+(mark the target, see [combat-simulator-service.md](/architecture/combat-simulator-service.md)).
+`ActionRunner.call` / `EffectExecutor.call` accept `crit:` so an effect riding on
+a critical weapon hit doubles its dice.
 
 Damage effects can also declare `"attack": "spell"` (a spell attack roll against
 the target's AC, made by the actor with `PlayerCharacter#spell_attack_bonus`; a

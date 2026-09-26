@@ -4,8 +4,8 @@ title: Local development setup
 description: Install, database setup, running the dev server, and running the test suite for the Rails app.
 tags: [setup, dev, runbook]
 generated:
-  by: copilot-cli/claude-sonnet-5
-  at: 2026-08-21T23:39:26Z
+  by: claude-code/claude-sonnet-5
+  at: 2026-09-20T16:51:19Z
 sources:
   - id: gemfile
     title: Gemfile / .ruby-version
@@ -29,7 +29,7 @@ This is the environment used to run and test the system described in
 
 ```bash
 bundle install && yarn install
-bin/rails db:create db:migrate
+bin/rails db:create db:migrate db:seed   # seed data: YAML under db/seeds/ (templates in db/seeds/templates/)
 ./bin/dev                    # starts Rails server + Bootstrap Sass watch (dartsass) on :3000
 ```
 
