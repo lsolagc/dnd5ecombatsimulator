@@ -84,31 +84,38 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_operator champion.current_hit_points, :>, starting_hit_points
   end
 
-  test "Precision Attack maneuver consumes a superiority die, adds its roll to damage, and disappears once dice are spent" do
+  test "a maneuver rides on a weapon attack: its die is added on a hit, spending one superiority die, and nothing on a miss" do
     battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
-    target = fresh_character(:aragorn)
+    target = hittable_target(armor_class: 1)
+    service = maneuver_service(battle_master:, target:)
 
-    service = CombatSimulatorService.new(party_one: [ battle_master ], party_two: [ target ], seed: 1, max_rounds: 1)
-    service.send(:initialize_state)
+    action = maneuver_action(service:, actor: battle_master, slug: "precision-attack")
+    assert action, "expected Precision Attack to be available to a Battle Master who knows it"
+    assert_equal 4, action[:uses_remaining]
 
-    maneuver_action = precision_attack_action(service:, actor: battle_master)
-    assert maneuver_action, "expected Precision Attack to be available to a Battle Master who knows it"
-    assert_equal 4, maneuver_action[:uses_remaining]
+    Random.srand(1)
+    turn = service.send(:execute_action, actor: battle_master, chosen_action: action, round_number: 1, turn_index: 1)
 
-    Random.srand(1) # 1d8 natural roll: 6
-    turn = service.send(:execute_class_feature_action, actor: battle_master, chosen_action: maneuver_action, round_number: 1, turn_index: 1)
+    assert_equal :attack, turn.dig(:action, :type)
+    assert_equal "Maneuver: Precision Attack", turn.dig(:action, :maneuver_name)
+    attack = turn[:results].first
+    assert attack[:success]
+    assert_equal :damage, attack.dig(:rider, :kind)
+    assert_includes 1..8, attack.dig(:rider, :amount)
+    assert_equal 3, maneuver_action(service:, actor: battle_master, slug: "precision-attack")[:uses_remaining]
 
-    damage_result = turn[:results].first
-    assert_equal :damage, damage_result[:kind]
-    assert_equal 6, damage_result[:amount]
+    target.combatant.update!(armor_class: 100)
+    Random.srand(1)
+    miss = service.send(:execute_action, actor: battle_master, chosen_action: action, round_number: 1, turn_index: 1).dig(:results, 0)
 
-    remaining_action = precision_attack_action(service:, actor: battle_master)
-    assert_equal 3, remaining_action[:uses_remaining]
+    assert_not miss[:success]
+    assert_nil miss[:rider]
+    assert_equal 3, maneuver_action(service:, actor: battle_master, slug: "precision-attack")[:uses_remaining], "a miss must not spend a die"
 
     combat_superiority_id = class_features(:fighter_battle_master_combat_superiority).id
     service.send(:instance_variable_get, :@uses_remaining)[battle_master.id][combat_superiority_id] = 0
 
-    assert_nil precision_attack_action(service:, actor: battle_master)
+    assert_nil maneuver_action(service:, actor: battle_master, slug: "precision-attack")
   end
 
   test "a Battle Master who does not know Precision Attack does not see it as an available action" do
@@ -471,8 +478,27 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     end
 
     def precision_attack_action(service:, actor:)
+      maneuver_action(service:, actor:, slug: "precision-attack")
+    end
+
+    def maneuver_action(service:, actor:, slug:)
       service.send(:available_actions_for, actor:).find do |action|
-        action[:type] == :class_feature && action[:class_feature].slug == "battle-master-maneuver-precision-attack"
+        action[:type] == :class_feature && action[:class_feature].slug == "battle-master-maneuver-#{slug}"
       end
+    end
+
+    # A fixture target with a chosen armor class and plenty of HP, so it survives a few hits and the
+    # to-hit bonus alone decides whether an attack lands.
+    def hittable_target(armor_class:)
+      target = player_characters(:aragorn)
+      target.combatant.update!(armor_class:, max_hit_points: 1000)
+      target.current_hit_points = target.max_hit_points
+      target
+    end
+
+    def maneuver_service(battle_master:, target:, allies: [])
+      service = CombatSimulatorService.new(party_one: [ battle_master, *allies ], party_two: [ target ], seed: 1, max_rounds: 1)
+      service.send(:initialize_state)
+      service
     end
 end

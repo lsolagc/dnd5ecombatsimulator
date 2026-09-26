@@ -141,6 +141,7 @@ battle_master_maneuver_precision_attack_level_3:
     roll: "1d8"
     target: enemy
     damage_type: bludgeoning
+    applies_to: weapon_attack
 
 eldritch_knight_archetype_level_3:
   class_feature: fighter_eldritch_knight_archetype

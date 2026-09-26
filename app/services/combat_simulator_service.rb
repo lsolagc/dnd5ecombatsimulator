@@ -248,7 +248,12 @@ class CombatSimulatorService
       when :attack
         execute_attack_action(actor:, round_number:, turn_index:)
       when :class_feature
-        execute_class_feature_action(actor:, chosen_action:, round_number:, turn_index:)
+        # A maneuver is not an action of its own: it rides on a normal weapon attack.
+        if chosen_action[:payload]["applies_to"] == "weapon_attack"
+          execute_attack_action(actor:, round_number:, turn_index:, maneuver: chosen_action)
+        else
+          execute_class_feature_action(actor:, chosen_action:, round_number:, turn_index:)
+        end
       when :cast_spell
         execute_cast_spell_action(actor:, chosen_action:, round_number:, turn_index:)
       else
@@ -256,9 +261,12 @@ class CombatSimulatorService
       end
     end
 
-    def execute_attack_action(actor:, round_number:, turn_index:)
-      enemy_party = party_for(actor) == :party_one ? @party_two : @party_one
+    # maneuver: the chosen class_feature action of a maneuver (payload "applies_to" weapon_attack). Its
+    # die is added to the damage of the first attack that hits; a miss spends nothing.
+    def execute_attack_action(actor:, round_number:, turn_index:, maneuver: nil)
+      enemy_party = enemy_party_for(actor)
       attacks = []
+      pending_maneuver = maneuver
 
       [ actor.attacks_per_action.to_i, 1 ].max.times do
         target = alive_combatants(enemy_party).sample(random: @rng)
@@ -269,11 +277,15 @@ class CombatSimulatorService
 
         @eldritch_strike_pending[target.id] = actor.id if attacked[:success] && eldritch_strike_unlocked?(actor:)
 
+        rider = apply_maneuver_rider(actor:, target:, maneuver: pending_maneuver, crit: attack_roll.crit) if pending_maneuver && attacked[:success]
+        pending_maneuver = nil if rider
+
         attacks << {
           kind: :attack,
           target_id: target.id,
           target_name: target.name,
           success: attacked[:success],
+          rider: rider,
           damage: attacked[:success] ? attack_roll.damage : 0,
           attack_roll: {
             natural: attack_roll.natural,
@@ -292,10 +304,24 @@ class CombatSimulatorService
         actor_name: actor.name,
         actor_party: party_for(actor),
         action: {
-          type: :attack
-        },
+          type: :attack,
+          maneuver_name: maneuver&.dig(:class_feature)&.name
+        }.compact,
         results: attacks
       }
+    end
+
+    # Adds the maneuver's die to a weapon attack that just hit: rolls it through the effect pipeline
+    # (doubled on a critical hit) and spends a superiority die.
+    # ponytail: the die lands as its own damage instance (own log line, own resistance rounding), not
+    # inside the weapon's single damage roll; merge them if that ever distorts a metric.
+    def apply_maneuver_rider(actor:, target:, maneuver:, crit:)
+      feature = maneuver[:class_feature]
+      action = Combat::CombatAction.new(source_type: :class_feature, source_id: feature.id, actor:, targets: [ target ])
+      results = Combat::ActionRunner.call(action:, crit:)
+      consume_feature_use!(actor:, class_feature_id: resource_class_feature_id(feature:, combat_superiority_unlock: combat_superiority_unlock_for(actor:)))
+
+      serialize_effect_results(results:).first.merge(feature_name: feature.name)
     end
 
     def execute_class_feature_action(actor:, chosen_action:, round_number:, turn_index:)
