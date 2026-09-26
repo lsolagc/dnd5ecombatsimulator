@@ -1,0 +1,17 @@
+name: Cavaleiro Arcano
+level: 3
+class: Guerreiro
+fighting_style: fighting-style-archery
+martial_archetype: martial-archetype-eldritch-knight
+combatant:
+  strength: 14
+  dexterity: 14
+  constitution: 14
+  intelligence: 16
+  wisdom: 10
+  charisma: 8
+  armor_class: 16
+  attack_bonus: 4
+  damage_dice: 1d8
+  damage_type: slashing
+spells: [fire-bolt, ray-of-frost, chromatic-orb, shield]

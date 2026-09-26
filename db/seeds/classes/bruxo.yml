@@ -1,0 +1,4 @@
+name: Bruxo
+hit_die: d8
+description: Usuários de magia que fazem pactos com entidades poderosas.
+spellcasting_modifier: charisma

@@ -1,0 +1,23 @@
+# Modelo de personagem. Copie para db/seeds/characters/<nome>.yml.
+# Referências a outros registros são por chave estável: `class` pelo nome da classe; estilo de luta,
+# arquétipo e manobras pelo slug da habilidade; magias pelo slug da magia (db/seeds/spells.yml).
+# Personagens já existentes (pelo name) não são recriados; magias e manobras faltantes são adicionadas.
+name: Personagem de Exemplo
+level: 3
+class: Guerreiro
+fighting_style: fighting-style-dueling             # opcional
+martial_archetype: martial-archetype-eldritch-knight  # opcional
+# Atributos e estatísticas de combate (colunas de Combatant). PV máximos = PV cheios para o nível.
+combatant:
+  strength: 16
+  dexterity: 14
+  constitution: 14
+  intelligence: 12
+  wisdom: 10
+  charisma: 8
+  armor_class: 16
+  attack_bonus: 5
+  damage_dice: 1d8
+  damage_type: slashing
+spells: [fire-bolt, shield]      # opcional; respeita os limites de magias conhecidas do nível
+# maneuvers: [battle-master-maneuver-parry]   # opcional; só para Battle Master

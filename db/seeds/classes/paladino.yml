@@ -1,0 +1,4 @@
+name: Paladino
+hit_die: d10
+description: Guerreiros sagrados guiados por um juramento.
+spellcasting_modifier: charisma

@@ -1,0 +1,4 @@
+name: Bardo
+hit_die: d8
+description: "Artistas mágicos versáteis, mestres em inspirar aliados."
+spellcasting_modifier: charisma

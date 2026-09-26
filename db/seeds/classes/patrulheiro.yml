@@ -1,0 +1,4 @@
+name: Patrulheiro
+hit_die: d10
+description: Exploradores e caçadores especialistas em terrenos selvagens.
+spellcasting_modifier: wisdom

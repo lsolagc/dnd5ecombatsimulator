@@ -1,0 +1,470 @@
+name: Guerreiro
+hit_die: d10
+description: Combatentes versáteis e mestres em armas.
+
+# Progressão por nível (tabela do Guerreiro, PHB 2014). Aumento de Atributo (ASI) nos níveis
+# 4, 6, 8, 12, 14, 16 e 19.
+progression:
+  - { level: 1, proficiency_bonus: 2, attacks_per_action: 1 }
+  - { level: 2, proficiency_bonus: 2, attacks_per_action: 1 }
+  - { level: 3, proficiency_bonus: 2, attacks_per_action: 1 }
+  - { level: 4, proficiency_bonus: 2, attacks_per_action: 1, grants_ability_score_improvement: true }
+  - { level: 5, proficiency_bonus: 3, attacks_per_action: 2 }
+  - { level: 6, proficiency_bonus: 3, attacks_per_action: 2, grants_ability_score_improvement: true }
+  - { level: 7, proficiency_bonus: 3, attacks_per_action: 2 }
+  - { level: 8, proficiency_bonus: 3, attacks_per_action: 2, grants_ability_score_improvement: true }
+  - { level: 9, proficiency_bonus: 4, attacks_per_action: 2 }
+  - { level: 10, proficiency_bonus: 4, attacks_per_action: 2 }
+  - { level: 11, proficiency_bonus: 4, attacks_per_action: 3 }
+  - { level: 12, proficiency_bonus: 4, attacks_per_action: 3, grants_ability_score_improvement: true }
+  - { level: 13, proficiency_bonus: 5, attacks_per_action: 3 }
+  - { level: 14, proficiency_bonus: 5, attacks_per_action: 3, grants_ability_score_improvement: true }
+  - { level: 15, proficiency_bonus: 5, attacks_per_action: 3 }
+  - { level: 16, proficiency_bonus: 5, attacks_per_action: 3, grants_ability_score_improvement: true }
+  - { level: 17, proficiency_bonus: 6, attacks_per_action: 3 }
+  - { level: 18, proficiency_bonus: 6, attacks_per_action: 3 }
+  - { level: 19, proficiency_bonus: 6, attacks_per_action: 3, grants_ability_score_improvement: true }
+  - { level: 20, proficiency_bonus: 6, attacks_per_action: 4 }
+
+features:
+  # Características de núcleo (PHB 2014)
+  - name: Second Wind
+    slug: second-wind
+    description: "Reserva de estamina usada para se proteger contra danos, recuperando pontos de vida."
+    feature_type: core
+    action_type: bonus_action
+    recharge_type: short_or_long_rest
+    resource_name: Second Wind
+    source_reference: Fighter 1
+    unlocks:
+      - level: 1
+        uses: 1
+        resource_name: Second Wind
+        description: "Usa uma ação bônus para recuperar pontos de vida iguais a 1d10 + seu nível de guerreiro."
+        effect_payload: { kind: heal, roll: "1d10 + actor_level", target: self }
+  - name: Action Surge
+    slug: action-surge
+    description: "Força seu limite além do normal por um momento, realizando uma ação adicional no turno."
+    feature_type: core
+    action_type: no_action
+    recharge_type: short_or_long_rest
+    resource_name: Action Surge
+    source_reference: Fighter 2
+    unlocks:
+      - level: 2
+        uses: 1
+        description: Realiza uma ação adicional junto com sua ação e possível ação bônus.
+      - level: 17
+        uses: 2
+        description: "Pode usar Surto de Ação duas vezes entre descansos, mas somente uma vez no mesmo turno."
+  - name: Indomitable
+    slug: indomitable
+    description: Permite rolar novamente um teste de resistência que tenha falhado.
+    feature_type: core
+    action_type: special
+    recharge_type: long_rest
+    resource_name: Indomitable
+    source_reference: Fighter 9
+    unlocks:
+      - level: 9
+        uses: 1
+        description: "Ao falhar um teste de resistência, pode rolar novamente e deve usar o novo resultado. Só pode usar antes de terminar um descanso longo."
+      - level: 13
+        uses: 2
+        description: Pode usar Indomável duas vezes entre descansos longos.
+      - level: 17
+        uses: 3
+        description: Pode usar Indomável três vezes entre descansos longos.
+
+  # Estilos de Luta (escolhidos uma vez, no nível 1)
+  - name: "Fighting Style: Archery"
+    slug: fighting-style-archery
+    description: "Ganha +2 de bônus nas jogadas de ataque realizadas com armas de ataque à distância."
+    feature_type: optional
+    source_reference: Fighter 1
+    unlocks:
+      - level: 1
+        effect_payload: { kind: modifier, trigger: always, modifier: attack_bonus, value: 2 }
+        notes: "Aplicado a todo ataque (não só à distância) porque o motor não distingue arma corpo-a-corpo de arma à distância."
+  - name: "Fighting Style: Defense"
+    slug: fighting-style-defense
+    description: "Ganha +1 de bônus na Classe de Armadura enquanto estiver usando armadura."
+    feature_type: optional
+    source_reference: Fighter 1
+    unlocks:
+      - level: 1
+        effect_payload: { kind: modifier, trigger: always, modifier: armor_class, value: 1 }
+        notes: Aplicado incondicionalmente porque o uso de armadura não é rastreado pelo motor.
+  - name: "Fighting Style: Dueling"
+    slug: fighting-style-dueling
+    description: "Ganha +2 de bônus nas jogadas de dano ao empunhar uma arma corpo-a-corpo em uma mão e nenhuma outra arma."
+    feature_type: optional
+    source_reference: Fighter 1
+    unlocks:
+      - level: 1
+        effect_payload: { kind: modifier, trigger: always, modifier: damage_bonus, value: 2 }
+        notes: "Aplicado independente de quantas armas o personagem empunha, pois isso não é rastreado pelo motor."
+  - name: "Fighting Style: Great Weapon Fighting"
+    slug: fighting-style-great-weapon-fighting
+    description: "Ao rolar 1 ou 2 no dado de dano de um ataque corpo-a-corpo com arma empunhada com duas mãos, pode rolar novamente e usar o novo resultado. A arma deve ter a propriedade duas mãos ou versátil."
+    feature_type: optional
+    source_reference: Fighter 1
+    unlocks:
+      - level: 1
+  - name: "Fighting Style: Protection"
+    slug: fighting-style-protection
+    description: "Ao usar um escudo, pode gastar a reação para impor desvantagem na jogada de ataque de uma criatura que ataque um alvo a até 1,5 metro de você."
+    feature_type: optional
+    source_reference: Fighter 1
+    unlocks:
+      - level: 1
+  - name: "Fighting Style: Two-Weapon Fighting"
+    slug: fighting-style-two-weapon-fighting
+    description: "Ao lutar com duas armas, pode adicionar seu modificador de habilidade de dano na jogada de dano do segundo ataque."
+    feature_type: optional
+    source_reference: Fighter 1
+    unlocks:
+      - level: 1
+
+  # Arquétipo Marcial: Champion (PHB 2014)
+  - name: "Martial Archetype: Champion"
+    slug: martial-archetype-champion
+    description: Escolha do arquétipo marcial Champion.
+    feature_type: subclass
+    source_reference: Fighter 3
+    notes: Marca a escolha de subclasse e organiza marcos de progressão do Champion.
+    unlocks:
+      - level: 3
+        description: Escolhe Champion como arquétipo marcial.
+    subclass_features:
+      - name: Improved Critical
+        slug: champion-improved-critical
+        description: Seus ataques com arma causam acerto crítico com 19 ou 20.
+        source_reference: Champion 3
+        unlocks:
+          - level: 3
+            description: Sua margem de crítico com ataque de arma passa a 19-20.
+            effect_payload: { kind: modifier, trigger: always, modifier: critical_hit_threshold, value: 19 }
+      - name: Remarkable Athlete
+        slug: champion-remarkable-athlete
+        description: "Adiciona metade da proficiência em testes de FOR, DES e CON sem proficiência e melhora salto em distância."
+        source_reference: Champion 7
+        unlocks:
+          - level: 7
+            description: Ganha bônus atlético parcial e melhora salto em distância.
+      - name: Additional Fighting Style
+        slug: champion-additional-fighting-style
+        description: Você pode escolher um segundo Fighting Style entre as opções disponíveis ao Guerreiro.
+        source_reference: Champion 10
+        unlocks:
+          - level: 10
+            description: Escolhe um Fighting Style adicional.
+      - name: Superior Critical
+        slug: champion-superior-critical
+        description: "Seus ataques com arma causam acerto crítico com 18, 19 ou 20."
+        source_reference: Champion 15
+        notes: Substitui a faixa de crítico do Improved Critical quando desbloqueado.
+        unlocks:
+          - level: 15
+            description: Sua margem de crítico com ataque de arma passa a 18-20.
+            effect_payload: { kind: modifier, trigger: always, modifier: critical_hit_threshold, value: 18 }
+      - name: Survivor
+        slug: champion-survivor
+        description: "No início de cada turno, recupera PV iguais a 5 + modificador de CON se tiver metade dos PV ou menos e ao menos 1 PV."
+        source_reference: Champion 18
+        notes: "Recuperação automática por turno; exige suporte de gatilhos de início de turno no motor de combate."
+        unlocks:
+          - level: 18
+            description: "Regenera 5 + CON no início do turno sob as condições da habilidade."
+            effect_payload: { kind: heal, trigger: turn_start, roll: "5 + constitution_modifier", target: self, conditions: { current_hp_gt: 0, current_hp_lte_max_hp_fraction: 0.5 } }
+
+  # Arquétipo Marcial: Battle Master (PHB 2014)
+  - name: "Martial Archetype: Battle Master"
+    slug: martial-archetype-battle-master
+    description: Escolha do arquétipo marcial Battle Master.
+    feature_type: subclass
+    source_reference: Fighter 3
+    unlocks:
+      - level: 3
+        description: Escolhe Battle Master como arquétipo marcial.
+    subclass_features:
+      - name: Combat Superiority
+        slug: battle-master-combat-superiority
+        description: "Aprende manobras abastecidas por dados de superioridade (d8), gastos ao usar e recuperados em um descanso curto ou longo."
+        recharge_type: short_or_long_rest
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        unlocks:
+          - level: 3
+            uses: 4
+            description: "Aprende três manobras, à sua escolha. Tem quatro dados de superioridade (d8)."
+          - level: 7
+            uses: 5
+            description: "Aprende duas manobras adicionais (cinco no total). Ganha mais um dado de superioridade (cinco no total)."
+          - level: 10
+            uses: 5
+            description: "Aprende duas manobras adicionais (sete no total)."
+          - level: 15
+            uses: 6
+            description: "Aprende duas manobras adicionais (nove no total). Ganha mais um dado de superioridade (seis no total)."
+      - name: Student of War
+        slug: battle-master-student-of-war
+        description: "Ganha proficiência com um tipo de ferramenta de artesão, à sua escolha."
+        source_reference: Battle Master 3
+        unlocks:
+          - level: 3
+            description: Escolhe uma ferramenta de artesão para ganhar proficiência.
+      - name: Know Your Enemy
+        slug: battle-master-know-your-enemy
+        description: "Ao observar ou interagir com uma criatura por ao menos 1 minuto fora de combate, aprende como duas de suas capacidades se comparam às suas."
+        source_reference: Battle Master 7
+        unlocks:
+          - level: 7
+            description: "Escolhe duas características (FOR, DES, CON, CA, PV atuais, nível total ou nível de guerreiro) para comparar com uma criatura observada."
+      - name: Improved Combat Superiority
+        slug: battle-master-improved-combat-superiority
+        description: Seus dados de superioridade aumentam de tamanho.
+        source_reference: Battle Master 10
+        unlocks:
+          - level: 10
+            description: Seus dados de superioridade se tornam d10s.
+          - level: 18
+            description: Seus dados de superioridade se tornam d12s.
+      - name: Relentless
+        slug: battle-master-relentless
+        description: "Ao rolar iniciativa sem nenhum dado de superioridade restante, recupera um dado de superioridade."
+        source_reference: Battle Master 15
+        unlocks:
+          - level: 15
+            description: Recupera um dado de superioridade ao rolar iniciativa sem dados restantes.
+      - name: "Maneuver: Parry"
+        slug: battle-master-maneuver-parry
+        description: "Quando outra criatura causar dano a você com um ataque corpo-a-corpo, usa a reação e gasta um dado de superioridade para reduzir o dano recebido em uma quantidade igual ao número rolado no dado + seu modificador de Destreza."
+        action_type: reaction
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+      - name: "Maneuver: Menacing Attack"
+        slug: battle-master-maneuver-menacing-attack
+        description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano; o alvo faz um teste de resistência de Sabedoria ou fica amedrontado até o final do seu próximo turno."
+        action_type: no_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+      - name: "Maneuver: Pushing Attack"
+        slug: battle-master-maneuver-pushing-attack
+        description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano; se o alvo for Grande ou menor, faz um teste de resistência de Força ou é empurrado até 4,5 metros."
+        action_type: no_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+      - name: "Maneuver: Feinting Attack"
+        slug: battle-master-maneuver-feinting-attack
+        description: "Gasta um dado de superioridade e uma ação bônus para fintar uma criatura a 1,5 metro; ganha vantagem na próxima jogada de ataque contra ela nesse turno e, se acertar, adiciona o dado ao dano."
+        action_type: bonus_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+      - name: "Maneuver: Maneuvering Attack"
+        slug: battle-master-maneuver-maneuvering-attack
+        description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano e permite que um aliado use a reação para se mover até metade do deslocamento sem provocar ataques de oportunidade do alvo."
+        action_type: no_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+      - name: "Maneuver: Precision Attack"
+        slug: battle-master-maneuver-precision-attack
+        description: "Ao realizar uma jogada de ataque com arma, gasta um dado de superioridade para adicioná-lo à jogada, antes ou depois de rolar, mas antes de aplicar qualquer efeito do ataque."
+        action_type: no_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        notes: "Simplificado como dano puro (kind: damage) somado ao ataque, em vez de somar à jogada de acerto: o motor não distingue ajuste de acerto de ajuste de dano nesta manobra. damage_type fixado em bludgeoning (mesmo default do motor em Combatant#damage_type e do fallback de Combat::EffectExecutor) por não haver como propagar dinamicamente o tipo de dano da arma do ator para um effect_payload estático."
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+            effect_payload: { kind: damage, roll: "1d8", target: enemy, damage_type: bludgeoning, applies_to: weapon_attack }
+      - name: "Maneuver: Disarming Attack"
+        slug: battle-master-maneuver-disarming-attack
+        description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano; o alvo faz um teste de resistência de Força ou deixa cair um item à sua escolha."
+        action_type: no_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        notes: "Rider de desarmar não modelado; tratado como dano puro (kind: damage) somado ao ataque. damage_type fixado em bludgeoning (mesmo default do motor), pelo mesmo motivo do Precision Attack."
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+            effect_payload: { kind: damage, roll: "1d8", target: enemy, damage_type: bludgeoning, applies_to: weapon_attack }
+      - name: "Maneuver: Lunging Attack"
+        slug: battle-master-maneuver-lunging-attack
+        description: "Ao atingir uma criatura com um ataque corpo-a-corpo com arma, gasta um dado de superioridade para aumentar o alcance do ataque em 1,5 metro e adicionar o dado ao dano."
+        action_type: no_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        notes: "Aumento de alcance não modelado (motor não rastreia posição/distância); tratado como dano puro (kind: damage) somado ao ataque. damage_type fixado em bludgeoning (mesmo default do motor), pelo mesmo motivo do Precision Attack."
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+            effect_payload: { kind: damage, roll: "1d8", target: enemy, damage_type: bludgeoning, applies_to: weapon_attack }
+      - name: "Maneuver: Goading Attack"
+        slug: battle-master-maneuver-goading-attack
+        description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano; o alvo faz um teste de resistência de Sabedoria ou fica com desvantagem em ataques contra alvos diferentes de você até o final do seu próximo turno."
+        action_type: no_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+      - name: "Maneuver: Sweeping Attack"
+        slug: battle-master-maneuver-sweeping-attack
+        description: "Ao atingir uma criatura com um ataque corpo-a-corpo com arma, gasta um dado de superioridade para causar dano igual ao número rolado a uma segunda criatura a até 1,5 metro do alvo original e dentro do seu alcance."
+        action_type: no_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        notes: "Rider de segundo alvo simultâneo não modelado (o motor resolve uma ação de classe contra um único alvo por vez); tratado como dano puro (kind: damage) contra um único alvo. damage_type fixado em bludgeoning (mesmo default do motor), pelo mesmo motivo do Precision Attack."
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+            effect_payload: { kind: damage, roll: "1d8", target: enemy, damage_type: bludgeoning, applies_to: weapon_attack }
+      - name: "Maneuver: Riposte"
+        slug: battle-master-maneuver-riposte
+        description: "Quando uma criatura erra um ataque corpo-a-corpo contra você, usa a reação e gasta um dado de superioridade para realizar um ataque corpo-a-corpo com arma contra ela, adicionando o dado ao dano se acertar."
+        action_type: reaction
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+      - name: "Maneuver: Trip Attack"
+        slug: battle-master-maneuver-trip-attack
+        description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano; se o alvo for Grande ou menor, faz um teste de resistência de Força ou fica caído."
+        action_type: no_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+      - name: "Maneuver: Distracting Strike"
+        slug: battle-master-maneuver-distracting-strike
+        description: "Ao atingir uma criatura com um ataque com arma, gasta um dado de superioridade para adicioná-lo ao dano; a próxima jogada de ataque contra o alvo, feita por outra criatura antes do início do seu próximo turno, tem vantagem."
+        action_type: no_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        notes: "O dado é somado ao dano do ataque com arma (applies_to: weapon_attack). O rider é a marca debuff: next_attack_advantage no alvo: o próximo ataque com arma contra ele, feito por outra criatura que não quem aplicou, tem vantagem; a marca expira no início do próximo turno de quem aplicou. Só vale para ataques com arma. damage_type fixado em bludgeoning (mesmo default do motor), pelo mesmo motivo do Precision Attack."
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+            effect_payload: { kind: damage, roll: "1d8", target: enemy, damage_type: bludgeoning, applies_to: weapon_attack, debuff: next_attack_advantage }
+      - name: "Maneuver: Commander's Strike"
+        slug: battle-master-maneuver-commanders-strike
+        description: "Na ação de Ataque, desiste de um dos ataques e usa uma ação bônus para gastar um dado de superioridade e permitir que um aliado use a reação para atacar, adicionando o dado ao dano do aliado."
+        action_type: bonus_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+      - name: "Maneuver: Rally"
+        slug: battle-master-maneuver-rally
+        description: "Usa uma ação bônus e gasta um dado de superioridade para conceder a um aliado pontos de vida temporários iguais ao número rolado no dado + seu modificador de Carisma."
+        action_type: bonus_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+      - name: "Maneuver: Evasive Footwork"
+        slug: battle-master-maneuver-evasive-footwork
+        description: "Ao se mover, pode gastar um dado de superioridade, rolar o dado e adicionar o resultado à sua CA até terminar o deslocamento."
+        action_type: no_action
+        resource_name: Superiority Dice
+        source_reference: Battle Master 3
+        unlocks:
+          - level: 3
+            description: Manobra disponível para escolha do Battle Master.
+
+  # Arquétipo Marcial: Eldritch Knight (PHB 2014)
+  - name: "Martial Archetype: Eldritch Knight"
+    slug: martial-archetype-eldritch-knight
+    description: Escolha do arquétipo marcial Eldritch Knight.
+    feature_type: subclass
+    source_reference: Fighter 3
+    unlocks:
+      - level: 3
+        description: Escolhe Eldritch Knight como arquétipo marcial.
+    subclass_features:
+      - name: Spellcasting
+        slug: eldritch-knight-spellcasting
+        description: "Amplia seu poderio marcial com a habilidade de conjurar magias de mago, focadas em abjuração e evocação."
+        source_reference: Eldritch Knight 3
+        grants_spellcasting: true
+        spellcasting_ability: intelligence
+        unlocks:
+          - level: 3
+            description: "Ganha acesso a truques e magias de 1º nível de mago, restritas a abjuração e evocação (algumas magias de qualquer escola nos níveis 8, 14 e 20)."
+        spell_slots:
+          - { level: 3, cantrips_known: 2, spells_known: 3, slots: [2, 0, 0, 0] }
+          - { level: 4, cantrips_known: 2, spells_known: 4, slots: [3, 0, 0, 0] }
+          - { level: 5, cantrips_known: 2, spells_known: 4, slots: [3, 0, 0, 0] }
+          - { level: 6, cantrips_known: 2, spells_known: 4, slots: [3, 0, 0, 0] }
+          - { level: 7, cantrips_known: 2, spells_known: 5, slots: [4, 2, 0, 0] }
+          - { level: 8, cantrips_known: 2, spells_known: 6, slots: [4, 2, 0, 0] }
+          - { level: 9, cantrips_known: 2, spells_known: 6, slots: [4, 2, 0, 0] }
+          - { level: 10, cantrips_known: 3, spells_known: 7, slots: [4, 3, 0, 0] }
+          - { level: 11, cantrips_known: 3, spells_known: 8, slots: [4, 3, 0, 0] }
+          - { level: 12, cantrips_known: 3, spells_known: 8, slots: [4, 3, 0, 0] }
+          - { level: 13, cantrips_known: 3, spells_known: 9, slots: [4, 3, 2, 0] }
+          - { level: 14, cantrips_known: 3, spells_known: 10, slots: [4, 3, 2, 0] }
+          - { level: 15, cantrips_known: 3, spells_known: 10, slots: [4, 3, 2, 0] }
+          - { level: 16, cantrips_known: 3, spells_known: 11, slots: [4, 3, 3, 0] }
+          - { level: 17, cantrips_known: 3, spells_known: 11, slots: [4, 3, 3, 0] }
+          - { level: 18, cantrips_known: 3, spells_known: 11, slots: [4, 3, 3, 0] }
+          - { level: 19, cantrips_known: 3, spells_known: 12, slots: [4, 3, 3, 1] }
+          - { level: 20, cantrips_known: 3, spells_known: 13, slots: [4, 3, 3, 1] }
+      - name: Weapon Bond
+        slug: eldritch-knight-weapon-bond
+        description: "Cria um vínculo mágico com até duas armas; não pode ser desarmado delas a menos que incapacitado, e pode invocar uma delas com uma ação bônus."
+        source_reference: Eldritch Knight 3
+        unlocks:
+          - level: 3
+            description: Realiza o ritual de vínculo com até duas armas.
+      - name: War Magic
+        slug: eldritch-knight-war-magic
+        description: "Ao usar a ação para conjurar um truque, pode realizar um ataque com arma com uma ação bônus."
+        source_reference: Eldritch Knight 7
+        notes: "Implementado em CombatSimulatorService: um ataque bônus com arma dispara sempre que a ação normal do turno for conjurar um truque (cast_spell com spell.cantrip? true), sem consumir recurso. Não encadeia com Action Surge nem com o próprio ataque bônus."
+        unlocks:
+          - level: 7
+            description: Conjurar um truque como ação permite um ataque com arma como ação bônus.
+      - name: Eldritch Strike
+        slug: eldritch-knight-eldritch-strike
+        description: "Ao atingir uma criatura com um ataque com arma, ela fica com desvantagem no próximo teste de resistência contra uma magia sua até o final do seu próximo turno."
+        source_reference: Eldritch Knight 10
+        notes: "Simplificação deliberada: o RAW impõe a desvantagem \"até o final do seu próximo turno\", mas o motor não tem nenhum conceito de duração/expiração por turno. Implementado como consumo único (last-hit-wins se dois atores diferentes acertarem o mesmo alvo): o primeiro saving throw do alvo contra uma magia do MESMO ator que o atingiu recebe disadvantage_on_save, e a marca pendente é removida na hora, independentemente de quantos turnos realmente passaram."
+        unlocks:
+          - level: 10
+            description: Um ataque com arma impõe desvantagem no próximo teste de resistência contra suas magias.
+      - name: Arcane Charge
+        slug: eldritch-knight-arcane-charge
+        description: "Ao usar Surto de Ação, pode se teletransportar até 9 metros para um espaço desocupado que possa ver."
+        source_reference: Eldritch Knight 15
+        unlocks:
+          - level: 15
+            description: Teletransporte de até 9 metros ao usar Surto de Ação.
+      - name: Improved War Magic
+        slug: eldritch-knight-improved-war-magic
+        description: "Ao usar a ação para conjurar qualquer magia, pode realizar um ataque com arma com uma ação bônus."
+        source_reference: Eldritch Knight 18
+        notes: "Implementado em CombatSimulatorService: mesma regra do War Magic, mas sem restringir a truque — qualquer cast_spell na ação normal do turno dispara o ataque bônus."
+        unlocks:
+          - level: 18
+            description: Conjurar qualquer magia como ação permite um ataque com arma como ação bônus.

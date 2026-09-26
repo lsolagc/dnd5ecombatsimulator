@@ -1,0 +1,16 @@
+name: Campeão
+level: 5
+class: Guerreiro
+fighting_style: fighting-style-dueling
+martial_archetype: martial-archetype-champion
+combatant:
+  strength: 16
+  dexterity: 14
+  constitution: 14
+  intelligence: 10
+  wisdom: 12
+  charisma: 8
+  armor_class: 17
+  attack_bonus: 6
+  damage_dice: 1d8
+  damage_type: slashing

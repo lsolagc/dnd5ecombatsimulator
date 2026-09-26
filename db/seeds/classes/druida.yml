@@ -1,0 +1,4 @@
+name: Druida
+hit_die: d8
+description: Guardião da natureza e mestre da transformação.
+spellcasting_modifier: wisdom

@@ -1,0 +1,4 @@
+name: Mago
+hit_die: d6
+description: Estudiosos da magia arcana e do conhecimento.
+spellcasting_modifier: intelligence

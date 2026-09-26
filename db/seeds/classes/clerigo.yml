@@ -1,0 +1,4 @@
+name: Clérigo
+hit_die: d8
+description: Servos divinos que canalizam o poder de seus deuses.
+spellcasting_modifier: wisdom

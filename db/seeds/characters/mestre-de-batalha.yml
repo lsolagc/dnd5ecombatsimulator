@@ -1,0 +1,20 @@
+name: Mestre de Batalha
+level: 3
+class: Guerreiro
+fighting_style: fighting-style-defense
+martial_archetype: martial-archetype-battle-master
+combatant:
+  strength: 16
+  dexterity: 13
+  constitution: 15
+  intelligence: 10
+  wisdom: 12
+  charisma: 8
+  armor_class: 18
+  attack_bonus: 5
+  damage_dice: 1d10
+  damage_type: slashing
+maneuvers:
+  - battle-master-maneuver-parry
+  - battle-master-maneuver-riposte
+  - battle-master-maneuver-precision-attack

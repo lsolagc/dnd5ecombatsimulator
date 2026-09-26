@@ -1,0 +1,50 @@
+# Modelo de classe + progressão. Copie para db/seeds/classes/<nome>.yml.
+# Chaves omitidas usam o default da coluna (action_type: passive, recharge_type: none,
+# source_book: PHB 2014, grants_spellcasting: false...). Enums são strings.
+name: Classe de Exemplo          # chave única da classe (find_or_create_by)
+hit_die: d10                     # d4 | d6 | d8 | d10 | d12
+description: Texto livre.
+spellcasting_modifier: charisma  # intelligence | wisdom | charisma; omita se a classe não conjura
+
+# Uma linha por nível (opcional). Níveis já existentes no banco não são alterados.
+progression:
+  - { level: 1, proficiency_bonus: 2, attacks_per_action: 1 }
+  - { level: 2, proficiency_bonus: 2, attacks_per_action: 1, grants_ability_score_improvement: true }
+
+features:
+  - name: Habilidade de Núcleo
+    slug: habilidade-de-nucleo   # chave estável, única por classe
+    description: Descrição da habilidade.
+    feature_type: core           # core | optional (ex.: Estilo de Luta) | subclass | subclass_progression
+    action_type: bonus_action    # passive | action | bonus_action | reaction | no_action | special
+    recharge_type: long_rest     # none | short_rest | long_rest | short_or_long_rest | turn | round | special
+    resource_name: Recurso       # opcional: recurso consumível
+    source_reference: Exemplo 1
+    unlocks:                     # o que a habilidade concede a cada nível
+      - level: 1
+        uses: 1
+        description: Omitida = herda a descrição da habilidade.
+        effect_payload: { kind: heal, roll: "1d10 + actor_level", target: self }  # opcional; target: self | enemy | ally
+        # Manobras (kind: damage) acrescentam applies_to: weapon_attack (o dado é somado ao dano de um ataque com
+        # arma que acertou, em vez de ser uma ação própria) e, opcionalmente, debuff: next_attack_advantage.
+        notes: Simplificações do motor, se houver.
+
+  # Subclasse: a habilidade `subclass` é o marcador; as `subclass_features` aninhadas pertencem a ela
+  # (feature_type: subclass_progression é implícito).
+  - name: Subclasse de Exemplo
+    slug: subclasse-de-exemplo
+    description: Escolha da subclasse.
+    feature_type: subclass
+    unlocks:
+      - level: 3
+    subclass_features:
+      - name: Conjuração da Subclasse
+        slug: conjuracao-da-subclasse
+        description: A subclasse conjura magias.
+        grants_spellcasting: true
+        spellcasting_ability: intelligence
+        unlocks:
+          - level: 3
+        # Espaços de magia por nível; `slots` = espaços dos níveis 1 a 4.
+        spell_slots:
+          - { level: 3, cantrips_known: 2, spells_known: 3, slots: [2, 0, 0, 0] }

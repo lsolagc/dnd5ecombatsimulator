@@ -1,0 +1,4 @@
+name: Feiticeiro
+hit_die: d6
+description: Magos inatos que manipulam magia bruta.
+spellcasting_modifier: charisma
