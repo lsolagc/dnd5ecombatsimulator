@@ -190,6 +190,20 @@ fighter_battle_master_maneuver_precision_attack:
   source_book: PHB 2014
   source_reference: Battle Master 3
 
+fighter_battle_master_maneuver_distracting_strike:
+  player_class: fighter
+  subclass_marker: fighter_battle_master_archetype
+  name: "Maneuver: Distracting Strike"
+  slug: battle-master-maneuver-distracting-strike
+  description: Spend a superiority die to add it to a weapon attack's damage; the next attack against the target by someone else has advantage.
+  feature_type: subclass_progression
+  action_type: no_action
+  recharge_type: none
+  resource_name: Superiority Dice
+  grants_spellcasting: false
+  source_book: PHB 2014
+  source_reference: Battle Master 3
+
 fighter_eldritch_knight_archetype:
   player_class: fighter
   name: "Martial Archetype: Eldritch Knight"

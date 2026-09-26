@@ -3,3 +3,7 @@
 battle_master_seven_precision_attack:
   player_character: battle_master_seven
   maneuver: fighter_battle_master_maneuver_precision_attack
+
+battle_master_seven_distracting_strike:
+  player_character: battle_master_seven
+  maneuver: fighter_battle_master_maneuver_distracting_strike

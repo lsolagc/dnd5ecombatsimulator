@@ -18,6 +18,10 @@ class CombatSimulatorService
     # saving throw the target rolls against a spell from that same attacker. No
     # turn/round tracking — see notes on the Eldritch Strike class feature (db/seeds.rb).
     @eldritch_strike_pending = {}
+    # Distracting Strike marks: target.id => ids of the combatants who marked it. The first weapon attack
+    # against the target by anyone else rolls with advantage and uses one mark up; a mark also
+    # expires at the start of its owner's next turn (see execute_round).
+    @advantage_marks = Hash.new { |marks, target_id| marks[target_id] = [] }
   end
 
   def call
@@ -104,6 +108,7 @@ class CombatSimulatorService
       turns = []
 
       initiative_order.each_with_index do |actor, turn_index|
+        @advantage_marks.each_value { |sources| sources.delete(actor.id) }
         next if actor.dead?
         break if combat_over?
 
@@ -272,7 +277,8 @@ class CombatSimulatorService
         target = alive_combatants(enemy_party).sample(random: @rng)
         break if target.nil?
 
-        attack_roll = actor.roll_an_attack
+        advantage = consume_advantage_mark(target:, attacker: actor)
+        attack_roll = actor.roll_an_attack(advantage:)
         attacked = target.get_attacked(attack_roll:)
 
         @eldritch_strike_pending[target.id] = actor.id if attacked[:success] && eldritch_strike_unlocked?(actor:)
@@ -285,6 +291,7 @@ class CombatSimulatorService
           target_id: target.id,
           target_name: target.name,
           success: attacked[:success],
+          advantage: advantage,
           rider: rider,
           damage: attacked[:success] ? attack_roll.damage : 0,
           attack_roll: {
@@ -312,7 +319,7 @@ class CombatSimulatorService
     end
 
     # Adds the maneuver's die to a weapon attack that just hit: rolls it through the effect pipeline
-    # (doubled on a critical hit) and spends a superiority die.
+    # (doubled on a critical hit), spends a superiority die and applies the payload's debuff, if any.
     # ponytail: the die lands as its own damage instance (own log line, own resistance rounding), not
     # inside the weapon's single damage roll; merge them if that ever distorts a metric.
     def apply_maneuver_rider(actor:, target:, maneuver:, crit:)
@@ -321,7 +328,24 @@ class CombatSimulatorService
       results = Combat::ActionRunner.call(action:, crit:)
       consume_feature_use!(actor:, class_feature_id: resource_class_feature_id(feature:, combat_superiority_unlock: combat_superiority_unlock_for(actor:)))
 
-      serialize_effect_results(results:).first.merge(feature_name: feature.name)
+      debuff = maneuver[:payload]["debuff"]
+      case debuff
+      when nil then nil
+      when "next_attack_advantage" then @advantage_marks[target.id] << actor.id
+      else raise ArgumentError, "Unsupported debuff: #{debuff.inspect}"
+      end
+
+      serialize_effect_results(results:).first.merge(feature_name: feature.name, debuff:).compact
+    end
+
+    # The first attacker other than a mark's owner uses that mark up and rolls with advantage.
+    def consume_advantage_mark(target:, attacker:)
+      marks = @advantage_marks[target.id]
+      index = marks.index { |source_id| source_id != attacker.id }
+      return false unless index
+
+      marks.delete_at(index)
+      true
     end
 
     def execute_class_feature_action(actor:, chosen_action:, round_number:, turn_index:)

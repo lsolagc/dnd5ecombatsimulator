@@ -118,6 +118,47 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_nil maneuver_action(service:, actor: battle_master, slug: "precision-attack")
   end
 
+  test "Distracting Strike marks the target only when the attack hits, and the mark is spent by the first other attacker" do
+    battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
+    ally = fresh_character(:aragorn_copy)
+    target = hittable_target(armor_class: 100)
+    service = maneuver_service(battle_master:, target:, allies: [ ally ])
+    marks = service.send(:instance_variable_get, :@advantage_marks)
+    strike = maneuver_action(service:, actor: battle_master, slug: "distracting-strike")
+    strike_now = -> { service.send(:execute_action, actor: battle_master, chosen_action: strike, round_number: 1, turn_index: 1) }
+    attack_now = ->(actor) { service.send(:execute_attack_action, actor:, round_number: 1, turn_index: 1).dig(:results, 0) }
+
+    Random.srand(1) # AC 100: a miss
+    assert_not strike_now.call.dig(:results, 0, :success)
+    assert_empty marks[target.id], "no hit, no mark"
+
+    target.combatant.update!(armor_class: 1)
+    Random.srand(1)
+    assert strike_now.call.dig(:results, 0, :success)
+    assert_equal [ battle_master.id ], marks[target.id]
+
+    assert_not attack_now.(battle_master)[:advantage], "the mark never helps the one who set it"
+    assert_equal [ battle_master.id ], marks[target.id]
+
+    assert attack_now.(ally)[:advantage], "the next attack by anyone else has advantage"
+    assert_empty marks[target.id]
+    assert_not attack_now.(ally)[:advantage], "the mark is consumed by that one attack"
+  end
+
+  test "a Distracting Strike mark expires at the start of its owner's next turn, leaving other owners' marks alone" do
+    battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
+    ally = fresh_character(:aragorn_copy)
+    target = hittable_target(armor_class: 1)
+    service = maneuver_service(battle_master:, target:, allies: [ ally ])
+    marks = service.send(:instance_variable_get, :@advantage_marks)
+    marks[target.id] = [ ally.id, battle_master.id ]
+    target.current_hit_points = 0 # the fight is over, so the turn ends right after the expiry and no attack spends a mark
+
+    service.send(:execute_round, round_number: 1, initiative_order: [ battle_master ])
+
+    assert_equal [ ally.id ], marks[target.id]
+  end
+
   test "a Battle Master who does not know Precision Attack does not see it as an available action" do
     battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
     battle_master.player_character_maneuvers.destroy_all

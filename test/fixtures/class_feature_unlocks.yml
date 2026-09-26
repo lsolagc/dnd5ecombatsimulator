@@ -143,6 +143,18 @@ battle_master_maneuver_precision_attack_level_3:
     damage_type: bludgeoning
     applies_to: weapon_attack
 
+battle_master_maneuver_distracting_strike_level_3:
+  class_feature: fighter_battle_master_maneuver_distracting_strike
+  level: 3
+  description: Maneuver available for the Battle Master to choose.
+  effect_payload:
+    kind: damage
+    roll: "1d8"
+    target: enemy
+    damage_type: bludgeoning
+    applies_to: weapon_attack
+    debuff: next_attack_advantage
+
 eldritch_knight_archetype_level_3:
   class_feature: fighter_eldritch_knight_archetype
   level: 3
