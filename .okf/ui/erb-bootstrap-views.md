@@ -5,8 +5,8 @@ description: The ERB view layer styled with Bootstrap 5 (via dartsass-rails), wh
 resource: app/views
 tags: [ui, bootstrap]
 generated:
-  by: copilot-cli/claude-sonnet-5
-  at: 2026-08-24T01:00:00Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-06T01:50:00Z
 sources:
   - id: application-layout
     title: app/views/layouts/application.html.erb
@@ -40,7 +40,7 @@ are hardcoded per view.
 
 `app/views/layouts/application.html.erb` is the single shared layout: a
 horizontal Bootstrap `navbar` (brand, Início/Personagens/Classes links, a
-disabled "Simulações" placeholder for the not-yet-built feature) plus a
+"Simulações", which opens the [simulation batch](/architecture/simulation-batches.md) form) plus a
 `<main>` content area.[^application-layout] The navbar also hosts a
 Claro/Escuro/Sistema theme segmented control, backed by Bootstrap 5's native
 `data-bs-theme` dark mode: the layout reads the `theme` cookie server-side to
@@ -52,11 +52,13 @@ the design handoff's terracotta accent before `@import "bootstrap"`.[^applicatio
 
 **Stimulus is now wired up** (`stimulus-rails`'s standard
 `app/javascript/controllers/` + importmap `pin_all_from` setup — it was
-previously an installed-but-unused gem). Three controllers exist:
+previously an installed-but-unused gem). Besides
 `theme_controller.js` (above), `class_row_controller.js` (toggles the
 expandable progression/features row on `player_classes#index`), and the
-larger `wizard_controller.js` driving the character-creation wizard below.
-None of them make network requests — all client-side state and DOM
+larger `wizard_controller.js` driving the character-creation wizard below,
+`simulation_form_controller.js` and `poll_controller.js` serve the
+[simulation batch](/architecture/simulation-batches.md) screens. Only
+`poll_controller.js` makes requests (reloading a turbo-frame); the others are all client-side state and DOM
 toggling, with the actual persistence happening on normal Rails form
 submits.
 
@@ -64,8 +66,8 @@ submits.
 
 - **`home#index`**: a hero explaining the simulator, a 3-step "how it works"
   strip, and three shortcut cards (Personagens/Classes counts pulled from
-  `PlayerCharacter.count`/`PlayerClass.count`; a disabled "Simulações" card
-  since that feature doesn't exist yet).
+  `PlayerCharacter.count`/`PlayerClass.count`; a "Simulações" card with
+  `SimulationBatch.count` linking to the batch form).
 - **`player_classes#index`**: a filterable table (`q` name search, `hit_die`
   and `spellcasting_modifier` selects — plain GET params, no Turbo Frame)
   where each row expands in place (via `class_row_controller.js`) into that
@@ -104,12 +106,16 @@ submits.
   backed by a single `player_character[damage_type_flags][<type>]` value per
   damage type; `PlayerCharactersController` translates that flag hash into
   the three separate `Combatant` jsonb columns before
-  save.[^player-characters-controller] The Features step is read-only
-  (derived from the selected class's `class_features`/
-  `class_feature_unlocks`); the Combate step's weapon fields (main/offhand)
-  are rendered to match the design but **are not backed by any model** —
-  there is no `Weapon` concept in the schema yet, so those inputs have no
-  `name` attribute and are dropped on submit.
+  save.[^player-characters-controller] The damage-type labels (pt-BR) come
+  from `ApplicationHelper::DAMAGE_TYPE_LABELS`, shared with the sheet and the
+  [simulation experiment](/architecture/simulation-batches.md) cards. The
+  Features step is read-only (derived from the selected class's
+  `class_features`/`class_feature_unlocks`). In the Combate step the main
+  weapon's attack bonus, damage dice and damage type are real `Combatant`
+  columns (`attack_bonus`, `damage_dice`, `damage_type`); only the weapon
+  *name* and the whole offhand weapon are visual-only — there is no `Weapon`
+  concept in the schema yet, so those inputs have no `name` attribute and are
+  dropped on submit.
 
 Views are tested via system tests (Capybara) exercising the rendered pages —
 see `test/system/`.

@@ -5,4 +5,5 @@
 * [Combat effect-execution pipeline (Combat::*)](combat-effect-pipeline.md) - The evolving pipeline for class-feature/spell effects: CombatAction, EffectResolver, EffectExecutor, ActionRunner.
 * [Phased migration off EncounterService onto Combat::*](combat-migration-strategy.md) - Why the pipeline is introduced additively, in three phases, without touching the frozen service.
 * [CombatSimulatorService — seeded, feature-aware combat orchestrator](combat-simulator-service.md) - A newer, separate orchestrator combining basic attacks with class-feature effects, seeded for reproducibility.
+* [Simulation batches](simulation-batches.md) - Background job running CombatSimulatorService up to 1000 times, with progress polling, cancellation, summary metrics and a zipped JSON log.
 * [Passive effect triggers (always / turn_start / turn_end)](passive-effect-triggers.md) - The trigger + conditions extension to effect_payload behind passives like Champion's improved critical.

@@ -4,8 +4,8 @@ title: System Architecture Overview
 description: High-level layering of the D&D 5e combat simulator — presentation, services, models, and database — and how a character-creation or combat request flows through them.
 tags: [rails]
 generated:
-  by: copilot-cli/claude-sonnet-5
-  at: 2026-08-21T23:39:26Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-06T02:20:00Z
 sources:
   - id: characters-controller
     title: app/controllers/player_characters_controller.rb
@@ -67,6 +67,11 @@ alongside both:
 
 Any task touching combat should first identify which of these three it
 affects — they are not interchangeable, and none of them defers to another.
+
+Repeated runs are driven by [simulation batches](/architecture/simulation-batches.md):
+up to 1000 `CombatSimulatorService` combats between two sides, one Solid Queue
+job each, run in parallel by worker processes that push progress to the page,
+aggregated into win rate, healing and damage metrics.
 
 # Patterns used
 

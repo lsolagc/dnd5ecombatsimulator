@@ -5,8 +5,8 @@ description: A new combat orchestrator (parallel to EncounterService) that runs 
 resource: app/services/combat_simulator_service.rb
 tags: [combat, evolution]
 generated:
-  by: claude-code/claude-sonnet-5
-  at: 2026-09-20T18:31:57Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-06T02:15:00Z
 sources:
   - id: combat-simulator-rb
     title: app/services/combat_simulator_service.rb
@@ -56,6 +56,9 @@ result = CombatSimulatorService.new(
   `Random` seed (via `Random.srand`, restored after `call`) are pinned, so
   every dice roll — including inside `Combat::RollExpression` — is
   reproducible.
+- `abort_if`: optional callable checked before every round; when it returns
+  true, `call` raises `CombatSimulatorService::Aborted` (used to cancel
+  [simulation batches](/architecture/simulation-batches.md)).
 - `max_rounds`: default 20; the loop stops early once one party has no
   combatants left alive (`combat_over?`).
 
@@ -99,11 +102,24 @@ action per turn:
    [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)); the
    turn's result then carries an `attack_roll` (`natural`, `total`, `armor_class`,
    `hit`, `crit`). Weapon attacks in the log carry `natural`, `total`, `crit` and
-   `damage`; both kinds decide the hit with `Dice.hit?` (natural 20 always hits,
+   `damage` (inside `attack_roll`) plus the target's `hp_before`/`hp_after` around the hit (before any maneuver rider); both kinds decide the hit with `Dice.hit?` (natural 20 always hits,
    natural 1 always misses), so an auto-hit can show a `total` below the AC.
 
 The available actions are collected into a list and one is picked with
 `.sample(random: @rng)` — action choice is random, not strategic.
+
+# Lookup caching
+
+A character's class, level and choices cannot change mid-combat, so the
+lookups the turn loop repeats are loaded once per simulation:
+`highest_unlock_per_feature` and the known-maneuver ids are memoized per
+combatant on the service instance (one instance per simulation), and
+`PlayerCharacter` caches its unlocked feature unlocks, class progression and
+spellcasting feature (see [player-character.md](/models/player-character.md)).
+This cut a typical simulation from ~259 queries / ~590 ms to ~39 / ~97 ms;
+60 seeded results across four compositions were byte-identical before and
+after, and a test pins the unlock lookups to one per combatant per side of the
+cache.
 
 # Resource tracking
 

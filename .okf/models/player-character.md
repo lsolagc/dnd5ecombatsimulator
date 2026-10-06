@@ -5,8 +5,8 @@ description: The player's character record — name, class, and level — delega
 resource: app/models/player_character.rb
 tags: [model, character, persistence, combat]
 generated:
-  by: copilot-cli/claude-sonnet-5
-  at: 2026-08-21T23:39:26Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-06T02:15:00Z
 sources:
   - id: player-character-rb
     title: app/models/player_character.rb
@@ -70,7 +70,7 @@ contract is `to_hit_modifier:`, `damage_dice:`, `damage_modifier:`,
 with `Dice.hit?` — the 5e rule shared with spell attacks: a natural 20 always
 hits (and always crits), a natural 1 always misses, otherwise the roll's total
 must reach `armor_class` (delegated from `Combatant`); a crit that hits doubles
-the damage dice. On a hit it calls `take_damage` with `damage_type:` read from the combatant's own
+the damage dice. On a hit that rolled positive damage (a negative modifier can bring it to 0, which hits for nothing) it calls `take_damage` with `damage_type:` read from the combatant's own
 `damage_type` field (default `"bludgeoning"`) — configured per character via
 the creation/edit wizard rather than hardcoded. `take_damage` applies the
 target's immunity/resistance/vulnerability (delegated to `Combatant`, see
@@ -112,6 +112,18 @@ modifier (raising when the character has no ability), and from it
 `proficiency_bonus + modifier`. The combat pipeline reads them for spell attacks
 and `"dc": "spell"` saves — see
 [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md).
+
+# Cached class lookups
+
+`unlocked_class_feature_unlocks` (behind every passive: attack and AC
+modifiers, critical threshold, turn passives), `class_progression` (attacks
+per action, proficiency bonus) and `spellcasting_feature` are cached on the
+instance, keyed by what they depend on (`player_class_id`, `level`,
+`martial_archetype_id`, `fighting_style_id`): changing one of those on the
+same instance recomputes, and `#reload` clears the cache. The combat loop asks
+for them on every attack, and [CombatSimulatorService](/architecture/combat-simulator-service.md)
+builds fresh instances per simulation. Rows edited in the database while an
+instance is alive (unlocks, progressions) are not seen until `reload`.
 
 # Schema
 
