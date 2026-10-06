@@ -1,0 +1,69 @@
+<%# Locals: character, settings (the experiment's values), side ("party_one" | "party_two") %>
+<% blueprint = SimulationBatch.blueprint_settings(character) %>
+<% prefix = "simulation_batch[combatants][#{character.id}]" %>
+<% dom = "combatant_#{character.id}" %>
+<% field = ->(key) { { class: [ "sim-field", ("is-edited" if settings[key].to_s != blueprint[key].to_s) ], data: { field: key } } } %>
+<article class="sim-card" data-simulation-form-target="card" data-character-id="<%= character.id %>" aria-label="<%= character.name %>">
+  <%= hidden_field_tag "#{prefix}[side]", side, id: nil, data: { side_input: true } %>
+
+  <header class="sim-card__header">
+    <div class="min-w-0">
+      <h3 class="sim-card__name"><%= character.name %></h3>
+      <p class="sim-card__meta"><%= character.player_class.name %> · nível <%= character.level %> · HP máx. <%= character.max_hit_points %></p>
+    </div>
+    <div class="sim-card__actions">
+      <span class="sim-card__edits" data-edit-count hidden></span>
+      <button type="button" class="btn btn-sm btn-link sim-card__reset" data-action="simulation-form#reset" data-reset-button hidden>Restaurar ficha</button>
+      <button type="button" class="btn-close" data-action="simulation-form#remove" aria-label="Remover <%= character.name %>"></button>
+    </div>
+  </header>
+
+  <div class="sim-card__stats" data-action="input->simulation-form#edited change->simulation-form#edited">
+    <%= tag.div(**field.("current_hit_points")) do %>
+      <label for="<%= dom %>_hp">HP inicial</label>
+      <div class="input-group input-group-sm">
+        <%= number_field_tag "#{prefix}[current_hit_points]", settings["current_hit_points"], id: "#{dom}_hp", min: 1, max: character.max_hit_points, required: true,
+              class: "form-control font-monospace", data: { blueprint: blueprint["current_hit_points"] } %>
+        <span class="input-group-text font-monospace">/<%= character.max_hit_points %></span>
+      </div>
+    <% end %>
+    <%= tag.div(**field.("armor_class")) do %>
+      <label for="<%= dom %>_ac">CA</label>
+      <%= number_field_tag "#{prefix}[armor_class]", settings["armor_class"], id: "#{dom}_ac", min: 0, required: true,
+            class: "form-control form-control-sm font-monospace", data: { blueprint: blueprint["armor_class"] } %>
+    <% end %>
+    <%= tag.div(**field.("attack_bonus")) do %>
+      <label for="<%= dom %>_attack">Ataque</label>
+      <%= number_field_tag "#{prefix}[attack_bonus]", settings["attack_bonus"], id: "#{dom}_attack", required: true,
+            class: "form-control form-control-sm font-monospace", data: { blueprint: blueprint["attack_bonus"] } %>
+    <% end %>
+    <%= tag.div(**field.("damage_dice")) do %>
+      <label for="<%= dom %>_dice">Dano</label>
+      <%= text_field_tag "#{prefix}[damage_dice]", settings["damage_dice"], id: "#{dom}_dice", required: true, pattern: "[1-9][0-9]*[dD][1-9][0-9]*",
+            title: "Formato: quantidade d faces, ex.: 1d8", autocomplete: "off",
+            class: "form-control form-control-sm font-monospace", data: { blueprint: blueprint["damage_dice"] } %>
+    <% end %>
+    <%= tag.div(**field.("damage_type")) do %>
+      <label for="<%= dom %>_type">Tipo de dano</label>
+      <%= select_tag "#{prefix}[damage_type]", options_for_select(damage_type_labels.invert, settings["damage_type"]), id: "#{dom}_type",
+            class: "form-select form-select-sm", data: { blueprint: blueprint["damage_type"] } %>
+    <% end %>
+  </div>
+
+  <details class="sim-card__defenses">
+    <summary>
+      <span class="sim-card__defenses-title">Defesas</span>
+      <span class="sim-card__defenses-summary" data-defense-summary></span>
+    </summary>
+    <p class="small text-body-secondary mb-2">Clique para alternar: — / R (resistência) / I (imunidade) / V (vulnerabilidade).</p>
+    <div class="d-flex flex-wrap gap-1">
+      <% damage_type_labels.each do |type, label| %>
+        <% flag = settings.dig("defenses", type).to_s %>
+        <span class="sim-chip<%= " is-edited" if flag != blueprint["defenses"][type].to_s %>" data-field="defense">
+          <button type="button" class="sim-chip__button" data-action="simulation-form#cycleDefense" data-label="<%= label %>"><%= label %> <span class="sim-chip__flag" data-flag><%= flag %></span></button>
+          <%= hidden_field_tag "#{prefix}[defenses][#{type}]", flag, id: nil, data: { blueprint: blueprint["defenses"][type].to_s, defense_input: true } %>
+        </span>
+      <% end %>
+    </div>
+  </details>
+</article>

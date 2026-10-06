@@ -38,7 +38,7 @@
             <%= link_to "Classes", player_classes_path, class: "nav-link#{" active fw-semibold" if controller_name == "player_classes"}" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Simulações", "#", class: "nav-link disabled", aria: { disabled: true }, tabindex: "-1" %>
+            <%= link_to "Simulações", new_simulation_batch_path, class: "nav-link#{" active fw-semibold" if controller_name == "simulation_batches"}" %>
           </li>
         </ul>
 

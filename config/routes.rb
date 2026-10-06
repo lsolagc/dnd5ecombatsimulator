@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   resources :player_characters
   resources :player_classes
+  resources :simulation_batches, only: %i[ new create show ] do
+    member do
+      post :cancel
+      get :logs
+    end
+  end
   get "home/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

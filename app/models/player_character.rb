@@ -111,7 +111,8 @@ class PlayerCharacter < ApplicationRecord
 
   def get_attacked(attack_roll:)
     if Dice.hit?(natural: attack_roll.natural, total: attack_roll.total, armor_class:)
-      take_damage(amount: attack_roll.damage, damage_type: damage_type.to_sym)
+      # A negative damage modifier can bring a hit to 0 damage (e.g. 1d4 - 1 rolling a 1): it still hits, for nothing.
+      take_damage(amount: attack_roll.damage, damage_type: damage_type.to_sym) if attack_roll.damage.positive?
       { success: true, attack_roll: attack_roll, message: "Hit!" }
     else
       { success: false, attack_roll: attack_roll, message: "Miss!" }
@@ -142,7 +143,7 @@ class PlayerCharacter < ApplicationRecord
   end
 
   def class_progression
-    player_class.progression_at(level)
+    cached(:class_progression, [ player_class_id, level ]) { player_class.progression_at(level) }
   end
 
   def proficiency_bonus
@@ -169,10 +170,15 @@ class PlayerCharacter < ApplicationRecord
   end
 
   def spellcasting_feature
-    feature = player_class.class_features.find_by(grants_spellcasting: true)
-    return nil unless feature && ClassFeature.visible_for?(feature, martial_archetype: martial_archetype, fighting_style: fighting_style)
+    cached(:spellcasting_feature, [ player_class_id, martial_archetype_id, fighting_style_id ]) do
+      feature = player_class.class_features.find_by(grants_spellcasting: true)
+      feature if feature && ClassFeature.visible_for?(feature, martial_archetype: martial_archetype, fighting_style: fighting_style)
+    end
+  end
 
-    feature
+  def reload(*)
+    @lookup_cache = nil
+    super
   end
 
   # Ability name ("intelligence"...) this character casts with: the chosen subclass's spellcasting
@@ -234,12 +240,24 @@ class PlayerCharacter < ApplicationRecord
     end
 
     def unlocked_class_feature_unlocks
-      ClassFeatureUnlock
-        .joins(:class_feature)
-        .includes(:class_feature)
-        .where(class_features: { player_class_id: player_class_id })
-        .where("class_feature_unlocks.level <= ?", level)
-        .select { |unlock| ClassFeature.visible_for?(unlock.class_feature, martial_archetype: martial_archetype, fighting_style: fighting_style) }
+      cached(:unlocked_class_feature_unlocks, [ player_class_id, level, martial_archetype_id, fighting_style_id ]) do
+        ClassFeatureUnlock
+          .joins(:class_feature)
+          .includes(:class_feature)
+          .where(class_features: { player_class_id: player_class_id })
+          .where("class_feature_unlocks.level <= ?", level)
+          .select { |unlock| ClassFeature.visible_for?(unlock.class_feature, martial_archetype: martial_archetype, fighting_style: fighting_style) }
+      end
+    end
+
+    # Per-instance cache for lookups that depend only on the character's class, level and choices. The combat
+    # loop asks for them on every attack; a changed key (say, a level edited on this instance) recomputes, and
+    # #reload clears it.
+    def cached(name, key)
+      entry = (@lookup_cache ||= {})[name]
+      return entry.last if entry&.first == key
+
+      yield.tap { |value| @lookup_cache[name] = [ key, value ] }
     end
 
     def modifier_bonus(name)

@@ -2,6 +2,7 @@ class HomeController < ApplicationController
   def index
     @player_characters_count = PlayerCharacter.count
     @player_classes_count = PlayerClass.count
+    @simulation_batches_count = SimulationBatch.count
   end
 
   def ping

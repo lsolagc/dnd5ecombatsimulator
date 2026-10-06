@@ -1,0 +1,58 @@
+<% content_for :title, "Experimento ##{@simulation_batch.id}" %>
+
+<div class="sim-page">
+  <header class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <p class="sim-eyebrow">Experimento #<%= @simulation_batch.id %></p>
+      <h1 class="fw-bold mb-1"><%= pluralize(@simulation_batch.requested_count, "simulação", plural: "simulações") %></h1>
+      <p class="text-body-secondary mb-0">
+        <%= @simulation_batch.seed ? "Seed #{@simulation_batch.seed}: rolagens reproduzíveis" : "Seed aleatória por simulação (registrada no log)" %>
+      </p>
+    </div>
+    <div class="d-flex gap-2">
+      <%= link_to "Repetir com ajustes", new_simulation_batch_path(from: @simulation_batch.id), class: "btn btn-outline-secondary" %>
+      <%= link_to "Novo experimento", new_simulation_batch_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </header>
+
+  <div class="row g-4 mb-4">
+    <% { "party_one" => @simulation_batch.party_one, "party_two" => @simulation_batch.party_two }.each do |side, party| %>
+      <% letter = simulation_sides[side] %>
+      <div class="col-lg-6">
+        <section class="sim-side sim-side--<%= side %>" aria-label="Lado <%= letter %>">
+          <header class="sim-side__header">
+            <span class="sim-side__badge" aria-hidden="true"><%= letter %></span>
+            <h2 class="sim-side__title">Lado <%= letter %></h2>
+            <span class="sim-side__count"><%= pluralize(party.size, "combatente") %></span>
+          </header>
+          <ul class="sim-roster">
+            <% party.each do |character| %>
+              <% settings = @simulation_batch.settings_for(character) %>
+              <% defenses = settings["defenses"] || {} %>
+              <li class="sim-roster__item">
+                <div class="d-flex justify-content-between gap-2">
+                  <span class="fw-semibold"><%= character.name %></span>
+                  <span class="small text-body-secondary"><%= character.player_class.name %> · nível <%= character.level %></span>
+                </div>
+                <p class="sim-roster__stats"><%= combat_line(settings, character.max_hit_points) %></p>
+                <% if defenses.any? %>
+                  <p class="sim-roster__defenses">
+                    <% defenses.each do |type, flag| %>
+                      <span class="sim-tag" title="<%= defense_labels[flag] %>"><%= damage_type_labels[type] %> <%= flag %></span>
+                    <% end %>
+                  </p>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </section>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Workers push progress over this stream (SimulationBatch#broadcast_progress), morphing the frame in place. %>
+  <%= turbo_stream_from @simulation_batch %>
+  <%= turbo_frame_tag "batch_status", refresh: "morph" do %>
+    <%= render "status", batch: @simulation_batch %>
+  <% end %>
+</div>

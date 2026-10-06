@@ -1,0 +1,101 @@
+<% completed = batch.simulation_runs.count %>
+<% average_ms = batch.average_elapsed_ms %>
+<% pace = batch.simulations_per_second %>
+
+<% if batch.pending? || batch.running? %>
+  <% percent = share(completed, batch.requested_count) %>
+  <%# Progress normally arrives pushed by the workers; the slow poll only covers a dropped connection. %>
+  <section class="sim-panel" data-controller="poll" aria-label="Progresso">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+      <div>
+        <p class="sim-eyebrow"><%= batch.pending? ? "Na fila" : "Rodando" %></p>
+        <p class="sim-hero mb-0"><%= completed %><span class="sim-hero__total"> / <%= batch.requested_count %> simulações finalizadas</span></p>
+      </div>
+      <dl class="sim-progress-stats">
+        <div><dt>Tempo médio</dt><dd><%= format_milliseconds(average_ms) %></dd></div>
+        <div><dt>Ritmo</dt><dd><%= pace ? "#{number_with_precision(pace, precision: 1, separator: ",")}/s" : "—" %></dd></div>
+        <div><dt>Restante</dt><dd><%= pace&.positive? ? "≈ #{format_milliseconds((batch.requested_count - completed) / pace * 1000)}" : "—" %></dd></div>
+      </dl>
+    </div>
+    <div class="progress sim-progress mb-3" role="progressbar" aria-label="Simulações finalizadas"
+         aria-valuenow="<%= completed %>" aria-valuemin="0" aria-valuemax="<%= batch.requested_count %>">
+      <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: <%= percent %>%"></div>
+    </div>
+    <%# No token field: this partial is also rendered by workers, outside any session. Turbo sends the page's CSRF token as a header. %>
+    <%= button_to "Interromper", cancel_simulation_batch_path(batch), class: "btn btn-outline-danger", authenticity_token: false, form: { data: { turbo_frame: "_top" } } %>
+  </section>
+<% else %>
+  <% summary = batch.summary %>
+  <% total = summary[:total] %>
+  <% wins_a, wins_b, no_winner = summary[:wins]["party_one"].to_i, summary[:wins]["party_two"].to_i, summary[:wins][nil].to_i %>
+  <% healing_rolled = summary[:healing_done] + summary[:healing_wasted] %>
+
+  <% if batch.cancelled? %>
+    <div class="alert alert-warning" role="status">Experimento interrompido após <%= completed %> de <%= batch.requested_count %> simulações. O resultado considera apenas as finalizadas.</div>
+  <% elsif batch.failed? %>
+    <div class="alert alert-danger" role="alert">O experimento falhou após <%= completed %> simulações: <%= batch.error_message %></div>
+  <% end %>
+
+  <section class="sim-panel mb-4" id="batch_summary" aria-labelledby="result_title">
+    <p class="sim-eyebrow" id="result_title">Resultado · <%= pluralize(total, "simulação", plural: "simulações") %></p>
+    <% if total.zero? %>
+      <p class="sim-headline mb-0">Nenhuma simulação terminou.</p>
+    <% else %>
+      <p class="sim-headline">
+        <% if wins_a == wins_b %>
+          Empate técnico: cada lado venceu <%= format_share(share(wins_a, total)) %> dos combates.
+        <% else %>
+          <% leader, leader_wins = wins_a > wins_b ? [ "A", wins_a ] : [ "B", wins_b ] %>
+          <span class="sim-dot sim-dot--<%= leader == "A" ? "party_one" : "party_two" %>" aria-hidden="true"></span>
+          Lado <%= leader %> venceu <%= format_share(share(leader_wins, total)) %> dos combates.
+        <% end %>
+      </p>
+
+      <% segments = [ [ "party_one", "Vitórias do lado A", wins_a ], [ nil, "Sem vencedor", no_winner ], [ "party_two", "Vitórias do lado B", wins_b ] ] %>
+      <div class="sim-winbar" role="img" aria-label="<%= segments.map { |_, label, count| "#{label}: #{format_share(share(count, total))}" }.join(", ") %>">
+        <% segments.each do |side, label, count| %>
+          <% next if count.zero? %>
+          <% width = share(count, total) %>
+          <div class="sim-winbar__segment sim-winbar__segment--<%= side || "none" %>" style="flex-basis: <%= width %>%" title="<%= label %>: <%= format_share(width) %> (<%= count %>)">
+            <% if width >= 12 %><span><%= format_share(width) %></span><% end %>
+          </div>
+        <% end %>
+      </div>
+      <dl class="sim-legend">
+        <% segments.each do |side, label, count| %>
+          <div class="sim-legend__item">
+            <dt><span class="sim-dot sim-dot--<%= side || "none" %>" aria-hidden="true"></span><%= label %></dt>
+            <dd><strong><%= format_share(share(count, total)) %></strong> <span class="text-body-secondary"><%= count %> de <%= total %><%= " · empate ou limite de rodadas" unless side %></span></dd>
+          </div>
+        <% end %>
+      </dl>
+    <% end %>
+  </section>
+
+  <div class="sim-tiles mb-4">
+    <div class="sim-tile">
+      <p class="sim-tile__label">Cura realizada</p>
+      <p class="sim-tile__value"><%= summary[:healing_done] %></p>
+      <p class="sim-tile__hint">HP efetivamente recuperado</p>
+    </div>
+    <div class="sim-tile">
+      <p class="sim-tile__label">Cura desperdiçada</p>
+      <p class="sim-tile__value"><%= summary[:healing_wasted] %></p>
+      <p class="sim-tile__hint"><%= healing_rolled.zero? ? "acima do HP máximo do alvo" : "#{format_share(share(summary[:healing_wasted], healing_rolled))} da cura rolada passou do HP máximo" %></p>
+    </div>
+    <div class="sim-tile">
+      <p class="sim-tile__label">Maior dano em um round</p>
+      <p class="sim-tile__value"><%= summary[:max_round_damage] %></p>
+      <p class="sim-tile__hint">soma de todos os combatentes</p>
+    </div>
+    <div class="sim-tile">
+      <p class="sim-tile__label">Tempo médio</p>
+      <p class="sim-tile__value"><%= format_milliseconds(average_ms) %></p>
+      <p class="sim-tile__hint">por simulação</p>
+    </div>
+  </div>
+
+  <% if total.positive? %>
+    <%= link_to "Baixar logs (JSON, .zip)", logs_simulation_batch_path(batch), class: "btn btn-primary", data: { turbo: false } %>
+  <% end %>
+<% end %>

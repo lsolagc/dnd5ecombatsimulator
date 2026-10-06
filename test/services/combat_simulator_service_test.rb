@@ -53,6 +53,48 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_equal 0, result[:total_rounds]
   end
 
+  test "abort_if aborts the simulation in progress between rounds" do
+    rounds_started = 0
+    service = CombatSimulatorService.new(
+      party_one: [ fresh_character(:thorin) ],
+      party_two: [ fresh_character(:aragorn) ],
+      seed: 42,
+      max_rounds: 5,
+      abort_if: -> { (rounds_started += 1) > 1 }
+    )
+
+    assert_raises(CombatSimulatorService::Aborted) { service.call }
+    assert_equal 2, rounds_started
+  end
+
+  test "weapon attack entries carry the target's HP before and after the hit" do
+    target = fresh_character(:aragorn_copy)
+    result = CombatSimulatorService.new(party_one: [ fresh_character(:thorin) ], party_two: [ target ], seed: 42, max_rounds: 3).call
+
+    attacks = result[:round_log].flat_map { |round| round[:turns] }.flat_map { |turn| turn[:results] }.select { |entry| entry[:kind] == :attack }
+    assert attacks.any?
+    attacks.each do |attack|
+      assert_operator attack[:hp_after], :<=, attack[:hp_before]
+      assert_equal attack[:hp_before], attack[:hp_after] unless attack[:success]
+    end
+  end
+
+  test "loads each combatant's unlocked features once per simulation, not on every turn" do
+    party_one = [ fresh_character(:battle_master_seven) ]
+    party_two = [ fresh_character(:eldritch_knight_seven), fresh_character(:champion_seven) ]
+
+    unlock_lookups = 0
+    subscription = ActiveSupport::Notifications.subscribe("sql.active_record") do |*, payload|
+      unlock_lookups += 1 if payload[:sql].include?('FROM "class_feature_unlocks" INNER JOIN "class_features"')
+    end
+    result = CombatSimulatorService.new(party_one:, party_two:, seed: 3, max_rounds: 10).call
+    ActiveSupport::Notifications.unsubscribe(subscription)
+
+    assert_equal 10, result[:total_rounds], "the fight must be long enough for a per-turn lookup to show"
+    # One lookup in the simulator and one in PlayerCharacter (passives) per combatant, however long the fight.
+    assert_equal 6, unlock_lookups
+  end
+
   test "respects max_rounds stop condition" do
     result = CombatSimulatorService.new(
       party_one: [ fresh_character(:thorin) ],

@@ -1,13 +1,18 @@
 class CombatSimulatorService
   DEFAULT_MAX_ROUNDS = 20
 
-  def initialize(party_one:, party_two:, seed: nil, max_rounds: DEFAULT_MAX_ROUNDS)
+  # Raised from #call when abort_if returns true; the partial simulation is discarded.
+  class Aborted < StandardError; end
+
+  # abort_if: optional callable checked before every round (e.g. a batch cancelled from the UI).
+  def initialize(party_one:, party_two:, seed: nil, max_rounds: DEFAULT_MAX_ROUNDS, abort_if: nil)
     raise ArgumentError, "Both parties must be Arrays" unless party_one.is_a?(Array) && party_two.is_a?(Array)
     raise ArgumentError, "Parties must not be empty" if party_one.empty? || party_two.empty?
 
     @party_one = party_one
     @party_two = party_two
     @seed = seed
+    @abort_if = abort_if
     @max_rounds = Integer(max_rounds)
     raise ArgumentError, "max_rounds must be greater than 0" if @max_rounds <= 0
 
@@ -33,6 +38,7 @@ class CombatSimulatorService
 
       while round_number < @max_rounds
         break if combat_over?
+        raise Aborted if @abort_if&.call
 
         round_number += 1
         turns = execute_round(round_number:, initiative_order:)
@@ -208,7 +214,7 @@ class CombatSimulatorService
         next if payload["trigger"].present?
 
         resource_feature_id = resource_class_feature_id(feature: unlock.class_feature, combat_superiority_unlock:)
-        next if resource_feature_id == combat_superiority_unlock&.class_feature_id && !actor.known_maneuvers.exists?(id: unlock.class_feature_id)
+        next if resource_feature_id == combat_superiority_unlock&.class_feature_id && !known_maneuver_ids(actor:).include?(unlock.class_feature_id)
 
         uses = @uses_remaining.dig(actor.id, resource_feature_id)
         next if uses.is_a?(Integer) && uses <= 0
@@ -279,7 +285,9 @@ class CombatSimulatorService
 
         advantage = consume_advantage_mark(target:, attacker: actor)
         attack_roll = actor.roll_an_attack(advantage:)
+        hp_before = target.current_hit_points
         attacked = target.get_attacked(attack_roll:)
+        hp_after = target.current_hit_points
 
         @eldritch_strike_pending[target.id] = actor.id if attacked[:success] && eldritch_strike_unlocked?(actor:)
 
@@ -294,6 +302,8 @@ class CombatSimulatorService
           advantage: advantage,
           rider: rider,
           damage: attacked[:success] ? attack_roll.damage : 0,
+          hp_before:,
+          hp_after:,
           attack_roll: {
             natural: attack_roll.natural,
             total: attack_roll.total,
@@ -486,7 +496,16 @@ class CombatSimulatorService
       highest_unlock_per_feature(combatant: actor).find { |unlock| unlock.class_feature.name == "Combat Superiority" }
     end
 
+    # Cached per combatant for this simulation: a character's class, level and choices don't change mid-combat.
+    def known_maneuver_ids(actor:)
+      (@known_maneuver_ids ||= {})[actor.id] ||= actor.known_maneuvers.pluck(:id).to_set
+    end
+
     def highest_unlock_per_feature(combatant:)
+      (@highest_unlocks ||= {})[combatant.id] ||= load_highest_unlock_per_feature(combatant:)
+    end
+
+    def load_highest_unlock_per_feature(combatant:)
       unlocks = ClassFeatureUnlock
                   .joins(:class_feature)
                   .includes(:class_feature)

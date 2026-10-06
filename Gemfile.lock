@@ -398,6 +398,7 @@ DEPENDENCIES
   puma (>= 5.0)
   rails (~> 8.0.2)
   rubocop-rails-omakase
+  rubyzip (~> 2.4)
   selenium-webdriver
   solid_cable
   solid_cache

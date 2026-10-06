@@ -1,5 +1,4 @@
 <% ability_labels = { "strength" => "Força", "dexterity" => "Destreza", "constitution" => "Constituição", "intelligence" => "Inteligência", "wisdom" => "Sabedoria", "charisma" => "Carisma" } %>
-<% damage_type_labels = { "acid" => "Ácido", "cold" => "Frio", "fire" => "Fogo", "force" => "Força", "poison" => "Veneno", "psychic" => "Psíquico", "radiant" => "Radiante", "thunder" => "Trovejante", "necrotic" => "Necrótico", "piercing" => "Perfurante", "slashing" => "Cortante", "lightning" => "Elétrico", "bludgeoning" => "Concussão" } %>
 <% editing = player_character.persisted? %>
 <% heading = editing ? "Editar #{player_character.name.presence || "personagem"}" : "Novo personagem" %>
 <% submit_label = editing ? "Salvar alterações" : "Criar personagem" %>

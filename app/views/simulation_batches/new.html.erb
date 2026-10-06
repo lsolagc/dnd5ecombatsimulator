@@ -1,0 +1,92 @@
+<% content_for :title, "Novo experimento" %>
+<% characters = PlayerCharacter.includes(:player_class, :combatant).order(:name) %>
+<% selected = characters.index_by(&:id) %>
+
+<div class="sim-page">
+  <header class="mb-4">
+    <p class="sim-eyebrow">Experimento</p>
+    <h1 class="fw-bold mb-1">Novo experimento</h1>
+    <p class="text-body-secondary mb-0" style="max-width: 44rem;">
+      Os personagens salvos são blueprints: monte os dois lados, ajuste HP, CA, ataque e defesas só para este
+      experimento e rode até <%= SimulationBatch::MAX_SIMULATIONS %> combates. A ficha original não muda.
+    </p>
+  </header>
+
+  <% if @simulation_batch.errors.any? %>
+    <div id="error_explanation" class="alert alert-danger" role="alert">
+      <p class="fw-semibold mb-1">Não deu para iniciar o experimento:</p>
+      <ul class="mb-0">
+        <% @simulation_batch.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if characters.empty? %>
+    <div class="sim-empty-state">
+      <p class="fw-semibold mb-1">Nenhum personagem cadastrado.</p>
+      <p class="text-body-secondary mb-3">Os experimentos partem de personagens salvos.</p>
+      <%= link_to "Criar personagem", new_player_character_path, class: "btn btn-primary" %>
+    </div>
+  <% else %>
+    <%= form_with model: @simulation_batch, data: { controller: "simulation-form" } do |form| %>
+      <div class="row g-4">
+        <% simulation_sides.each do |side, letter| %>
+          <% ids = @simulation_batch.public_send("#{side}_ids") %>
+          <div class="col-xl-6">
+            <section class="sim-side sim-side--<%= side %>" aria-labelledby="<%= side %>_title">
+              <header class="sim-side__header">
+                <span class="sim-side__badge" aria-hidden="true"><%= letter %></span>
+                <h2 class="sim-side__title" id="<%= side %>_title">Lado <%= letter %></h2>
+                <span class="sim-side__count" data-side-count="<%= side %>"></span>
+              </header>
+
+              <div class="sim-side__list" data-simulation-form-target="list" data-side="<%= side %>">
+                <% ids.each do |id| %>
+                  <% next unless (character = selected[id]) %>
+                  <%= render "combatant_card", character:, settings: @simulation_batch.settings_for(character), side: %>
+                <% end %>
+              </div>
+              <p class="sim-side__empty">Nenhum combatente ainda. Escolha abaixo quem entra no Lado <%= letter %>.</p>
+
+              <label class="visually-hidden" for="<%= side %>_picker">Adicionar personagem ao Lado <%= letter %></label>
+              <select id="<%= side %>_picker" class="form-select sim-side__picker" data-simulation-form-target="picker" data-side="<%= side %>"
+                      data-action="change->simulation-form#add">
+                <option value="">+ Adicionar personagem…</option>
+                <% characters.each do |character| %>
+                  <option value="<%= character.id %>"><%= character.name %> — <%= character.player_class.name %>, nível <%= character.level %></option>
+                <% end %>
+              </select>
+            </section>
+          </div>
+        <% end %>
+      </div>
+
+      <% characters.each do |character| %>
+        <template data-simulation-form-target="template" data-character-id="<%= character.id %>">
+          <%= render "combatant_card", character:, settings: SimulationBatch.blueprint_settings(character), side: "" %>
+        </template>
+      <% end %>
+
+      <div class="sim-run">
+        <div class="sim-run__field">
+          <%= form.label :requested_count, "Simulações", class: "form-label" %>
+          <%= form.number_field :requested_count, min: 1, max: SimulationBatch::MAX_SIMULATIONS, required: true, class: "form-control font-monospace",
+                data: { simulation_form_target: "count", action: "input->simulation-form#summarize" } %>
+          <div class="form-text">De 1 a <%= SimulationBatch::MAX_SIMULATIONS %>.</div>
+        </div>
+        <div class="sim-run__field">
+          <%= form.label :seed, "Seed (opcional)", class: "form-label" %>
+          <%= form.number_field :seed, min: 0, max: SimulationBatch::MAX_SEED, class: "form-control font-monospace", placeholder: "aleatória",
+                data: { simulation_form_target: "seed", action: "input->simulation-form#toggleSeed" } %>
+          <div class="form-text">Fixa as rolagens e roda uma única simulação.</div>
+        </div>
+        <div class="sim-run__submit">
+          <p class="sim-run__summary" data-simulation-form-target="summary" aria-live="polite"></p>
+          <%= form.submit "Iniciar experimento", class: "btn btn-primary btn-lg" %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

@@ -20,6 +20,8 @@ gem "bootstrap", "~> 5.3"
 gem "dartsass-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
+# Zip the batch simulation logs for download (already locked through selenium-webdriver)
+gem "rubyzip", "~> 2.4", require: "zip"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"

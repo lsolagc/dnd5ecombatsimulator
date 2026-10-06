@@ -27,3 +27,267 @@ $primary: #b3563c;
   color: var(--bs-primary);
   font-weight: 600;
 }
+
+// --- Simulation experiments ---
+// Side colors are categorical identity (validated with the dataviz palette checker, light and dark):
+// A blue, B orange, "no winner" a neutral gray. Text never wears them; they mark borders, dots and bars.
+:root,
+[data-bs-theme="light"] {
+  --sim-side-a: #2a78d6;
+  --sim-side-b: #eb6834;
+  --sim-neutral: #8a8983;
+}
+
+[data-bs-theme="dark"] {
+  --sim-side-a: #3987e5;
+  --sim-side-b: #d95926;
+}
+
+.sim-side--party_one, .sim-dot--party_one, .sim-winbar__segment--party_one { --sim-side-color: var(--sim-side-a); }
+.sim-side--party_two, .sim-dot--party_two, .sim-winbar__segment--party_two { --sim-side-color: var(--sim-side-b); }
+.sim-dot--none, .sim-winbar__segment--none { --sim-side-color: var(--sim-neutral); }
+
+.sim-page { max-width: 80rem; }
+
+.sim-eyebrow {
+  margin-bottom: .25rem;
+  color: var(--bs-secondary-color);
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.sim-empty-state,
+.sim-panel {
+  border: 1px solid var(--bs-border-color);
+  border-radius: .75rem;
+  background: var(--bs-body-bg);
+  padding: 1.5rem;
+}
+
+// Sides
+.sim-side {
+  height: 100%;
+  border: 1px solid var(--bs-border-color);
+  border-top: 4px solid var(--sim-side-color);
+  border-radius: .75rem;
+  background: var(--bs-body-bg);
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.sim-side__header {
+  display: flex;
+  align-items: center;
+  gap: .625rem;
+  margin-bottom: 1rem;
+}
+
+.sim-side__badge {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--sim-side-color);
+  color: #fff;
+  font-weight: 700;
+}
+
+.sim-side__title { margin: 0; font-size: 1.125rem; font-weight: 700; }
+.sim-side__count { margin-left: auto; color: var(--bs-secondary-color); font-size: .875rem; }
+
+.sim-side__list { display: grid; gap: .75rem; }
+.sim-side__empty {
+  margin: 0;
+  padding: 1.5rem 1rem;
+  border: 1px dashed var(--bs-border-color);
+  border-radius: .5rem;
+  color: var(--bs-secondary-color);
+  text-align: center;
+}
+.sim-side:has(.sim-card) .sim-side__empty { display: none; }
+.sim-side__picker { margin-top: .75rem; }
+
+// Combatant cards
+.sim-card {
+  border: 1px solid var(--bs-border-color);
+  border-left: 3px solid var(--sim-side-color);
+  border-radius: .5rem;
+  background: var(--bs-tertiary-bg);
+  padding: .75rem 1rem;
+}
+
+.sim-card__header { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; margin-bottom: .75rem; }
+.sim-card__name { margin: 0; font-size: 1rem; font-weight: 700; }
+.sim-card__meta { margin: 0; color: var(--bs-secondary-color); font-size: .8125rem; }
+.sim-card__actions { display: flex; align-items: center; gap: .25rem; flex-shrink: 0; }
+.sim-card__reset { padding: 0 .25rem; font-size: .8125rem; }
+.sim-card__edits {
+  border-radius: 999px;
+  background: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary-text-emphasis);
+  font-size: .75rem;
+  font-weight: 600;
+  padding: .125rem .5rem;
+}
+
+.sim-card__stats {
+  display: grid;
+  grid-template-columns: 1.3fr .8fr .8fr 1fr 1.5fr;
+  gap: .5rem;
+}
+
+@media (max-width: 767.98px) {
+  .sim-card__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sim-card__stats > :last-child { grid-column: 1 / -1; }
+  .sim-card__header { flex-wrap: wrap; }
+  .sim-card__actions { order: -1; width: 100%; justify-content: flex-end; }
+}
+
+.sim-field label {
+  display: block;
+  margin-bottom: .25rem;
+  color: var(--bs-secondary-color);
+  font-size: .6875rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// A value moved away from the character sheet for this experiment.
+.sim-field.is-edited label { color: var(--bs-primary-text-emphasis); }
+.sim-field.is-edited label::after { content: " •"; }
+.sim-field.is-edited .form-control,
+.sim-field.is-edited .form-select { border-color: var(--bs-primary); }
+
+.sim-card__defenses { margin-top: .75rem; }
+.sim-card__defenses summary {
+  display: flex;
+  gap: .5rem;
+  cursor: pointer;
+  font-size: .8125rem;
+}
+.sim-card__defenses-title { font-weight: 600; }
+.sim-card__defenses-summary { color: var(--bs-secondary-color); }
+.sim-card__defenses[open] summary { margin-bottom: .5rem; }
+
+.sim-chip { display: inline-flex; }
+.sim-chip__button {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 999px;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  font-size: .75rem;
+  padding: .125rem .5rem;
+}
+.sim-chip__flag { font-family: var(--bs-font-monospace); font-weight: 700; }
+.sim-chip__flag:empty { display: none; }
+.sim-chip.is-active .sim-chip__button { border-color: var(--bs-body-color); font-weight: 600; }
+.sim-chip.is-edited .sim-chip__button { border-color: var(--bs-primary); color: var(--bs-primary-text-emphasis); }
+
+// Run bar
+.sim-run {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem 1.5rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--bs-border-color);
+  background: var(--bs-body-bg);
+  padding: 1rem 0;
+}
+.sim-run__field { width: 12rem; }
+.sim-run__field .form-label { font-weight: 600; }
+.sim-run__submit { display: flex; align-items: center; gap: 1rem; margin-left: auto; align-self: center; }
+.sim-run__summary { margin: 0; color: var(--bs-secondary-color); }
+
+@media (max-width: 767.98px) {
+  // On a phone a sticky bar would cover half the screen: it scrolls with the page instead.
+  .sim-run { position: static; }
+  .sim-run__field { width: calc(50% - .75rem); }
+  .sim-run__submit { flex-wrap: wrap; width: 100%; margin-left: 0; }
+  .sim-run__submit .btn { width: 100%; }
+}
+
+// Experiment page
+.sim-roster { display: grid; gap: .75rem; margin: 0; padding: 0; list-style: none; }
+.sim-roster__item { border-left: 3px solid var(--sim-side-color); padding-left: .75rem; }
+.sim-roster__stats { margin: .125rem 0 0; font-family: var(--bs-font-monospace); font-size: .8125rem; }
+.sim-roster__defenses { display: flex; flex-wrap: wrap; gap: .25rem; margin: .375rem 0 0; }
+.sim-tag {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 999px;
+  font-size: .75rem;
+  padding: 0 .5rem;
+}
+
+.sim-hero { font-size: 3rem; font-weight: 700; line-height: 1; }
+.sim-hero__total { color: var(--bs-secondary-color); font-size: 1rem; font-weight: 400; }
+
+.sim-progress { height: .75rem; }
+// Pushed updates morph the same bar element, so its width eases between values instead of jumping.
+.sim-progress { --bs-progress-bar-transition: width .35s ease-out; }
+.sim-progress .progress-bar { background-color: var(--bs-primary); }
+.sim-progress-stats { display: flex; gap: 2rem; margin: 0; }
+.sim-progress-stats dt { color: var(--bs-secondary-color); font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+.sim-progress-stats dd { margin: 0; font-size: 1.25rem; font-weight: 600; }
+
+.sim-headline { display: flex; align-items: center; gap: .5rem; font-size: 1.5rem; font-weight: 700; }
+
+.sim-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: .75rem;
+  height: .75rem;
+  border-radius: 50%;
+  background: var(--sim-side-color);
+}
+
+// 100% win-rate bar: 2px surface gaps between segments, 4px rounded ends.
+.sim-winbar {
+  display: flex;
+  gap: 2px;
+  height: 2.5rem;
+  margin: 1rem 0;
+}
+.sim-winbar__segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4px;
+  background: var(--sim-side-color);
+  font-size: .875rem;
+  font-weight: 700;
+}
+.sim-winbar__segment:first-child { border-radius: 4px 0 0 4px; }
+.sim-winbar__segment:last-child { border-radius: 0 4px 4px 0; }
+.sim-winbar__segment:only-child { border-radius: 4px; }
+.sim-winbar__segment--party_one { color: #fff; }
+.sim-winbar__segment--party_two,
+.sim-winbar__segment--none { color: #111; }
+
+.sim-legend { display: flex; flex-wrap: wrap; gap: .75rem 2rem; margin: 0; }
+.sim-legend dt { display: flex; align-items: center; gap: .375rem; font-weight: 400; color: var(--bs-secondary-color); font-size: .875rem; }
+.sim-legend dd { margin: 0; }
+
+.sim-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1rem;
+}
+.sim-tile {
+  border: 1px solid var(--bs-border-color);
+  border-radius: .75rem;
+  background: var(--bs-body-bg);
+  padding: 1rem 1.25rem;
+}
+.sim-tile__label { margin-bottom: .25rem; color: var(--bs-secondary-color); font-size: .875rem; font-weight: 600; }
+.sim-tile__value { margin-bottom: .25rem; font-size: 2rem; font-weight: 700; line-height: 1.1; }
+.sim-tile__hint { margin: 0; color: var(--bs-secondary-color); font-size: .8125rem; }

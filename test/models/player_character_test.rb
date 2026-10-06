@@ -40,6 +40,26 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     assert_equal 2, character.attacks_per_action
   end
 
+  test "cached class lookups follow a level or archetype change on the same instance" do
+    character = player_characters(:thorin) # level 5 fighter, Champion
+    assert_equal 2, character.attacks_per_action
+    assert_equal 19, character.critical_hit_threshold
+
+    character.level = 1
+    assert_equal 1, character.attacks_per_action
+    character.level = 5
+    character.martial_archetype = nil
+    assert_equal 20, character.critical_hit_threshold, "Improved Critical belongs to the Champion archetype"
+  end
+
+  test "reload drops cached class lookups" do
+    character = player_characters(:thorin)
+    assert_equal 2, character.attacks_per_action
+
+    ClassLevelProgression.where(player_class: player_classes(:fighter), level: 5).update_all(attacks_per_action: 3)
+    assert_equal 3, character.reload.attacks_per_action
+  end
+
   # class_progression
 
   test "class_progression returns the correct ClassLevelProgression" do
@@ -294,6 +314,17 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     character.get_attacked(attack_roll: attack_roll)
 
     assert_equal character.max_hit_points - 6, character.current_hit_points, "expected the default bludgeoning type to trigger vulnerability (double damage)"
+  end
+
+  test "get_attacked takes a hit that rolled 0 damage without raising" do
+    character = player_characters(:aragorn)
+    character.current_hit_points = character.max_hit_points
+    attack_roll = Struct.new(:natural, :total, :damage).new(10, 999, 0)
+
+    result = character.get_attacked(attack_roll: attack_roll)
+
+    assert result[:success]
+    assert_equal character.max_hit_points, character.current_hit_points
   end
 
   test "get_attacked always hits on a natural 20, even when the total is below the armor class" do
