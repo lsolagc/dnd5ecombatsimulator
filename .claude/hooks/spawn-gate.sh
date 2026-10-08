@@ -31,6 +31,12 @@ fi
 START="$(printf '%s\n' "$PROMPT" | grep -nEi "$HEADING_RE" | head -1 | cut -d: -f1)"
 SECTION="$(printf '%s\n' "$PROMPT" | tail -n +"$START" | awk 'NR==1 {print; next} /^#/ {exit} {print}' | head -40)"
 
+if [ "${CLAUDE_AUTONOMOUS:-}" = "1" ]; then
+  emit allow "Modo autônomo (CLAUDE_AUTONOMOUS=1): build liberado sem aprovação humana. Registre estas Decisões para Veto para revisão do usuário no fim:
+
+$SECTION"
+fi
+
 emit ask "Aprovação humana antes do build (task-build). Decisões para Veto declaradas pela especificação:
 
 $SECTION
