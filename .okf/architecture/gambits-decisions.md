@@ -158,3 +158,17 @@ Smaller choices taken while building pass 5:
 | Two concurrent saves with the same name? | The unique index on `lower(name)` refuses the second (a 500 in that race, not rescued). | Single-user tool; the validation covers every non-concurrent case. |
 
 **Pass 5 status (2026-10-09):** done. Review blocked once: the controller's refusal to overwrite a preset from a character without rules (and to apply an empty preset) had no test, and two tabs saving the same name raised `RecordNotUnique` (500). The orchestrator added both tests, rescued the race into the same 422 as a duplicate name, tested the non-string name guard, and hid "Sobrescrever" for a character without rules; each proven red by sabotage.
+
+# Pass 6 — Brenna and Corwin
+
+Both are level-4 Fighters in the dev database only (not in the YAML seeds): Brenna
+Ironhide (id 17, Champion, Great Weapon Fighting) and Corwin Vale (id 18, Battle Master,
+Dueling, knows Disarming Attack, Distracting Strike and Precision Attack).
+
+| Question | Decision | Why |
+|---|---|---|
+| How are they configured? | `bin/rails gambits:brenna_corwin` (lib/tasks/gambits.rake, logic and rules in `GambitSetups`, lib/gambit_setups.rb): finds each by exact name, replaces only that character's gambits in one transaction, aborts with a message if a name or a feature is missing. Idempotent by construction (replace, not append). | Task: idempotent, by name, touching nothing else. |
+| Brenna (defensive) | 1 Self: HP < 50% → Second Wind · 2 Self: HP < 50% → Action Surge · 3 Inimigo: menor HP → Ataque · 4 (desligada) Self: qualquer → Action Surge | Heals before anything when hurt, then surges while hurt to close the fight; the disabled rule shows the toggle and the "surge at once" alternative. Rule 2 was planned as "Inimigo: HP < 30% → Action Surge", but the model rejects it (Action Surge only takes the Self target, `Gambit::COMPATIBLE_TARGETS`); "Self: HP < 50%" is the closest valid rule. Once Second Wind is spent, rule 1 is skipped and rule 2 fires. |
+| Corwin (aggressive) | 1 Self: qualquer → Action Surge · 2 Inimigo: recurso ≥ 2 → Precision Attack · 3 Self: HP < 25% → Second Wind · 4 Inimigo: menor HP → Disarming Attack · 5 (desligada) Inimigo: não marcado → Distracting Strike · 6 Inimigo: menor HP → Ataque | Surges on the first turn, spends dice on Precision while keeping one back for Disarming (the last die), heals only when nearly down. Distracting Strike's mark only helps other attackers (`marked_for?` ignores the actor's own mark), so enabled in a 1x1 it won every turn and swallowed the pool (Precision and Disarming fired 0 times in 300 seeds); it stays disabled, ready for group fights. |
+
+**Pass 6 status (2026-10-09):** done. Review iteration 1 blocked on a real configuration bug (Corwin's "não marcado → Distracting Strike" won every turn in a 1x1, so Precision and Disarming never fired) and weak tests (exact name, presets, attributes); iteration 2 fixed both. Dry run on dev (ids 17/18, seeds 1–100, rolled back): every enabled rule fires — Brenna 1/2/3 = 77/61/503, Corwin 1/2/3/4/6 = 100/550/15/65/1. Corwin's rule 6 (Ataque) is nearly unreachable in a 1x1: Disarming ("menor HP", always true) takes every turn while a die is left, and fights usually end first. The test rebuilds the two with default ability scores, so its firing seeds differ from dev's.

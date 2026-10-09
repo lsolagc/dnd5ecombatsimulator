@@ -22,7 +22,7 @@ every decision taken alone is in [gambits-decisions.md](/architecture/gambits-de
 | 3. Log (snapshot + gambits section + per-turn gambit) | done, review gap closed by the orchestrator | see `git log` |
 | 4. UI (6 slots, drag, toggle, edit) | done | see `git log` |
 | 5. Presets | done | see `git log` |
-| 6. Brenna (17) / Corwin (18) rake task | not started | — |
+| 6. Brenna (17) / Corwin (18) rake task | done, run on dev | see `git log` |
 | 7. Refinement + real batch + final reports | not started | — |
 
 ## Pass 3 — what is on disk (uncommitted)
