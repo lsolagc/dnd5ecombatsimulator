@@ -8,3 +8,4 @@
 * [Simulation batches](simulation-batches.md) - Background job running CombatSimulatorService up to 1000 times, with progress polling, cancellation, summary metrics and a zipped JSON log.
 * [Passive effect triggers (always / turn_start / turn_end)](passive-effect-triggers.md) - The trigger + conditions extension to effect_payload behind passives like Champion's improved critical.
 * [Gambits — autonomous decisions](gambits-decisions.md) - Refinement questions and decisions taken per pass of the FFXII-style gambits work, open to veto.
+* [Gambits — mechanics impact](gambits-impact.md) - What the gambits changed in combat, how it was validated, and the measured effect on Brenna x Corwin.

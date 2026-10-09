@@ -9,7 +9,11 @@ generated:
 status: draft
 ---
 
-# Where things stand (2026-10-09 ~02:50 UTC)
+# Where things stand
+
+**Complete (2026-10-09 ~22:30 UTC):** all 7 passes committed on `feat/gambits`; nothing pushed or merged. What follows is the history of the resume.
+
+## Snapshot when the first session stopped (2026-10-09 ~02:50 UTC)
 
 Branch `feat/gambits` (local only, never pushed). The original task text is the
 user's prompt "Tarefa autônoma de ponta a ponta: implementar um sistema de Gambits";
@@ -23,7 +27,7 @@ every decision taken alone is in [gambits-decisions.md](/architecture/gambits-de
 | 4. UI (6 slots, drag, toggle, edit) | done | see `git log` |
 | 5. Presets | done | see `git log` |
 | 6. Brenna (17) / Corwin (18) rake task | done, run on dev | see `git log` |
-| 7. Refinement + real batch + final reports | not started | — |
+| 7. Refinement + real batch + final reports | done (batch #9 on dev, [gambits-impact.md](/architecture/gambits-impact.md), `tmp/qa/gambits.md`) | see `git log` |
 
 ## Pass 3 — what is on disk (uncommitted)
 

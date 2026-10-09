@@ -46,4 +46,4 @@ enabled ones top to bottom.[^gambit-rb]
   character's gambits screen (Presets panel).
 - `label` renders the rule in PT-BR, e.g. `Inimigo: HP < 50% → Ataque`.
 
-Decisions behind the model: [gambits-decisions.md](/architecture/gambits-decisions.md).
+Decisions behind the model: [gambits-decisions.md](/architecture/gambits-decisions.md); measured effect: [gambits-impact.md](/architecture/gambits-impact.md).

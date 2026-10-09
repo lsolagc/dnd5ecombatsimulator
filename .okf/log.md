@@ -1,6 +1,7 @@
 # Update Log
 
 ## 2026-10-09
+* **Update**: `gambits:brenna_corwin` configures the two dev-only Fighters ([ops/dev-setup.md](ops/dev-setup.md)); a real 50-run batch shows both rule sets in its log. Mechanics impact recorded in [architecture/gambits-impact.md](architecture/gambits-impact.md).
 * **Update**: Gambit presets (`gambit_presets`, a second owner of `gambits`): save a character's rules as a new preset or overwrite one, and apply a preset to another character — copies both ways, no live link (`Gambit.copy_rules`) — [models/gambit.md](models/gambit.md).
 * **Update**: Characters have a gambits screen (`/player_characters/:id/gambits`): 6 slots, native drag and drop plus ↑/↓, on/off, per-slot editing; the sheet shows a summary — [ui/erb-bootstrap-views.md](ui/erb-bootstrap-views.md), decisions in [architecture/gambits-decisions.md](architecture/gambits-decisions.md).
 * **Update**: Batches copy each character's gambits at creation (`simulation_batches.gambit_settings`) and simulate from that copy; the log zip opens every file with a per-side gambits section and each decision turn records the gambit that fired, "nenhum aplicável: parado" or "aleatório" — [architecture/simulation-batches.md](architecture/simulation-batches.md), [architecture/combat-simulator-service.md](architecture/combat-simulator-service.md).
