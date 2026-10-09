@@ -7,6 +7,7 @@ class SimulationBatch < ApplicationRecord
   DICE_FORMAT = /\A[1-9]\d*d[1-9]\d*\z/
   # Parallel workers can finish many simulations a second: push progress at most this often.
   PROGRESS_BROADCAST_INTERVAL = 0.2.seconds
+  GAMBIT_RULE_KEYS = %w[ position enabled target condition action rule ].freeze
 
   has_many :simulation_runs, -> { order(:id) }
 
@@ -15,6 +16,7 @@ class SimulationBatch < ApplicationRecord
   # A fixed seed always means exactly one (reproducible) simulation.
   before_validation { self.requested_count = 1 if seed.present? }
   before_validation :snapshot_blueprint_settings
+  before_validation :snapshot_gambit_settings
 
   validates :requested_count, numericality: { only_integer: true, in: 1..MAX_SIMULATIONS }
   validates :seed, numericality: { only_integer: true, in: 0..MAX_SEED }, allow_nil: true
@@ -141,18 +143,28 @@ class SimulationBatch < ApplicationRecord
   # One JSON file per simulation (each carrying its seed) plus a batch.json with the setup and summary.
   def logs_zip
     Zip::OutputStream.write_buffer do |zip|
+      names = PlayerCharacter.where(id: party_one_ids + party_two_ids).pluck(:id, :name).to_h
       zip.put_next_entry("batch.json")
       zip.write(JSON.pretty_generate(
         id:, status:, requested_count:, seed:,
-        party_one: PlayerCharacter.where(id: party_one_ids).pluck(:id, :name).to_h,
-        party_two: PlayerCharacter.where(id: party_two_ids).pluck(:id, :name).to_h,
+        party_one: names.slice(*party_one_ids),
+        party_two: names.slice(*party_two_ids),
         combatant_settings:,
+        gambits: { party_one: party_one_ids, party_two: party_two_ids }.transform_values do |ids|
+          ids.map { |id| Gambit.log_section(id:, name: names[id], snapshots: gambit_settings.fetch(id.to_s, [])) }
+        end,
         summary:
       ))
 
       simulation_runs.find_each.with_index(1) do |run, index|
         zip.put_next_entry(format("simulation-%04d.json", index))
-        zip.write(JSON.pretty_generate({ "simulation" => index, "seed" => run.seed, "elapsed_ms" => run.elapsed_ms }.merge(run.result)))
+        # jsonb doesn't keep key order: the gambits section is put back right after the run's identity, in
+        # the same reading order as batch.json.
+        gambits = run.result["gambits"]&.transform_values do |side|
+          side.map { |entry| entry.slice("id", "name", "mode").merge("rules" => entry["rules"].map { |rule| rule.slice(*GAMBIT_RULE_KEYS) }) }
+        end
+        zip.write(JSON.pretty_generate({ "simulation" => index, "seed" => run.seed, "elapsed_ms" => run.elapsed_ms, "gambits" => gambits }
+          .compact.merge(run.result.except("gambits"))))
       end
     end.string
   end
@@ -203,6 +215,14 @@ class SimulationBatch < ApplicationRecord
       @blueprints = nil
       self.combatant_settings = blueprints.to_h do |id, character|
         [ id.to_s, combatant_settings[id.to_s] || self.class.blueprint_settings(character) ]
+      end
+    end
+
+    # Copies each character's gambits (every rule, in priority order) once, when the batch is created:
+    # every run simulates from this copy, so editing the rules later changes neither the runs nor the log.
+    def snapshot_gambit_settings
+      self.gambit_settings = blueprints.to_h do |id, character|
+        [ id.to_s, gambit_settings[id.to_s] || character.gambits.sort_by(&:position).map(&:snapshot) ]
       end
     end
 

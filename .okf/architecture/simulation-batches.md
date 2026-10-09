@@ -54,6 +54,14 @@ between two sides of `PlayerCharacter`s and aggregates the results.[^batch-model
   `combatants=` reads the form (`{ id => { side, current_hit_points, … } }`)
   into the side arrays and settings; `rerun` copies combatants, settings,
   count and seed into a new unsaved batch ("Repetir com ajustes").
+- **`gambit_settings`** (jsonb, keyed by character id): a copy of each
+  character's [gambits](/models/gambit.md) taken when the batch is created
+  (missing keys only, never rewritten); every run is simulated from it and the
+  zip's `batch.json` and `simulation-NNNN.json` open with that per-side gambits
+  section, so editing a character later never changes an old log. `rerun` takes
+  the current rules. Each rule is copied with its readable texts (target,
+  condition, action, full rule), so renaming a feature later doesn't change the
+  log either; only the character's name is read from the database.
 - **`SimulationRun`**: one row per finished combat — its `seed`,
   `elapsed_ms`, `winning_party`, `outcome`, the full result (`round_log`
   included) as `jsonb`, and three metrics extracted at save time by

@@ -217,6 +217,31 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     _, turns = one_turn(actor)
 
     assert_equal [ [ :action_surge, false ], [ :idle, false ], [ :idle, true ] ], turns.map { |turn| [ turn.dig(:action, :type), !!turn[:extra] ] }
+    assert_equal [ { position: 1, rule: "Self: qualquer → Action Surge" }, "nenhum aplicável: parado", "nenhum aplicável: parado" ],
+                 turns.pluck(:gambit)
+  end
+
+  test "every decision entry logs the gambit behind it; the War Magic bonus inherits its spell's, passives log none" do
+    knight = seed_character("Cavaleiro Arcano", level: 18) # Improved War Magic: a bonus attack after any spell
+    add_rule(knight, position: 1, target: :self, feature: "action-surge")
+    add_rule(knight, position: 2, spell: "fire-bolt")
+    idler = seed_character("Mestre de Batalha")
+    add_rule(idler, position: 1, condition: :hp_below, condition_value: 1) # never fires on a living enemy
+    champion = seed_character("Campeão", level: 18) # no gambits: random, with Action Surge
+    champion.current_hit_points = champion.max_hit_points / 2 # Survivor heals at the start of its turn
+
+    entries = CombatSimulatorService.new(party_one: [ knight, idler ], party_two: [ champion ], seed: 1, max_rounds: 1).call[:round_log]
+      .flat_map { |round| round[:turns] }
+    logged = ->(actor) { entries.select { |turn| turn[:actor_id] == actor.id }.map { |turn| [ turn.dig(:action, :type), turn.slice(:bonus, :extra, :gambit) ] } }
+
+    surge = { position: 1, rule: "Self: qualquer → Action Surge" }
+    bolt = { position: 2, rule: "Inimigo: qualquer → Fire Bolt" }
+    assert_equal [ [ :action_surge, { gambit: surge } ], [ :cast_spell, { gambit: bolt } ], [ :attack, { bonus: true, gambit: bolt } ],
+                   [ :cast_spell, { extra: true, gambit: bolt } ] ], logged.(knight)
+    assert_equal [ [ :idle, { gambit: "nenhum aplicável: parado" } ] ], logged.(idler)
+    champion_entries = logged.(champion)
+    assert_equal [ :turn_passive, {} ], champion_entries.first
+    assert_equal [ {}, { gambit: "aleatório" }, { extra: true, gambit: "aleatório" } ], champion_entries.map(&:second).uniq
   end
 
   test "a gambit-driven actor with no Action Surge rule never surges, whether it acts or stands idle" do

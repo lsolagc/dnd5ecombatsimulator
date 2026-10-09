@@ -4,8 +4,15 @@ class CombatSimulatorService
   # Raised from #call when abort_if returns true; the partial simulation is discarded.
   class Aborted < StandardError; end
 
+  # The `gambit` of a decision entry when no rule drove it: a random pick, or a gambit-driven actor
+  # whose rules all failed.
+  RANDOM_GAMBIT = "aleatório"
+  IDLE_GAMBIT = "nenhum aplicável: parado"
+
   # abort_if: optional callable checked before every round (e.g. a batch cancelled from the UI).
-  def initialize(party_one:, party_two:, seed: nil, max_rounds: DEFAULT_MAX_ROUNDS, abort_if: nil)
+  # gambits: optional copy of the rules, { character id (string) => [Gambit#snapshot, ...] } (a batch's
+  # gambit_settings); the simulation runs and logs from it instead of each combatant's own gambits.
+  def initialize(party_one:, party_two:, seed: nil, max_rounds: DEFAULT_MAX_ROUNDS, abort_if: nil, gambits: nil)
     raise ArgumentError, "Both parties must be Arrays" unless party_one.is_a?(Array) && party_two.is_a?(Array)
     raise ArgumentError, "Parties must not be empty" if party_one.empty? || party_two.empty?
 
@@ -13,6 +20,8 @@ class CombatSimulatorService
     @party_two = party_two
     @seed = seed
     @abort_if = abort_if
+    @gambit_settings = gambits
+    @gambit_labels = {}.compare_by_identity
     @max_rounds = Integer(max_rounds)
     raise ArgumentError, "max_rounds must be greater than 0" if @max_rounds <= 0
 
@@ -129,7 +138,7 @@ class CombatSimulatorService
           available = available_actions_for(actor:)
           if available.any?
             chosen_action = choose_turn_action(available:, actor:)
-            turns << execute_action(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
+            turns << execute_action(actor:, chosen_action:, round_number:, turn_index: turn_index + 1).merge(gambit: RANDOM_GAMBIT)
             bonus_turn = war_magic_turn(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
             turns << bonus_turn if bonus_turn
           end
@@ -146,9 +155,22 @@ class CombatSimulatorService
     end
 
     # Enabled gambits by priority, loaded once per simulation. Works on Gambit objects (saved or not),
-    # never querying mid-turn, so a snapshot of the rules can stand in for the owner's own.
+    # never querying mid-turn, so a snapshot of the rules can stand in for the owner's own: with a copy
+    # (gambits:), unsaved gambits rebuilt from it, logged with the copy's own label.
     def enabled_gambits(actor:)
-      (@enabled_gambits ||= {})[actor.id] ||= actor.gambits.select(&:enabled?).sort_by(&:position)
+      (@enabled_gambits ||= {})[actor.id] ||= if @gambit_settings
+        gambit_snapshots(actor).select { |rule| rule["enabled"] }.map do |rule|
+          Gambit.new(rule.slice(*Gambit::SNAPSHOT_ATTRIBUTES)).tap { |gambit| @gambit_labels[gambit] = rule["label"] }
+        end
+      else
+        actor.gambits.select(&:enabled?).sort_by(&:position)
+      end
+    end
+
+    # Every rule of the combatant (enabled or not) by priority, as Gambit#snapshot hashes.
+    def gambit_snapshots(combatant)
+      rules = @gambit_settings ? @gambit_settings.fetch(combatant.id.to_s, []) : combatant.gambits.map(&:snapshot)
+      rules.sort_by { |rule| rule["position"] }
     end
 
     # One gambit-driven evaluation of the list, logged as the turn's entries: the winning rule's action
@@ -217,7 +239,7 @@ class CombatSimulatorService
     end
 
     def gambit_log(gambit)
-      { position: gambit.position, label: gambit.label }
+      { position: gambit.position, rule: @gambit_labels[gambit] || gambit.label }
     end
 
     # Candidates are the living combatants on the rule's side, in initiative order; the condition picks
@@ -260,7 +282,8 @@ class CombatSimulatorService
         actor_name: actor.name,
         actor_party: party_for(actor),
         action: { type: :idle },
-        results: []
+        results: [],
+        gambit: IDLE_GAMBIT
       }
     end
 
@@ -281,7 +304,7 @@ class CombatSimulatorService
 
       chosen_action = available.sample(random: @rng)
       consume_feature_use!(actor:, class_feature_id: unlock.class_feature_id)
-      execute_action(actor:, chosen_action:, round_number:, turn_index:).merge(extra: true)
+      execute_action(actor:, chosen_action:, round_number:, turn_index:).merge(extra: true, gambit: RANDOM_GAMBIT)
     end
 
     def action_surge_unlock_for(actor:)
@@ -293,7 +316,7 @@ class CombatSimulatorService
     # execute_attack_action, never triggers another one) and never fired from the
     # Action Surge extra action — only from the turn's normal chosen_action.
     # A gambit-driven actor aims it without @rng: the spell's target if it is a living enemy, else the
-    # first living enemy in initiative order.
+    # first living enemy in initiative order. The bonus entry carries the gambit of the spell's entry.
     def war_magic_turn(actor:, chosen_action:, round_number:, turn_index:)
       return nil unless war_magic_available?(actor:, chosen_action:)
 
@@ -301,7 +324,8 @@ class CombatSimulatorService
         spell_target = chosen_action[:target]
         focus = enemy_party_for(actor).include?(spell_target) && !spell_target.dead? ? spell_target : first_living_enemy(actor:)
       end
-      execute_attack_action(actor:, round_number:, turn_index:, focus:).merge(bonus: true)
+      gambit = chosen_action.key?(:gambit) ? gambit_log(chosen_action[:gambit]) : RANDOM_GAMBIT
+      execute_attack_action(actor:, round_number:, turn_index:, focus:).merge(bonus: true, gambit:)
     end
 
     def war_magic_available?(actor:, chosen_action:)
@@ -682,6 +706,9 @@ class CombatSimulatorService
       end
 
       {
+        gambits: { party_one: @party_one, party_two: @party_two }.transform_values do |party|
+          party.map { |combatant| Gambit.log_section(id: combatant.id, name: combatant.name, snapshots: gambit_snapshots(combatant)) }
+        end,
         winning_party: winning_party,
         total_rounds: round_number,
         round_log: @round_log,

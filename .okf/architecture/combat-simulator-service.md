@@ -130,6 +130,15 @@ with empty `results`. Gambit choices draw nothing from `@rng`, and actors with
 no enabled gambit take the old random path unchanged. Rules are loaded once per
 simulation and evaluated over `Gambit` objects (saved or not).
 
+**Log.** `gambits:` (optional, a batch's `gambit_settings`) makes the
+simulation run and log from that copy, rebuilding unsaved `Gambit`s. The result
+opens with `gambits: { party_one: [...], party_two: [...] }` — per combatant
+`id`, `name`, `mode` (`"gambits"`, or `"aleatório"` with no enabled rule) and
+every rule by priority (position, enabled, target, condition, action, rule).
+Every decision entry carries `gambit`: `{ position, rule }`,
+`"nenhum aplicável: parado"` or `"aleatório"` (random choice and the automatic
+Action Surge); the War Magic bonus inherits its spell's, passives carry none.
+
 **Action Surge** is a gambit action (target Self) for these actors: when its
 rule wins, one use is spent, a marker turn `action: { type: :action_surge }` is
 logged, and the list is evaluated twice more (the second `extra: true`), skipping

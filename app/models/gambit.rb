@@ -28,6 +28,31 @@ class Gambit < ApplicationRecord
   validate :resource_condition_has_a_resource
   validate :owner_has_room
 
+  # The attributes a SimulationBatch copies (and the simulator rebuilds unsaved gambits from).
+  SNAPSHOT_ATTRIBUTES = %w[position enabled target condition condition_value action_kind class_feature_id spell_id].freeze
+
+  # The rule as copied into a batch: its attributes plus the readable texts at copy time, so the log
+  # never depends on the database (a renamed feature or spell, an edited rule).
+  def snapshot
+    attributes.slice(*SNAPSHOT_ATTRIBUTES).merge(
+      "target_label" => TARGET_LABELS[target], "condition_label" => condition_label, "action_label" => action_label, "label" => label
+    )
+  end
+
+  # A combatant's gambits as the log shows them, from snapshots: every rule (enabled or not) in priority
+  # order, and "aleatório" when none is enabled (the simulator then picks at random).
+  def self.log_section(id:, name:, snapshots:)
+    rules = snapshots.sort_by { |rule| rule["position"] }
+    {
+      id:, name:,
+      mode: rules.any? { |rule| rule["enabled"] } ? "gambits" : "aleatório",
+      rules: rules.map do |rule|
+        { position: rule["position"], enabled: rule["enabled"], target: rule["target_label"], condition: rule["condition_label"],
+          action: rule["action_label"], rule: rule["label"] }
+      end
+    }
+  end
+
   def label
     "#{TARGET_LABELS[target]}: #{condition_label} → #{action_label}"
   end

@@ -93,3 +93,20 @@ slot level, War Magic fallback with several enemies, Action Surge uses under
 `resource_at_least`). After iteration 3 the last gap was a single assertion the reviewer
 had already validated; the orchestrator added it, proved `.first`, `.last` and
 `sample(@rng)` red, and committed instead of stopping the task. Flagged for the user.
+
+# Pass 3 — log
+
+| Question | Decision | Why |
+|---|---|---|
+| When is the gambits copy taken? | When the batch is created: a `gambit_settings` jsonb column on `simulation_batches`, keyed by character id like `combatant_settings`, filled once (missing keys only). Every run of the batch is **simulated from that copy**, not from the database. | One copy per batch keeps every run of an experiment on the same rules, and running from the copy (not only logging it) means an edit mid-batch can't make the log lie. |
+| "Repetir com ajustes" (rerun)? | Does not copy the gambits; the new batch snapshots the characters' current rules. | Gambits are not editable in the experiment builder, only on the character; repeating after editing them is the point. |
+| Shape of the per-combatant section? | Per side, per combatant: `mode` ("gambits" or "aleatório") and every rule in priority order with position, on/off, target, condition, action and the full readable rule. All-disabled rules are listed with mode "aleatório". | The task asks for target, condition, action and on/off per rule; the mode makes the random fallback explicit. |
+| Which turn entries carry the fired gambit? | Every decision entry: `{ position, rule }`, `"nenhum aplicável: parado"` or `"aleatório"`. A War Magic bonus inherits the gambit of the spell turn that triggered it; turn-start/turn-end passives carry none. | Passives and the bonus are not decisions; inheriting keeps the bonus traceable to its rule. |
+| Where does the section sit in each simulation file? | Right after `simulation`, `seed` and `elapsed_ms`, before `round_log`. | "No começo" of the file while keeping the run's identity first. |
+
+**Pass 3 status (2026-10-09):** review blocked once on a test gap (an empty `[]` copy
+could be rewritten by a later save via `.presence`); the orchestrator added that assertion
+and a renamed-feature check to the zip-immutability test, both proven red by sabotage, and
+reordered the section's keys in each simulation file (jsonb scrambles them). Known,
+non-blocking: the combatant's `name` in the section comes from the database (null if the
+character is deleted), like the pre-existing `party_one`/`party_two` maps.

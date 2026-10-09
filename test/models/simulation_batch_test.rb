@@ -143,7 +143,99 @@ class SimulationBatchTest < ActiveSupport::TestCase
                  [ copy.party_one_ids, copy.party_two_ids, copy.combatant_settings, copy.requested_count, copy.seed ]
   end
 
+  test "copies every character's gambits, enabled or not and in priority order, when the batch is created" do
+    aragorn = player_characters(:aragorn)
+    aragorn.gambits.create!(position: 2, target: :enemy, condition: :hp_below, condition_value: 50, action_kind: :attack, enabled: false)
+    aragorn.gambits.create!(position: 1, target: :self, condition: :any, action_kind: :class_feature, class_feature: class_features(:fighter_second_wind))
+
+    record = batch
+    record.save!
+
+    assert_equal [ aragorn.id, player_characters(:merlin).id ].map(&:to_s).sort, record.gambit_settings.keys.sort
+    assert_equal [], record.gambit_settings[player_characters(:merlin).id.to_s]
+    assert_equal [
+      { "position" => 1, "enabled" => true, "target" => "self", "condition" => "any", "condition_value" => nil, "action_kind" => "class_feature",
+        "class_feature_id" => class_features(:fighter_second_wind).id, "spell_id" => nil,
+        "target_label" => "Self", "condition_label" => "qualquer", "action_label" => "Second Wind", "label" => "Self: qualquer → Second Wind" },
+      { "position" => 2, "enabled" => false, "target" => "enemy", "condition" => "hp_below", "condition_value" => 50, "action_kind" => "attack",
+        "class_feature_id" => nil, "spell_id" => nil,
+        "target_label" => "Inimigo", "condition_label" => "HP < 50%", "action_label" => "Ataque", "label" => "Inimigo: HP < 50% → Ataque" }
+    ], SimulationBatch.find(record.id).gambit_settings[aragorn.id.to_s]
+  end
+
+  test "the gambits copy is never rewritten by later saves, even after the character's rules change" do
+    aragorn = player_characters(:aragorn)
+    rule = aragorn.gambits.create!(position: 1, target: :enemy, condition: :any, action_kind: :attack)
+    record = batch
+    record.save!
+    copied = record.gambit_settings
+
+    rule.update!(condition: :lowest_hp)
+    aragorn.gambits.create!(position: 2, target: :self, condition: :any, action_kind: :class_feature, class_feature: class_features(:fighter_second_wind))
+    merlin = player_characters(:merlin) # no rules at creation: its empty copy must stay empty too
+    merlin.gambits.create!(position: 1, target: :enemy, condition: :any, action_kind: :attack)
+    SimulationBatch.find(record.id).update!(status: "running")
+    SimulationBatch.find(record.id).cancel!
+
+    assert_equal copied, SimulationBatch.find(record.id).gambit_settings
+    assert_equal [ "Inimigo: qualquer → Ataque" ], copied[aragorn.id.to_s].pluck("label")
+    assert_equal [], SimulationBatch.find(record.id).gambit_settings[merlin.id.to_s]
+  end
+
+  test "a rerun does not copy the gambits: the new experiment takes the character's current rules" do
+    aragorn = player_characters(:aragorn)
+    rule = aragorn.gambits.create!(position: 1, target: :enemy, condition: :any, action_kind: :attack)
+    record = batch
+    record.save!
+    rule.update!(enabled: false)
+
+    copy = record.rerun
+    assert_equal({}, copy.gambit_settings)
+
+    copy.save!
+    assert_equal [ false ], copy.gambit_settings[aragorn.id.to_s].pluck("enabled")
+    assert_equal [ true ], record.reload.gambit_settings[aragorn.id.to_s].pluck("enabled")
+  end
+
+  test "logs_zip puts the gambits right after each run's identity, and per side in batch.json" do
+    aragorn, merlin = player_characters(:aragorn), player_characters(:merlin)
+    aragorn.gambits.create!(position: 1, target: :enemy, condition: :any, action_kind: :attack)
+    record = batch(seed: 3)
+    record.save!
+    SimulationRunJob.perform_now(record)
+
+    files = read_zip(record.reload.logs_zip)
+
+    simulation = files["simulation-0001.json"]
+    assert_equal %w[ simulation seed elapsed_ms gambits ], simulation.keys.first(4)
+    assert_operator simulation.keys.index("gambits"), :<, simulation.keys.index("round_log")
+    assert_equal [ [ aragorn.id, "gambits" ] ], simulation.dig("gambits", "party_one").map { |entry| entry.values_at("id", "mode") }
+    entry = simulation.dig("gambits", "party_one", 0)
+    assert_equal %w[ id name mode rules ], entry.keys, "the section reads in the same order as batch.json"
+    assert_equal %w[ position enabled target condition action rule ], entry["rules"].first.keys
+
+    setup = files["batch.json"]
+    assert_equal %w[ combatant_settings gambits ], setup.keys.values_at(setup.keys.index("combatant_settings"), setup.keys.index("combatant_settings") + 1)
+    assert_equal({
+      "party_one" => [ { "id" => aragorn.id, "name" => "Aragorn", "mode" => "gambits", "rules" => [
+        { "position" => 1, "enabled" => true, "target" => "Inimigo", "condition" => "qualquer", "action" => "Ataque", "rule" => "Inimigo: qualquer → Ataque" }
+      ] } ],
+      "party_two" => [ { "id" => merlin.id, "name" => merlin.name, "mode" => "aleatório", "rules" => [] } ]
+    }, setup["gambits"])
+    assert_equal setup["gambits"], simulation["gambits"]
+  end
+
   private
+
+    def read_zip(data)
+      files = {}
+      Zip::InputStream.open(StringIO.new(data)) do |zip|
+        while (entry = zip.get_next_entry)
+          files[entry.name] = JSON.parse(zip.read)
+        end
+      end
+      files
+    end
 
     # A form entry carrying Aragorn-like defaults, overridden per test.
     def form_entry(side, **overrides)

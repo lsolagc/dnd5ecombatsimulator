@@ -8,7 +8,7 @@ class SimulationRunJob < ApplicationJob
     seed = batch.seed || SecureRandom.random_number(2**31)
     started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     result = CombatSimulatorService.new(
-      party_one: batch.party_one, party_two: batch.party_two, seed:,
+      party_one: batch.party_one, party_two: batch.party_two, seed:, gambits: batch.gambit_settings,
       abort_if: -> { batch.cancelled_in_database? }
     ).call
     elapsed_ms = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1000

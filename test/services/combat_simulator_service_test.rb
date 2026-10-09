@@ -588,8 +588,8 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     turns = actor_turns(actor:, result: gambit_service(actor:, max_rounds: 2).call)
 
     assert_equal [ :class_feature, :attack ], turns.map { |turn| turn.dig(:action, :type) }
-    assert_equal({ position: 1, label: "Self: qualquer → Second Wind" }, turns.first[:gambit])
-    assert_equal({ position: 2, label: "Inimigo: qualquer → Ataque" }, turns.second[:gambit])
+    assert_equal({ position: 1, rule: "Self: qualquer → Second Wind" }, turns.first[:gambit])
+    assert_equal({ position: 2, rule: "Inimigo: qualquer → Ataque" }, turns.second[:gambit])
   end
 
   test "gambits: a rule whose condition finds no target is skipped and the next one fires" do
@@ -676,6 +676,58 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_equal first, second
   end
 
+  test "gambits: the result opens with each side's rules, enabled or not, in priority order, and its mode" do
+    actor = fresh_character(:aragorn)
+    add_gambit(actor, position: 2, enabled: false)
+    add_gambit(actor, position: 1, target: :self, action_kind: :class_feature, class_feature: class_features(:fighter_second_wind))
+    all_disabled = fresh_character(:thorin)
+    add_gambit(all_disabled, position: 1, condition: :hp_below, condition_value: 50, enabled: false)
+    without_rules = fresh_character(:aragorn_copy)
+
+    result = CombatSimulatorService.new(party_one: [ actor, all_disabled ], party_two: [ without_rules ], seed: 1, max_rounds: 1).call
+
+    assert_equal :gambits, result.keys.first
+    assert_equal({
+      party_one: [
+        { id: actor.id, name: "Aragorn", mode: "gambits", rules: [
+          { position: 1, enabled: true, target: "Self", condition: "qualquer", action: "Second Wind", rule: "Self: qualquer → Second Wind" },
+          { position: 2, enabled: false, target: "Inimigo", condition: "qualquer", action: "Ataque", rule: "Inimigo: qualquer → Ataque" }
+        ] },
+        { id: all_disabled.id, name: "Thorin", mode: "aleatório", rules: [
+          { position: 1, enabled: false, target: "Inimigo", condition: "HP < 50%", action: "Ataque", rule: "Inimigo: HP < 50% → Ataque" }
+        ] }
+      ],
+      party_two: [ { id: without_rules.id, name: "Aragorn Copy", mode: "aleatório", rules: [] } ]
+    }, result[:gambits])
+  end
+
+  test "gambits: given a copy of the rules, the simulation plays and logs the copy, not the combatant's own gambits" do
+    actor = sturdy(fresh_character(:aragorn))
+    add_gambit(actor, position: 1) # its own rule: an attack
+    second_wind = Gambit.new(position: 1, target: :self, condition: :any, action_kind: :class_feature, class_feature: class_features(:fighter_second_wind))
+    disabled = Gambit.new(position: 2, target: :enemy, condition: :any, action_kind: :attack, enabled: false)
+    copy = { actor.id.to_s => [ disabled.snapshot, second_wind.snapshot.merge("label" => "rótulo da cópia") ] }
+
+    result = CombatSimulatorService.new(party_one: [ actor ], party_two: [ sturdy(fresh_character(:merlin)) ], seed: 5, max_rounds: 1, gambits: copy).call
+
+    turn = actor_turns(actor:, result:).first
+    assert_equal [ :class_feature, { position: 1, rule: "rótulo da cópia" } ], [ turn.dig(:action, :type), turn[:gambit] ]
+    assert_equal [ [ 1, true, "rótulo da cópia" ], [ 2, false, "Inimigo: qualquer → Ataque" ] ],
+                 result.dig(:gambits, :party_one, 0, :rules).map { |rule| rule.values_at(:position, :enabled, :rule) }
+    assert_equal({ mode: "aleatório", rules: [] }, result.dig(:gambits, :party_two, 0).slice(:mode, :rules), "a combatant missing from the copy has no rules")
+  end
+
+  test "without gambits, every decision entry is logged as random, Action Surge's extra and the War Magic bonus included" do
+    eldritch_knight = sturdy(spellcaster_with_known_spells(:eldritch_knight_seven))
+    enemies = %i[aragorn aragorn_copy].map { |name| sturdy(fresh_character(name)) }
+
+    entries = CombatSimulatorService.new(party_one: [ eldritch_knight ], party_two: enemies, seed: 6, max_rounds: 3).call[:round_log].flat_map { |round| round[:turns] }
+
+    assert entries.any? { |entry| entry[:bonus] }, "the scenario must include a War Magic bonus"
+    assert entries.any? { |entry| entry[:extra] }, "the scenario must include an Action Surge extra action"
+    assert_equal [ "aleatório" ], entries.map { |entry| entry.fetch(:gambit, :missing) }.uniq
+  end
+
   test "gambits: a character whose gambits are all disabled plays exactly like one without gambits" do
     run = lambda do |with_disabled_gambits:|
       actor = fresh_character(:thorin)
@@ -686,7 +738,10 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
       CombatSimulatorService.new(party_one: [ actor ], party_two: [ fresh_character(:aragorn), fresh_character(:aragorn_copy) ], seed: 77, max_rounds: 5).call
     end
 
-    assert_equal run.(with_disabled_gambits: false), run.(with_disabled_gambits: true)
+    without, disabled = run.(with_disabled_gambits: false), run.(with_disabled_gambits: true)
+    # Only the gambits section differs: it lists the disabled rules, still in "aleatório" mode.
+    assert_equal without.except(:gambits), disabled.except(:gambits)
+    assert_equal [ "aleatório", [ false, false ] ], disabled.dig(:gambits, :party_one, 0).then { |entry| [ entry[:mode], entry[:rules].pluck(:enabled) ] }
   end
 
   test "gambits: a feature fired by a gambit spends exactly one use" do
@@ -782,7 +837,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     turns = service.call[:round_log].flat_map { |round| round[:turns] }
 
     # Level 1 fighters: no Action Surge, no War Magic, so every turn is a gambit turn against 2 living enemies.
-    assert_equal [ "Inimigo: qualquer → Ataque" ] * 8, turns.map { |turn| turn.dig(:gambit, :label) }
+    assert_equal [ "Inimigo: qualquer → Ataque" ] * 8, turns.map { |turn| turn.dig(:gambit, :rule) }
     assert_equal Marshal.dump(Random.new(seed)), Marshal.dump(service.instance_variable_get(:@rng)),
       "an 'any' rule must not consume @rng"
   end

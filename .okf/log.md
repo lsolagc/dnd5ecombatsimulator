@@ -1,6 +1,7 @@
 # Update Log
 
 ## 2026-10-09
+* **Update**: Batches copy each character's gambits at creation (`simulation_batches.gambit_settings`) and simulate from that copy; the log zip opens every file with a per-side gambits section and each decision turn records the gambit that fired, "nenhum aplicável: parado" or "aleatório" — [architecture/simulation-batches.md](architecture/simulation-batches.md), [architecture/combat-simulator-service.md](architecture/combat-simulator-service.md).
 * **Update**: Gambits cover every turn action the Fighter has (attack, Second Wind, Action Surge, 5 maneuvers, 5 spells) and gained hp_above, highest_hp, marked/unmarked and resource_at_least. Action Surge is a gambit action that re-evaluates the list twice; gambit-driven actors no longer surge automatically and their War Magic bonus is deterministic — [architecture/combat-simulator-service.md](architecture/combat-simulator-service.md), [models/gambit.md](models/gambit.md), inventory in [architecture/gambits-decisions.md](architecture/gambits-decisions.md).
 
 ## 2026-10-08

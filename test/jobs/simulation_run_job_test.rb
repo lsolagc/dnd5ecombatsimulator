@@ -116,4 +116,63 @@ class SimulationRunJobTest < ActiveJob::TestCase
     assert_equal [ "update", "batch_status", "morph" ], [ stream["action"], stream["target"], stream["method"] ]
     assert_match %r{1<span class="sim-hero__total"> / 3 simulações finalizadas}, stream.to_html
   end
+
+  test "the run plays and logs the gambits copied at creation, whatever happens to the character's rules before it runs" do
+    aragorn = player_characters(:aragorn)
+    edits = {
+      "edited" => -> { aragorn.gambits.each { |rule| rule.update!(target: :enemy, action_kind: :attack, class_feature: nil) } },
+      "deleted" => -> { aragorn.gambits.destroy_all },
+      "disabled" => -> { aragorn.gambits.each { |rule| rule.update!(enabled: false) } }
+    }
+
+    edits.each do |name, edit|
+      aragorn.gambits.reload.destroy_all
+      aragorn.gambits.create!(position: 1, target: :self, condition: :any, action_kind: :class_feature, class_feature: class_features(:fighter_second_wind))
+      batch = SimulationBatch.create!(party_one_ids: [ aragorn.id ], party_two_ids: [ player_characters(:aragorn_copy).id ], seed: 1)
+      edit.call
+      aragorn.gambits.reload
+
+      SimulationRunJob.perform_now(batch)
+
+      result = batch.simulation_runs.sole.result
+      first_turn = result["round_log"].flat_map { |round| round["turns"] }
+        .find { |turn| turn["actor_id"] == aragorn.id && turn.dig("action", "type") != "turn_passive" }
+      assert_equal [ "second-wind", { "position" => 1, "rule" => "Self: qualquer → Second Wind" } ],
+                   [ first_turn.dig("action", "feature_slug"), first_turn["gambit"] ], "#{name}: the run must follow the copy"
+      assert_equal [ "gambits", [ "Self: qualquer → Second Wind" ] ],
+                   result.dig("gambits", "party_one", 0).then { |entry| [ entry["mode"], entry["rules"].pluck("rule") ] }, name
+    end
+  end
+
+  test "editing the gambits after a run leaves its logs unchanged" do
+    aragorn = player_characters(:aragorn)
+    rule = aragorn.gambits.create!(position: 1, target: :enemy, condition: :any, action_kind: :attack)
+    second_wind = class_features(:fighter_second_wind)
+    aragorn.gambits.create!(position: 2, target: :self, condition: :hp_below, condition_value: 50, action_kind: :class_feature, class_feature: second_wind)
+    batch = SimulationBatch.create!(party_one_ids: [ aragorn.id ], party_two_ids: [ player_characters(:aragorn_copy).id ], seed: 1)
+    SimulationRunJob.perform_now(batch)
+    before = zip_contents(batch.reload.logs_zip)
+
+    rule.update!(condition: :lowest_hp, enabled: false)
+    second_wind.update!(name: "Fôlego Renomeado") # the log keeps the action's name from the copy
+    aragorn.gambits.create!(position: 3, target: :self, condition: :any, action_kind: :class_feature, class_feature: second_wind)
+
+    assert_equal before, zip_contents(SimulationBatch.find(batch.id).logs_zip)
+    rules = before["batch.json"].dig("gambits", "party_one", 0, "rules")
+    assert_equal [ "Inimigo: qualquer → Ataque", "Self: HP < 50% → Second Wind" ], rules.pluck("rule")
+    assert_equal [ "Ataque", "Second Wind" ], rules.pluck("action")
+    assert_equal [ "Ataque", "Second Wind" ], before["simulation-0001.json"].dig("gambits", "party_one", 0, "rules").pluck("action")
+  end
+
+  private
+
+    def zip_contents(data)
+      files = {}
+      Zip::InputStream.open(StringIO.new(data)) do |zip|
+        while (entry = zip.get_next_entry)
+          files[entry.name] = JSON.parse(zip.read)
+        end
+      end
+      files
+    end
 end
