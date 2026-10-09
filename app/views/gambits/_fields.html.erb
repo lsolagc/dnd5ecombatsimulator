@@ -1,0 +1,20 @@
+<%# Target, condition (+ value) and action of one slot's form. A stored action missing from the character's options stays listed, marked "(indisponível)". %>
+<% action_options = action_options.map(&:last).include?(gambit.action_choice) || gambit.action_kind.nil? ? action_options : action_options + [ [ "#{gambit.action_label} (indisponível)", gambit.action_choice ] ] %>
+<div>
+  <%= form.label :target, "Alvo", class: "form-label small mb-0" %>
+  <%= form.select :target, Gambit::TARGET_LABELS.invert, {}, class: "form-select form-select-sm" %>
+</div>
+<div>
+  <%= form.label :condition, "Condição", class: "form-label small mb-0" %>
+  <%= form.select :condition,
+        Gambit::CONDITION_LABELS.map { |value, label| [ label, value, { data: { takes_value: value.in?(Gambit::CONDITIONS_WITH_VALUE) } } ] },
+        {}, class: "form-select form-select-sm", data: { gambits_target: "condition", action: "gambits#syncValue" } %>
+</div>
+<div data-gambits-target="value">
+  <%= form.label :condition_value, "Valor", class: "form-label small mb-0" %>
+  <%= form.number_field :condition_value, min: 1, max: 99, class: "form-control form-control-sm", style: "width: 5.5rem" %>
+</div>
+<div>
+  <%= form.label :action, "Ação", class: "form-label small mb-0" %>
+  <%= form.select :action, action_options, { selected: gambit.action_choice }, class: "form-select form-select-sm" %>
+</div>

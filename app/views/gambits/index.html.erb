@@ -1,0 +1,79 @@
+<% content_for :title, "Gambits de #{@player_character.name}" %>
+
+<div class="w-100" data-controller="gambits" data-gambits-reorder-url-value="<%= reorder_player_character_gambits_path(@player_character) %>">
+  <% if notice.present? %>
+    <p class="alert alert-success d-inline-block mb-3" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+      <h1 class="fw-bold mb-1">Gambits de <%= @player_character.name %></h1>
+      <p class="text-body-secondary mb-0"><%= @player_character.player_class.name %> · nível <%= @player_character.level %></p>
+    </div>
+    <%= link_to "Voltar para a ficha", @player_character, class: "btn btn-outline-secondary" %>
+  </div>
+
+  <p class="text-body-secondary mb-3">
+    As regras são avaliadas de cima para baixo a cada turno: a primeira ligada com alvo válido e ação disponível decide a ação.
+    Sem nenhuma regra ligada, o personagem age ao acaso; se nenhuma se aplicar, ele fica parado.
+    Arraste pela alça ⠿ ou use ↑ / ↓ para mudar a prioridade.
+  </p>
+
+  <% if @gambits.size >= Gambit::MAX_PER_OWNER && @new_gambit.errors.any? %>
+    <div class="alert alert-danger" id="new_gambit_errors"><%= @new_gambit.errors.map(&:message).to_sentence %></div>
+  <% end %>
+
+  <ol class="list-group mb-4">
+    <% @gambits.each_with_index do |gambit, index| %>
+      <li class="list-group-item d-flex flex-wrap align-items-end gap-2" id="<%= dom_id(gambit) %>"
+          data-gambits-target="slot" data-id="<%= gambit.id %>" data-action="dragover->gambits#dragover drop->gambits#drop">
+        <span class="align-self-center fs-5 text-body-secondary user-select-none" style="cursor: grab" draggable="true"
+              title="Arrastar para reordenar" data-action="dragstart->gambits#dragstart dragend->gambits#dragend">⠿</span>
+        <span class="align-self-center fw-bold font-monospace" style="width: 1.5rem"><%= gambit.position %></span>
+
+        <%= button_to toggle_player_character_gambit_path(@player_character, gambit), method: :patch, form_class: "align-self-center",
+              class: "btn btn-sm #{gambit.enabled? ? "btn-success" : "btn-outline-secondary"}", role: "switch",
+              aria: { checked: gambit.enabled?, label: "Ligar/desligar gambit #{gambit.position}" } do %>
+          <%= gambit.enabled? ? "● Ligado" : "○ Desligado" %>
+        <% end %>
+
+        <%= form_with model: gambit, url: player_character_gambit_path(@player_character, gambit), namespace: dom_id(gambit),
+              class: "d-flex flex-wrap align-items-end gap-2 flex-grow-1 #{"opacity-50" unless gambit.enabled?}" do |form| %>
+          <%= render "fields", form:, gambit:, action_options: @action_options %>
+          <%= form.submit "Salvar", class: "btn btn-sm btn-primary" %>
+        <% end %>
+
+        <div class="d-flex gap-1">
+          <%= button_to "↑", move_player_character_gambit_path(@player_character, gambit, direction: "up"), method: :patch,
+                class: "btn btn-sm btn-outline-secondary", disabled: index.zero?, title: "Subir regra #{gambit.position}", aria: { label: "Subir regra #{gambit.position}" } %>
+          <%= button_to "↓", move_player_character_gambit_path(@player_character, gambit, direction: "down"), method: :patch,
+                class: "btn btn-sm btn-outline-secondary", disabled: index == @gambits.size - 1, title: "Descer regra #{gambit.position}", aria: { label: "Descer regra #{gambit.position}" } %>
+          <%= button_to "Remover", player_character_gambit_path(@player_character, gambit), method: :delete,
+                class: "btn btn-sm btn-outline-danger" %>
+        </div>
+
+        <% if gambit.errors.any? %>
+          <div class="alert alert-danger small py-1 px-2 mb-0 w-100"><%= gambit.errors.map(&:message).to_sentence %></div>
+        <% end %>
+      </li>
+    <% end %>
+
+    <% (@gambits.size + 1..Gambit::MAX_PER_OWNER).each do |position| %>
+      <% if position == @gambits.size + 1 %>
+        <li class="list-group-item" id="new_gambit">
+          <p class="small text-uppercase text-body-secondary fw-semibold mb-1"><span class="font-monospace"><%= position %></span> · Novo gambit</p>
+          <%= form_with model: @new_gambit, url: player_character_gambits_path(@player_character), namespace: "new_gambit",
+                class: "d-flex flex-wrap align-items-end gap-2" do |form| %>
+            <%= render "fields", form:, gambit: @new_gambit, action_options: @action_options %>
+            <%= form.submit "Adicionar", class: "btn btn-sm btn-primary" %>
+          <% end %>
+          <% if @new_gambit.errors.any? %>
+            <div class="alert alert-danger small py-1 px-2 mt-2 mb-0"><%= @new_gambit.errors.map(&:message).to_sentence %></div>
+          <% end %>
+        </li>
+      <% else %>
+        <li class="list-group-item text-body-secondary opacity-50"><span class="font-monospace fw-bold"><%= position %></span> · vazio</li>
+      <% end %>
+    <% end %>
+  </ol>
+</div>

@@ -13,6 +13,7 @@
       <p class="text-body-secondary mb-0"><%= @player_character.player_class.name %> · nível <%= @player_character.level %></p>
     </div>
     <div class="d-flex gap-2">
+      <%= link_to "Gambits", player_character_gambits_path(@player_character), class: "btn btn-outline-primary" %>
       <%= link_to "Editar", edit_player_character_path(@player_character), class: "btn btn-outline-secondary" %>
       <%= button_to "Excluir", @player_character, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Tem certeza?" } %>
     </div>
@@ -89,6 +90,23 @@
     </div>
   <% else %>
     <p class="small text-body-secondary mb-4">Sem features cadastradas.</p>
+  <% end %>
+
+  <p class="small text-uppercase text-body-secondary fw-semibold mb-2">Gambits</p>
+  <% gambits = @player_character.gambits.includes(:class_feature, :spell) %>
+  <% if gambits.any? %>
+    <ol class="list-unstyled mb-4" id="gambits_summary">
+      <% gambits.each do |gambit| %>
+        <li class="<%= "text-body-secondary opacity-50" unless gambit.enabled? %>">
+          <span class="font-monospace fw-semibold"><%= gambit.position %></span> <%= gambit.label %><%= " (desligado)" unless gambit.enabled? %>
+        </li>
+      <% end %>
+    </ol>
+    <% if gambits.none?(&:enabled?) %>
+      <p class="small text-body-secondary mb-4">Todos desligados: ação aleatória.</p>
+    <% end %>
+  <% else %>
+    <p class="small text-body-secondary mb-4">Sem gambits: ação aleatória</p>
   <% end %>
 
   <%= link_to "Voltar para personagens", player_characters_path, class: "btn btn-outline-secondary" %>

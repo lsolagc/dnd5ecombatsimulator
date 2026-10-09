@@ -370,4 +370,21 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     aragorn = player_characters(:aragorn)
     assert_equal({}, aragorn.available_spell_slots)
   end
+
+  test "gambit_action_options are the character's turn actions, encoded as Gambit#action_choice" do
+    second_wind, surge = class_features(:fighter_second_wind), class_features(:fighter_action_surge)
+
+    assert_equal [ [ "Ataque", "attack" ], [ "Second Wind", "class_feature:#{second_wind.id}" ] ],
+      player_characters(:aragorn).gambit_action_options, "Action Surge unlocks at level 2"
+    assert_equal [ "Ataque", "Second Wind", "Action Surge" ], player_characters(:thorin).gambit_action_options.map(&:first)
+
+    battle_master = player_characters(:battle_master_seven)
+    player_character_maneuvers(:battle_master_seven_distracting_strike).destroy!
+    assert_equal [ "Ataque", "Second Wind", "Action Surge", "Maneuver: Precision Attack" ],
+      battle_master.gambit_action_options.map(&:first), "only known maneuvers"
+
+    spell_options = player_characters(:eldritch_knight_seven).gambit_action_options.select { |_, value| value.start_with?("spell:") }
+    assert_equal [ spells(:fire_bolt), spells(:chromatic_orb), spells(:magic_missile) ].map { |spell| [ spell.name, "spell:#{spell.id}" ] },
+      spell_options, "known spells with an effect (Shield has none)"
+  end
 end

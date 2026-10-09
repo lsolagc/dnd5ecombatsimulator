@@ -220,6 +220,24 @@ class PlayerCharacter < ApplicationRecord
     Combat::ActionRunner.call(action: action, disadvantage_on_save:)
   end
 
+  # The turn actions a gambit of this character can choose, as [label, value] select options (value as in
+  # Gambit#action_choice): Ataque, unlocked features the simulator runs as an action (Gambit's own filter,
+  # Action Surge included) by unlock level, maneuvers only when known, and known spells with an effect by level.
+  def gambit_action_options
+    unlocked_features = unlocked_class_feature_unlocks.sort_by { |unlock| [ unlock.level, unlock.class_feature.name ] }.map(&:class_feature).uniq
+    combat_superiority = unlocked_features.find { |feature| feature.name == "Combat Superiority" }
+    known_maneuver_ids = known_maneuvers.ids
+    features = unlocked_features.reject do |feature|
+      combat_superiority && feature.resource_name == combat_superiority.resource_name && !known_maneuver_ids.include?(feature.id)
+    end
+
+    choices = [ Gambit.new(action_kind: :attack) ] +
+      features.map { |feature| Gambit.new(action_kind: :class_feature, class_feature: feature) }
+              .select { |gambit| gambit.action_surge? || gambit.active_feature_payload } +
+      spells.select { |spell| spell.effect_payload.present? }.sort_by { |spell| [ spell.level, spell.name ] }.map { |spell| Gambit.new(action_kind: :spell, spell:) }
+    choices.map { |gambit| [ gambit.action_label, gambit.action_choice ] }
+  end
+
   private
 
     def build_available_spell_slots

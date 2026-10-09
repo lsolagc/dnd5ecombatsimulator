@@ -29,7 +29,7 @@ class GambitTest < ActiveSupport::TestCase
 
     seventh = build_gambit(owner: owner.reload, position: 6)
     assert_not seventh.valid?
-    assert_includes seventh.errors[:base].join, "at most 6"
+    assert_includes seventh.errors[:base].join, "No máximo 6"
   end
 
   test "editing one of six gambits does not count itself against the limit" do

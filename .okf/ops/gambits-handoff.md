@@ -20,7 +20,7 @@ every decision taken alone is in [gambits-decisions.md](/architecture/gambits-de
 | 1. POC (model + evaluator) | done, review non-blocking | `8ed5df9` |
 | 2. Coverage (13 inventory actions, 5 new conditions, Action Surge via gambit) | done, last gap closed by the orchestrator (see decisions doc) | `1d18092` |
 | 3. Log (snapshot + gambits section + per-turn gambit) | done, review gap closed by the orchestrator | see `git log` |
-| 4. UI (6 slots, drag, toggle, edit) | not started | — |
+| 4. UI (6 slots, drag, toggle, edit) | done | see `git log` |
 | 5. Presets | not started | — |
 | 6. Brenna (17) / Corwin (18) rake task | not started | — |
 | 7. Refinement + real batch + final reports | not started | — |

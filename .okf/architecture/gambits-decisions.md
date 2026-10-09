@@ -110,3 +110,28 @@ and a renamed-feature check to the zip-immutability test, both proven red by sab
 reordered the section's keys in each simulation file (jsonb scrambles them). Known,
 non-blocking: the combatant's `name` in the section comes from the database (null if the
 character is deleted), like the pre-existing `party_one`/`party_two` maps.
+
+# Pass 4 — UI
+
+| Question | Decision | Why |
+|---|---|---|
+| Where does the screen live? | Its own page, `/player_characters/:id/gambits` (nested `resources :gambits`), linked by a "Gambits" button on the character sheet, which also lists the enabled rules read-only. | The sheet is already long; FFXII keeps gambits on their own menu screen. |
+| Save model? | Each slot saves on its own (one form per filled slot, PATCH); an empty slot is a "new rule" form (POST, next position). Toggle, up/down and delete are small `button_to` forms, so everything works without JS. | Matches the per-row FFXII editing; no client-side state to lose. |
+| Drag and drop? | Native HTML5 DnD in a Stimulus controller (`gambits_controller.js`), which on drop sends the new id order to `PATCH .../gambits/reorder`; the server rewrites every position in one transaction (unique constraint deferred). Up/down buttons are the keyboard path. SortableJS not added. | The task asks to try native first; the list is ≤ 6 rows, native DnD is enough. |
+| Which actions are offered? | The character's own turn actions (the pass-2 inventory filtered to it): Ataque, unlocked Second Wind/Action Surge, known maneuvers with an effect, known spells with an effect. A rule pointing elsewhere (e.g. after a preset) still shows its action, marked "indisponível". | Offering everything would make rules that can never fire; keeping foreign rules visible avoids silent data loss. |
+| Invalid combinations (target/condition vs action)? | Server-side validation; the slot re-renders with the error. Stimulus only hides the value input when the condition takes none. | The model already validates; duplicating rules in JS is drift risk. |
+
+Smaller choices taken while building pass 4:
+
+| Question | Decision | Why |
+|---|---|---|
+| How does the switch work without JS? | A `button_to` with `role="switch"`/`aria-checked`, reading "● Ligado" / "○ Desligado". | A checkbox would need JS to submit; a button inside a form works everywhere. |
+| A hidden value field with a stale number? | Stimulus also disables it, and `GambitsController#gambit_params` clears `condition_value` whenever the submitted condition is not in `Gambit::CONDITIONS_WITH_VALUE`. | Without the clearing, switching "HP abaixo de 40" to "Qualquer" never saved (the stored 40 failed the absence validation); review iteration 2. |
+| Concurrent writes to positions? | `create`, `move`, `destroy` (with its renumbering) and `reorder` run in one transaction holding `lock!` on the character; every position is rewritten. Not covered by a real concurrency test. | Two requests reading the same positions could otherwise write duplicates or gaps. |
+| Malformed input to `move`/`reorder`? | `direction` other than up/down and `ids` that are not a list of strings answer 422. | A tampered request must not 500 nor be read as "down". |
+| Order of the action options? | Ataque, then features by unlock level and name, then spells by level and name (`PlayerCharacter#gambit_action_options`, values from `Gambit#action_choice`). | Deterministic select order; pass 5 reuses both. |
+| Where does a refused 7th gambit show its error? | An alert above the list (the new-rule form is not rendered with 6 rules). | There is no empty slot to attach it to. |
+| A drop the server refuses (stale page)? | The page reloads anyway and shows the stored order. | The server is the truth; no client-side rollback. |
+| All rules off, on the sheet? | The summary lists them dimmed plus "Todos desligados: ação aleatória." | Otherwise the sheet would suggest the rules still drive the turn. |
+
+**Pass 4 status (2026-10-09):** done. Review iteration 1 blocked (switching to a condition without a value never saved; tampered reorder ids gave a 500; three test gaps), iteration 2 came back non-blocking. The orchestrator then made `reorder` accept only digit strings (`"12abc"` used to pass as 12). Known and accepted: the server accepts, via a tampered request, an action outside the character's options — consistent with "(indisponível)" rules and presets, and the simulator skips it; the row lock in create/move/destroy/reorder has no concurrency test.

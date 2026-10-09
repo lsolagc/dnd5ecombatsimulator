@@ -57,8 +57,9 @@ previously an installed-but-unused gem). Besides
 expandable progression/features row on `player_classes#index`), and the
 larger `wizard_controller.js` driving the character-creation wizard below,
 `simulation_form_controller.js` and `poll_controller.js` serve the
-[simulation batch](/architecture/simulation-batches.md) screens. Only
-`poll_controller.js` makes requests (reloading a turbo-frame); the others are all client-side state and DOM
+[simulation batch](/architecture/simulation-batches.md) screens, and
+`gambits_controller.js` the gambits screen. Only `poll_controller.js` and
+`gambits_controller.js` make requests (the first reloads a turbo-frame, the second PATCHes `reorder` on drop); the others are all client-side state and DOM
 toggling, with the actual persistence happening on normal Rails form
 submits.
 
@@ -93,6 +94,15 @@ submits.
   step, duplicated a third time rather than extracted into a partial (no
   screen shares a controller with the others, so there's nowhere natural to
   put a shared partial yet).
+- **`gambits#index`** (`/player_characters/:id/gambits`): the character's
+  [gambits](/models/gambit.md) as 6 slots — each filled slot is its own form
+  (target/condition/value/action, Salvar) plus `button_to` forms for on/off,
+  ↑/↓ and Remover; the first empty slot is the "Novo gambit" form. The
+  Stimulus `gambits_controller.js` does native HTML5 drag and drop (dropping
+  a slot on another PATCHes the new id order to `reorder`, then reloads) and
+  hides the value field for conditions that take none. The sheet
+  (`player_characters#show`) links to it and lists the rules read-only.
+  Decisions: [gambits-decisions.md](/architecture/gambits-decisions.md) (Pass 4).
 - **`player_characters#new`**: a 4-step wizard (Atributos / Combate /
   Features / Revisão) navigated client-side by `wizard_controller.js`[^wizard-controller] — no
   server round-trip between steps, one form submitted on the last step. The Revisão HP

@@ -1,5 +1,13 @@
 Rails.application.routes.draw do
-  resources :player_characters
+  resources :player_characters do
+    resources :gambits, only: %i[ index create update destroy ] do
+      collection { patch :reorder }
+      member do
+        patch :toggle
+        patch :move
+      end
+    end
+  end
   resources :player_classes
   resources :simulation_batches, only: %i[ new create show ] do
     member do

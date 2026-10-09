@@ -7,22 +7,31 @@ class Gambit < ApplicationRecord
   TARGET_LABELS = { "self" => "Self", "ally" => "Aliado", "enemy" => "Inimigo" }.freeze
   # Targets a rule may use for each natural target of its action (the effect payload's "target").
   COMPATIBLE_TARGETS = { "self" => %w[self], "enemy" => %w[enemy], "ally" => %w[ally self] }.freeze
+  # The conditions as the gambits screen offers them (condition_label renders them with their value).
+  CONDITION_LABELS = {
+    "any" => "Qualquer", "hp_below" => "HP abaixo de (%)", "hp_above" => "HP acima de (%)", "lowest_hp" => "Menor HP",
+    "highest_hp" => "Maior HP", "marked" => "Marcado", "unmarked" => "Não marcado", "resource_at_least" => "Recurso no mínimo"
+  }.freeze
+  CONDITIONS_WITH_VALUE = %w[hp_below hp_above resource_at_least].freeze
 
   belongs_to :owner, polymorphic: true
   belongs_to :class_feature, optional: true
   belongs_to :spell, optional: true
 
-  enum :target, { self: 0, ally: 1, enemy: 2 }, prefix: true
+  # Messages are whole pt-BR sentences: the gambits screen shows them as they are (errors.map(&:message)).
+  # validate: makes a tampered enum value a validation error instead of an ArgumentError.
+  enum :target, { self: 0, ally: 1, enemy: 2 }, prefix: true, validate: { message: "Alvo inválido" }
   # Append new conditions with new values; never renumber (stored as integers).
   enum :condition, { any: 0, hp_below: 1, lowest_hp: 2, hp_above: 3, highest_hp: 4, marked: 5, unmarked: 6, resource_at_least: 7 },
-                    prefix: true
-  enum :action_kind, { attack: 0, class_feature: 1, spell: 2 }, prefix: :action
+                    prefix: true, validate: { message: "Condição inválida" }
+  enum :action_kind, { attack: 0, class_feature: 1, spell: 2 }, prefix: :action, validate: { message: "Ação inválida" }
 
-  validates :position, presence: true, inclusion: { in: 1..MAX_PER_OWNER }
-  validates :target, :condition, :action_kind, presence: true
-  validates :condition_value, numericality: { only_integer: true, in: 1..99 }, if: -> { condition_hp_below? || condition_hp_above? }
-  validates :condition_value, numericality: { only_integer: true, in: 1..20 }, if: :condition_resource_at_least?
-  validates :condition_value, absence: true, unless: -> { condition_hp_below? || condition_hp_above? || condition_resource_at_least? }
+  validates :position, presence: true, inclusion: { in: 1..MAX_PER_OWNER, message: "A posição vai de 1 a #{MAX_PER_OWNER}" }
+  validates :condition_value, numericality: { only_integer: true, in: 1..99, message: "O valor da condição vai de 1 a 99 (%)" },
+                              if: -> { condition_hp_below? || condition_hp_above? }
+  validates :condition_value, numericality: { only_integer: true, in: 1..20, message: "O valor do recurso vai de 1 a 20" },
+                              if: :condition_resource_at_least?
+  validates :condition_value, absence: { message: "Esta condição não usa valor" }, unless: -> { condition.in?(CONDITIONS_WITH_VALUE) }
   validate :action_matches_its_kind
   validate :target_fits_the_action
   validate :resource_condition_has_a_resource
@@ -78,6 +87,12 @@ class Gambit < ApplicationRecord
     end
   end
 
+  # The action as one select value ("attack", "class_feature:ID", "spell:ID"), the encoding of
+  # PlayerCharacter#gambit_action_options and GambitsController.
+  def action_choice
+    action_attack? ? "attack" : "#{action_kind}:#{class_feature_id || spell_id}"
+  end
+
   # The action's natural target ("self", "ally" or "enemy"); nil when it has no active effect.
   def action_target
     case action_kind
@@ -108,13 +123,13 @@ class Gambit < ApplicationRecord
     def action_matches_its_kind
       case action_kind
       when "attack"
-        errors.add(:base, "an attack takes no class feature or spell") if class_feature_id || spell_id
+        errors.add(:base, "Um ataque não leva feature nem magia") if class_feature_id || spell_id
       when "class_feature"
-        errors.add(:class_feature, "must be set") if class_feature.nil?
-        errors.add(:spell, "must be blank for a class feature") if spell_id
+        errors.add(:class_feature, "Escolha a feature da ação") if class_feature.nil?
+        errors.add(:spell, "Uma ação de feature não leva magia") if spell_id
       when "spell"
-        errors.add(:spell, "must be set") if spell.nil?
-        errors.add(:class_feature, "must be blank for a spell") if class_feature_id
+        errors.add(:spell, "Escolha a magia da ação") if spell.nil?
+        errors.add(:class_feature, "Uma ação de magia não leva feature") if class_feature_id
       end
     end
 
@@ -123,9 +138,9 @@ class Gambit < ApplicationRecord
 
       natural = action_target
       if natural.nil?
-        errors.add(:base, "the action has no active effect")
+        errors.add(:base, "Esta ação não tem efeito ativo no simulador")
       elsif !COMPATIBLE_TARGETS.fetch(natural, []).include?(target)
-        errors.add(:target, "does not fit the action (it targets #{natural})")
+        errors.add(:target, "O alvo não combina com a ação (ela mira #{TARGET_LABELS[natural]})")
       end
     end
 
@@ -133,13 +148,13 @@ class Gambit < ApplicationRecord
     def resource_condition_has_a_resource
       return unless condition_resource_at_least?
 
-      errors.add(:condition, "needs an action that spends a resource") if action_attack? || (action_spell? && spell&.cantrip?)
+      errors.add(:condition, "\"Recurso no mínimo\" precisa de uma ação que gaste recurso") if action_attack? || (action_spell? && spell&.cantrip?)
     end
 
     def owner_has_room
       return if owner.nil?
 
       others = owner.gambits.to_a.reject { |gambit| gambit.equal?(self) || (persisted? && gambit.id == id) }
-      errors.add(:base, "an owner can have at most #{MAX_PER_OWNER} gambits") if others.size >= MAX_PER_OWNER
+      errors.add(:base, "No máximo #{MAX_PER_OWNER} gambits") if others.size >= MAX_PER_OWNER
     end
 end
