@@ -1,7 +1,7 @@
 ---
 type: Model
 title: "Gambit"
-description: One FFXII-style turn rule (target + condition → action) owned by a PlayerCharacter (later also a GambitPreset), up to 6 per owner, evaluated by position in CombatSimulatorService.
+description: One FFXII-style turn rule (target + condition → action) owned by a PlayerCharacter or a GambitPreset, up to 6 per owner, evaluated by position in CombatSimulatorService.
 resource: app/models/gambit.rb
 tags: [model, combat, gambits]
 generated:
@@ -38,6 +38,12 @@ enabled ones top to bottom.[^gambit-rb]
 - `position` 1..6 (check constraint), at most 6 per owner, and a unique
   `(owner_type, owner_id, position)` constraint **deferrable initially deferred**, so a
   reorder can permute positions inside one transaction.[^gambit-test]
+- `Gambit.copy_rules(from:, to:)` is the only copy (preset save, overwrite and apply): in one
+  transaction holding a row lock on `to`, deletes `to`'s rules and creates new rows from `from`'s in
+  priority order, positions 1..n. Returns false, changing nothing, when `from` has none. No link is kept.
+- `GambitPreset` (`app/models/gambit_preset.rb`): `name` stripped, unique case-insensitively (validation
+  + unique index on `lower(name)`); `has_many :gambits, as: :owner`. Created and used only from a
+  character's gambits screen (Presets panel).
 - `label` renders the rule in PT-BR, e.g. `Inimigo: HP < 50% → Ataque`.
 
 Decisions behind the model: [gambits-decisions.md](/architecture/gambits-decisions.md).

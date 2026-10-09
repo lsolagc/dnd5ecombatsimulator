@@ -76,4 +76,57 @@
       <% end %>
     <% end %>
   </ol>
+
+  <section class="card mb-4" id="presets" aria-labelledby="presets_title">
+    <div class="card-body">
+      <h2 class="h5 fw-bold" id="presets_title">Presets</h2>
+      <p class="text-body-secondary small">Um preset é uma cópia das regras: aplicar ou sobrescrever não deixa vínculo entre preset e personagens.</p>
+      <% if @preset_error %>
+        <div class="alert alert-danger" id="preset_errors"><%= @preset_error %></div>
+      <% end %>
+      <% preset_options = @presets.map { |preset| [ "#{preset.name} (#{pluralize(preset.gambits.size, "regra")})", preset.id ] } %>
+      <% current_rules = pluralize(@player_character.gambits.size, "regra") %>
+
+      <div class="row g-4">
+        <div class="col-lg-6" id="save_preset">
+          <h3 class="h6 fw-semibold">Salvar como preset</h3>
+          <%= form_with url: save_preset_player_character_gambits_path(@player_character), method: :post, class: "d-flex align-items-end gap-2 mb-2" do |form| %>
+            <div class="flex-grow-1">
+              <%= form.label :name, "Nome do novo preset", class: "form-label small mb-0" %>
+              <%= form.text_field :name, value: @preset_name, class: "form-control form-control-sm", required: true %>
+            </div>
+            <%= form.submit "Salvar como novo", class: "btn btn-sm btn-primary" %>
+          <% end %>
+          <% if preset_options.any? && @gambits.any?(&:persisted?) %>
+            <%= form_with url: overwrite_preset_player_character_gambits_path(@player_character), method: :patch, class: "d-flex align-items-end gap-2",
+                  data: { turbo_confirm: "Sobrescrever o preset escolhido com as regras de #{@player_character.name} (#{current_rules})?" } do |form| %>
+              <div class="flex-grow-1">
+                <%= form.label :preset_id, "Preset a sobrescrever", for: "overwrite_preset_id", class: "form-label small mb-0" %>
+                <%= form.select :preset_id, preset_options, {}, id: "overwrite_preset_id", class: "form-select form-select-sm" %>
+              </div>
+              <%= form.submit "Sobrescrever", class: "btn btn-sm btn-outline-danger" %>
+            <% end %>
+          <% else %>
+            <p class="text-body-secondary small mb-0">Nenhum preset salvo ainda</p>
+          <% end %>
+        </div>
+
+        <div class="col-lg-6" id="apply_preset">
+          <h3 class="h6 fw-semibold">Aplicar preset</h3>
+          <% if preset_options.any? %>
+            <%= form_with url: apply_preset_player_character_gambits_path(@player_character), method: :patch, class: "d-flex align-items-end gap-2",
+                  data: { turbo_confirm: "Aplicar o preset escolhido? Ele substitui as regras atuais de #{@player_character.name} (#{current_rules})." } do |form| %>
+              <div class="flex-grow-1">
+                <%= form.label :preset_id, "Preset a aplicar", for: "apply_preset_id", class: "form-label small mb-0" %>
+                <%= form.select :preset_id, preset_options, {}, id: "apply_preset_id", class: "form-select form-select-sm" %>
+              </div>
+              <%= form.submit "Aplicar", class: "btn btn-sm btn-primary" %>
+            <% end %>
+          <% else %>
+            <p class="text-body-secondary small mb-0">Nenhum preset salvo ainda</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>

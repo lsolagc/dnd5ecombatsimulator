@@ -1,6 +1,8 @@
 # A character's gambits screen: up to 6 FFXII-style rules, each slot saved on its own. Every action is
 # scoped to the character, so another character's gambit is a 404.
 class GambitsController < ApplicationController
+  NO_RULES_TO_SAVE = "Este personagem está sem regras para salvar.".freeze
+
   before_action :set_player_character
   before_action :set_gambit, only: %i[ update toggle move destroy ]
 
@@ -77,7 +79,59 @@ class GambitsController < ApplicationController
     accepted ? head(:no_content) : head(:unprocessable_entity)
   end
 
+  # Presets (Gambit.copy_rules both ways). name: a new preset holding a copy of the character's rules.
+  def save_preset
+    name = params[:name] if params[:name].is_a?(String)
+    preset = GambitPreset.new(name:)
+    begin
+      GambitPreset.transaction do
+        raise ActiveRecord::Rollback unless preset.save && copy_rules_into(preset)
+      end
+    rescue ActiveRecord::RecordNotUnique # another tab saved the same name after this one validated
+      preset = GambitPreset.new(name:)
+      preset.errors.add(:name, GambitPreset::NAME_TAKEN)
+    end
+    return preset_refused(preset.errors.map(&:message).to_sentence, name:) unless preset.persisted?
+
+    preset_done(preset, "salvo")
+  end
+
+  # preset_id: an existing preset, replaced by a copy of the character's rules.
+  def overwrite_preset
+    preset = GambitPreset.find(params.expect(:preset_id))
+    return preset_refused(NO_RULES_TO_SAVE) unless Gambit.copy_rules(from: @player_character, to: preset)
+
+    preset_done(preset, "sobrescrito")
+  end
+
+  # preset_id: the character's rules are replaced by a copy of the preset's.
+  def apply_preset
+    preset = GambitPreset.find(params.expect(:preset_id))
+    return preset_refused("O preset #{preset.name} não tem regras") unless Gambit.copy_rules(from: preset, to: @player_character)
+
+    preset_done(preset, "aplicado")
+  end
+
   private
+
+    def copy_rules_into(preset)
+      return true if Gambit.copy_rules(from: @player_character, to: preset)
+
+      preset.errors.add(:base, NO_RULES_TO_SAVE)
+      false
+    end
+
+    def preset_done(preset, verb)
+      redirect_to player_character_gambits_path(@player_character), status: :see_other, notice: "Preset #{preset.name} #{verb}."
+    end
+
+    # The screen again (422) with the error in the presets panel; name refills the new preset's field.
+    def preset_refused(message, name: nil)
+      load_screen
+      @preset_error = message
+      @preset_name = name
+      render :index, status: :unprocessable_entity
+    end
 
     def set_player_character
       @player_character = PlayerCharacter.find(params.expect(:player_character_id))
@@ -123,5 +177,6 @@ class GambitsController < ApplicationController
       @gambits = @player_character.gambits.includes(:class_feature, :spell).map { |gambit| gambit == invalid ? invalid : gambit }
       @new_gambit = new_gambit || Gambit.new(target: :enemy, condition: :any, action_kind: :attack)
       @action_options = @player_character.gambit_action_options
+      @presets = GambitPreset.includes(:gambits).order(:name)
     end
 end

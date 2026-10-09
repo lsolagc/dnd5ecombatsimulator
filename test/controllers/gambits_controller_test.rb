@@ -175,4 +175,122 @@ class GambitsControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal [ "any", true ], foreign.reload.values_at(:condition, :enabled)
   end
+
+  test "save_preset creates a preset holding a copy of the character's rules" do
+    assert_difference("GambitPreset.count", 1) do
+      post save_preset_player_character_gambits_url(@character), params: { name: "  Guerreiro  " }
+    end
+
+    assert_redirected_to player_character_gambits_url(@character)
+    assert_equal "Preset Guerreiro salvo.", flash[:notice]
+    preset = GambitPreset.find_by!(name: "Guerreiro")
+    assert_equal rule_rows(@character), rule_rows(preset)
+    assert_empty preset.gambits.ids & @character.gambits.ids
+  end
+
+  test "save_preset with a duplicate (any case) or blank name is a 422 with the error on the screen, creating nothing" do
+    GambitPreset.create!(name: "Guerreiro")
+
+    { "gUERREIRO" => "Já existe um preset com esse nome", "  " => "Dê um nome ao preset", nil => "Dê um nome ao preset" }.each do |name, error|
+      assert_no_difference([ "GambitPreset.count", "Gambit.count" ]) do
+        post save_preset_player_character_gambits_url(@character), params: { name: }.compact
+      end
+      assert_response :unprocessable_entity
+      assert_select "#preset_errors", error
+    end
+  end
+
+  test "save_preset from a character without rules is refused, creating nothing" do
+    character = player_characters(:aragorn)
+
+    assert_no_difference([ "GambitPreset.count", "Gambit.count" ]) do
+      post save_preset_player_character_gambits_url(character), params: { name: "Vazio" }
+    end
+    assert_response :unprocessable_entity
+    assert_select "#preset_errors", /sem regras para salvar/
+  end
+
+  test "save_preset losing a race for the name (unique index) is a 422, never a 500" do
+    # Another tab saves the same name between this request's validation and its INSERT.
+    GambitPreset.class_eval { before_create { GambitPreset.insert_all([ { name: "CORRIDA", created_at: Time.current, updated_at: Time.current } ]) } }
+
+    post save_preset_player_character_gambits_url(@character), params: { name: "corrida" }
+
+    assert_response :unprocessable_entity
+    assert_select "#preset_errors", "Já existe um preset com esse nome"
+    assert_equal 0, GambitPreset.count # the stand-in row rolls back with this request (in production it is another tab's, committed)
+  ensure
+    GambitPreset.reset_callbacks(:create)
+  end
+
+  test "save_preset with a name that is not a string is refused" do
+    assert_no_difference("GambitPreset.count") do
+      post save_preset_player_character_gambits_url(@character), params: { name: [ "x" ] }
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test "overwrite_preset from a character without rules is refused, leaving the preset as it was" do
+    preset = GambitPreset.create!(name: "Cheio")
+    Gambit.create!(owner: preset, position: 1, target: :enemy, condition: :marked, action_kind: :attack)
+
+    patch overwrite_preset_player_character_gambits_url(player_characters(:aragorn)), params: { preset_id: preset.id }
+
+    assert_response :unprocessable_entity
+    assert_select "#preset_errors", /sem regras para salvar/
+    assert_equal [ "marked" ], preset.gambits.reload.map(&:condition)
+  end
+
+  test "applying an empty preset is refused, leaving the character's rules" do
+    preset = GambitPreset.create!(name: "Vazio")
+
+    patch apply_preset_player_character_gambits_url(@character), params: { preset_id: preset.id }
+
+    assert_response :unprocessable_entity
+    assert_select "#preset_errors", /não tem regras/
+    assert_equal 3, @character.gambits.reload.size
+  end
+
+  test "overwrite_preset replaces the preset's rules with a copy of the character's" do
+    preset = GambitPreset.create!(name: "Velho")
+    Gambit.create!(owner: preset, position: 1, target: :enemy, condition: :marked, action_kind: :attack)
+
+    patch overwrite_preset_player_character_gambits_url(@character), params: { preset_id: preset.id }
+
+    assert_redirected_to player_character_gambits_url(@character)
+    assert_equal "Preset Velho sobrescrito.", flash[:notice]
+    assert_equal rule_rows(@character), rule_rows(preset)
+  end
+
+  test "apply_preset replaces only this character's rules with a copy of the preset's" do
+    preset = GambitPreset.create!(name: "Arqueiro")
+    Gambit.create!(owner: preset, position: 1, target: :enemy, condition: :lowest_hp, action_kind: :attack)
+    other = Gambit.create!(owner: player_characters(:aragorn), position: 1, target: :enemy, condition: :any, action_kind: :attack)
+
+    patch apply_preset_player_character_gambits_url(@character), params: { preset_id: preset.id }
+
+    assert_redirected_to player_character_gambits_url(@character)
+    assert_equal "Preset Arqueiro aplicado.", flash[:notice]
+    assert_equal rule_rows(preset), rule_rows(@character)
+    assert_equal [ other.id ], player_characters(:aragorn).gambits.reload.ids, "another character is untouched"
+    assert_equal 1, preset.gambits.count
+  end
+
+  test "an unknown preset is a 404 on overwrite and apply, a malformed id a 400, changing nothing" do
+    before = rule_rows(@character)
+
+    patch overwrite_preset_player_character_gambits_url(@character), params: { preset_id: 0 }
+    assert_response :not_found
+    patch apply_preset_player_character_gambits_url(@character), params: { preset_id: 0 }
+    assert_response :not_found
+    patch apply_preset_player_character_gambits_url(@character), params: { preset_id: { id: 1 } }
+    assert_response :bad_request
+    assert_equal before, rule_rows(@character)
+  end
+
+  private
+
+    def rule_rows(owner)
+      Gambit.where(owner:).order(:position).map { |gambit| gambit.attributes.slice(*Gambit::SNAPSHOT_ATTRIBUTES) }
+    end
 end

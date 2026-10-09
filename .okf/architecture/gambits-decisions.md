@@ -135,3 +135,26 @@ Smaller choices taken while building pass 4:
 | All rules off, on the sheet? | The summary lists them dimmed plus "Todos desligados: ação aleatória." | Otherwise the sheet would suggest the rules still drive the turn. |
 
 **Pass 4 status (2026-10-09):** done. Review iteration 1 blocked (switching to a condition without a value never saved; tampered reorder ids gave a 500; three test gaps), iteration 2 came back non-blocking. The orchestrator then made `reorder` accept only digit strings (`"12abc"` used to pass as 12). Known and accepted: the server accepts, via a tampered request, an action outside the character's options — consistent with "(indisponível)" rules and presets, and the simulator skips it; the row lock in create/move/destroy/reorder has no concurrency test.
+
+# Pass 5 — presets
+
+| Question | Decision | Why |
+|---|---|---|
+| Model? | `gambit_presets` (`name` unique, case-insensitive, stripped), `has_many :gambits, as: :owner, dependent: :destroy`, reusing the `gambits` table, validations and labels. | Task decision: same table, same validations. |
+| Where is the preset UI? | A "Presets" panel on the character's gambits screen: "Salvar como preset" (new name, or overwrite a chosen one) and "Aplicar preset" (select + confirm). No preset index or editor screen. | "Editar um preset fora de um personagem" is out of scope; everything starts from a character. |
+| Copy semantics? | Save and apply both delete the destination's rules and insert copies (position, enabled, target, condition, value, action), in one transaction; no link is kept. | Task decision: copy both ways. |
+| Saving a character with no rules? | Refused ("sem regras para salvar"). | An empty preset would wipe characters it is applied to. |
+| Applying a preset with an action the character lacks? | Copied anyway; the screen shows it "(indisponível)" and the simulator skips it. | Same rule as pass 1; presets are meant to travel between characters. |
+| Overwrite confirmation? | `turbo_confirm` on overwrite and apply ("substitui as N regras atuais"). | Both are destructive for the destination. |
+
+Smaller choices taken while building pass 5:
+
+| Question | Decision | Why |
+|---|---|---|
+| Where do the preset actions live? | Collection routes on the character's gambits (`save_preset`, `overwrite_preset`, `apply_preset`) in `GambitsController`, reusing its character scoping and screen loading; no `GambitPresetsController`. | A refusal re-renders the gambits screen (422) with the error in the panel; a second controller would duplicate `load_screen`. |
+| Positions of the copies? | Renumbered 1..n in the source's priority order, not copied verbatim. | Same result for compact sources; a source with gaps still yields a valid compact list. It also makes the order of the copy observable (and testable). |
+| Overwriting from a character with no rules? | Refused like saving ("sem regras para salvar"); the preset keeps its rules. | Same reason as saving: an empty preset would wipe characters. |
+| Missing or malformed `preset_id`? | Unknown id → 404; absent or non-scalar → 400 (`params.expect`). Never 500. | Same style as the rest of the controller. |
+| Two concurrent saves with the same name? | The unique index on `lower(name)` refuses the second (a 500 in that race, not rescued). | Single-user tool; the validation covers every non-concurrent case. |
+
+**Pass 5 status (2026-10-09):** done. Review blocked once: the controller's refusal to overwrite a preset from a character without rules (and to apply an empty preset) had no test, and two tabs saving the same name raised `RecordNotUnique` (500). The orchestrator added both tests, rescued the race into the same 422 as a duplicate name, tested the non-string name guard, and hid "Sobrescrever" for a character without rules; each proven red by sabotage.

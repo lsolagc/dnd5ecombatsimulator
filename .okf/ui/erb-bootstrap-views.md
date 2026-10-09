@@ -102,7 +102,10 @@ submits.
   a slot on another PATCHes the new id order to `reorder`, then reloads) and
   hides the value field for conditions that take none. The sheet
   (`player_characters#show`) links to it and lists the rules read-only.
-  Decisions: [gambits-decisions.md](/architecture/gambits-decisions.md) (Pass 4).
+  Below the slots, a **Presets** panel saves the rules as a new preset (unique
+  name) or overwrites a chosen one, and applies a preset to this character
+  (both with a Turbo confirm), copying rules without a live link.
+  Decisions: [gambits-decisions.md](/architecture/gambits-decisions.md) (Pass 4, 5).
 - **`player_characters#new`**: a 4-step wizard (Atributos / Combate /
   Features / Revisão) navigated client-side by `wizard_controller.js`[^wizard-controller] — no
   server round-trip between steps, one form submitted on the last step. The Revisão HP

@@ -1,7 +1,13 @@
 Rails.application.routes.draw do
   resources :player_characters do
     resources :gambits, only: %i[ index create update destroy ] do
-      collection { patch :reorder }
+      collection do
+        patch :reorder
+        # Presets: save the character's rules as a new preset, overwrite one, or apply one to the character.
+        post :save_preset
+        patch :overwrite_preset
+        patch :apply_preset
+      end
       member do
         patch :toggle
         patch :move
