@@ -1,5 +1,8 @@
 # Update Log
 
+## 2026-10-09
+* **Update**: Gambits cover every turn action the Fighter has (attack, Second Wind, Action Surge, 5 maneuvers, 5 spells) and gained hp_above, highest_hp, marked/unmarked and resource_at_least. Action Surge is a gambit action that re-evaluates the list twice; gambit-driven actors no longer surge automatically and their War Magic bonus is deterministic — [architecture/combat-simulator-service.md](architecture/combat-simulator-service.md), [models/gambit.md](models/gambit.md), inventory in [architecture/gambits-decisions.md](architecture/gambits-decisions.md).
+
 ## 2026-10-08
 * **Creation**: [models/gambit.md](models/gambit.md) — FFXII-style turn rules (target + condition + action, up to 6 per owner, polymorphic owner, deferrable unique position) and [architecture/gambits-decisions.md](architecture/gambits-decisions.md), the decisions taken autonomously while building them. [architecture/combat-simulator-service.md](architecture/combat-simulator-service.md) now documents gambit-driven turns: rules by priority, targets in initiative order, idle turns, no `@rng` draws; actors without enabled gambits keep the random choice.
 

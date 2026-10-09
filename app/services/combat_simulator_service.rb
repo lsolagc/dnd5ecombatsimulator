@@ -122,23 +122,21 @@ class CombatSimulatorService
         turns << start_log if start_log
         next if actor.dead?
 
-        available = available_actions_for(actor:)
         gambits = enabled_gambits(actor:)
         if gambits.any?
-          chosen_action = choose_gambit_action(actor:, gambits:, available:)
-          turns << (chosen_action ? gambit_turn(actor:, chosen_action:, round_number:, turn_index: turn_index + 1) : idle_turn(actor:, round_number:, turn_index: turn_index + 1))
-        elsif available.any?
-          chosen_action = choose_turn_action(available:, actor:)
-          turns << execute_action(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
-        end
+          turns.concat(gambit_turns(actor:, gambits:, round_number:, turn_index: turn_index + 1))
+        else
+          available = available_actions_for(actor:)
+          if available.any?
+            chosen_action = choose_turn_action(available:, actor:)
+            turns << execute_action(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
+            bonus_turn = war_magic_turn(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
+            turns << bonus_turn if bonus_turn
+          end
 
-        if chosen_action
-          bonus_turn = war_magic_turn(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
-          turns << bonus_turn if bonus_turn
+          extra_turn = action_surge_turn(actor:, round_number:, turn_index: turn_index + 1)
+          turns << extra_turn if extra_turn
         end
-
-        extra_turn = action_surge_turn(actor:, round_number:, turn_index: turn_index + 1)
-        turns << extra_turn if extra_turn
 
         end_log = turn_passive_log(actor:, trigger: :turn_end, round_number:, turn_index: turn_index + 1)
         turns << end_log if end_log
@@ -153,12 +151,41 @@ class CombatSimulatorService
       (@enabled_gambits ||= {})[actor.id] ||= actor.gambits.select(&:enabled?).sort_by(&:position)
     end
 
+    # One gambit-driven evaluation of the list, logged as the turn's entries: the winning rule's action
+    # (plus War Magic's bonus attack, never on the extra action), or an idle entry. An Action Surge rule
+    # spends one use, logs a marker and runs the list twice more (normal action, then the extra one),
+    # with surge rules skipped inside both, so a surge never chains into another.
+    def gambit_turns(actor:, gambits:, round_number:, turn_index:, surging: false, extra: false)
+      return [] if combat_over?
+
+      chosen_action = choose_gambit_action(actor:, gambits:, available: available_actions_for(actor:), surging:)
+      return [ idle_turn(actor:, round_number:, turn_index:).merge(extra ? { extra: true } : {}) ] unless chosen_action
+
+      if chosen_action[:type] == :action_surge
+        consume_feature_use!(actor:, class_feature_id: chosen_action[:class_feature].id)
+        marker = idle_turn(actor:, round_number:, turn_index:).merge(action: { type: :action_surge }, gambit: gambit_log(chosen_action[:gambit]))
+        return [ marker,
+                 *gambit_turns(actor:, gambits:, round_number:, turn_index:, surging: true),
+                 *gambit_turns(actor:, gambits:, round_number:, turn_index:, surging: true, extra: true) ]
+      end
+
+      return [ gambit_turn(actor:, chosen_action:, round_number:, turn_index:).merge(extra: true) ] if extra
+
+      [ gambit_turn(actor:, chosen_action:, round_number:, turn_index:),
+        (war_magic_turn(actor:, chosen_action:, round_number:, turn_index:) unless combat_over?) ].compact
+    end
+
     # FFXII-style choice: the first enabled gambit (top to bottom) whose action is available right now
     # and whose condition finds a target wins. Nil when none fires. Never draws from @rng.
-    def choose_gambit_action(actor:, gambits:, available:)
+    # surging: inside an Action Surge, whose rules are skipped.
+    def choose_gambit_action(actor:, gambits:, available:, surging: false)
+      surge = action_surge_action(actor:) unless surging
+      available += [ surge ] if surge
+
       gambits.each do |gambit|
         action = available.find { |candidate| gambit_action?(gambit:, action: candidate) }
         next unless action
+        next if gambit.condition_resource_at_least? && !gambit_resource_at_least?(actor:, action:, minimum: gambit.condition_value)
 
         target = gambit_target(actor:, gambit:)
         return action.merge(target:, gambit:) if target
@@ -170,9 +197,27 @@ class CombatSimulatorService
     def gambit_action?(gambit:, action:)
       case gambit.action_kind
       when "attack" then action[:type] == :attack
-      when "class_feature" then action[:type] == :class_feature && action[:class_feature].id == gambit.class_feature_id
+      when "class_feature" then action[:class_feature]&.id == gambit.class_feature_id
       when "spell" then action[:type] == :cast_spell && action[:spell].id == gambit.spell_id
       end
+    end
+
+    # Action Surge as a gambit action: unlocked and with a use left.
+    def action_surge_action(actor:)
+      unlock = action_surge_unlock_for(actor:)
+      uses = unlock && @uses_remaining.dig(actor.id, unlock.class_feature_id)
+      { type: :action_surge, class_feature: unlock.class_feature, uses_remaining: uses } if uses.is_a?(Integer) && uses.positive?
+    end
+
+    # The actor's remaining resource for the rule's own action: spell slots of the spell's level, else the
+    # feature's uses (the superiority-dice pool for maneuvers). Unlimited uses always pass.
+    def gambit_resource_at_least?(actor:, action:, minimum:)
+      remaining = action[:type] == :cast_spell ? actor.available_spell_slots[action[:spell].level].to_i : action[:uses_remaining]
+      !remaining.is_a?(Integer) || remaining >= minimum
+    end
+
+    def gambit_log(gambit)
+      { position: gambit.position, label: gambit.label }
     end
 
     # Candidates are the living combatants on the rule's side, in initiative order; the condition picks
@@ -186,16 +231,24 @@ class CombatSimulatorService
       candidates = @initiative_order.select { |combatant| pool.include?(combatant) && !combatant.dead? }
 
       case gambit.condition
-      when "any" then candidates.first
+      when "any", "resource_at_least" then candidates.first # the resource is checked in choose_gambit_action
       when "hp_below" then candidates.find { |combatant| combatant.current_hit_points * 100 < gambit.condition_value * combatant.max_hit_points }
+      when "hp_above" then candidates.find { |combatant| combatant.current_hit_points * 100 > gambit.condition_value * combatant.max_hit_points }
       when "lowest_hp" then candidates.min_by(&:current_hit_points)
+      when "highest_hp" then candidates.max_by(&:current_hit_points)
+      when "marked" then candidates.find { |combatant| marked_for?(actor:, target: combatant) }
+      when "unmarked" then candidates.find { |combatant| !marked_for?(actor:, target: combatant) }
       else raise ArgumentError, "Unsupported gambit condition: #{gambit.condition.inspect}"
       end
     end
 
+    # The actor's next weapon attack on the target would use up someone else's Distracting Strike mark.
+    def marked_for?(actor:, target:)
+      @advantage_marks.fetch(target.id, []).any? { |source_id| source_id != actor.id }
+    end
+
     def gambit_turn(actor:, chosen_action:, round_number:, turn_index:)
-      gambit = chosen_action[:gambit]
-      execute_action(actor:, chosen_action:, round_number:, turn_index:).merge(gambit: { position: gambit.position, label: gambit.label })
+      execute_action(actor:, chosen_action:, round_number:, turn_index:).merge(gambit: gambit_log(chosen_action[:gambit]))
     end
 
     # A gambit-driven actor whose rules all failed stands idle for the turn.
@@ -211,8 +264,9 @@ class CombatSimulatorService
       }
     end
 
-    # Action Surge: if the actor has an unused Action Surge, take one extra action right
-    # after their normal action. Not recursive — the extra action never grants another one.
+    # Action Surge for an actor without gambits: if the actor has an unused Action Surge, take one extra
+    # action right after their normal action. Not recursive — the extra action never grants another one.
+    # A gambit-driven actor only surges through a rule (see gambit_turns).
     def action_surge_turn(actor:, round_number:, turn_index:)
       return nil if combat_over?
 
@@ -238,10 +292,16 @@ class CombatSimulatorService
     # a bonus weapon attack right after it. Not recursive (a plain attack, via
     # execute_attack_action, never triggers another one) and never fired from the
     # Action Surge extra action — only from the turn's normal chosen_action.
+    # A gambit-driven actor aims it without @rng: the spell's target if it is a living enemy, else the
+    # first living enemy in initiative order.
     def war_magic_turn(actor:, chosen_action:, round_number:, turn_index:)
       return nil unless war_magic_available?(actor:, chosen_action:)
 
-      execute_attack_action(actor:, round_number:, turn_index:).merge(bonus: true)
+      if chosen_action.key?(:gambit)
+        spell_target = chosen_action[:target]
+        focus = enemy_party_for(actor).include?(spell_target) && !spell_target.dead? ? spell_target : first_living_enemy(actor:)
+      end
+      execute_attack_action(actor:, round_number:, turn_index:, focus:).merge(bonus: true)
     end
 
     def war_magic_available?(actor:, chosen_action:)
@@ -346,14 +406,17 @@ class CombatSimulatorService
     # die is added to the damage of the first attack that hits; a miss spends nothing.
     # gambit: the rule that chose this action. Every attack re-runs its target pick (the first one lands
     # on the target the rule just chose), falling back to the first living enemy in initiative order.
-    def execute_attack_action(actor:, round_number:, turn_index:, maneuver: nil, gambit: nil)
+    # focus: a fixed target (War Magic for a gambit-driven actor), with the same fallback once it is down.
+    def execute_attack_action(actor:, round_number:, turn_index:, maneuver: nil, gambit: nil, focus: nil)
       enemy_party = enemy_party_for(actor)
       attacks = []
       pending_maneuver = maneuver
 
       [ actor.attacks_per_action.to_i, 1 ].max.times do
         target = if gambit
-          gambit_target(actor:, gambit:) || @initiative_order.find { |combatant| enemy_party.include?(combatant) && !combatant.dead? }
+          gambit_target(actor:, gambit:) || first_living_enemy(actor:)
+        elsif focus
+          focus.dead? ? first_living_enemy(actor:) : focus
         else
           alive_combatants(enemy_party).sample(random: @rng)
         end
@@ -645,6 +708,11 @@ class CombatSimulatorService
 
     def own_party_for(combatant)
       party_for(combatant) == :party_one ? @party_one : @party_two
+    end
+
+    def first_living_enemy(actor:)
+      enemy_party = enemy_party_for(actor)
+      @initiative_order.find { |combatant| enemy_party.include?(combatant) && !combatant.dead? }
     end
 
     def enemy_party_for(combatant)

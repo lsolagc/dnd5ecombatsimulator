@@ -83,7 +83,15 @@ class GambitTest < ActiveSupport::TestCase
   end
 
   test "a feature with no active effect cannot be a gambit action" do
-    assert_not build_gambit(action_kind: :class_feature, target: :self, class_feature: class_features(:fighter_action_surge)).valid?
+    assert_not build_gambit(action_kind: :class_feature, target: :self, class_feature: class_features(:fighter_indomitable)).valid?
+  end
+
+  test "Action Surge is a gambit action targeting Self, though it has no effect payload" do
+    action_surge = class_features(:fighter_action_surge)
+
+    assert build_gambit(action_kind: :class_feature, target: :self, class_feature: action_surge).valid?
+    assert_not build_gambit(action_kind: :class_feature, target: :enemy, class_feature: action_surge).valid?
+    assert_not build_gambit(action_kind: :class_feature, target: :ally, class_feature: action_surge).valid?
   end
 
   test "a passive feature cannot be a gambit action, even with a heal or modifier payload" do
@@ -118,6 +126,42 @@ class GambitTest < ActiveSupport::TestCase
     assert build_gambit(condition: :lowest_hp).valid?
   end
 
+  test "condition_value is required within 1..99 for hp_above, within 1..20 for resource_at_least, and blank otherwise" do
+    second_wind = { action_kind: :class_feature, target: :self, class_feature: class_features(:fighter_second_wind) }
+
+    assert_not build_gambit(condition: :hp_above).valid?
+    assert_not build_gambit(condition: :hp_above, condition_value: 0).valid?
+    assert_not build_gambit(condition: :hp_above, condition_value: 100).valid?
+    assert build_gambit(condition: :hp_above, condition_value: 1).valid?
+    assert build_gambit(condition: :hp_above, condition_value: 99).valid?
+
+    assert_not build_gambit(condition: :resource_at_least, **second_wind).valid?
+    assert_not build_gambit(condition: :resource_at_least, condition_value: 0, **second_wind).valid?
+    assert_not build_gambit(condition: :resource_at_least, condition_value: 21, **second_wind).valid?
+    assert build_gambit(condition: :resource_at_least, condition_value: 20, **second_wind).valid?
+
+    %i[highest_hp marked unmarked].each do |condition|
+      assert build_gambit(condition:).valid?, condition
+      assert_not build_gambit(condition:, condition_value: 50).valid?, condition
+    end
+  end
+
+  test "resource_at_least is rejected with Ataque and with a cantrip, accepted with a leveled spell, a feature or a maneuver" do
+    assert_includes build_gambit(condition: :resource_at_least, condition_value: 1).tap(&:validate).errors.attribute_names, :condition
+    assert_includes build_gambit(condition: :resource_at_least, condition_value: 1, action_kind: :spell, spell: spells(:fire_bolt))
+                      .tap(&:validate).errors.attribute_names, :condition
+    assert build_gambit(condition: :resource_at_least, condition_value: 1, action_kind: :spell, spell: spells(:magic_missile)).valid?
+    assert build_gambit(condition: :resource_at_least, condition_value: 1, action_kind: :class_feature,
+                        class_feature: class_features(:fighter_battle_master_maneuver_precision_attack)).valid?
+    assert build_gambit(condition: :resource_at_least, condition_value: 1, action_kind: :class_feature, target: :self,
+                        class_feature: class_features(:fighter_action_surge)).valid?
+  end
+
+  test "the condition enum keeps its stored integers" do
+    assert_equal({ "any" => 0, "hp_below" => 1, "lowest_hp" => 2, "hp_above" => 3, "highest_hp" => 4, "marked" => 5,
+                   "unmarked" => 6, "resource_at_least" => 7 }, Gambit.conditions)
+  end
+
   test "label reads target, condition and action in Portuguese" do
     assert_equal "Inimigo: HP < 50% → Ataque", build_gambit(condition: :hp_below, condition_value: 50).label
     assert_equal "Self: qualquer → Second Wind",
@@ -126,6 +170,13 @@ class GambitTest < ActiveSupport::TestCase
                  build_gambit(condition: :lowest_hp, action_kind: :class_feature,
                               class_feature: class_features(:fighter_battle_master_maneuver_precision_attack)).label
     assert_equal "Inimigo: qualquer → Fire Bolt", build_gambit(action_kind: :spell, spell: spells(:fire_bolt)).label
+    assert_equal "Inimigo: HP > 75% → Ataque", build_gambit(condition: :hp_above, condition_value: 75).label
+    assert_equal "Inimigo: maior HP → Ataque", build_gambit(condition: :highest_hp).label
+    assert_equal "Inimigo: marcado → Ataque", build_gambit(condition: :marked).label
+    assert_equal "Inimigo: não marcado → Ataque", build_gambit(condition: :unmarked).label
+    assert_equal "Self: recurso ≥ 1 → Action Surge",
+                 build_gambit(action_kind: :class_feature, target: :self, condition: :resource_at_least, condition_value: 1,
+                              class_feature: class_features(:fighter_action_surge)).label
   end
 
   test "a character lists its gambits by position and destroys them with it" do

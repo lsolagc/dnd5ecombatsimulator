@@ -14,15 +14,18 @@ class Gambit < ApplicationRecord
 
   enum :target, { self: 0, ally: 1, enemy: 2 }, prefix: true
   # Append new conditions with new values; never renumber (stored as integers).
-  enum :condition, { any: 0, hp_below: 1, lowest_hp: 2 }, prefix: true
+  enum :condition, { any: 0, hp_below: 1, lowest_hp: 2, hp_above: 3, highest_hp: 4, marked: 5, unmarked: 6, resource_at_least: 7 },
+                    prefix: true
   enum :action_kind, { attack: 0, class_feature: 1, spell: 2 }, prefix: :action
 
   validates :position, presence: true, inclusion: { in: 1..MAX_PER_OWNER }
   validates :target, :condition, :action_kind, presence: true
-  validates :condition_value, numericality: { only_integer: true, in: 1..99 }, if: :condition_hp_below?
-  validates :condition_value, absence: true, unless: :condition_hp_below?
+  validates :condition_value, numericality: { only_integer: true, in: 1..99 }, if: -> { condition_hp_below? || condition_hp_above? }
+  validates :condition_value, numericality: { only_integer: true, in: 1..20 }, if: :condition_resource_at_least?
+  validates :condition_value, absence: true, unless: -> { condition_hp_below? || condition_hp_above? || condition_resource_at_least? }
   validate :action_matches_its_kind
   validate :target_fits_the_action
+  validate :resource_condition_has_a_resource
   validate :owner_has_room
 
   def label
@@ -34,6 +37,11 @@ class Gambit < ApplicationRecord
     when "any" then "qualquer"
     when "hp_below" then "HP < #{condition_value}%"
     when "lowest_hp" then "menor HP"
+    when "hp_above" then "HP > #{condition_value}%"
+    when "highest_hp" then "maior HP"
+    when "marked" then "marcado"
+    when "unmarked" then "não marcado"
+    when "resource_at_least" then "recurso ≥ #{condition_value}"
     end
   end
 
@@ -49,9 +57,15 @@ class Gambit < ApplicationRecord
   def action_target
     case action_kind
     when "attack" then "enemy"
-    when "class_feature" then active_feature_payload&.dig("target")
+    when "class_feature" then action_surge? ? "self" : active_feature_payload&.dig("target")
     when "spell" then spell&.effect_payload&.dig("target")
     end
+  end
+
+  # Action Surge has no effect payload: the simulator runs it as a gambit action of its own (identified
+  # by name, like CombatSimulatorService#action_surge_unlock_for).
+  def action_surge?
+    action_class_feature? && class_feature&.name == "Action Surge"
   end
 
   # The feature's effect at its highest unlock level, if the simulator can choose it as an action: a
@@ -88,6 +102,13 @@ class Gambit < ApplicationRecord
       elsif !COMPATIBLE_TARGETS.fetch(natural, []).include?(target)
         errors.add(:target, "does not fit the action (it targets #{natural})")
       end
+    end
+
+    # Ataque and cantrips spend nothing, so "recurso ≥ X" has nothing to measure.
+    def resource_condition_has_a_resource
+      return unless condition_resource_at_least?
+
+      errors.add(:condition, "needs an action that spends a resource") if action_attack? || (action_spell? && spell&.cantrip?)
     end
 
     def owner_has_room

@@ -116,14 +116,27 @@ An actor with enabled gambits never samples: its rules are walked by
 (attack always; a feature with uses, a known maneuver, a spell with a slot) and
 its condition finds a target among the living combatants of the rule's side
 (`self`, `ally` = own party with the actor, `enemy`), **walked in initiative
-order** (`@initiative_order`) — `any` takes the first, `hp_below` the first
-under X% of max HP, `lowest_hp` the minimum (ties to initiative order). The
+order** (`@initiative_order`) — `any` takes the first, `hp_below`/`hp_above`
+the first strictly under/over X% of max HP, `lowest_hp`/`highest_hp` the
+minimum/maximum (ties to initiative order), `marked`/`unmarked` whether the
+target carries a Distracting Strike mark from someone else (one the actor would
+use), and `resource_at_least` checks the actor's resource for the rule's own
+action (feature uses, the superiority-dice pool for maneuvers, slots of the
+spell's level) and takes the first candidate. The
 chosen target replaces `resolve_feature_target` for features and spells; every
 attack of the action re-runs the rule's pick, falling back to the first living
 enemy in initiative order. No rule fires → the turn logs `action: { type: :idle }`
 with empty `results`. Gambit choices draw nothing from `@rng`, and actors with
 no enabled gambit take the old random path unchanged. Rules are loaded once per
-simulation and evaluated over `Gambit` objects (saved or not). Decisions:
+simulation and evaluated over `Gambit` objects (saved or not).
+
+**Action Surge** is a gambit action (target Self) for these actors: when its
+rule wins, one use is spent, a marker turn `action: { type: :action_surge }` is
+logged, and the list is evaluated twice more (the second `extra: true`), skipping
+surge rules; either may stand idle, and both stop once the fight is over. A
+gambit-driven actor never gets the automatic random surge. **War Magic** stays
+automatic after the first of those actions; its bonus attack aims at the spell's
+target if it is a living enemy, else the first living enemy in initiative order. Decisions:
 [gambits-decisions.md](/architecture/gambits-decisions.md).
 
 # Lookup caching

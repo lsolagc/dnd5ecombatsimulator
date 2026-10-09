@@ -25,14 +25,16 @@ A `Gambit` belongs to a polymorphic `owner` ([PlayerCharacter](/models/player-ch
 enabled ones top to bottom.[^gambit-rb]
 
 - `target`: `self` / `ally` / `enemy` (prefixed: `target_self?`).
-- `condition` (enum in code, prefixed `condition_*`): `any`, `hp_below`
-  (`condition_value` 1..99 %), `lowest_hp`. New values are appended, never renumbered.
+- `condition` (enum in code, prefixed `condition_*`): `any`, `hp_below` /
+  `hp_above` (`condition_value` 1..99 %), `lowest_hp`, `highest_hp`, `marked`,
+  `unmarked`, `resource_at_least` (`condition_value` 1..20; rejected with Ataque
+  and cantrips). New values are appended, never renumbered.
 - Action: `action_kind` `attack` (no record) / `class_feature` (FK) / `spell` (FK).
   A DB check constraint keeps the FKs consistent with the kind.
 - The target must fit the action's natural target (attack → enemy; payload
   `self`/`enemy` → same; `ally` → ally or self), read from the highest-level unlock
   that has a payload; passive (`trigger`) and non heal/damage payloads are
-  rejected. A rule naming an action its owner lacks is valid and skipped at runtime.
+  rejected. Action Surge (no payload) is accepted with target Self. A rule naming an action its owner lacks is valid and skipped at runtime.
 - `position` 1..6 (check constraint), at most 6 per owner, and a unique
   `(owner_type, owner_id, position)` constraint **deferrable initially deferred**, so a
   reorder can permute positions inside one transaction.[^gambit-test]
