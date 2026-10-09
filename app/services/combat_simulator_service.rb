@@ -32,7 +32,7 @@ class CombatSimulatorService
   def call
     with_seed do
       initialize_state
-      initiative_order = build_initiative_order
+      initiative_order = @initiative_order = build_initiative_order
 
       round_number = 0
 
@@ -123,10 +123,16 @@ class CombatSimulatorService
         next if actor.dead?
 
         available = available_actions_for(actor:)
-        unless available.empty?
+        gambits = enabled_gambits(actor:)
+        if gambits.any?
+          chosen_action = choose_gambit_action(actor:, gambits:, available:)
+          turns << (chosen_action ? gambit_turn(actor:, chosen_action:, round_number:, turn_index: turn_index + 1) : idle_turn(actor:, round_number:, turn_index: turn_index + 1))
+        elsif available.any?
           chosen_action = choose_turn_action(available:, actor:)
           turns << execute_action(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
+        end
 
+        if chosen_action
           bonus_turn = war_magic_turn(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
           turns << bonus_turn if bonus_turn
         end
@@ -139,6 +145,70 @@ class CombatSimulatorService
       end
 
       turns
+    end
+
+    # Enabled gambits by priority, loaded once per simulation. Works on Gambit objects (saved or not),
+    # never querying mid-turn, so a snapshot of the rules can stand in for the owner's own.
+    def enabled_gambits(actor:)
+      (@enabled_gambits ||= {})[actor.id] ||= actor.gambits.select(&:enabled?).sort_by(&:position)
+    end
+
+    # FFXII-style choice: the first enabled gambit (top to bottom) whose action is available right now
+    # and whose condition finds a target wins. Nil when none fires. Never draws from @rng.
+    def choose_gambit_action(actor:, gambits:, available:)
+      gambits.each do |gambit|
+        action = available.find { |candidate| gambit_action?(gambit:, action: candidate) }
+        next unless action
+
+        target = gambit_target(actor:, gambit:)
+        return action.merge(target:, gambit:) if target
+      end
+
+      nil
+    end
+
+    def gambit_action?(gambit:, action:)
+      case gambit.action_kind
+      when "attack" then action[:type] == :attack
+      when "class_feature" then action[:type] == :class_feature && action[:class_feature].id == gambit.class_feature_id
+      when "spell" then action[:type] == :cast_spell && action[:spell].id == gambit.spell_id
+      end
+    end
+
+    # Candidates are the living combatants on the rule's side, in initiative order; the condition picks
+    # one (ties go to whoever comes first in initiative). Nil when nobody qualifies.
+    def gambit_target(actor:, gambit:)
+      pool = case gambit.target
+      when "self" then [ actor ]
+      when "ally" then own_party_for(actor)
+      when "enemy" then enemy_party_for(actor)
+      end
+      candidates = @initiative_order.select { |combatant| pool.include?(combatant) && !combatant.dead? }
+
+      case gambit.condition
+      when "any" then candidates.first
+      when "hp_below" then candidates.find { |combatant| combatant.current_hit_points * 100 < gambit.condition_value * combatant.max_hit_points }
+      when "lowest_hp" then candidates.min_by(&:current_hit_points)
+      else raise ArgumentError, "Unsupported gambit condition: #{gambit.condition.inspect}"
+      end
+    end
+
+    def gambit_turn(actor:, chosen_action:, round_number:, turn_index:)
+      gambit = chosen_action[:gambit]
+      execute_action(actor:, chosen_action:, round_number:, turn_index:).merge(gambit: { position: gambit.position, label: gambit.label })
+    end
+
+    # A gambit-driven actor whose rules all failed stands idle for the turn.
+    def idle_turn(actor:, round_number:, turn_index:)
+      {
+        round: round_number,
+        turn: turn_index,
+        actor_id: actor.id,
+        actor_name: actor.name,
+        actor_party: party_for(actor),
+        action: { type: :idle },
+        results: []
+      }
     end
 
     # Action Surge: if the actor has an unused Action Surge, take one extra action right
@@ -257,11 +327,11 @@ class CombatSimulatorService
     def execute_action(actor:, chosen_action:, round_number:, turn_index:)
       case chosen_action[:type]
       when :attack
-        execute_attack_action(actor:, round_number:, turn_index:)
+        execute_attack_action(actor:, round_number:, turn_index:, gambit: chosen_action[:gambit])
       when :class_feature
         # A maneuver is not an action of its own: it rides on a normal weapon attack.
         if chosen_action[:payload]["applies_to"] == "weapon_attack"
-          execute_attack_action(actor:, round_number:, turn_index:, maneuver: chosen_action)
+          execute_attack_action(actor:, round_number:, turn_index:, maneuver: chosen_action, gambit: chosen_action[:gambit])
         else
           execute_class_feature_action(actor:, chosen_action:, round_number:, turn_index:)
         end
@@ -274,13 +344,19 @@ class CombatSimulatorService
 
     # maneuver: the chosen class_feature action of a maneuver (payload "applies_to" weapon_attack). Its
     # die is added to the damage of the first attack that hits; a miss spends nothing.
-    def execute_attack_action(actor:, round_number:, turn_index:, maneuver: nil)
+    # gambit: the rule that chose this action. Every attack re-runs its target pick (the first one lands
+    # on the target the rule just chose), falling back to the first living enemy in initiative order.
+    def execute_attack_action(actor:, round_number:, turn_index:, maneuver: nil, gambit: nil)
       enemy_party = enemy_party_for(actor)
       attacks = []
       pending_maneuver = maneuver
 
       [ actor.attacks_per_action.to_i, 1 ].max.times do
-        target = alive_combatants(enemy_party).sample(random: @rng)
+        target = if gambit
+          gambit_target(actor:, gambit:) || @initiative_order.find { |combatant| enemy_party.include?(combatant) && !combatant.dead? }
+        else
+          alive_combatants(enemy_party).sample(random: @rng)
+        end
         break if target.nil?
 
         advantage = consume_advantage_mark(target:, attacker: actor)
@@ -361,7 +437,7 @@ class CombatSimulatorService
     def execute_class_feature_action(actor:, chosen_action:, round_number:, turn_index:)
       feature = chosen_action[:class_feature]
       payload = chosen_action[:payload]
-      target = resolve_feature_target(actor:, payload:)
+      target = chosen_action.key?(:gambit) ? chosen_action[:target] : resolve_feature_target(actor:, payload:)
 
       action = Combat::CombatAction.new(
         source_type: :class_feature,
@@ -405,7 +481,7 @@ class CombatSimulatorService
     def execute_cast_spell_action(actor:, chosen_action:, round_number:, turn_index:)
       spell = chosen_action[:spell]
       payload = chosen_action[:payload]
-      target = resolve_feature_target(actor:, payload:)
+      target = chosen_action.key?(:gambit) ? chosen_action[:target] : resolve_feature_target(actor:, payload:)
 
       disadvantage_on_save = target && @eldritch_strike_pending[target.id] == actor.id
       @eldritch_strike_pending.delete(target.id) if disadvantage_on_save

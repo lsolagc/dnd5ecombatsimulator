@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_05_235907) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_08_234024) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -87,6 +87,26 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_05_235907) do
     t.string "damage_dice", default: "1d4", null: false
     t.string "damage_type", default: "bludgeoning", null: false
     t.index ["combatable_type", "combatable_id"], name: "index_combatants_on_combatable"
+  end
+
+  create_table "gambits", force: :cascade do |t|
+    t.string "owner_type", null: false
+    t.bigint "owner_id", null: false
+    t.integer "position", null: false
+    t.boolean "enabled", default: true, null: false
+    t.integer "target", null: false
+    t.integer "condition", null: false
+    t.integer "condition_value"
+    t.integer "action_kind", null: false
+    t.bigint "class_feature_id"
+    t.bigint "spell_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["class_feature_id"], name: "index_gambits_on_class_feature_id"
+    t.index ["spell_id"], name: "index_gambits_on_spell_id"
+    t.check_constraint "\"position\" >= 1 AND \"position\" <= 6", name: "gambits_position_range"
+    t.check_constraint "action_kind = 0 AND class_feature_id IS NULL AND spell_id IS NULL OR action_kind = 1 AND class_feature_id IS NOT NULL AND spell_id IS NULL OR action_kind = 2 AND class_feature_id IS NULL AND spell_id IS NOT NULL", name: "gambits_action_consistency"
+    t.unique_constraint ["owner_type", "owner_id", "position"], deferrable: :deferred, name: "gambits_owner_position_unique"
   end
 
   create_table "player_character_maneuvers", force: :cascade do |t|
@@ -192,6 +212,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_05_235907) do
   add_foreign_key "class_features", "class_features", column: "subclass_marker_id"
   add_foreign_key "class_features", "player_classes"
   add_foreign_key "class_level_progressions", "player_classes"
+  add_foreign_key "gambits", "class_features"
+  add_foreign_key "gambits", "spells"
   add_foreign_key "player_character_maneuvers", "class_features", column: "maneuver_id"
   add_foreign_key "player_character_maneuvers", "player_characters"
   add_foreign_key "player_character_spells", "player_characters"

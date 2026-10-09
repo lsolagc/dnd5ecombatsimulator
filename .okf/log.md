@@ -1,5 +1,8 @@
 # Update Log
 
+## 2026-10-08
+* **Creation**: [models/gambit.md](models/gambit.md) — FFXII-style turn rules (target + condition + action, up to 6 per owner, polymorphic owner, deferrable unique position) and [architecture/gambits-decisions.md](architecture/gambits-decisions.md), the decisions taken autonomously while building them. [architecture/combat-simulator-service.md](architecture/combat-simulator-service.md) now documents gambit-driven turns: rules by priority, targets in initiative order, idle turns, no `@rng` draws; actors without enabled gambits keep the random choice.
+
 ## 2026-10-06
 * **Update**: Experiments now run one `SimulationRunJob` per simulation on Solid Queue worker processes (`bin/jobs`, in `bin/dev`; Puma plugin in production) and push progress over Solid Cable as a morphing Turbo Stream, throttled to 0.2 s, instead of in-process jobs with 1 s polling. Simulator and `PlayerCharacter` lookups are cached per simulation (590 → 97 ms per simulation, results byte-identical). Fixed along the way: cancellation never reached running simulations in workers (query cache), and a combat cancelled in its last round was still saved. Updated [architecture/simulation-batches.md](architecture/simulation-batches.md), [architecture/combat-simulator-service.md](architecture/combat-simulator-service.md), [models/player-character.md](models/player-character.md) and [ops/dev-setup.md](ops/dev-setup.md) (which also wrongly said development used SQLite).
 * **Fix**: [ui/erb-bootstrap-views.md](ui/erb-bootstrap-views.md) said the wizard's weapon fields were not persisted; the main weapon's attack bonus, damage dice and damage type are `Combatant` columns, only the weapon name and the offhand weapon are visual-only.

@@ -21,6 +21,8 @@ class PlayerCharacter < ApplicationRecord
   has_many :player_character_maneuvers, dependent: :destroy
   has_many :known_maneuvers, through: :player_character_maneuvers, source: :maneuver
 
+  has_many :gambits, -> { order(:position) }, as: :owner, dependent: :destroy
+
   MAX_HIT_POINTS_INPUT_CEILING = 2_147_483_647
 
   attr_accessor :max_hit_points_input

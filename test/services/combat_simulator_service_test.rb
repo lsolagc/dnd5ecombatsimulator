@@ -1,6 +1,7 @@
 require "test_helper"
 
 class CombatSimulatorServiceTest < ActiveSupport::TestCase
+  SEED_WITH_REVERSED_INITIATIVE = 3
   test "returns the expected contract shape" do
     party_one = [ fresh_character(:aragorn) ]
     party_two = [ fresh_character(:aragorn_copy) ]
@@ -32,6 +33,51 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     ).call
 
     assert_equal result_one, result_two
+  end
+
+  test "without gambits, a fixed seed replays the exact same random choices" do
+    # Recorded from the code before gambits existed: the random path must not change.
+    party_one = %i[thorin fighter_archer].map { |name| fresh_character(name) }
+    party_two = %i[aragorn aragorn_copy fighter_defender].map { |name| fresh_character(name) }
+    name_of = %i[thorin fighter_archer aragorn aragorn_copy fighter_defender].index_by { |name| player_characters(name).id }
+
+    result = CombatSimulatorService.new(party_one:, party_two:, seed: 77, max_rounds: 3).call
+
+    choices = result[:round_log].flat_map { |round| round[:turns] }.flat_map do |turn|
+      targets = turn[:results].filter_map { |entry| name_of[entry[:target_id]] }
+      (targets.presence || [ nil ]).map { |target| [ name_of[turn[:actor_id]], turn.dig(:action, :type), target ] }
+    end
+    assert_equal [
+      [ :fighter_defender, :class_feature, nil ], [ :thorin, :class_feature, nil ], [ :thorin, :attack, :aragorn ],
+      [ :aragorn_copy, :attack, :fighter_archer ], [ :fighter_archer, :class_feature, nil ], [ :aragorn, :attack, :fighter_archer ],
+      [ :fighter_defender, :attack, :thorin ], [ :thorin, :attack, :aragorn_copy ], [ :aragorn_copy, :class_feature, nil ],
+      [ :fighter_archer, :attack, :aragorn_copy ], [ :aragorn, :attack, :fighter_archer ], [ :fighter_defender, :attack, :thorin ],
+      [ :thorin, :attack, :fighter_defender ], [ :aragorn_copy, :attack, :thorin ], [ :fighter_archer, :attack, :fighter_defender ],
+      [ :aragorn, :attack, :fighter_archer ]
+    ], choices
+  end
+
+  test "without gambits, a caster with War Magic replays the exact same random choices" do
+    # Recorded from the code before gambits existed: the coin flip between spells and attacks, and the
+    # War Magic bonus attack after a cantrip, must not change on the random path.
+    eldritch_knight = sturdy(spellcaster_with_known_spells(:eldritch_knight_seven))
+    enemies = %i[aragorn aragorn_copy].map { |name| sturdy(fresh_character(name)) }
+    name_of = { eldritch_knight.id => :eldritch_knight_seven, enemies.first.id => :aragorn, enemies.second.id => :aragorn_copy }
+
+    result = CombatSimulatorService.new(party_one: [ eldritch_knight ], party_two: enemies, seed: 6, max_rounds: 3).call
+
+    choices = result[:round_log].flat_map { |round| round[:turns] }.flat_map do |turn|
+      targets = turn[:results].filter_map { |entry| name_of[entry[:target_id]] }
+      (targets.presence || [ nil ]).map { |target| [ name_of[turn[:actor_id]], turn.dig(:action, :type), target, !!turn[:bonus] ] }
+    end
+    assert_equal [
+      [ :eldritch_knight_seven, :cast_spell, nil, false ], [ :eldritch_knight_seven, :attack, :aragorn_copy, true ],
+      [ :eldritch_knight_seven, :cast_spell, nil, false ], [ :aragorn, :attack, :eldritch_knight_seven, false ],
+      [ :aragorn_copy, :class_feature, nil, false ], [ :eldritch_knight_seven, :class_feature, nil, false ],
+      [ :aragorn, :class_feature, nil, false ], [ :aragorn_copy, :attack, :eldritch_knight_seven, false ],
+      [ :eldritch_knight_seven, :cast_spell, nil, false ], [ :aragorn, :attack, :eldritch_knight_seven, false ],
+      [ :aragorn_copy, :attack, :eldritch_knight_seven, false ]
+    ], choices
   end
 
   test "signals explicit draw on simultaneous elimination" do
@@ -533,6 +579,366 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_nil service.send(:resolve_feature_target, actor:, payload: { "target" => "enemy" })
   end
 
+  test "gambits: with two valid rules the top one wins, and a rule out of uses is skipped" do
+    second_wind = class_features(:fighter_second_wind)
+    actor = sturdy(fresh_character(:aragorn))
+    add_gambit(actor, position: 1, target: :self, action_kind: :class_feature, class_feature: second_wind)
+    add_gambit(actor, position: 2)
+
+    turns = actor_turns(actor:, result: gambit_service(actor:, max_rounds: 2).call)
+
+    assert_equal [ :class_feature, :attack ], turns.map { |turn| turn.dig(:action, :type) }
+    assert_equal({ position: 1, label: "Self: qualquer → Second Wind" }, turns.first[:gambit])
+    assert_equal({ position: 2, label: "Inimigo: qualquer → Ataque" }, turns.second[:gambit])
+  end
+
+  test "gambits: a rule whose condition finds no target is skipped and the next one fires" do
+    actor = sturdy(fresh_character(:aragorn))
+    add_gambit(actor, position: 1, condition: :hp_below, condition_value: 10)
+    add_gambit(actor, position: 2, target: :self, action_kind: :class_feature, class_feature: class_features(:fighter_second_wind))
+
+    turn = actor_turns(actor:, result: gambit_service(actor:).call).first
+
+    assert_equal "second-wind", turn.dig(:action, :feature_slug)
+    assert_equal 2, turn.dig(:gambit, :position)
+  end
+
+  test "gambits: a rule with a maneuver the character does not know is skipped" do
+    precision = class_features(:fighter_battle_master_maneuver_precision_attack)
+    actor = battle_master_with_known_maneuvers(:battle_master_seven)
+    actor.player_character_maneuvers.where(maneuver: precision).destroy_all
+    add_gambit(actor, position: 1, action_kind: :class_feature, class_feature: precision)
+    add_gambit(actor, position: 2, action_kind: :class_feature, class_feature: class_features(:fighter_battle_master_maneuver_distracting_strike))
+
+    turn = actor_turns(actor:, result: gambit_service(actor:).call).first
+
+    assert_equal "Maneuver: Distracting Strike", turn.dig(:action, :maneuver_name)
+    assert_equal 2, turn.dig(:gambit, :position)
+  end
+
+  test "gambits: when no rule fires the character stands idle" do
+    actor = sturdy(fresh_character(:aragorn))
+    enemy = sturdy(fresh_character(:merlin))
+    add_gambit(actor, position: 1, condition: :hp_below, condition_value: 10)
+
+    result = gambit_service(actor:, enemy:).call
+    turns = actor_turns(actor:, result:)
+
+    assert_equal [ { type: :idle } ], turns.map { |turn| turn[:action] }
+    assert_equal [], turns.first[:results]
+    assert_equal 1000, enemy.current_hit_points
+    assert_nothing_raised { SimulationRun.metrics(result[:round_log]) }
+  end
+
+  test "gambits: lowest HP picks the weakest enemy, ties going to initiative order" do
+    run = lambda do |weaken: nil|
+      actor = sturdy(fresh_character(:thorin))
+      enemies = [ fresh_character(:aragorn), fresh_character(:aragorn_copy) ]
+      enemies.find { |enemy| enemy.id == weaken }&.then { |enemy| enemy.current_hit_points -= 5 }
+      add_gambit(actor, position: 1, condition: :lowest_hp)
+      service = CombatSimulatorService.new(party_one: [ actor ], party_two: enemies, seed: SEED_WITH_REVERSED_INITIATIVE, max_rounds: 1)
+      first_target = actor_turns(actor:, result: service.call).first[:results].first[:target_id]
+      [ first_target, service.instance_variable_get(:@initiative_order).map(&:id) - [ actor.id ] ]
+    end
+
+    target, order = run.call
+    assert_equal [ player_characters(:aragorn_copy).id, player_characters(:aragorn).id ], order,
+      "the seed must put the enemies in initiative order opposite to their party order, or the tie-break is untested"
+    assert_equal order.first, target
+
+    target, = run.(weaken: order.last)
+    assert_equal order.last, target
+  end
+
+  test "gambits: the same seed and the same gambits give the same result, with several rules firing" do
+    # Rule 1 fires once any enemy is hurt; rules 2-6 always fire, so only the priority order decides
+    # which one wins. A shuffled order matches the expected position of an actor's first gambit turn
+    # with probability at most 1/5 (a given rule first among the 5 or 6 that fire), independently per
+    # actor: two runs both matching the expected positions by chance is at most (1/5)**12 ≈ 4e-9.
+    run = lambda do
+      party_one = %i[aragorn fighter_archer merlin].map { |name| fresh_character(name) }
+      party_two = %i[aragorn_copy fighter_defender elora].map { |name| fresh_character(name) }
+      (party_one + party_two).each do |character|
+        add_gambit(character, position: 1, condition: :hp_below, condition_value: 99)
+        (2..6).each { |position| add_gambit(character, position:, condition: position.even? ? :any : :lowest_hp) }
+      end
+      CombatSimulatorService.new(party_one:, party_two:, seed: 77, max_rounds: 3).call
+    end
+
+    first = run.call
+    second = run.call
+    gambit_turns = first[:round_log].flat_map { |round| round[:turns] }.select { |turn| turn[:gambit] }
+    positions = gambit_turns.map { |turn| turn.dig(:gambit, :position) }
+
+    assert_operator positions.uniq.size, :>=, 2
+    assert_equal 6, gambit_turns.map { |turn| turn[:actor_id] }.uniq.size
+    assert_equal [ 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1 ], positions
+    assert_equal first, second
+  end
+
+  test "gambits: a character whose gambits are all disabled plays exactly like one without gambits" do
+    run = lambda do |with_disabled_gambits:|
+      actor = fresh_character(:thorin)
+      if with_disabled_gambits
+        add_gambit(actor, position: 1, enabled: false)
+        add_gambit(actor, position: 2, target: :self, action_kind: :class_feature, class_feature: class_features(:fighter_second_wind), enabled: false)
+      end
+      CombatSimulatorService.new(party_one: [ actor ], party_two: [ fresh_character(:aragorn), fresh_character(:aragorn_copy) ], seed: 77, max_rounds: 5).call
+    end
+
+    assert_equal run.(with_disabled_gambits: false), run.(with_disabled_gambits: true)
+  end
+
+  test "gambits: a feature fired by a gambit spends exactly one use" do
+    second_wind = class_features(:fighter_second_wind)
+    actor = sturdy(fresh_character(:aragorn))
+    add_gambit(actor, position: 1, target: :self, action_kind: :class_feature, class_feature: second_wind)
+    service = gambit_service(actor:)
+    service.send(:initialize_state)
+    service.instance_variable_set(:@initiative_order, [ actor, *service.instance_variable_get(:@party_two) ])
+    uses_remaining = service.instance_variable_get(:@uses_remaining)
+    uses_remaining[actor.id][second_wind.id] = 3
+
+    turns = service.send(:execute_round, round_number: 1, initiative_order: service.instance_variable_get(:@initiative_order))
+
+    assert_equal 1, turns.count { |turn| turn[:actor_id] == actor.id && turn.dig(:action, :feature_slug) == "second-wind" }
+    assert_equal 2, uses_remaining[actor.id][second_wind.id]
+  end
+
+  test "gambits: a spell or feature fired by a gambit lands on the rule's target, not a random one" do
+    cases = {
+      spellcaster_with_known_spells(:merlin) => { action_kind: :spell, spell: spells(:fire_bolt) },
+      player_characters(:barbarian_test_striker) => { action_kind: :class_feature, class_feature: class_features(:barbarian_test_save_strike) }
+    }
+
+    cases.each do |actor, action|
+      (1..6).each do |seed|
+        actor.gambits.reset
+        sturdy(actor)
+        # Only the middle enemy is at normal HP: still the weakest even if it heals itself before the actor's turn.
+        enemies = %i[aragorn aragorn_copy elora].map { |name| fresh_character(name) }
+        sturdy(enemies.first)
+        sturdy(enemies.third)
+        add_gambit(actor, position: 1, condition: :lowest_hp, **action)
+
+        turn = actor_turns(actor:, result: CombatSimulatorService.new(party_one: [ actor ], party_two: enemies, seed:, max_rounds: 1).call).first
+
+        assert_equal 1, turn.dig(:gambit, :position)
+        assert_operator turn[:results].first[:hp_before], :<=, enemies.second.max_hit_points, "#{actor.name}, seed #{seed}: expected the weakest enemy as target"
+      end
+    end
+  end
+
+  test "gambits: each extra attack re-runs the rule, then falls back to the first living enemy in initiative order" do
+    actor = fresh_character(:thorin)
+    actor.define_singleton_method(:attacks_per_action) { 3 }
+    enemies = %i[aragorn aragorn_copy elora fighter_archer fighter_defender].map { |name| fresh_character(name) }
+    a, b, c, d, e = enemies
+    a.current_hit_points = d.current_hit_points = 5 # below 50%: the rule's only candidates
+    enemies.each do |enemy|
+      enemy.define_singleton_method(:get_attacked) do |attack_roll:|
+        self.current_hit_points = 0
+        { success: true, attack_roll:, message: "Hit!" }
+      end
+    end
+    gambit = add_gambit(actor, position: 1, condition: :hp_below, condition_value: 50)
+    service = CombatSimulatorService.new(party_one: [ actor ], party_two: enemies, seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+    service.instance_variable_set(:@initiative_order, [ e, actor, c, a, d, b ])
+
+    turn = service.send(:execute_attack_action, actor:, round_number: 1, turn_index: 1, gambit:)
+
+    # a and d by the rule (in initiative order), then e: the first living enemy in initiative order
+    # (not b, the first in party order).
+    assert_equal [ a.id, d.id, e.id ], turn[:results].map { |attack| attack[:target_id] }
+  end
+
+  test "gambits: choices driven by gambits never draw from @rng" do
+    seed = 9
+    party_one = [ fresh_character(:aragorn), fresh_character(:fighter_archer) ]
+    party_two = [ fresh_character(:aragorn_copy), fresh_character(:fighter_defender) ]
+    (party_one + party_two).each do |character|
+      add_gambit(character, position: 1, condition: :hp_below, condition_value: 50)
+      add_gambit(character, position: 2, target: :self, condition: :hp_below, condition_value: 30, action_kind: :class_feature,
+                                         class_feature: class_features(:fighter_second_wind))
+      add_gambit(character, position: 3, condition: :lowest_hp)
+    end
+    service = CombatSimulatorService.new(party_one:, party_two:, seed:, max_rounds: 5)
+
+    result = service.call
+
+    assert result[:round_log].flat_map { |round| round[:turns] }.count { |turn| turn[:gambit] } > 4
+    assert_equal Marshal.dump(Random.new(seed)), Marshal.dump(service.instance_variable_get(:@rng)),
+      "a gambit-driven turn must not consume @rng"
+  end
+
+  test "gambits: an 'any' rule with several candidates never draws from @rng" do
+    seed = 9
+    party_one = [ sturdy(fresh_character(:aragorn)), sturdy(fresh_character(:fighter_archer)) ]
+    party_two = [ sturdy(fresh_character(:aragorn_copy)), sturdy(fresh_character(:fighter_defender)) ]
+    (party_one + party_two).each { |character| add_gambit(character, position: 1) }
+    service = CombatSimulatorService.new(party_one:, party_two:, seed:, max_rounds: 2)
+
+    turns = service.call[:round_log].flat_map { |round| round[:turns] }
+
+    # Level 1 fighters: no Action Surge, no War Magic, so every turn is a gambit turn against 2 living enemies.
+    assert_equal [ "Inimigo: qualquer → Ataque" ] * 8, turns.map { |turn| turn.dig(:gambit, :label) }
+    assert_equal Marshal.dump(Random.new(seed)), Marshal.dump(service.instance_variable_get(:@rng)),
+      "an 'any' rule must not consume @rng"
+  end
+
+  test "gambits: a spell rule casts its own spell, and falls to the next rule without a slot for it" do
+    actor = sturdy(spellcaster_with_known_spells(:merlin))
+    magic_missile = spells(:magic_missile)
+    add_gambit(actor, position: 1, action_kind: :spell, spell: magic_missile)
+    add_gambit(actor, position: 2)
+    new_service = -> { gambit_service(actor:, enemy: sturdy(fresh_character(:aragorn))) }
+    run = -> { actor_turns(actor:, result: new_service.call.call).first }
+
+    service = new_service.call
+    service.send(:initialize_state)
+    first_spell = service.send(:available_actions_for, actor:).find { |action| action[:type] == :cast_spell }[:spell]
+    assert_not_equal magic_missile, first_spell, "another spell must come first, or matching the rule's own spell is untested"
+
+    turn = run.call
+    assert_equal [ "magic-missile", 1 ], [ turn.dig(:action, :spell_slug), turn.dig(:gambit, :position) ]
+
+    actor.available_spell_slots = { 1 => 0 }
+    turn = run.call
+    assert_equal [ :attack, 2 ], [ turn.dig(:action, :type), turn.dig(:gambit, :position) ]
+  end
+
+  test "gambits: priority follows position, not creation order, and a reorder takes effect" do
+    second_wind = class_features(:fighter_second_wind)
+    actor = sturdy(player_characters(:aragorn))
+    actor.gambits.load # already loaded, as after editing the rules: new records stay in creation order in memory
+    attack = actor.gambits.create!(position: 2, target: :enemy, condition: :any, action_kind: :attack)
+    heal = actor.gambits.create!(position: 1, target: :self, condition: :any, action_kind: :class_feature, class_feature: second_wind)
+    assert_operator attack.id, :<, heal.id
+    first_action = -> { actor_turns(actor:, result: gambit_service(actor:).call).first.dig(:action, :type) }
+
+    assert_equal :class_feature, first_action.call
+
+    Gambit.transaction do # the unique (owner, position) constraint is deferred, so a swap is allowed
+      attack.update!(position: 1)
+      heal.update!(position: 2)
+    end
+    sturdy(actor.reload)
+
+    assert_equal :attack, first_action.call
+  end
+
+  test "gambits: a spell fired by a gambit spends exactly one slot" do
+    actor = sturdy(spellcaster_with_known_spells(:merlin))
+    actor.available_spell_slots = { 1 => 2 }
+    add_gambit(actor, position: 1, action_kind: :spell, spell: spells(:magic_missile))
+
+    turns = actor_turns(actor:, result: gambit_service(actor:, enemy: sturdy(fresh_character(:aragorn))).call)
+
+    assert_equal [ "magic-missile" ], turns.map { |turn| turn.dig(:action, :spell_slug) }
+    assert_equal({ 1 => 1 }, actor.available_spell_slots)
+  end
+
+  test "gambits: a combat where every gambit turn stands idle never draws from @rng" do
+    seed = 9
+    party_one = [ sturdy(fresh_character(:aragorn)) ]
+    party_two = [ sturdy(fresh_character(:aragorn_copy)) ]
+    (party_one + party_two).each { |character| add_gambit(character, position: 1, condition: :hp_below, condition_value: 10) }
+    service = CombatSimulatorService.new(party_one:, party_two:, seed:, max_rounds: 3)
+
+    turns = service.call[:round_log].flat_map { |round| round[:turns] }
+
+    assert_equal [ { type: :idle } ] * 6, turns.map { |turn| turn[:action] }
+    assert_equal Marshal.dump(Random.new(seed)), Marshal.dump(service.instance_variable_get(:@rng)),
+      "an idle turn must not consume @rng"
+  end
+
+  test "gambits: a maneuver fired by a gambit spends exactly one superiority die on a hit" do
+    battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
+    target = hittable_target(armor_class: 1)
+    service = maneuver_service(battle_master:, target:)
+    service.instance_variable_set(:@initiative_order, [ battle_master, target ])
+    gambit = add_gambit(battle_master, position: 1, action_kind: :class_feature,
+                                       class_feature: class_features(:fighter_battle_master_maneuver_precision_attack))
+    chosen = service.send(:choose_gambit_action, actor: battle_master, gambits: [ gambit ], available: service.send(:available_actions_for, actor: battle_master))
+    assert_equal 4, chosen[:uses_remaining]
+
+    Random.srand(1)
+    turn = service.send(:gambit_turn, actor: battle_master, chosen_action: chosen, round_number: 1, turn_index: 1)
+
+    assert_equal 1, turn[:results].count { |attack| attack[:rider] }
+    assert_equal 3, maneuver_action(service:, actor: battle_master, slug: "precision-attack")[:uses_remaining]
+  end
+
+  test "gambits: an 'any' rule takes the first living candidate in initiative order, on every attack" do
+    actor = sturdy(fresh_character(:thorin))
+    actor.define_singleton_method(:attacks_per_action) { 20 }
+    enemies = [ sturdy(fresh_character(:aragorn)), sturdy(fresh_character(:aragorn_copy)) ]
+    add_gambit(actor, position: 1)
+    service = CombatSimulatorService.new(party_one: [ actor ], party_two: enemies, seed: SEED_WITH_REVERSED_INITIATIVE, max_rounds: 1)
+
+    turn = actor_turns(actor:, result: service.call).first
+
+    order = service.instance_variable_get(:@initiative_order).map(&:id) - [ actor.id ]
+    assert_equal enemies.reverse.map(&:id), order, "the seed must put the enemies in initiative order opposite to their party order"
+    assert_equal [ order.first ] * 20, turn[:results].map { |attack| attack[:target_id] }
+  end
+
+  test "gambits: a maneuver fired by a gambit rides an attack on the rule's target" do
+    actor = battle_master_with_known_maneuvers(:battle_master_seven)
+    (1..6).each do |seed|
+      actor.gambits.reset
+      sturdy(actor)
+      enemies = [ sturdy(fresh_character(:aragorn)), fresh_character(:aragorn_copy), sturdy(fresh_character(:elora)) ]
+      add_gambit(actor, position: 1, condition: :lowest_hp, action_kind: :class_feature,
+                        class_feature: class_features(:fighter_battle_master_maneuver_precision_attack))
+
+      turn = actor_turns(actor:, result: CombatSimulatorService.new(party_one: [ actor ], party_two: enemies, seed:, max_rounds: 1).call).first
+
+      assert_equal "Maneuver: Precision Attack", turn.dig(:action, :maneuver_name)
+      assert_equal enemies.second.id, turn[:results].first[:target_id], "seed #{seed}: expected the weakest enemy as target"
+    end
+  end
+
+  test "gambits: an ally rule includes the actor itself" do
+    actor = player_characters(:elora)
+    actor.current_hit_points = 4 # below 50% of 10
+    mend = Spell.create!(name: "Test Mend", slug: "test-mend", level: 0, school: "evocation", description: "Test-only ally heal.",
+                         effect_payload: { kind: "heal", roll: "1d4", target: "ally" })
+    PlayerCharacterSpell.create!(player_character: actor, spell: mend)
+    ally = sturdy(fresh_character(:aragorn))
+    enemy = fresh_character(:merlin)
+    add_gambit(actor, position: 1, target: :ally, condition: :hp_below, condition_value: 50, action_kind: :spell, spell: mend)
+    service = CombatSimulatorService.new(party_one: [ ally, actor ], party_two: [ enemy ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+    service.instance_variable_set(:@initiative_order, [ ally, actor, enemy ])
+
+    chosen = service.send(:choose_gambit_action, actor:, gambits: actor.gambits.to_a, available: service.send(:available_actions_for, actor:))
+
+    assert_equal :cast_spell, chosen&.dig(:type)
+    assert_equal actor, chosen[:target]
+  end
+
+  test "gambits: hp_below fires only strictly below the threshold" do
+    actor = fresh_character(:thorin)
+    enemy = fresh_character(:aragorn) # max 12
+    gambit = add_gambit(actor, position: 1, condition: :hp_below, condition_value: 50)
+    service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ enemy ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+    service.instance_variable_set(:@initiative_order, [ actor, enemy ])
+
+    enemy.current_hit_points = 6 # exactly 50%
+    assert_nil service.send(:gambit_target, actor:, gambit:)
+
+    enemy.current_hit_points = 5
+    assert_equal enemy, service.send(:gambit_target, actor:, gambit:)
+
+    # 62/125 = 49.6%: below 50% even though it rounds to 50.
+    enemy.max_hit_points = 125
+    enemy.current_hit_points = 62
+    assert_equal enemy, service.send(:gambit_target, actor:, gambit:)
+  end
+
   private
 
     def fresh_character(fixture_name)
@@ -583,5 +989,25 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
       service = CombatSimulatorService.new(party_one: [ battle_master, *allies ], party_two: [ target ], seed: 1, max_rounds: 1)
       service.send(:initialize_state)
       service
+    end
+
+    def add_gambit(character, position:, target: :enemy, condition: :any, action_kind: :attack, **attributes)
+      character.gambits.build(position:, target:, condition:, action_kind:, **attributes)
+    end
+
+    # Enough HP that nobody falls over the few rounds a gambit test runs.
+    def sturdy(character)
+      character.current_hit_points = 1000
+      character
+    end
+
+    def gambit_service(actor:, enemy: sturdy(fresh_character(:merlin)), max_rounds: 1)
+      CombatSimulatorService.new(party_one: [ actor ], party_two: [ enemy ], seed: 5, max_rounds:)
+    end
+
+    # The actor's own turn entries (not passives or Action Surge extras).
+    def actor_turns(actor:, result:)
+      result[:round_log].flat_map { |round| round[:turns] }
+        .select { |turn| turn[:actor_id] == actor.id && turn.dig(:action, :type) != :turn_passive && !turn[:extra] }
     end
 end

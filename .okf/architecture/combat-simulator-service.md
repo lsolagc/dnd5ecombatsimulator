@@ -106,7 +106,25 @@ action per turn:
    natural 1 always misses), so an auto-hit can show a `total` below the AC.
 
 The available actions are collected into a list and one is picked with
-`.sample(random: @rng)` — action choice is random, not strategic.
+`.sample(random: @rng)` — action choice is random, not strategic — **unless the
+actor has at least one enabled [gambit](/models/gambit.md)** (see below).
+
+# Gambits (FFXII-style turn AI)
+
+An actor with enabled gambits never samples: its rules are walked by
+`position` (1 first). A rule wins when its action is in `available_actions_for`
+(attack always; a feature with uses, a known maneuver, a spell with a slot) and
+its condition finds a target among the living combatants of the rule's side
+(`self`, `ally` = own party with the actor, `enemy`), **walked in initiative
+order** (`@initiative_order`) — `any` takes the first, `hp_below` the first
+under X% of max HP, `lowest_hp` the minimum (ties to initiative order). The
+chosen target replaces `resolve_feature_target` for features and spells; every
+attack of the action re-runs the rule's pick, falling back to the first living
+enemy in initiative order. No rule fires → the turn logs `action: { type: :idle }`
+with empty `results`. Gambit choices draw nothing from `@rng`, and actors with
+no enabled gambit take the old random path unchanged. Rules are loaded once per
+simulation and evaluated over `Gambit` objects (saved or not). Decisions:
+[gambits-decisions.md](/architecture/gambits-decisions.md).
 
 # Lookup caching
 
