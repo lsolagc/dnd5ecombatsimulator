@@ -30,6 +30,8 @@ services:
       DB_USER: postgres
       DB_PASS: postgres
       BINDING: 0.0.0.0
+      # db:prepare in development also prepares the test database, which the host's tests own.
+      SKIP_TEST_DATABASE: "true"
     ports:
       - "3000:3000"
     volumes:
