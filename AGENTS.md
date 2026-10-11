@@ -19,6 +19,12 @@ e simular combates entre equipes, medindo taxa de vitória, duração e impacto 
   sem tocar em `EncounterService`. Antes de mexer em combate, checar qual dos três sistemas a tarefa afeta
   — ver [.okf/architecture/overview.md](.okf/architecture/overview.md).
 
+## Design system
+- Antes de mexer em views ou estilos, leia docs/design-system/README.md.
+- Tokens: docs/design-system/tokens.json.
+- Guia de cada componente: docs/design-system/components/<Nome>/README.md. O preview.html de cada um
+  é a referência visual; o bundle.css é só para os previews (no app, use Bootstrap 5.3 + application.scss).
+
 ## Comandos
 
 ```bash

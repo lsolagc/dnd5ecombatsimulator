@@ -74,3 +74,6 @@
 
 # Claude Code per-machine local settings (not shared with the team).
 /.claude/settings.local.json
+
+# Windows "downloaded from the internet" metadata copied over from NTFS.
+*:Zone.Identifier
