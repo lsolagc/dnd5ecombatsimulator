@@ -7,6 +7,14 @@ FROM docker.io/library/ruby:$RUBY_VERSION
 # foreman runs Procfile.dev (bin/dev); okf serves the .okf bundle.
 RUN gem install foreman okf:2.1.1
 
+# Chromium for the system tests (bin/rails test:system). SE_CHROMEDRIVER skips Selenium
+# Manager's own Chrome download, which lacks these libraries and has no Linux ARM build.
+RUN apt-get update && apt-get install -y --no-install-recommends chromium chromium-driver \
+    && rm -rf /var/lib/apt/lists/* \
+    && echo 'export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --no-sandbox"' > /etc/chromium.d/no-sandbox
+# Docker's default seccomp profile blocks Chromium's sandbox, hence the flag above.
+ENV SE_CHROMEDRIVER=/usr/bin/chromedriver
+
 # Same UID as the host user, so files written into the bind mount (log/, tmp/, assets) stay yours.
 ARG UID=1000
 RUN useradd --create-home --uid $UID dev && mkdir /bundle && chown dev /bundle

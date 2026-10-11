@@ -51,12 +51,17 @@ docker compose up -d                         # once; rebuild with --build after 
 docker compose logs -f app                   # server, jobs and Sass output
 docker compose exec app bin/rails console    # any rails/rake command, credentials already set
 docker compose restart app                   # after a Gemfile or config/ change
+docker compose exec app bin/rails test       # the suite, against the container's dnd_test
+docker compose exec app bin/rails test:system  # system tests, headless Chromium in the image
 ```
 
 The containers run as UID 1000 (build arg `UID`), so files they write in the
 repo stay owned by the host user. Ports 3000 and 8808 must be free: stop a
-local `bin/dev` or `okf server` first. Tests still run on the host
-(`bin/rails test`, test database from `DND_TEST_USER`). To bring the host's
+local `bin/dev` or `okf server` first. Tests run in the container or on the
+host: `DB_HOST` points the test database at whichever Postgres the shell sees
+(`db` in the container, `localhost` by default), so each has its own `dnd_test`.
+The image's Chromium runs with `--no-sandbox` (set in `/etc/chromium.d/`), since
+Docker's default seccomp profile blocks its sandbox. To bring the host's
 development data into the container, restore a dump into the `db` service, e.g.
 `pg_dump -Fc dnd_development | docker compose exec -T db pg_restore -U postgres -d dnd_development --clean --if-exists`.
 
