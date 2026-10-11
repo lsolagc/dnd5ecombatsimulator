@@ -36,6 +36,10 @@ bin/rails db:create db:migrate
 ./bin/dev
 ```
 
+Ou, sem terminal aberto: `docker compose up -d` sobe Postgres, o portal (web, Sass e workers) em
+http://localhost:3000 e o visualizador do OKF em http://localhost:8808, e eles voltam sozinhos quando
+o Docker inicia. Detalhes em [.okf/ops/dev-setup.md](.okf/ops/dev-setup.md).
+
 ## Rodando testes
 
 ```bash

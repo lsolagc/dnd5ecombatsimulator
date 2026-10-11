@@ -25,6 +25,8 @@ development:
     database: dnd_development
     username: <%= ENV["DB_USER"] %>
     password: <%= ENV["DB_PASS"] %>
+    # Unset locally (Unix socket); compose.yaml sets it to its Postgres service.
+    host: <%= ENV["DB_HOST"] %>
   # Solid Queue and Solid Cable get their own databases, as in production, so the
   # job workers (bin/jobs) and the web process share the queue and the broadcasts.
   queue:

@@ -1,0 +1,15 @@
+# Development image for compose.yaml (the production image is ./Dockerfile). The app code is
+# bind-mounted, not copied, and the app's gems live in the "bundle" volume, so a Gemfile
+# change needs a container restart, not a rebuild.
+ARG RUBY_VERSION=3.4.2
+FROM docker.io/library/ruby:$RUBY_VERSION
+
+# foreman runs Procfile.dev (bin/dev); okf serves the .okf bundle.
+RUN gem install foreman okf:2.1.1
+
+# Same UID as the host user, so files written into the bind mount (log/, tmp/, assets) stay yours.
+ARG UID=1000
+RUN useradd --create-home --uid $UID dev && mkdir /bundle && chown dev /bundle
+USER dev
+ENV BUNDLE_PATH=/bundle
+WORKDIR /dnd

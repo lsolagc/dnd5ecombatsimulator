@@ -5,12 +5,15 @@ description: Install, database setup, running the dev server, and running the te
 tags: [setup]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-11T22:30:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:31:53Z }
 sources:
   - id: gemfile
     title: Gemfile / .ruby-version
     resource: ../../Gemfile
+  - id: compose
+    title: compose.yaml / Dockerfile.dev / bin/okf-server
+    resource: ../../compose.yaml
 status: stable
 ---
 
@@ -31,6 +34,35 @@ bundle install && yarn install
 bin/rails db:prepare db:seed  # creates/loads all three databases; seed data: YAML under db/seeds/ (templates in db/seeds/templates/)
 ./bin/dev                    # Rails server on :3000 + Bootstrap Sass watch (dartsass) + job workers (bin/jobs)
 ```
+
+# Always-on stack (Docker Compose)
+
+`compose.yaml` runs the same thing without a terminal to keep open: Postgres 16
+(service `db`, its own volume, not published to the host), the portal through
+`bin/dev` (service `app`: web on :3000, Sass watcher, Solid Queue workers) and
+the OKF viewer (service `okf`, :8808). The code is bind-mounted; the app's gems
+live in a `bundle` volume and `bin/rails db:prepare` (create, migrate, seed)
+runs on every start. `bin/okf-server` restarts `okf server` whenever a file
+under `.okf/` changes, since the server parses the bundle once. Everything has
+`restart: unless-stopped`, so it comes back whenever Docker starts.[^compose]
+
+```bash
+docker compose up -d                         # once; rebuild with --build after changing Dockerfile.dev
+docker compose logs -f app                   # server, jobs and Sass output
+docker compose exec app bin/rails console    # any rails/rake command, credentials already set
+docker compose restart app                   # after a Gemfile or config/ change
+```
+
+The containers run as UID 1000 (build arg `UID`), so files they write in the
+repo stay owned by the host user. Ports 3000 and 8808 must be free: stop a
+local `bin/dev` or `okf server` first. Tests still run on the host
+(`bin/rails test`, test database from `DND_TEST_USER`). To bring the host's
+development data into the container, restore a dump into the `db` service, e.g.
+`pg_dump -Fc dnd_development | docker compose exec -T db pg_restore -U postgres -d dnd_development --clean --if-exists`.
+
+On WSL, Docker Desktop needs *Settings → Resources → WSL integration* turned on
+for the distro, and *Start Docker Desktop when you sign in* for the stack to be
+up after a reboot.
 
 # Testing and linting
 
@@ -70,3 +102,4 @@ name; replaces only their gambits, in one transaction, so running it again is a
 no-op — and also undoes manual edits made to their rules since.
 
 [^gemfile]: Source: `Gemfile / .ruby-version`
+[^compose]: Source: `compose.yaml / Dockerfile.dev / bin/okf-server`

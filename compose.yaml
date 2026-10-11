@@ -1,0 +1,52 @@
+# Local development stack: Postgres, the portal (bin/dev: web on :3000, Sass watcher and the
+# Solid Queue job workers) and the OKF bundle viewer on :8808. Start it once with
+# `docker compose up -d`; it comes back by itself whenever Docker starts.
+x-dev: &dev
+  build:
+    context: .
+    dockerfile: Dockerfile.dev
+  image: dnd-dev
+  init: true
+  restart: unless-stopped
+
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 2s
+      retries: 30
+
+  app:
+    <<: *dev
+    command: sh -c "bundle check || bundle install && rm -f tmp/pids/server.pid && bin/rails db:prepare && exec bin/dev"
+    environment:
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASS: postgres
+      BINDING: 0.0.0.0
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/dnd
+      - bundle:/bundle
+    depends_on:
+      db:
+        condition: service_healthy
+
+  okf:
+    <<: *dev
+    command: bin/okf-server
+    ports:
+      - "8808:8808"
+    volumes:
+      - .:/dnd
+
+volumes:
+  postgres:
+  bundle:
