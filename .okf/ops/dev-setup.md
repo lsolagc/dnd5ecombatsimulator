@@ -2,17 +2,14 @@
 type: Runbook
 title: Local development setup
 description: Install, database setup, running the dev server, and running the test suite for the Rails app.
-tags: [setup, dev, runbook]
+tags: [setup]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-06T02:15:00Z
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: gemfile
     title: Gemfile / .ruby-version
     resource: ../../Gemfile
-  - id: agents-md
-    title: AGENTS.md
-    resource: ../../AGENTS.md
 status: stable
 ---
 
@@ -48,7 +45,7 @@ bundle exec rubocop          # lint — Rubocop Omakase style, see .rubocop.yml
 # Migrations
 
 Always generate migrations with the Rails generator and edit the generated
-file — never hand-write a migration timestamp.[^agents-md]
+file — never hand-write a migration timestamp.
 
 # Common issues
 
@@ -70,3 +67,5 @@ Ironhide and Corwin Vale their gambits (rules in `lib/gambit_setups.rb`, reasons
 [gambits-decisions.md](/architecture/gambits-decisions.md), Pass 6). Found by exact
 name; replaces only their gambits, in one transaction, so running it again is a
 no-op — and also undoes manual edits made to their rules since.
+
+[^gemfile]: Source: `Gemfile / .ruby-version`

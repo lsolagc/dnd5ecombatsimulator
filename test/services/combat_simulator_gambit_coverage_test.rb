@@ -1,4 +1,5 @@
 require "test_helper"
+require "minitest/mock"
 
 # Pass 2 of the gambits: every turn action the simulator can take is reachable through a gambit, on the
 # real content of db/seeds (loaded inside each test's transaction), plus the conditions added in pass 2
@@ -284,10 +285,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     enemies = [ spell_target, party_first, initiative_first, party_last ]
     enemies.each do |enemy|
       enemy.current_hit_points = 1000
-      enemy.define_singleton_method(:get_attacked) do |attack_roll:| # every attack hits and kills
-        self.current_hit_points = 0
-        { success: true, attack_roll:, message: "Hit!" }
-      end
+      enemy.define_singleton_method(:take_damage) { |**| self.current_hit_points = 0 } # with Dice.hit? stubbed below, every attack hits and kills
     end
     gambit = add_rule(knight, position: 1, spell: "fire-bolt")
     service = prepared_service(party_one: [ knight ], party_two: enemies,
@@ -295,7 +293,9 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     chosen_action = service.send(:available_actions_for, actor: knight).find { |action| action[:spell]&.slug == "fire-bolt" }
     spell_target.current_hit_points = 0 # the spell killed its own target, leaving three enemies alive
 
-    bonus = service.send(:war_magic_turn, actor: knight, chosen_action: chosen_action.merge(target: spell_target, gambit:), round_number: 1, turn_index: 1)
+    bonus = Dice.stub(:hit?, true) do
+      service.send(:war_magic_turn, actor: knight, chosen_action: chosen_action.merge(target: spell_target, gambit:), round_number: 1, turn_index: 1)
+    end
 
     # The first attack goes to the first living enemy in initiative order (not the first or last in party
     # order) and kills it; the second re-runs the fallback on the two still alive.
@@ -312,17 +312,16 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     enemies = [ spell_target, party_first, initiative_first, party_last ]
     enemies.each do |enemy|
       enemy.current_hit_points = 1000
-      enemy.define_singleton_method(:get_attacked) do |attack_roll:| # every attack hits and kills
-        self.current_hit_points = 0
-        { success: true, attack_roll:, message: "Hit!" }
-      end
+      enemy.define_singleton_method(:take_damage) { |**| self.current_hit_points = 0 } # with Dice.hit? stubbed below, every attack hits and kills
     end
     gambit = add_rule(knight, position: 1, spell: "fire-bolt")
     service = prepared_service(party_one: [ knight ], party_two: enemies,
                                initiative_order: [ initiative_first, knight, party_last, spell_target, party_first ])
     chosen_action = service.send(:available_actions_for, actor: knight).find { |action| action[:spell]&.slug == "fire-bolt" }
 
-    bonus = service.send(:war_magic_turn, actor: knight, chosen_action: chosen_action.merge(target: spell_target, gambit:), round_number: 1, turn_index: 1)
+    bonus = Dice.stub(:hit?, true) do
+      service.send(:war_magic_turn, actor: knight, chosen_action: chosen_action.merge(target: spell_target, gambit:), round_number: 1, turn_index: 1)
+    end
 
     # initiative_first sits in the middle of party order, so neither .first nor .last can pass.
     assert_equal [ spell_target.id, initiative_first.id ], bonus[:results].map { |attack| attack[:target_id] }

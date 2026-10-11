@@ -3,10 +3,10 @@ type: Model
 title: PlayerClass
 description: A D&D 5e class definition (hit die, spellcasting modifier) that anchors level progression and class features; looked up per level via progression_at, with no in-memory freezing.
 resource: app/models/player_class.rb
-tags: [model, class, persistence]
+tags: [class, persistence]
 generated:
-  by: copilot-cli/claude-sonnet-5
-  at: 2026-08-21T23:39:26Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: player-class-rb
     title: app/models/player_class.rb
@@ -50,3 +50,5 @@ ordinary (mutable) ActiveRecord objects.[^player-class-rb]
 Level 1: `hit_die_value + CON_modifier`. Each level after: `+= hit_die_value
 + CON_modifier` (full HP for the level, no rolling) — see
 [player-character.md](/models/player-character.md).
+
+[^player-class-rb]: Source: `app/models/player_class.rb`

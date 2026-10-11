@@ -1,6 +1,6 @@
 ---
 name: safe-change-sensitive-area
-description: 'Conduza mudanças em áreas sensíveis com alto risco de regressão, especialmente ao redor de EncounterService. Use para limitar escopo, validar impactos e reduzir acoplamento acidental.'
+description: 'Conduza mudanças em áreas sensíveis com alto risco de regressão, especialmente no loop de turnos do CombatSimulatorService. Use para limitar escopo, validar impactos e reduzir acoplamento acidental.'
 argument-hint: 'Descreva a mudança proposta, a área sensível afetada e o risco principal.'
 user-invocable: true
 ---
@@ -8,12 +8,12 @@ user-invocable: true
 # Mudança Segura em Área Sensível
 
 ## Objetivo
-Executar alterações com segurança em partes congeladas ou acopladas.
+Executar alterações com segurança em partes acopladas ou de alto risco de regressão.
 
 ## Quando usar
-- Mudança próxima do EncounterService.
+- Mudança no loop de turnos do `CombatSimulatorService` (ordem de iniciativa, ordem de sorteios do RNG,
+  formato do `round_log`, desfecho).
 - Ajuste com alto risco de regressão silenciosa.
-- Correções em fluxo de combate legado.
 
 ## Procedimento
 1. Defina a fronteira exata da mudança e o que fica fora de escopo.
@@ -24,5 +24,5 @@ Executar alterações com segurança em partes congeladas ou acopladas.
 6. Atualize a documentação quando houver novo limite ou decisão arquitetural.
 
 ## Regras
-- Não expandir EncounterService sem escopo explícito de refatoração.
+- Não mudar a sequência de sorteios do RNG sem dizer que os resultados com a mesma seed mudam.
 - Preferir o pipeline de efeitos para novas mecânicas quando possível.

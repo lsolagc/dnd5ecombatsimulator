@@ -3,10 +3,10 @@ type: Model
 title: ClassFeature
 description: The identity and base behavior of a class ability (e.g. Second Wind, Rage, Ki) — action cost, resource, recharge rule — kept in a table separate from spells.
 resource: app/models/class_feature.rb
-tags: [model, class, feature, persistence]
+tags: [class, feature, persistence]
 generated:
-  by: copilot-cli/claude-sonnet-5
-  at: 2026-08-21T23:39:26Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: class-feature-rb
     title: app/models/class_feature.rb
@@ -56,3 +56,5 @@ per class (`index_class_features_on_player_class_id_and_slug`).
 | source_book | string | Default `PHB 2014` |
 | source_reference | string | Optional short reference |
 | notes | text | Optional |
+
+[^class-feature-rb]: Source: `app/models/class_feature.rb`

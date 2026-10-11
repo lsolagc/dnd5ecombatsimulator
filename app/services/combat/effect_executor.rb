@@ -9,21 +9,22 @@ module Combat
   #   hp_after      - target HP after the effect
   #   roll_outcome  - Combat::RollOutcome with full roll breakdown
   #   saving_throw  - Combat::SavingThrow rolled by the target, or nil if the effect has no save
-  #   attack_roll   - SpellAttack rolled by the actor, or nil if the effect is not a spell attack
+  #   attack_roll   - AttackRoll rolled by the actor, or nil if the effect makes no attack
   #   message       - human-readable description
   class EffectExecutor
     Result = Data.define(:kind, :applied, :amount, :hp_before, :hp_after, :roll_outcome, :saving_throw, :attack_roll, :message)
-    SpellAttack = Data.define(:natural, :total, :armor_class, :hit, :crit)
+    AttackRoll = Data.define(:natural, :total, :armor_class, :hit, :crit)
 
     # A save "dc" of this value means the actor's spell save DC instead of a fixed number.
     SPELL_SAVE_DC = "spell"
 
     # crit: the effect rides on a weapon attack that was a critical hit (doubles its dice).
-    def self.call(effect:, actor:, target:, combat_state: {}, reroll_saving_throw: false, disadvantage_on_save: false, crit: false)
-      new(effect:, actor:, target:, combat_state:, reroll_saving_throw:, disadvantage_on_save:, crit:).execute
+    # advantage: the effect's attack roll is made with advantage.
+    def self.call(effect:, actor:, target:, combat_state: {}, reroll_saving_throw: false, disadvantage_on_save: false, crit: false, advantage: false)
+      new(effect:, actor:, target:, combat_state:, reroll_saving_throw:, disadvantage_on_save:, crit:, advantage:).execute
     end
 
-    def initialize(effect:, actor:, target:, combat_state: {}, reroll_saving_throw: false, disadvantage_on_save: false, crit: false)
+    def initialize(effect:, actor:, target:, combat_state: {}, reroll_saving_throw: false, disadvantage_on_save: false, crit: false, advantage: false)
       @effect               = effect
       @actor                = actor
       @target               = target
@@ -31,6 +32,7 @@ module Combat
       @reroll_saving_throw  = reroll_saving_throw
       @disadvantage_on_save = disadvantage_on_save
       @crit                 = crit
+      @advantage            = advantage
     end
 
     def execute
@@ -74,7 +76,7 @@ module Combat
 
       def execute_damage(target)
         hp_before             = target.current_hit_points || target.max_hit_points
-        attack_roll           = roll_spell_attack(target) if @effect.attack
+        attack_roll           = roll_attack(target) if @effect.attack
         missed                = attack_roll && !attack_roll.hit
         roll_outcome          = roll_for_effect(crit: attack_roll&.crit || @crit)
         full_amount           = missed ? 0 : [ roll_outcome.total, 0 ].max
@@ -101,13 +103,17 @@ module Combat
         RollExpression.new(expression: @effect.roll_expression).resolve(context:, crit: !!crit)
       end
 
-      # Same hit rule as a weapon attack (Dice.hit?); a natural 20 is the critical hit that doubles the dice.
-      def roll_spell_attack(target)
-        roll = Dice.d20(modifier: @actor.spell_attack_bonus)
+      # Hits by Dice.hit?. The critical hit that doubles the dice is a natural 20 for a spell attack, and the
+      # actor's critical_hit_threshold (e.g. 19 for a Champion) for a weapon attack.
+      def roll_attack(target)
+        weapon = @effect.attack == "weapon"
+        roll = Dice.d20(modifier: weapon ? @actor.weapon_attack_bonus : @actor.spell_attack_bonus)
+        roll = roll.with_advantage if @advantage
         armor_class = target.armor_class
 
-        SpellAttack.new(natural: roll.natural, total: roll.total, armor_class:,
-                        hit: Dice.hit?(natural: roll.natural, total: roll.total, armor_class:), crit: roll.natural == 20)
+        AttackRoll.new(natural: roll.natural, total: roll.total, armor_class:,
+                       hit: Dice.hit?(natural: roll.natural, total: roll.total, armor_class:),
+                       crit: roll.natural >= (weapon ? @actor.critical_hit_threshold : 20))
       end
 
       # Rolls the target's saving throw (if the effect declares one) and returns
@@ -136,7 +142,7 @@ module Combat
 
       def effect_message(verb:, noun:, target:, amount:, roll_outcome:, saving_throw:, attack_roll: nil)
         base = "#{target.name} #{verb} #{amount} #{noun} (#{roll_outcome.resolved_expression})."
-        base += " Spell attack #{attack_roll.total} vs AC #{attack_roll.armor_class}: #{attack_outcome(attack_roll)}." if attack_roll
+        base += " #{@effect.attack.capitalize} attack #{attack_roll.total} vs AC #{attack_roll.armor_class}: #{attack_outcome(attack_roll)}." if attack_roll
         return base unless saving_throw
 
         outcome = saving_throw.success ? "succeeds" : "fails"

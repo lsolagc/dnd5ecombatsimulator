@@ -436,44 +436,43 @@ class CombatSimulatorService
       attacks = []
       pending_maneuver = maneuver
 
-      [ actor.attacks_per_action.to_i, 1 ].max.times do
-        target = if gambit
+      next_target = lambda do
+        if gambit
           gambit_target(actor:, gambit:) || first_living_enemy(actor:)
         elsif focus
           focus.dead? ? first_living_enemy(actor:) : focus
         else
           alive_combatants(enemy_party).sample(random: @rng)
         end
-        break if target.nil?
+      end
+      action = Combat::CombatAction.new(source_type: :attack, source_id: nil, actor:)
 
-        advantage = consume_advantage_mark(target:, attacker: actor)
-        attack_roll = actor.roll_an_attack(advantage:)
-        hp_before = target.current_hit_points
-        attacked = target.get_attacked(attack_roll:)
-        hp_after = target.current_hit_points
+      Combat::ActionRunner.attack(action:, next_target:, advantage_against: ->(target) { consume_advantage_mark(target:, attacker: actor) }) do |target, result, advantage|
+        hit = result.attack_roll.hit
+        damage = result.roll_outcome.total
 
-        @eldritch_strike_pending[target.id] = actor.id if attacked[:success] && eldritch_strike_unlocked?(actor:)
+        @eldritch_strike_pending[target.id] = actor.id if hit && eldritch_strike_unlocked?(actor:)
 
-        rider = apply_maneuver_rider(actor:, target:, maneuver: pending_maneuver, crit: attack_roll.crit) if pending_maneuver && attacked[:success]
+        rider = apply_maneuver_rider(actor:, target:, maneuver: pending_maneuver, crit: result.attack_roll.crit) if pending_maneuver && hit
         pending_maneuver = nil if rider
 
         attacks << {
           kind: :attack,
           target_id: target.id,
           target_name: target.name,
-          success: attacked[:success],
+          success: hit,
           advantage: advantage,
           rider: rider,
-          damage: attacked[:success] ? attack_roll.damage : 0,
-          hp_before:,
-          hp_after:,
+          damage: hit ? damage : 0,
+          hp_before: result.hp_before,
+          hp_after: result.hp_after,
           attack_roll: {
-            natural: attack_roll.natural,
-            total: attack_roll.total,
-            crit: attack_roll.crit,
-            damage: attack_roll.damage
+            natural: result.attack_roll.natural,
+            total: result.attack_roll.total,
+            crit: result.attack_roll.crit,
+            damage: damage
           },
-          message: attacked[:message]
+          message: hit ? "Hit!" : "Miss!"
         }
       end
 

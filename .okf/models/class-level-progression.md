@@ -3,10 +3,10 @@ type: Model
 title: ClassLevelProgression
 description: The per-level table (1-20) of proficiency bonus, ability-score-improvement flag, and attacks-per-action for a PlayerClass; frozen in memory once loaded.
 resource: app/models/class_level_progression.rb
-tags: [model, class, progression, persistence]
+tags: [class, progression, persistence]
 generated:
-  by: claude-code/claude-sonnet-5
-  at: 2026-09-20T16:51:19Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: progression-rb
     title: app/models/class_level_progression.rb
@@ -58,3 +58,5 @@ not special-cased code.
 | proficiency_bonus | integer | +2 to +6 |
 | grants_ability_score_improvement | boolean | ASI at this level |
 | attacks_per_action | integer | Default 1 |
+
+[^progression-rb]: Source: `app/models/class_level_progression.rb`

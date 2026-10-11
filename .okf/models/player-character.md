@@ -3,10 +3,10 @@ type: Model
 title: PlayerCharacter
 description: The player's character record — name, class, and level — delegating all in-combat stats (ability scores, HP, armor class) to its Combatant, and hosting the attack/damage/passive-trigger behavior used in combat.
 resource: app/models/player_character.rb
-tags: [model, character, persistence, combat]
+tags: [persistence, combat]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-06T02:15:00Z
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: player-character-rb
     title: app/models/player_character.rb
@@ -34,9 +34,8 @@ persisted "identity" record (`PlayerCharacter`) is thin, and the "sheet"
 `attr_accessor` on the `CombatantBehavior` concern, reset to `max_hit_points`
 by `initialize_for_combat`.[^combatant-behavior-rb] In-combat HP is therefore
 transient, per Ruby object instance, matching how
-[CombatSimulatorService](/architecture/combat-simulator-service.md) and
-[EncounterService](/architecture/encounter-service.md) both reset it at the
-start of an encounter rather than reading a stored value.
+[CombatSimulatorService](/architecture/combat-simulator-service.md) resets
+it at the start of an encounter rather than reading a stored value.
 
 `has_one :combatant, as: :combatable, touch: true` creates the `Combatant`
 automatically on `before_create` if one is not already present.[^player-character-rb]
@@ -59,23 +58,31 @@ creation and not changed by application code today.
 
 # Attacks and damage
 
-`roll_an_attack` builds a `Dice::AttackRoll` from the combatant's configured
-`attack_bonus` (as `to_hit_modifier:`), `damage_roll` (delegated to
-`Combatant#damage_dice`, default `"1d4"`), `strength_modifier` (as
-`damage_modifier:`), and `critical_hit_threshold` — **not** the
-`ability_modifier`/`proficiency_bonus`/`advantage`/`disadvantage` shape
-described in the legacy combat-system docs; the current `Dice::AttackRoll`
-contract is `to_hit_modifier:`, `damage_dice:`, `damage_modifier:`,
-`critical_hit_threshold:`.[^player-character-rb] `get_attacked` decides the hit
-with `Dice.hit?` — the 5e rule shared with spell attacks: a natural 20 always
-hits (and always crits), a natural 1 always misses, otherwise the roll's total
-must reach `armor_class` (delegated from `Combatant`); a crit that hits doubles
-the damage dice. On a hit that rolled positive damage (a negative modifier can bring it to 0, which hits for nothing) it calls `take_damage` with `damage_type:` read from the combatant's own
-`damage_type` field (default `"bludgeoning"`) — configured per character via
-the creation/edit wizard rather than hardcoded. `take_damage` applies the
-target's immunity/resistance/vulnerability (delegated to `Combatant`, see
+In combat, a weapon attack runs through the pipeline as the Attack action
+(see [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)),
+which reads these from the character:[^player-character-rb]
+
+- `weapon_attack_bonus`: the combatant's `attack_bonus` plus passive
+  `attack_bonus` modifiers (Fighting Style: Archery's +2).
+- `weapon_damage_modifier`: `strength_modifier` plus passive `damage_bonus`
+  modifiers (Fighting Style: Dueling's +2).
+- `damage_dice`: default `"1d4"`. It must be a single `NdM` die.
+- `damage_type`: default `"bludgeoning"`, configured per character via the
+  creation/edit wizard.
+- `critical_hit_threshold`: the natural roll a weapon attack crits on.
+
+`take_damage(amount:, damage_type:)` applies the target's
+immunity/resistance/vulnerability (delegated to `Combatant`, see
 [combatant.md](/models/combatant.md)) before subtracting from
 `current_hit_points`, floored at 0.
+
+**Legacy, kept but no longer called by the simulator:** `roll_an_attack`
+builds a `Dice::AttackRoll` from the same numbers, and `get_attacked` decides
+the hit with `Dice.hit?`. Unlike the pipeline, `get_attacked` applies damage
+with the **defender's own** `damage_type`. That was the bug fixed when the
+Attack action moved to the pipeline (see
+[combat-action-language.md](/architecture/combat-action-language.md)). The
+pair stays until its replacement has been walked through with the user.
 
 # Critical hit threshold and passives (Champion)
 
@@ -132,3 +139,7 @@ instance is alive (unlocks, progressions) are not seen until `reload`.
 | name | string | Character name |
 | level | integer | Default 1; no in-app way to change it today |
 | player_class_id | integer (FK) | → `player_classes` |
+
+[^player-character-rb]: Source: `app/models/player_character.rb`
+
+[^combatant-behavior-rb]: Source: `app/models/concerns/combatant_behavior.rb`

@@ -3,10 +3,10 @@ type: Model
 title: ClassFeatureUnlock
 description: Per-level unlock/scaling row for a ClassFeature, and the bridge to the combat effect pipeline via the declarative effect_payload field.
 resource: app/models/class_feature_unlock.rb
-tags: [model, class, feature, combat, persistence, passive]
+tags: [class, feature, combat, persistence, passive]
 generated:
-  by: claude-code/claude-sonnet-5
-  at: 2026-09-20T18:32:58Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: unlock-rb
     title: app/models/class_feature_unlock.rb
@@ -28,7 +28,7 @@ variable resource pools.[^unlock-rb]
 the [combat effect-execution pipeline](/architecture/combat-effect-pipeline.md):
 it lets an unlocked feature describe an executable effect (`kind`, `roll`,
 `target` — `self`, `enemy` or `ally`, the valid-target indicator — …) without pushing new logic into
-[EncounterService](/architecture/encounter-service.md).[^unlock-rb]
+[CombatSimulatorService](/architecture/combat-simulator-service.md).[^unlock-rb]
 `Combat::EffectResolver` reads this payload to build the runtime
 `EffectInstance`.
 
@@ -66,3 +66,5 @@ in an encounter. `CombatAction`, `EffectInstance`, executor results, and
 | effect_payload | jsonb | Declarative executable effect, e.g. `{ "kind": "heal", "roll": "1d10 + fighter_level", "target": "self" }` |
 
 Index: `index_class_feature_unlocks_on_class_feature_id_and_level` (unique).
+
+[^unlock-rb]: Source: `app/models/class_feature_unlock.rb`

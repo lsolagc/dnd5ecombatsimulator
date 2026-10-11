@@ -3,10 +3,10 @@ type: Component
 title: ERB + Bootstrap views
 description: The ERB view layer styled with Bootstrap 5 (via dartsass-rails), which replaced the previous Phlex/RubyUI component layer.
 resource: app/views
-tags: [ui, bootstrap]
+tags: [ui]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-06T01:50:00Z
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: application-layout
     title: app/views/layouts/application.html.erb
@@ -133,3 +133,11 @@ submits.
 
 Views are tested via system tests (Capybara) exercising the rendered pages —
 see `test/system/`.
+
+[^application-scss]: Source: `app/assets/stylesheets/application.scss`
+
+[^application-layout]: Source: `app/views/layouts/application.html.erb`
+
+[^wizard-controller]: Source: `app/javascript/controllers/wizard_controller.js`
+
+[^player-characters-controller]: Source: `app/controllers/player_characters_controller.rb`

@@ -63,13 +63,23 @@ class PlayerCharacter < ApplicationRecord
 
   def roll_an_attack(advantage: false, disadvantage: false)
     Dice::AttackRoll.new(
-      to_hit_modifier: attack_bonus + modifier_bonus("attack_bonus"),
+      to_hit_modifier: weapon_attack_bonus,
       damage_dice: damage_roll,
-      damage_modifier: strength_modifier + modifier_bonus("damage_bonus"),
+      damage_modifier: weapon_damage_modifier,
       critical_hit_threshold: critical_hit_threshold,
       advantage: advantage,
       disadvantage: disadvantage
     )
+  end
+
+  # To-hit bonus of the equipped weapon, with passive bonuses (e.g. Fighting Style: Archery).
+  def weapon_attack_bonus
+    attack_bonus + modifier_bonus("attack_bonus")
+  end
+
+  # Flat damage added to the weapon's dice: STR modifier plus passive bonuses (e.g. Fighting Style: Dueling).
+  def weapon_damage_modifier
+    strength_modifier + modifier_bonus("damage_bonus")
   end
 
   def armor_class
