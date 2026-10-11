@@ -6,7 +6,7 @@ resource: app/jobs/simulation_run_job.rb
 tags: [combat, ui]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-06T02:15:00Z
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: batch-model
     title: app/models/simulation_batch.rb
@@ -28,8 +28,7 @@ status: stable
 
 # Overview
 
-A batch runs [CombatSimulatorService](/architecture/combat-simulator-service.md)
-(never [EncounterService](/architecture/encounter-service.md)) several times
+A batch runs [CombatSimulatorService](/architecture/combat-simulator-service.md) several times
 between two sides of `PlayerCharacter`s and aggregates the results.[^batch-model]
 
 - **`SimulationBatch`**: `party_one_ids` / `party_two_ids` (Postgres bigint

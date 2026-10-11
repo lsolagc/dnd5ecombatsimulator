@@ -11,13 +11,11 @@ e simular combates entre equipes, medindo taxa de vitória, duração e impacto 
 
 ## Pontos críticos de arquitetura
 
-- `EncounterService` é o fluxo de combate atual: tratar como **implementação provisória e congelada**.
-  Não refatorar fora de pedido explícito.
-- O caminho de evolução é o pipeline `Combat::*` (ações, resolução de efeitos, execução estruturada).
+- `CombatSimulatorService` é o orquestrador de combate oficial e único (o antigo `EncounterService` foi
+  removido em 2026-10-11). Ver [.okf/architecture/combat-simulator-service.md](.okf/architecture/combat-simulator-service.md).
+- Mecânica nova (habilidades, magias, efeitos) entra pelo pipeline `Combat::*` (ações, resolução de
+  efeitos, execução estruturada), chamado pelo simulador.
   Ver [.okf/architecture/combat-effect-pipeline.md](.okf/architecture/combat-effect-pipeline.md).
-- Há um terceiro sistema, `CombatSimulatorService`, que roda ataques e habilidades de classe lado a lado
-  sem tocar em `EncounterService`. Antes de mexer em combate, checar qual dos três sistemas a tarefa afeta
-  — ver [.okf/architecture/overview.md](.okf/architecture/overview.md).
 
 ## Comandos
 

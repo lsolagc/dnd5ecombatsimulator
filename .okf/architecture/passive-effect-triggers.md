@@ -4,8 +4,8 @@ title: Passive effect triggers (always / turn_start / turn_end)
 description: The trigger + conditions extension to effect_payload that lets class features declare passive modifiers and turn-based heal/damage without going through CombatAction — the mechanism behind the Champion subclass's improved critical.
 tags: [combat, pipeline, passive]
 generated:
-  by: claude-code/claude-sonnet-5
-  at: 2026-09-20T16:51:19Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: player-character-rb
     title: app/models/player_character.rb
@@ -53,12 +53,10 @@ no `CombatAction` involved:
   (`apply_passive_effect_payload` returns `nil` unless `target_type ==
   "self"`).
 
-Neither trigger is orchestrated by
-[CombatSimulatorService](/architecture/combat-simulator-service.md) or
-[EncounterService](/architecture/encounter-service.md) today — both hooks
-exist on `PlayerCharacter` but nothing in either orchestrator currently
-calls `apply_start_of_turn_passives!`/`apply_end_of_turn_passives!` during a
-round. Treat them as implemented-but-not-yet-wired-into-the-turn-loop.
+[CombatSimulatorService](/architecture/combat-simulator-service.md) calls
+`apply_start_of_turn_passives!` before each living combatant's action and
+`apply_end_of_turn_passives!` after it, logging any result as its own turn
+entry (`turn_passive_log`).
 
 # `conditions`
 

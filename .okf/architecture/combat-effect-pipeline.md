@@ -1,12 +1,12 @@
 ---
 type: Pipeline
 title: Combat effect-execution pipeline (Combat::*)
-description: The incremental replacement path for combat mechanics — CombatAction, EffectResolver, EffectExecutor, ActionRunner, and the RollExpression roll layer — meant to carry class-feature and future spell effects without expanding EncounterService.
+description: The incremental replacement path for combat mechanics — CombatAction, EffectResolver, EffectExecutor, ActionRunner, and the RollExpression roll layer — carrying the class-feature and spell effects that CombatSimulatorService runs.
 resource: app/services/combat
 tags: [combat, pipeline, evolution]
 generated:
-  by: claude-code/claude-sonnet-5
-  at: 2026-09-20T18:31:57Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: combat-pipeline-rb
     title: app/services/combat/*.rb
@@ -17,11 +17,11 @@ status: stable
 # Overview
 
 The `Combat::*` pipeline is the evolution path for combat mechanics beyond
-the basic attack loop in the frozen
-[encounter-service.md](/architecture/encounter-service.md). Phase 1 (shipped
-March 2026) delivered a reusable contract for executing class-feature effects
-— proven end-to-end with `Second Wind` — without pushing new logic into
-`EncounterService`.[^combat-pipeline-rb]
+the basic attack, used by
+[CombatSimulatorService](/architecture/combat-simulator-service.md). Phase 1
+(shipped March 2026) delivered a reusable contract for executing
+class-feature effects — proven end-to-end with `Second Wind` — without
+pushing new logic into the since-removed `EncounterService`.[^combat-pipeline-rb]
 
 Delivered in this phase: the `CombatAction` → `EffectResolver` →
 `EffectExecutor` pipeline (run via `Combat::ActionRunner`), the
@@ -36,9 +36,8 @@ end-to-end the same way Second Wind was: through `Combat::ActionRunner` and
 is scoped to a single class (Fighter's Eldritch Knight): no spell lists,
 upcasting, or control conditions.
 
-Out of scope for this phase: migrating the basic attack from
-`EncounterService` onto `CombatAction`, control conditions in the pipeline,
-`CombatSimulatorService` autonomously choosing to cast a prepared spell, and
+Out of scope for this phase: migrating the basic attack onto
+`CombatAction`, control conditions in the pipeline, and
 full transactional rest-based resource/recharge management (Action Surge,
 Ki).[^combat-pipeline-rb] See
 [combat-migration-strategy.md](/architecture/combat-migration-strategy.md)
@@ -110,7 +109,7 @@ at `EffectInstance` construction.
 This is the field that connects the persisted class-feature model (see
 [models/class-feature-unlock.md](/models/class-feature-unlock.md)) to this
 pipeline: a class feature's unlock row describes an executable effect
-without new `EncounterService` logic.[^combat-pipeline-rb]
+without new orchestrator logic.[^combat-pipeline-rb]
 
 # Model shortcut
 

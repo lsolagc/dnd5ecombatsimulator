@@ -1,12 +1,12 @@
 ---
 type: Service
 title: CombatSimulatorService — seeded, feature-aware combat orchestrator
-description: A new combat orchestrator (parallel to EncounterService) that runs seeded, repeatable encounters combining basic attacks with class-feature effects gated by remaining uses, ending in victory/draw/max-rounds outcomes.
+description: The official combat orchestrator; runs seeded, repeatable encounters combining basic attacks with class-feature effects gated by remaining uses, ending in victory/draw/max-rounds outcomes.
 resource: app/services/combat_simulator_service.rb
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-06T02:15:00Z
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: combat-simulator-rb
     title: app/services/combat_simulator_service.rb
@@ -19,17 +19,17 @@ status: stable
 
 # Overview
 
-`CombatSimulatorService` is a **new, separate** combat orchestrator — it does
-not modify or replace the frozen
-[EncounterService](/architecture/encounter-service.md), and it is the first
-concrete place in the codebase where basic attacks and
+`CombatSimulatorService` is the project's **single, official** combat
+orchestrator (the legacy `EncounterService` was removed on 2026-10-11). It is
+where basic attacks and
 [the Combat::* effect pipeline](/architecture/combat-effect-pipeline.md)
-run side by side in the same turn loop, one of two possible actions per
-combatant per turn (see
+run side by side in the same turn loop, each combatant picking one action
+per turn (see
 [combat-migration-strategy.md](/architecture/combat-migration-strategy.md)
-for how this relates to the planned phased migration).[^combat-simulator-rb]
+for why it became the official orchestrator and what Phases 2 and 3 still
+owe it).[^combat-simulator-rb]
 
-Unlike `EncounterService`, it is **seedable** — `Random.new(seed)` drives
+It is **seedable** — `Random.new(seed)` drives
 every roll and every `sample`, and the same seed reproduces an identical
 `round_log` and outcome, which is what makes it useful for measuring win
 rate and mechanic impact across repeated simulations rather than a single
@@ -69,9 +69,8 @@ combatant.initiative)`, tie-broken by original array order), gets **one**
 action per turn:
 
 1. **Attack** is always available and repeats `attacks_per_action` times
-   against a random living enemy, using the same
-   `roll_an_attack`/`get_attacked` pair
-   [EncounterService](/architecture/encounter-service.md) uses.
+   against a random living enemy, using
+   `PlayerCharacter#roll_an_attack`/`#get_attacked`.
 2. **Class feature** actions are offered for every unlocked feature whose
    `effect_payload.kind` is `heal` or `damage`, has no `trigger` (i.e. is
    *not* one of the [passive triggers](/architecture/passive-effect-triggers.md)),

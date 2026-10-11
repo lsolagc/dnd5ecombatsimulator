@@ -56,7 +56,7 @@ código. Se o ambiente não permitir executar, pare e diga ao usuário quem vai 
 
 Some o(s) critério(s) específico(s) do tipo de tarefa:
 - Efeito/habilidade de combate → `.agents/skills/combat-mechanics-testing/SKILL.md`.
-- Mudança perto de `EncounterService` → `.agents/skills/safe-change-sensitive-area/SKILL.md`
+- Mudança no loop de turnos do `CombatSimulatorService` → `.agents/skills/safe-change-sensitive-area/SKILL.md`
   (contratos declarados não podem quebrar).
 - Balanceamento → `.agents/skills/canonical-combat-scenario/SKILL.md` +
   `.agents/skills/simulation-evaluation-metrics/SKILL.md` (limiar aprovado/reprovado explícito).

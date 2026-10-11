@@ -5,7 +5,7 @@ description: High-level layering of the D&D 5e combat simulator — presentation
 tags: [rails]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-06T02:20:00Z
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: characters-controller
     title: app/controllers/player_characters_controller.rb
@@ -23,15 +23,13 @@ Bootstrap), a business-logic layer (services + validators), a persistence
 layer (ActiveRecord models), and a database (SQLite in development, with
 PostgreSQL support).
 
-Three combat systems coexist and are **not** interchangeable — see
-[encounter-service.md](/architecture/encounter-service.md) (the frozen
-legacy flow), [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)
-(the pipeline new mechanics should target),
-[combat-simulator-service.md](/architecture/combat-simulator-service.md)
-(a newer orchestrator combining the two), and
-[passive-effect-triggers.md](/architecture/passive-effect-triggers.md) (a
-fourth, data-driven mechanism running independently of any orchestrator).
-Any task touching combat should first identify which of these it affects.
+[CombatSimulatorService](/architecture/combat-simulator-service.md) is the
+single, official combat orchestrator. It runs class features and spells
+through [the Combat::* effect pipeline](/architecture/combat-effect-pipeline.md);
+[passive effect triggers](/architecture/passive-effect-triggers.md) are a
+separate, data-driven mechanism on `PlayerCharacter`. The legacy
+`EncounterService` was removed on 2026-10-11 — see
+[combat-migration-strategy.md](/architecture/combat-migration-strategy.md).
 
 # Character-creation flow
 
@@ -46,27 +44,16 @@ Any task touching combat should first identify which of these it affects.
 
 # Combat-execution flow
 
-Two separate orchestrators exist, and a third data-driven mechanism runs
-alongside both:
-
-1. **[EncounterService](/architecture/encounter-service.md)** (frozen,
-   legacy) — `EncounterService.new(party_one:, party_two:).call` rolls
-   initiative, loops rounds of basic attacks, and exposes an
-   `encounter_log`.
-2. **[CombatSimulatorService](/architecture/combat-simulator-service.md)**
-   (newer, separate) — seeded, repeatable simulation that mixes basic
-   attacks with class-feature effects run through
+1. **[CombatSimulatorService](/architecture/combat-simulator-service.md)** —
+   seeded, repeatable simulation that mixes basic attacks with class-feature
+   and spell effects run through
    [the Combat::* pipeline](/architecture/combat-effect-pipeline.md), gated
    by remaining uses, ending in a `victory`/`draw`/`max_rounds_reached`
    outcome.
-3. **[Passive effect triggers](/architecture/passive-effect-triggers.md)** —
+2. **[Passive effect triggers](/architecture/passive-effect-triggers.md)** —
    `always`/`turn_start`/`turn_end` `effect_payload`s (e.g. Champion's
-   improved critical) read directly off `PlayerCharacter`, independent of
-   either orchestrator above — and not yet actually invoked by either one's
-   turn loop.
-
-Any task touching combat should first identify which of these three it
-affects — they are not interchangeable, and none of them defers to another.
+   improved critical) read directly off `PlayerCharacter`; the simulator
+   applies the `turn_start`/`turn_end` ones around each combatant's turn.
 
 Repeated runs are driven by [simulation batches](/architecture/simulation-batches.md):
 up to 1000 `CombatSimulatorService` combats between two sides, one Solid Queue

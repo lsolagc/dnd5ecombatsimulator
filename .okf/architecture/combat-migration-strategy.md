@@ -1,20 +1,20 @@
 ---
 type: Decision
 title: Phased migration off EncounterService onto Combat::*
-description: Why the Combat::* pipeline is being introduced additively — a three-phase plan that keeps EncounterService untouched until an explicit combat-system refactor is in scope.
+description: Why the Combat::* pipeline was introduced additively in three phases around the frozen EncounterService, and the 2026-10-11 decision making CombatSimulatorService the official orchestrator and removing EncounterService.
 tags: [combat, decision, evolution]
 generated:
-  by: copilot-cli/claude-sonnet-5
-  at: 2026-08-21T23:39:26Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-11T00:00:00Z
 status: stable
 ---
 
 # Overview
 
-Because [encounter-service.md](/architecture/encounter-service.md) is
-documented and treated as frozen until a broader combat-system refactor is
+Because `EncounterService` (removed on 2026-10-11, see the last section) was
+treated as frozen until a broader combat-system refactor was
 explicitly scoped, new combat capability
-([combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)) is
+([combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)) was
 introduced **additively**, never by editing the frozen service in
 place.
 
@@ -58,14 +58,20 @@ Rather than Phase 2 (migrating `EncounterService`'s own basic attack onto
 attacks and class features side by side in its own turn loop, seeded for
 reproducibility, without touching `EncounterService` at all. That satisfies
 the same low-invasion principle from a different angle — a second
-orchestrator rather than an edit to the frozen one — but it means the
-codebase now has *two* combat orchestrators (`EncounterService` and
-`CombatSimulatorService`) plus the effect pipeline they both partially use,
-not the single eventual replacement the three-phase plan originally
-implied. Anyone continuing this work should decide explicitly whether
-`CombatSimulatorService` **is** intended to become the Phase 2/3 target, or
-whether it is a parallel experiment — that decision has not been recorded
-yet.
+orchestrator rather than an edit to the frozen one — but it meant the
+codebase then had *two* combat orchestrators (`EncounterService` and
+`CombatSimulatorService`) plus the effect pipeline they both partially used.
 
-Anyone picking up Phase 2 or 3 should re-check this decision is still current
-— it records a sequencing choice, not a guarantee that the plan hasn't moved.
+# Resolution (2026-10-11)
+
+Whether `CombatSimulatorService` was the Phase 2/3 target or a parallel
+experiment stayed open until the user settled it: `CombatSimulatorService`
+**is** the official combat orchestrator and the target of Phases 2 and 3.
+By then it had passives, spells, maneuvers, Action Surge, gambits and
+simulation batches, while `EncounterService` still only rolled basic attacks
+and had no caller outside its own test. `EncounterService` and its test were
+deleted; nothing else depended on it (`roll_an_attack`, `get_attacked` and
+`attacks_per_action` stay, since the simulator uses them).
+
+Phases 2 and 3 now apply to `CombatSimulatorService`: the basic attack still
+runs outside `CombatAction`, and the simulator is the place to migrate it.

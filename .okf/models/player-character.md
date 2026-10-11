@@ -6,7 +6,7 @@ resource: app/models/player_character.rb
 tags: [model, character, persistence, combat]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-06T02:15:00Z
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: player-character-rb
     title: app/models/player_character.rb
@@ -34,9 +34,8 @@ persisted "identity" record (`PlayerCharacter`) is thin, and the "sheet"
 `attr_accessor` on the `CombatantBehavior` concern, reset to `max_hit_points`
 by `initialize_for_combat`.[^combatant-behavior-rb] In-combat HP is therefore
 transient, per Ruby object instance, matching how
-[CombatSimulatorService](/architecture/combat-simulator-service.md) and
-[EncounterService](/architecture/encounter-service.md) both reset it at the
-start of an encounter rather than reading a stored value.
+[CombatSimulatorService](/architecture/combat-simulator-service.md) resets
+it at the start of an encounter rather than reading a stored value.
 
 `has_one :combatant, as: :combatable, touch: true` creates the `Combatant`
 automatically on `before_create` if one is not already present.[^player-character-rb]
