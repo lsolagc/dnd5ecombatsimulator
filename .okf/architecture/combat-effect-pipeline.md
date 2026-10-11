@@ -1,7 +1,7 @@
 ---
 type: Pipeline
 title: Combat effect-execution pipeline (Combat::*)
-description: The incremental replacement path for combat mechanics — CombatAction, EffectResolver, EffectExecutor, ActionRunner, and the RollExpression roll layer — carrying the class-feature and spell effects that CombatSimulatorService runs.
+description: The path every combat action takes in CombatSimulatorService — the basic Attack action, class features and spells — through CombatAction, EffectResolver, EffectExecutor, ActionRunner, and the RollExpression roll layer.
 resource: app/services/combat
 tags: [combat, pipeline, evolution]
 generated:
@@ -16,9 +16,13 @@ status: stable
 
 # Overview
 
-The `Combat::*` pipeline is the evolution path for combat mechanics beyond
-the basic attack, used by
-[CombatSimulatorService](/architecture/combat-simulator-service.md). Phase 1
+The `Combat::*` pipeline is the path every combat action takes in
+[CombatSimulatorService](/architecture/combat-simulator-service.md), from the
+basic Attack action every combatant has to class features and spells. An
+action's **effect** is its atomic outcome: the Attack action's effect is
+weapon damage on a hit, the same shape as a spell attack such as Fire Bolt.
+The vocabulary (action, attack, effect) is defined in
+[combat-action-language.md](/architecture/combat-action-language.md). Phase 1
 (shipped March 2026) delivered a reusable contract for executing
 class-feature effects — proven end-to-end with `Second Wind` — without
 pushing new logic into the since-removed `EncounterService`.[^combat-pipeline-rb]
@@ -36,8 +40,14 @@ end-to-end the same way Second Wind was: through `Combat::ActionRunner` and
 is scoped to a single class (Fighter's Eldritch Knight): no spell lists,
 upcasting, or control conditions.
 
-Out of scope for this phase: migrating the basic attack onto
-`CombatAction`, control conditions in the pipeline, and
+Since October 2026 the basic **Attack action** runs through the pipeline too
+(`source_type: :attack`, see below), so weapon attacks, spell attacks and
+class-feature damage share one hit rule, one crit rule and one damage
+application.
+
+Out of scope so far: control conditions in the pipeline, the action economy
+(action / bonus action / reaction / rider, see
+[combat-action-language.md](/architecture/combat-action-language.md)), and
 full transactional rest-based resource/recharge management (Action Surge,
 Ki).[^combat-pipeline-rb] See
 [combat-migration-strategy.md](/architecture/combat-migration-strategy.md)
@@ -54,6 +64,19 @@ action = Combat::CombatAction.new(
   targets: []
 )
 ```
+
+**The Attack action — `source_type: :attack`.** `source_id` is nil: the
+`EffectResolver` derives the payload from the actor's equipped weapon —
+`kind: damage`, `roll: "<damage_dice> ± weapon_damage_modifier"`, the weapon's
+`damage_type`, `target: enemy`, `attack: weapon` — and raises `ArgumentError`
+on a malformed die instead of letting `RollExpression` read it as a variable
+worth 0. `Combat::ActionRunner.attack(action:, next_target:,
+advantage_against:)` makes up to `attacks_per_action` weapon attacks (Extra
+Attack). Before each one it calls `next_target`, so an attack that follows a
+kill goes to another target and `nil` ends the action; the caller's block sees
+each `(target, result, advantage)` before the next target is picked. Target
+choice stays with the caller (the simulator's gambits, War Magic focus or
+random pick); the pipeline only asks for "the next target".
 
 **2. Resolution — `Combat::EffectResolver`** turns a `CombatAction` into one
 or more atomic `Combat::EffectInstance` objects (`heal`, `damage`,
@@ -94,16 +117,25 @@ instead of being an action of its own) and `"debuff": "next_attack_advantage"`
 `ActionRunner.call` / `EffectExecutor.call` accept `crit:` so an effect riding on
 a critical weapon hit doubles its dice.
 
-Damage effects can also declare `"attack": "spell"` (a spell attack roll against
-the target's AC, made by the actor with `PlayerCharacter#spell_attack_bonus`; a
-miss sets `applied: false` and deals 0; a natural 20 always hits and is a
-critical hit that doubles the dice via `RollExpression#resolve(crit: true)`, a
-natural 1 always misses, otherwise total >= AC — the same `Dice.hit?` rule as the
-weapon attack path) and a `save` whose `"dc"` is either a fixed
-integer or `"spell"`, meaning the actor's `spell_save_dc`. `EffectExecutor::Result`
-carries the rolled `attack_roll` (nil when the effect made none) next to
-`saving_throw`; both actors' numbers come from the spellcasting ability resolved
-by `PlayerCharacter#spellcasting_ability`. Unsupported `attack` values are rejected
+Damage effects can also declare `"attack": "spell"` or `"attack": "weapon"` (an
+attack roll against the target's AC; a miss sets `applied: false` and deals 0; a
+natural 20 always hits, a natural 1 always misses, otherwise total >= AC —
+`Dice.hit?`; a critical hit doubles the dice via `RollExpression#resolve(crit:
+true)`, never the flat modifier). A spell attack rolls with
+`PlayerCharacter#spell_attack_bonus` and crits on a natural 20; a weapon attack
+rolls with `#weapon_attack_bonus` (attack bonus + passive bonuses such as
+Archery) and crits at `#critical_hit_threshold` (19 for a Champion). `advantage:`
+on `EffectExecutor.call` rolls the d20 twice and keeps the higher. Damage is
+applied with the **effect's** `damage_type` (the attacker's weapon), so the
+target's resistance, immunity or vulnerability to *that* type applies.
+`EffectExecutor::Result` carries the rolled `attack_roll` (an
+`EffectExecutor::AttackRoll`: natural, total, armor_class, hit, crit; nil when
+the effect made none) next to `saving_throw`.
+
+Effects can also declare a `save` whose `"dc"` is either a fixed integer or
+`"spell"`, meaning the actor's `spell_save_dc`; spell attack and save numbers
+come from the spellcasting ability resolved by
+`PlayerCharacter#spellcasting_ability`. Unsupported `attack` values are rejected
 at `EffectInstance` construction.
 
 This is the field that connects the persisted class-feature model (see

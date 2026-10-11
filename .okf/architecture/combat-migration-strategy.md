@@ -32,9 +32,11 @@ else
 end
 ```
 
-**Phase 2 — standardization (not started).** Migrate the basic attack itself
-onto `CombatAction`, and unify combat logging on a single `EffectResult`
-shape.
+**Phase 2 — standardization (partly shipped 2026-10-11).** Migrate the basic
+attack itself onto `CombatAction` — done, as the Attack action (see
+[combat-action-language.md](/architecture/combat-action-language.md)) — and
+unify combat logging on a single `EffectResult` shape (not started: the
+simulator still builds its own attack log entries from the results).
 
 **Phase 3 — expansion (not started).** Integrate damage/control spells into
 the same pipeline, and bring rest-based resource/recharge spending into the
@@ -71,7 +73,10 @@ By then it had passives, spells, maneuvers, Action Surge, gambits and
 simulation batches, while `EncounterService` still only rolled basic attacks
 and had no caller outside its own test. `EncounterService` and its test were
 deleted; nothing else depended on it (`roll_an_attack`, `get_attacked` and
-`attacks_per_action` stay, since the simulator uses them).
+`attacks_per_action` stayed, since the simulator used them then; the first
+two have since been replaced by the Attack action, see
+[combat-action-language.md](/architecture/combat-action-language.md)).
 
-Phases 2 and 3 now apply to `CombatSimulatorService`: the basic attack still
-runs outside `CombatAction`, and the simulator is the place to migrate it.
+Phases 2 and 3 now apply to `CombatSimulatorService`. The basic attack
+moved onto `CombatAction` the same day; what is left of Phase 2 is the
+unified log shape.

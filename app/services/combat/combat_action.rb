@@ -1,8 +1,8 @@
 module Combat
   # Represents the intent of a combatant to perform an action on their turn.
   #
-  # source_type: :class_feature | :spell | :weapon_attack
-  # source_id:   ID of the ClassFeature (or future Spell) record
+  # source_type: :class_feature | :spell | :attack
+  # source_id:   ID of the ClassFeature or Spell record (nil for :attack, which uses the equipped weapon)
   # actor:       The combatant using the action
   # targets:     Array of target combatants (may be empty for self-targeting actions)
   # context:     Hash of extra info (e.g. upcast level, ability mode)

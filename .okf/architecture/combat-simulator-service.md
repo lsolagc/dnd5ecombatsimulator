@@ -68,9 +68,12 @@ Each living combatant, in initiative order (`Dice.d20(modifier:
 combatant.initiative)`, tie-broken by original array order), gets **one**
 action per turn:
 
-1. **Attack** is always available and repeats `attacks_per_action` times
-   against a random living enemy, using
-   `PlayerCharacter#roll_an_attack`/`#get_attacked`.
+1. **Attack** is always available: a `Combat::CombatAction(source_type:
+   :attack)` run by `Combat::ActionRunner.attack`, which makes
+   `attacks_per_action` weapon attacks and asks `execute_attack_action` for
+   each attack's target (a random living enemy, the gambit's target, or War
+   Magic's focus), so an attack after a kill goes to someone else. See
+   [combat-action-language.md](/architecture/combat-action-language.md).
 2. **Class feature** actions are offered for every unlocked feature whose
    `effect_payload.kind` is `heal` or `damage`, has no `trigger` (i.e. is
    *not* one of the [passive triggers](/architecture/passive-effect-triggers.md)),

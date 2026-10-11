@@ -1,4 +1,5 @@
 require "test_helper"
+require "minitest/mock"
 
 class CombatSimulatorServiceTest < ActiveSupport::TestCase
   SEED_WITH_REVERSED_INITIATIVE = 3
@@ -790,18 +791,13 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     enemies = %i[aragorn aragorn_copy elora fighter_archer fighter_defender].map { |name| fresh_character(name) }
     a, b, c, d, e = enemies
     a.current_hit_points = d.current_hit_points = 5 # below 50%: the rule's only candidates
-    enemies.each do |enemy|
-      enemy.define_singleton_method(:get_attacked) do |attack_roll:|
-        self.current_hit_points = 0
-        { success: true, attack_roll:, message: "Hit!" }
-      end
-    end
+    enemies.each { |enemy| enemy.define_singleton_method(:take_damage) { |**| self.current_hit_points = 0 } }
     gambit = add_gambit(actor, position: 1, condition: :hp_below, condition_value: 50)
     service = CombatSimulatorService.new(party_one: [ actor ], party_two: enemies, seed: 1, max_rounds: 1)
     service.send(:initialize_state)
     service.instance_variable_set(:@initiative_order, [ e, actor, c, a, d, b ])
 
-    turn = service.send(:execute_attack_action, actor:, round_number: 1, turn_index: 1, gambit:)
+    turn = Dice.stub(:hit?, true) { service.send(:execute_attack_action, actor:, round_number: 1, turn_index: 1, gambit:) } # every attack hits and kills
 
     # a and d by the rule (in initiative order), then e: the first living enemy in initiative order
     # (not b, the first in party order).
