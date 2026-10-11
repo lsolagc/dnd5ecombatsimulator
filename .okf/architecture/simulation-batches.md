@@ -161,3 +161,12 @@ aborting the *in-flight* combat is only covered by the job and
 `CombatSimulatorService` tests. Seed 42 is the deterministic screenshot
 scenario: the same seed reproduces the same summary.
 
+[^batch-model]: Source: `app/models/simulation_batch.rb`
+
+[^run-model]: Source: `app/models/simulation_run.rb`
+
+[^batch-controller]: Source: `app/controllers/simulation_batches_controller.rb`
+
+[^batch-job]: Source: `app/jobs/simulation_run_job.rb`
+
+[^batch-system-test]: Source: `test/system/simulation_batches_test.rb`

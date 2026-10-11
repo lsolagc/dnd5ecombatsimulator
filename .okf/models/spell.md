@@ -3,10 +3,10 @@ type: Model
 title: Spell, SpellSlotProgression, PlayerCharacterSpell
 description: Minimal spellcasting subsystem — a spell catalog, a per-ClassFeature spell slot progression table, and per-character prepared spells — built to support the Fighter's Eldritch Knight archetype.
 resource: app/models/spell.rb
-tags: [model, spell, class, feature, combat, persistence]
+tags: [spell, class, feature, combat, persistence, progression]
 generated:
-  by: copilot-cli/claude-sonnet-5
-  at: 2026-09-06T00:00:00Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: spell-rb
     title: app/models/spell.rb
@@ -110,3 +110,9 @@ its round log carries an `attack_roll` (`natural`, `total`, `armor_class`, `hit`
 |-------|------|--------------|
 | player_character_id | integer (FK) | |
 | spell_id | integer (FK) | Unique per `player_character_id` |
+
+[^spell-rb]: Source: `app/models/spell.rb`
+
+[^spell-slot-progression-rb]: Source: `app/models/spell_slot_progression.rb`
+
+[^player-character-spell-rb]: Source: `app/models/player_character_spell.rb`

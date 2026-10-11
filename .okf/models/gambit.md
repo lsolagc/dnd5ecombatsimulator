@@ -3,10 +3,10 @@ type: Model
 title: "Gambit"
 description: One FFXII-style turn rule (target + condition → action) owned by a PlayerCharacter or a GambitPreset, up to 6 per owner, evaluated by position in CombatSimulatorService.
 resource: app/models/gambit.rb
-tags: [model, combat, gambits]
+tags: [combat, gambits]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-09T00:30:00Z
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: gambit-rb
     title: app/models/gambit.rb
@@ -47,3 +47,7 @@ enabled ones top to bottom.[^gambit-rb]
 - `label` renders the rule in PT-BR, e.g. `Inimigo: HP < 50% → Ataque`.
 
 Decisions behind the model: [gambits-decisions.md](/architecture/gambits-decisions.md); measured effect: [gambits-impact.md](/architecture/gambits-impact.md).
+
+[^gambit-rb]: Source: `app/models/gambit.rb`
+
+[^gambit-test]: Source: `test/models/gambit_test.rb`

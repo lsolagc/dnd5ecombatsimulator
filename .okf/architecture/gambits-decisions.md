@@ -2,10 +2,10 @@
 type: Decision
 title: Gambits — decisions taken autonomously while building the FFXII-style turn AI
 description: Refinement questions raised per pass of the gambits work (feat/gambits), with the decision taken and why, for the user to veto at the end.
-tags: [combat, decision, gambits]
+tags: [combat, gambits]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-08T23:50:00Z
+  at: 2026-10-11T00:00:00Z
 status: draft
 ---
 

@@ -3,7 +3,7 @@ type: Pipeline
 title: Combat effect-execution pipeline (Combat::*)
 description: The path every combat action takes in CombatSimulatorService — the basic Attack action, class features and spells — through CombatAction, EffectResolver, EffectExecutor, ActionRunner, and the RollExpression roll layer.
 resource: app/services/combat
-tags: [combat, pipeline, evolution]
+tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
@@ -148,3 +148,5 @@ without new orchestrator logic.[^combat-pipeline-rb]
 `PlayerCharacter#use_class_feature(slug:, targets: [])` builds the
 `CombatAction` and delegates to `Combat::ActionRunner`, so callers do not
 construct the intent object by hand.
+
+[^combat-pipeline-rb]: Source: `app/services/combat/*.rb`

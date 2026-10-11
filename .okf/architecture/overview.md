@@ -2,7 +2,7 @@
 type: Overview
 title: System Architecture Overview
 description: High-level layering of the D&D 5e combat simulator — presentation, services, models, and database — and how a character-creation or combat request flows through them.
-tags: [rails]
+tags: [combat]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
@@ -74,3 +74,5 @@ aggregated into win rate, healing and damage metrics.
 
 For installing dependencies, running the dev server, and running tests
 locally, see [ops/dev-setup.md](/ops/dev-setup.md).
+
+[^characters-controller]: Source: `app/controllers/player_characters_controller.rb`

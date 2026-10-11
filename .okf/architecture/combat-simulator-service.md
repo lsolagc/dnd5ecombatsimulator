@@ -181,3 +181,7 @@ remaining uses for that feature by 1, floored at 0
   ends.
 - **`:max_rounds_reached`** — the loop hit `max_rounds` with no winner and
   no draw.
+
+[^combat-simulator-rb]: Source: `app/services/combat_simulator_service.rb`
+
+[^combat-simulator-test]: Source: `test/services/combat_simulator_service_test.rb`

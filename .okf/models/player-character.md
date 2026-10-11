@@ -3,7 +3,7 @@ type: Model
 title: PlayerCharacter
 description: The player's character record — name, class, and level — delegating all in-combat stats (ability scores, HP, armor class) to its Combatant, and hosting the attack/damage/passive-trigger behavior used in combat.
 resource: app/models/player_character.rb
-tags: [model, character, persistence, combat]
+tags: [persistence, combat]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
@@ -139,3 +139,7 @@ instance is alive (unlocks, progressions) are not seen until `reload`.
 | name | string | Character name |
 | level | integer | Default 1; no in-app way to change it today |
 | player_class_id | integer (FK) | → `player_classes` |
+
+[^player-character-rb]: Source: `app/models/player_character.rb`
+
+[^combatant-behavior-rb]: Source: `app/models/concerns/combatant_behavior.rb`

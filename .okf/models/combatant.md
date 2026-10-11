@@ -3,10 +3,10 @@ type: Model
 title: Combatant
 description: The actual in-combat "character sheet" — ability scores, armor class, speed, proficiency bonus, and resistance/vulnerability/immunity maps — attached polymorphically to a combatable (today, only PlayerCharacter).
 resource: app/models/combatant.rb
-tags: [model, combat, persistence]
+tags: [combat, persistence]
 generated:
-  by: copilot-cli/claude-sonnet-5
-  at: 2026-08-21T23:39:26Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-11T00:00:00Z
 sources:
   - id: combatant-rb
     title: app/models/combatant.rb
@@ -66,3 +66,7 @@ documentation described — resistances/vulnerabilities/immunities are
 | damage_dice | string | Default `"1d4"` — basic-attack damage dice notation |
 | damage_type | string | Default `"bludgeoning"` — basic-attack damage type, validated against the known damage-type set |
 | resistances / vulnerabilities / immunities | jsonb | `{ "conditions" => {...}, "damage_types" => {...} }`, all keys default `false` |
+
+[^combatant-rb]: Source: `app/models/combatant.rb`
+
+[^condition-logic-rb]: Source: `app/models/concerns/condition_and_damage_type_logic.rb`

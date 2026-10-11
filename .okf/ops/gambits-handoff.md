@@ -2,10 +2,10 @@
 type: Runbook
 title: Gambits work — handoff to resume the autonomous task
 description: State of the 7-pass FFXII gambits task on branch feat/gambits when the session stopped, what was in progress, and the exact steps left to finish it.
-tags: [gambits, ops]
+tags: [gambits]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-09T02:50:00Z
+  at: 2026-10-11T00:00:00Z
 status: draft
 ---
 

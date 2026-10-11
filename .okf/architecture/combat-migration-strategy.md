@@ -2,7 +2,7 @@
 type: Decision
 title: Phased migration off EncounterService onto Combat::*
 description: Why the Combat::* pipeline was introduced additively in three phases around the frozen EncounterService, and the 2026-10-11 decision making CombatSimulatorService the official orchestrator and removing EncounterService.
-tags: [combat, decision, evolution]
+tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z

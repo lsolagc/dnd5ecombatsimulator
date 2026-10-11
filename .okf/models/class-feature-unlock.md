@@ -3,7 +3,7 @@ type: Model
 title: ClassFeatureUnlock
 description: Per-level unlock/scaling row for a ClassFeature, and the bridge to the combat effect pipeline via the declarative effect_payload field.
 resource: app/models/class_feature_unlock.rb
-tags: [model, class, feature, combat, persistence, passive]
+tags: [class, feature, combat, persistence, passive]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
@@ -66,3 +66,5 @@ in an encounter. `CombatAction`, `EffectInstance`, executor results, and
 | effect_payload | jsonb | Declarative executable effect, e.g. `{ "kind": "heal", "roll": "1d10 + fighter_level", "target": "self" }` |
 
 Index: `index_class_feature_unlocks_on_class_feature_id_and_level` (unique).
+
+[^unlock-rb]: Source: `app/models/class_feature_unlock.rb`

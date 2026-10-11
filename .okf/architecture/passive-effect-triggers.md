@@ -2,7 +2,7 @@
 type: Pipeline
 title: Passive effect triggers (always / turn_start / turn_end)
 description: The trigger + conditions extension to effect_payload that lets class features declare passive modifiers and turn-based heal/damage without going through CombatAction — the mechanism behind the Champion subclass's improved critical.
-tags: [combat, pipeline, passive]
+tags: [combat, passive]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
@@ -71,3 +71,7 @@ Optional map of predicates, all of which must hold (`passive_conditions_met?`):
 | `current_hp_lte_max_hp_fraction` | `current_hit_points <= max_hit_points * value` |
 
 An absent `conditions` map always passes.
+
+[^player-character-rb]: Source: `app/models/player_character.rb`
+
+[^seeds]: Source: `db/seeds/classes/guerreiro.yml`
