@@ -11,6 +11,37 @@ class SimulationBatchesControllerTest < ActionDispatch::IntegrationTest
     assert_select "template[data-character-id='#{player_characters(:aragorn).id}'] input[name='simulation_batch[combatants][#{player_characters(:aragorn).id}][armor_class]'][value='16']"
   end
 
+  test "new summarizes each combatant's enabled gambits, or random action without any" do
+    aragorn, merlin = player_characters(:aragorn), player_characters(:merlin)
+    Gambit.create!(owner: aragorn, position: 1, target: :enemy, condition: :lowest_hp, action_kind: :attack)
+    Gambit.create!(owner: aragorn, position: 2, target: :enemy, condition: :any, action_kind: :attack, enabled: false)
+
+    get new_simulation_batch_url
+
+    assert_select "template[data-character-id='#{aragorn.id}'] .sim-card__gambits" do
+      assert_select ".sim-card__gambits-rules", text: "1. Inimigo: menor HP → Ataque"
+      assert_select "a[href='#{player_character_gambits_path(aragorn)}']", text: "Editar gambits"
+    end
+    assert_select "template[data-character-id='#{merlin.id}'] .sim-card__gambits-rules", text: "Ação aleatória"
+  end
+
+  test "show lists each combatant's gambits from the batch's copy" do
+    aragorn, merlin = player_characters(:aragorn), player_characters(:merlin)
+    Gambit.create!(owner: aragorn, position: 1, target: :enemy, condition: :lowest_hp, action_kind: :attack)
+    Gambit.create!(owner: aragorn, position: 2, target: :enemy, condition: :any, action_kind: :attack, enabled: false)
+    batch = SimulationBatch.create!(requested_count: 1, combatants: { aragorn.id => combatant_params("party_one"), merlin.id => combatant_params("party_two") })
+    aragorn.gambits.destroy_all
+
+    get simulation_batch_url(batch)
+
+    assert_select ".sim-side--party_one details.sim-roster__gambits[open]" do
+      assert_select "summary", text: "Gambits · 1 de 2 ligadas"
+      assert_select "li", text: "1Inimigo: menor HP → Ataque"
+      assert_select "li.is-off", text: "2Inimigo: qualquer → Ataque (desligado)"
+    end
+    assert_select ".sim-side--party_two .sim-roster__gambits", text: "Gambits · Aleatório"
+  end
+
   test "create starts the experiment with the edited parameters" do
     aragorn, elora, merlin = player_characters(:aragorn), player_characters(:elora), player_characters(:merlin)
 

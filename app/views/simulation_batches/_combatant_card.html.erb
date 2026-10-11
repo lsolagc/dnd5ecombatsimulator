@@ -14,7 +14,7 @@
     <div class="sim-card__actions">
       <span class="sim-card__edits" data-edit-count hidden></span>
       <button type="button" class="btn btn-sm btn-link sim-card__reset" data-action="simulation-form#reset" data-reset-button hidden>Restaurar ficha</button>
-      <button type="button" class="btn-close" data-action="simulation-form#remove" aria-label="Remover <%= character.name %>"></button>
+      <button type="button" class="sim-card__close" data-action="simulation-form#remove" aria-label="Remover <%= character.name %>">×</button>
     </div>
   </header>
 
@@ -58,6 +58,7 @@
     <p class="small text-body-secondary mb-2">Clique para alternar: — / R (resistência) / I (imunidade) / V (vulnerabilidade).</p>
     <div class="d-flex flex-wrap gap-1">
       <% damage_type_labels.each do |type, label| %>
+        <% label = label.downcase %>
         <% flag = settings.dig("defenses", type).to_s %>
         <span class="sim-chip<%= " is-edited" if flag != blueprint["defenses"][type].to_s %>" data-field="defense">
           <button type="button" class="sim-chip__button" data-action="simulation-form#cycleDefense" data-label="<%= label %>"><%= label %> <span class="sim-chip__flag" data-flag><%= flag %></span></button>
@@ -66,4 +67,18 @@
       <% end %>
     </div>
   </details>
+
+  <%# The live rules: the batch copies them when it is created. Short summary, so only enabled rules. %>
+  <% rules = character.gambits.select(&:enabled?) %>
+  <p class="sim-card__gambits">
+    <span class="sim-card__defenses-title">Gambits</span>
+    <%= tag.span class: "sim-card__gambits-rules text-body-secondary", title: (rules.map { |rule| "#{rule.position}. #{rule.label}" }.join(" · ") if rules.any?) do %>
+      <% if rules.any? %>
+        <%= safe_join(rules.map { |rule| safe_join([ tag.b("#{rule.position}."), " ", rule.label ]) }, " · ") %>
+      <% else %>
+        Ação aleatória
+      <% end %>
+    <% end %>
+    · <%= link_to "Editar gambits", player_character_gambits_path(character), class: "sim-card__gambits-link" %>
+  </p>
 </article>

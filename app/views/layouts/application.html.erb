@@ -24,10 +24,10 @@
 
   <body>
     <nav class="navbar navbar-expand border-bottom py-3">
-      <div class="container-fluid">
+      <div class="container-fluid flex-wrap gap-2">
         <%= link_to "D20 · SIM", root_path, class: "navbar-brand fw-bold text-uppercase small" %>
 
-        <ul class="navbar-nav me-auto">
+        <ul class="navbar-nav flex-wrap me-auto">
           <li class="nav-item">
             <%= link_to "Início", root_path, class: "nav-link#{" active fw-semibold" if current_page?(root_path)}" %>
           </li>

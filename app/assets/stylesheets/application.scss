@@ -123,6 +123,15 @@ $primary: #b3563c;
 .sim-card__meta { margin: 0; color: var(--bs-secondary-color); font-size: .8125rem; }
 .sim-card__actions { display: flex; align-items: center; gap: .25rem; flex-shrink: 0; }
 .sim-card__reset { padding: 0 .25rem; font-size: .8125rem; }
+.sim-card__close {
+  border: 0;
+  border-radius: .375rem;
+  background: none;
+  color: var(--bs-body-color);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.sim-card__close:focus-visible { outline: 0; box-shadow: 0 0 0 var(--bs-focus-ring-width) var(--bs-focus-ring-color); }
 .sim-card__edits {
   border-radius: 999px;
   background: var(--bs-primary-bg-subtle);
@@ -164,16 +173,20 @@ $primary: #b3563c;
 .sim-field.is-edited .form-control,
 .sim-field.is-edited .form-select { border-color: var(--bs-primary); }
 
-.sim-card__defenses { margin-top: .75rem; }
+.sim-card__defenses { margin-top: .75rem; font-size: .8125rem; }
 .sim-card__defenses summary {
   display: flex;
   gap: .5rem;
   cursor: pointer;
-  font-size: .8125rem;
 }
 .sim-card__defenses-title { font-weight: 600; }
 .sim-card__defenses-summary { color: var(--bs-secondary-color); }
 .sim-card__defenses[open] summary { margin-bottom: .5rem; }
+
+.sim-card__gambits { margin: .75rem 0 0; font-size: .8125rem; }
+// 4+ combatants on a side: each card's rules collapse to one line (full text in the title).
+.sim-side__list:has(> .sim-card:nth-child(4)) .sim-card__gambits { display: flex; gap: .25rem; white-space: nowrap; }
+.sim-side__list:has(> .sim-card:nth-child(4)) .sim-card__gambits-rules { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 
 .sim-chip { display: inline-flex; }
 .sim-chip__button {
@@ -219,8 +232,18 @@ $primary: #b3563c;
 // Experiment page
 .sim-roster { display: grid; gap: .75rem; margin: 0; padding: 0; list-style: none; }
 .sim-roster__item { border-left: 3px solid var(--sim-side-color); padding-left: .75rem; }
+.sim-roster__head { display: flex; justify-content: space-between; gap: .5rem; }
+.sim-roster__head span { color: var(--bs-secondary-color); font-size: .875rem; }
 .sim-roster__stats { margin: .125rem 0 0; font-family: var(--bs-font-monospace); font-size: .8125rem; }
 .sim-roster__defenses { display: flex; flex-wrap: wrap; gap: .25rem; margin: .375rem 0 0; }
+.sim-roster__gambits { margin: .375rem 0 0; font-size: .875rem; }
+.sim-roster__gambits summary { cursor: pointer; }
+.sim-roster__gambits[open] summary { margin-bottom: .25rem; }
+
+// GambitSummary: the rules in priority order; a switched-off rule also says "(desligado)".
+.gambit-summary { display: grid; gap: .125rem; margin: 0; padding: 0; list-style: none; }
+.gambit-summary b { margin-right: .25rem; }
+.gambit-summary .is-off { color: var(--bs-secondary-color); opacity: .75; }
 .sim-tag {
   border: 1px solid var(--bs-border-color);
   border-radius: 999px;
@@ -231,7 +254,8 @@ $primary: #b3563c;
 .sim-hero { font-size: 3rem; font-weight: 700; line-height: 1; }
 .sim-hero__total { color: var(--bs-secondary-color); font-size: 1rem; font-weight: 400; }
 
-.sim-progress { height: .75rem; }
+.sim-progress-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem; }
+.sim-progress { height: .75rem; margin: 1rem 0; }
 // Pushed updates morph the same bar element, so its width eases between values instead of jumping.
 .sim-progress { --bs-progress-bar-transition: width .35s ease-out; }
 .sim-progress .progress-bar { background-color: var(--bs-primary); }
@@ -239,7 +263,7 @@ $primary: #b3563c;
 .sim-progress-stats dt { color: var(--bs-secondary-color); font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
 .sim-progress-stats dd { margin: 0; font-size: 1.25rem; font-weight: 600; }
 
-.sim-headline { display: flex; align-items: center; gap: .5rem; font-size: 1.5rem; font-weight: 700; }
+.sim-headline { display: flex; align-items: center; gap: .5rem; margin: 0; font-size: 1.5rem; font-weight: 700; }
 
 .sim-dot {
   display: inline-block;

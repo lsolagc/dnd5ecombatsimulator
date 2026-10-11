@@ -29,18 +29,35 @@
             <% party.each do |character| %>
               <% settings = @simulation_batch.settings_for(character) %>
               <% defenses = settings["defenses"] || {} %>
+              <%# The batch's own copy of the rules, taken when it was created. %>
+              <% rules = @simulation_batch.gambit_settings.fetch(character.id.to_s, []).sort_by { |rule| rule["position"] } %>
+              <% enabled = rules.count { |rule| rule["enabled"] } %>
               <li class="sim-roster__item">
-                <div class="d-flex justify-content-between gap-2">
-                  <span class="fw-semibold"><%= character.name %></span>
-                  <span class="small text-body-secondary"><%= character.player_class.name %> · nível <%= character.level %></span>
+                <div class="sim-roster__head">
+                  <strong><%= character.name %></strong>
+                  <span><%= character.player_class.name %> · nível <%= character.level %></span>
                 </div>
                 <p class="sim-roster__stats"><%= combat_line(settings, character.max_hit_points) %></p>
                 <% if defenses.any? %>
-                  <p class="sim-roster__defenses">
+                  <div class="sim-roster__defenses">
                     <% defenses.each do |type, flag| %>
-                      <span class="sim-tag" title="<%= defense_labels[flag] %>"><%= damage_type_labels[type] %> <%= flag %></span>
+                      <span class="sim-tag" title="<%= defense_labels[flag] %>"><%= flag %> <%= damage_type_labels[type].downcase %></span>
                     <% end %>
-                  </p>
+                  </div>
+                <% end %>
+                <% if enabled.zero? %>
+                  <p class="sim-roster__gambits"><strong>Gambits</strong> <span class="text-body-secondary">· Aleatório</span></p>
+                <% else %>
+                  <%= tag.details class: "sim-roster__gambits", open: party.size < 4 do %>
+                    <summary><strong>Gambits</strong> <span class="text-body-secondary">· <%= enabled %> de <%= rules.size %> ligadas</span></summary>
+                    <ol class="gambit-summary">
+                      <% rules.each do |rule| %>
+                        <%= tag.li class: ("is-off" unless rule["enabled"]) do %>
+                          <b><%= rule["position"] %></b><%= rule["label"] %><%= " (desligado)" unless rule["enabled"] %>
+                        <% end %>
+                      <% end %>
+                    </ol>
+                  <% end %>
                 <% end %>
               </li>
             <% end %>

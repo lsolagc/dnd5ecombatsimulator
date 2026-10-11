@@ -131,13 +131,25 @@ picker that clones a server-rendered `<template>` combatant card (one per
 character; a character picked on one side is disabled in both pickers). Each
 card edits the settings above; fields that differ from the sheet get an
 `is-edited` marker and a per-card "N ajustes" count with "Restaurar ficha",
-and defenses are R/I/V chips inside a `<details>`. A run bar (sticky on
+a "×" removes the card, and defenses are R/I/V chips inside a `<details>`
+(summary "R fogo · I veneno"). A read-only gambits line
+lists the character's *enabled* rules as they are now (the copy above is taken
+on create, also for `?from=` reruns), or "Ação aleatória" when none is on, with
+an "Editar gambits" link to the character's gambits screen; with 4+ cards on a
+side, each line collapses to one ellipsized row (full text in `title`). Both
+screens follow `docs/design-system/` (SidePanel, CombatantCard, GambitSummary,
+RunBar, Roster, RunProgress, WinBar, MetricTile). A run bar (sticky on
 desktop, static on phones) holds count and seed — the Stimulus
-`simulation-form` controller disables the count at 1 while a seed is typed —
+`simulation-form` controller disables the count at 1 while a seed is typed,
+and its help text then reads "Travado em 1 com seed." —
 and a live "A contra B · N simulações" summary. Validation errors re-render
 the cards with the submitted values.
 
-`#show` lists each side's combatants with the parameters they ran with. The
+`#show` lists each side's combatants with the parameters they ran with and
+their gambits from the batch's own copy (`gambit_settings`): "Gambits · N de M
+ligadas" opening the rules in order (switched-off ones dimmed and marked
+"(desligado)"), collapsed by default on sides with 4+ combatants, or
+"Gambits · Aleatório" when none is on. The
 status lives in a `batch_status` turbo-frame, updated by the pushes above
 (finished count, progress bar, average `elapsed_ms`, pace in simulations per
 second since `started_at`, time left at that pace, "Interromper"). Once finished the frame

@@ -7,7 +7,7 @@ const DEFENSE_NAMES = { R: "resistente", I: "imune", V: "vulnerável" }
 // <template>s (one per character, a character can only be on one side), marks the
 // fields edited away from the character sheet, and locks the count at 1 with a seed.
 export default class extends Controller {
-  static targets = ["seed", "count", "template", "list", "picker", "card", "summary"]
+  static targets = ["seed", "count", "countHint", "template", "list", "picker", "card", "summary"]
 
   connect() {
     this.cardTargets.forEach((card) => this.refresh(card))
@@ -60,6 +60,7 @@ export default class extends Controller {
       this.countTarget.value = this.previousCount || 1
     }
     this.countTarget.disabled = seeded
+    this.countHintTarget.textContent = seeded ? "Travado em 1 com seed." : this.countHintTarget.dataset.default
     this.summarize()
   }
 
@@ -84,7 +85,7 @@ export default class extends Controller {
       chip.querySelector("[data-flag]").textContent = flag
       chip.classList.toggle("is-active", flag !== "")
       button.setAttribute("aria-label", `${button.dataset.label}: ${flag ? DEFENSE_NAMES[flag] : "normal"}`)
-      if (flag) active.push(`${button.dataset.label} ${flag}`)
+      if (flag) active.push(`${flag} ${button.dataset.label}`)
     })
     card.querySelector("[data-defense-summary]").textContent = active.length ? active.join(" · ") : "nenhuma"
   }

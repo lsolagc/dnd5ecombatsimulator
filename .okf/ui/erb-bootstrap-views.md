@@ -41,7 +41,8 @@ are hardcoded per view.
 `app/views/layouts/application.html.erb` is the single shared layout: a
 horizontal Bootstrap `navbar` (brand, Início/Personagens/Classes links, a
 "Simulações", which opens the [simulation batch](/architecture/simulation-batches.md) form) plus a
-`<main>` content area.[^application-layout] The navbar also hosts a
+`<main>` content area.[^application-layout] The navbar wraps onto several
+lines on phones instead of overflowing (390 px wide, no horizontal scroll). The navbar also hosts a
 Claro/Escuro/Sistema theme segmented control, backed by Bootstrap 5's native
 `data-bs-theme` dark mode: the layout reads the `theme` cookie server-side to
 set the initial `data-bs-theme` on `<html>` (avoiding a flash for explicit

@@ -1,21 +1,17 @@
 <% content_for :title, "Novo experimento" %>
-<% characters = PlayerCharacter.includes(:player_class, :combatant).order(:name) %>
+<% characters = PlayerCharacter.includes(:player_class, :combatant, gambits: %i[class_feature spell]).order(:name) %>
 <% selected = characters.index_by(&:id) %>
 
 <div class="sim-page">
   <header class="mb-4">
-    <p class="sim-eyebrow">Experimento</p>
     <h1 class="fw-bold mb-1">Novo experimento</h1>
-    <p class="text-body-secondary mb-0" style="max-width: 44rem;">
-      Os personagens salvos são blueprints: monte os dois lados, ajuste HP, CA, ataque e defesas só para este
-      experimento e rode até <%= SimulationBatch::MAX_SIMULATIONS %> combates. A ficha original não muda.
-    </p>
+    <p class="text-body-secondary mb-0">Monte os dois lados e rode até <%= SimulationBatch::MAX_SIMULATIONS %> combates. Os ajustes valem só para este experimento.</p>
   </header>
 
   <% if @simulation_batch.errors.any? %>
     <div id="error_explanation" class="alert alert-danger" role="alert">
-      <p class="fw-semibold mb-1">Não deu para iniciar o experimento:</p>
-      <ul class="mb-0">
+      <strong>Não deu para iniciar o experimento:</strong>
+      <ul class="mt-1 mb-0">
         <% @simulation_batch.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -74,13 +70,13 @@
           <%= form.label :requested_count, "Simulações", class: "form-label" %>
           <%= form.number_field :requested_count, min: 1, max: SimulationBatch::MAX_SIMULATIONS, required: true, class: "form-control font-monospace",
                 data: { simulation_form_target: "count", action: "input->simulation-form#summarize" } %>
-          <div class="form-text">De 1 a <%= SimulationBatch::MAX_SIMULATIONS %>.</div>
+          <div class="form-text" data-simulation-form-target="countHint" data-default="De 1 a <%= SimulationBatch::MAX_SIMULATIONS %>.">De 1 a <%= SimulationBatch::MAX_SIMULATIONS %>.</div>
         </div>
         <div class="sim-run__field">
           <%= form.label :seed, "Seed (opcional)", class: "form-label" %>
           <%= form.number_field :seed, min: 0, max: SimulationBatch::MAX_SEED, class: "form-control font-monospace", placeholder: "aleatória",
                 data: { simulation_form_target: "seed", action: "input->simulation-form#toggleSeed" } %>
-          <div class="form-text">Fixa as rolagens e roda uma única simulação.</div>
+          <div class="form-text">Reproduz um único combate.</div>
         </div>
         <div class="sim-run__submit">
           <p class="sim-run__summary" data-simulation-form-target="summary" aria-live="polite"></p>

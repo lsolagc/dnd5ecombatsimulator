@@ -5,8 +5,8 @@
 <% if batch.pending? || batch.running? %>
   <% percent = share(completed, batch.requested_count) %>
   <%# Progress normally arrives pushed by the workers; the slow poll only covers a dropped connection. %>
-  <section class="sim-panel" data-controller="poll" aria-label="Progresso">
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+  <section class="sim-panel" data-controller="poll" aria-label="Progresso" aria-live="polite">
+    <div class="sim-progress-head">
       <div>
         <p class="sim-eyebrow"><%= batch.pending? ? "Na fila" : "Rodando" %></p>
         <p class="sim-hero mb-0"><%= completed %><span class="sim-hero__total"> / <%= batch.requested_count %> simulações finalizadas</span></p>
@@ -17,9 +17,9 @@
         <div><dt>Restante</dt><dd><%= pace&.positive? ? "≈ #{format_milliseconds((batch.requested_count - completed) / pace * 1000)}" : "—" %></dd></div>
       </dl>
     </div>
-    <div class="progress sim-progress mb-3" role="progressbar" aria-label="Simulações finalizadas"
+    <div class="progress sim-progress" role="progressbar" aria-label="Simulações finalizadas"
          aria-valuenow="<%= completed %>" aria-valuemin="0" aria-valuemax="<%= batch.requested_count %>">
-      <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: <%= percent %>%"></div>
+      <div class="progress-bar<%= " progress-bar-striped progress-bar-animated" if batch.running? %>" style="width: <%= percent %>%"></div>
     </div>
     <%# No token field: this partial is also rendered by workers, outside any session. Turbo sends the page's CSRF token as a header. %>
     <%= button_to "Interromper", cancel_simulation_batch_path(batch), class: "btn btn-outline-danger", authenticity_token: false, form: { data: { turbo_frame: "_top" } } %>
@@ -39,9 +39,9 @@
   <section class="sim-panel mb-4" id="batch_summary" aria-labelledby="result_title">
     <p class="sim-eyebrow" id="result_title">Resultado · <%= pluralize(total, "simulação", plural: "simulações") %></p>
     <% if total.zero? %>
-      <p class="sim-headline mb-0">Nenhuma simulação terminou.</p>
+      <h2 class="sim-headline">Nenhuma simulação terminou.</h2>
     <% else %>
-      <p class="sim-headline">
+      <h2 class="sim-headline">
         <% if wins_a == wins_b %>
           Empate técnico: cada lado venceu <%= format_share(share(wins_a, total)) %> dos combates.
         <% else %>
@@ -49,14 +49,15 @@
           <span class="sim-dot sim-dot--<%= leader == "A" ? "party_one" : "party_two" %>" aria-hidden="true"></span>
           Lado <%= leader %> venceu <%= format_share(share(leader_wins, total)) %> dos combates.
         <% end %>
-      </p>
+      </h2>
 
-      <% segments = [ [ "party_one", "Vitórias do lado A", wins_a ], [ nil, "Sem vencedor", no_winner ], [ "party_two", "Vitórias do lado B", wins_b ] ] %>
-      <div class="sim-winbar" role="img" aria-label="<%= segments.map { |_, label, count| "#{label}: #{format_share(share(count, total))}" }.join(", ") %>">
+      <% segments = [ [ "party_one", "Vitórias do lado A", wins_a, "Lado A" ], [ nil, "Sem vencedor", no_winner, "sem vencedor" ], [ "party_two", "Vitórias do lado B", wins_b, "Lado B" ] ] %>
+      <div class="sim-winbar" role="img" aria-label="<%= segments.map { |_, _, count, short| "#{short} #{format_share(share(count, total))}" }.join(", ") %>">
         <% segments.each do |side, label, count| %>
           <% next if count.zero? %>
           <% width = share(count, total) %>
-          <div class="sim-winbar__segment sim-winbar__segment--<%= side || "none" %>" style="flex-basis: <%= width %>%" title="<%= label %>: <%= format_share(width) %> (<%= count %>)">
+          <%# Labels only where they fit; the legend below always repeats every value. %>
+          <div class="sim-winbar__segment sim-winbar__segment--<%= side || "none" %>" style="flex: <%= count %>" title="<%= label %>: <%= format_share(width) %> (<%= count %>)">
             <% if width >= 12 %><span><%= format_share(width) %></span><% end %>
           </div>
         <% end %>
@@ -65,7 +66,7 @@
         <% segments.each do |side, label, count| %>
           <div class="sim-legend__item">
             <dt><span class="sim-dot sim-dot--<%= side || "none" %>" aria-hidden="true"></span><%= label %></dt>
-            <dd><strong><%= format_share(share(count, total)) %></strong> <span class="text-body-secondary"><%= count %> de <%= total %><%= " · empate ou limite de rodadas" unless side %></span></dd>
+            <dd><strong><%= format_share(share(count, total)) %></strong> <%= count %> de <%= total %><%= " · empate ou limite de rodadas" unless side %></dd>
           </div>
         <% end %>
       </dl>

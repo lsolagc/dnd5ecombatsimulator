@@ -31,7 +31,7 @@ class SimulationBatchesTest < ApplicationSystemTestCase
       fill_in "CA", with: 19
       fill_in "HP inicial", with: 7
       find("summary", text: "Defesas").click
-      click_on "Fogo"
+      click_on "fogo"
       assert_text "3 ajustes"
       assert_selector ".sim-field.is-edited[data-field=armor_class]"
     end
@@ -41,7 +41,7 @@ class SimulationBatchesTest < ApplicationSystemTestCase
     click_on "Iniciar experimento"
     assert_text "0 / 5 simulações finalizadas"
     assert_text "HP 7/12 · CA 19 · +0 · 1d4 concussão"
-    assert_selector ".sim-tag", text: "Fogo R"
+    assert_selector ".sim-tag", text: "R fogo"
     assert_stream_connected
     assert_enqueued_jobs 5, only: SimulationRunJob
     perform_enqueued_jobs
@@ -139,10 +139,12 @@ class SimulationBatchesTest < ApplicationSystemTestCase
 
     fill_in "Seed (opcional)", with: "42"
     assert_field "Simulações", with: "1", disabled: true
+    assert_text "Travado em 1 com seed."
 
     # Backspace like a user would: Selenium's clear() fires no input event.
     find_field("Seed (opcional)").send_keys(:backspace, :backspace)
     assert_field "Simulações", with: "100", disabled: false
+    assert_text "De 1 a 1000."
   end
 
   test "refuses a combat with only one side" do
