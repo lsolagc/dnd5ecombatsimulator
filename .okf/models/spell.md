@@ -1,12 +1,13 @@
 ---
 type: Model
-title: Spell, SpellSlotProgression, PlayerCharacterSpell
-description: Minimal spellcasting subsystem — a spell catalog, a per-ClassFeature spell slot progression table, and per-character prepared spells — built to support the Fighter's Eldritch Knight archetype.
+title: "Spellcasting subsystem: Spell, SpellSlotProgression, PlayerCharacterSpell"
+description: Minimal spellcasting subsystem — a spell catalog, a per-ClassFeature spell slot progression table, and per-character prepared spells — built to support the Fighter's Eldritch Knight archetype, with the growth expected once full casters arrive.
 resource: app/models/spell.rb
 tags: [spell, class, feature, combat, persistence, progression]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
+verified: { by: human:lsolagc, at: 2026-10-11T21:31:33Z }
 sources:
   - id: spell-rb
     title: app/models/spell.rb
@@ -17,6 +18,9 @@ sources:
   - id: player-character-spell-rb
     title: app/models/player_character_spell.rb
     resource: ../../app/models/player_character_spell.rb
+  - id: issue-47
+    title: "GitHub issue #47: known vs. prepared spells, prepared ones picked per batch"
+    resource: https://github.com/lsolagc/dnd5ecombatsimulator/issues/47
 status: stable
 ---
 
@@ -45,6 +49,31 @@ feature to read the table from.
 has prepared — the stand-in for "encounter preparation" in an app with no
 persisted encounter entity; a character's prepared list is just edited
 directly.[^player-character-spell-rb]
+
+**One page, three models.** The three models are documented together
+because they are only referenced together: they form one subsystem. Split a
+model into its own page once another page needs to link to it alone.
+
+**Classes reach spellcasting through a class feature.** Every caster class
+fits the project's model by getting a class feature that grants spellcasting
+(`ClassFeature#grants_spellcasting`), at level 1 for a full caster, and
+`SpellSlotProgression` stays scoped to that feature. The subsystem never
+links to `PlayerClass` directly; the Eldritch Knight already works this way.
+
+**Expected growth.** Full casters will need more than this minimal model:
+slots up to 9th level (the table stops at `spell_slots_4`), the Warlock's
+pact magic, the combined slot table of a multiclass caster, a spell list per
+class, known vs. prepared spells, and upcasting. Caster classes are planned
+late, since this is the heaviest refactor ahead.
+
+**Known vs. prepared.** The simulator only needs the prepared spells, but
+experiments need both: the sheet should hold the spells a character knows,
+and each batch should pick which of them are prepared, the same way
+`combatant_settings` already overrides a character in memory without
+touching the sheet ([simulation batches](/architecture/simulation-batches.md)).
+Otherwise trying another selection means editing the sheet between batches or
+keeping several copies of one character. Planned in
+[issue #47](https://github.com/lsolagc/dnd5ecombatsimulator/issues/47).[^issue-47]
 
 # Casting a spell
 
@@ -116,3 +145,5 @@ its round log carries an `attack_roll` (`natural`, `total`, `armor_class`, `hit`
 [^spell-slot-progression-rb]: Source: `app/models/spell_slot_progression.rb`
 
 [^player-character-spell-rb]: Source: `app/models/player_character_spell.rb`
+
+[^issue-47]: Source: GitHub issue #47: known vs. prepared spells, prepared ones picked per batch

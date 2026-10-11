@@ -7,6 +7,7 @@ tags: [combat, persistence]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
+verified: { by: human:lsolagc, at: 2026-10-11T21:08:36Z }
 sources:
   - id: combatant-rb
     title: app/models/combatant.rb

@@ -7,6 +7,7 @@ tags: [class, persistence]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
+verified: { by: human:lsolagc, at: 2026-10-11T21:21:20Z }
 sources:
   - id: player-class-rb
     title: app/models/player_class.rb

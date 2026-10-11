@@ -7,6 +7,7 @@ tags: [ui]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
+verified: { by: human:lsolagc, at: 2026-10-11T22:04:15Z }
 sources:
   - id: application-layout
     title: app/views/layouts/application.html.erb
@@ -35,7 +36,8 @@ former Phlex/RubyUI layer) were removed, and every screen — `home`,
 style (`form_with`, `link_to`, `pluralize`, Bootstrap utility classes like
 `btn btn-primary`, `table table-striped`, `alert alert-danger`). Screen copy
 is written in Portuguese (pt-BR), matching the D&D 5e design handoff the
-three screens below were built from; there is no i18n locale layer — strings
+three screens below were built from (now documented as the
+[design system](/ui/design-system.md)); there is no i18n locale layer — strings
 are hardcoded per view.
 
 `app/views/layouts/application.html.erb` is the single shared layout: a
@@ -48,8 +50,8 @@ Claro/Escuro/Sistema theme segmented control, backed by Bootstrap 5's native
 set the initial `data-bs-theme` on `<html>` (avoiding a flash for explicit
 choices), and a Stimulus `theme` controller resolves "Sistema" via
 `prefers-color-scheme` and persists the choice back to the cookie on the
-client. `application.scss` sets Bootstrap's `$primary` to an approximation of
-the design handoff's terracotta accent before `@import "bootstrap"`.[^application-scss]
+client. `application.scss` sets Bootstrap's `$primary` to
+the [design system](/ui/design-system.md)'s terracotta (`#b3563c`) before `@import "bootstrap"`.[^application-scss]
 
 **Stimulus is now wired up** (`stimulus-rails`'s standard
 `app/javascript/controllers/` + importmap `pin_all_from` setup — it was

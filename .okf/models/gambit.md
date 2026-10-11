@@ -7,6 +7,7 @@ tags: [combat, gambits]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
+verified: { by: human:lsolagc, at: 2026-10-11T21:20:29Z }
 sources:
   - id: gambit-rb
     title: app/models/gambit.rb
@@ -14,7 +15,10 @@ sources:
   - id: gambit-test
     title: test/models/gambit_test.rb
     resource: ../../test/models/gambit_test.rb
-status: draft
+  - id: issue-46
+    title: "GitHub issue #46: gambit owner on Combatant once monsters exist"
+    resource: https://github.com/lsolagc/dnd5ecombatsimulator/issues/46
+status: stable
 ---
 
 # Overview
@@ -23,6 +27,14 @@ A `Gambit` belongs to a polymorphic `owner` ([PlayerCharacter](/models/player-ch
 `has_many :gambits, -> { order(:position) }, as: :owner`). It is data only:
 [CombatSimulatorService](/architecture/combat-simulator-service.md) evaluates the
 enabled ones top to bottom.[^gambit-rb]
+
+Caveat: once a monster model exists, the owner could be the
+[Combatant](/models/combatant.md) instead of the `PlayerCharacter`, since
+`Combatant` is already the supertype of everything that fights (a monster
+would be another `combatable` type). The polymorphic owner does not require
+it, and a monster's actions need a new `action_kind` either way;
+[issue #46](https://github.com/lsolagc/dnd5ecombatsimulator/issues/46) weighs
+it, not planned soon.[^issue-46]
 
 - `target`: `self` / `ally` / `enemy` (prefixed: `target_self?`).
 - `condition` (enum in code, prefixed `condition_*`): `any`, `hp_below` /
@@ -51,3 +63,5 @@ Decisions behind the model: [gambits-decisions.md](/architecture/gambits-decisio
 [^gambit-rb]: Source: `app/models/gambit.rb`
 
 [^gambit-test]: Source: `test/models/gambit_test.rb`
+
+[^issue-46]: Source: GitHub issue #46: gambit owner on Combatant once monsters exist

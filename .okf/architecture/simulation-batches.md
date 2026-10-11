@@ -137,7 +137,7 @@ lists the character's *enabled* rules as they are now (the copy above is taken
 on create, also for `?from=` reruns), or "Ação aleatória" when none is on, with
 an "Editar gambits" link to the character's gambits screen; with 4+ cards on a
 side, each line collapses to one ellipsized row (full text in `title`). Both
-screens follow `docs/design-system/` (SidePanel, CombatantCard, GambitSummary,
+screens follow the [design system](/ui/design-system.md) (SidePanel, CombatantCard, GambitSummary,
 RunBar, Roster, RunProgress, WinBar, MetricTile). A run bar (sticky on
 desktop, static on phones) holds count and seed — the Stimulus
 `simulation-form` controller disables the count at 1 while a seed is typed,
