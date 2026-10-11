@@ -7,10 +7,14 @@ tags: [class, feature, combat, persistence, passive]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
+verified: { by: human:lsolagc, at: 2026-10-11T21:06:51Z }
 sources:
   - id: unlock-rb
     title: app/models/class_feature_unlock.rb
     resource: ../../app/models/class_feature_unlock.rb
+  - id: issue-45
+    title: "GitHub issue #45: status system (5e conditions, buffs and debuffs with duration)"
+    resource: https://github.com/lsolagc/dnd5ecombatsimulator/issues/45
 status: stable
 ---
 
@@ -44,6 +48,10 @@ A Battle Master maneuver's payload also carries `applies_to: weapon_attack`
 (and Distracting Strike `debuff: next_attack_advantage`), which
 `CombatSimulatorService` reads to run the maneuver as a rider on a weapon attack
 — see [combat-simulator-service.md](/architecture/combat-simulator-service.md).
+`debuff` is a single string with one supported value, so its shape will change
+once other features or spells apply a [status](/ubiquitous-language.md) with
+a duration; [issue #45](https://github.com/lsolagc/dnd5ecombatsimulator/issues/45)
+plans it as part of the status system.[^issue-45]
 
 **Persisted vs. executed** — the model defines *what* a feature is;
 [the pipeline](/architecture/combat-effect-pipeline.md) defines *how* it runs
@@ -68,3 +76,5 @@ in an encounter. `CombatAction`, `EffectInstance`, executor results, and
 Index: `index_class_feature_unlocks_on_class_feature_id_and_level` (unique).
 
 [^unlock-rb]: Source: `app/models/class_feature_unlock.rb`
+
+[^issue-45]: Source: GitHub issue #45: status system (5e conditions, buffs and debuffs with duration)
