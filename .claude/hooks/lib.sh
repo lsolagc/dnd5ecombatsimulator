@@ -25,11 +25,22 @@ changed_ruby_files() {
     | sort -u | while IFS= read -r f; do [ -f "$f" ] && printf '%s\n' "$f"; done
 }
 
-# Runs a shell command with the test DB credentials available. They live in ~/.bashrc
-# after the interactive-shell guard, so fall back to `bash -ic` when they are not set.
+# The compose stack's app container (compose.yaml), when it is running on this very checkout.
+# A worktree has its own path, so it never picks the container that mounts the main checkout.
+app_container() {
+  command -v docker >/dev/null 2>&1 || return 0
+  timeout 10 docker ps -q --filter "label=com.docker.compose.project.working_dir=$GATE_ROOT" \
+    --filter label=com.docker.compose.service=app --filter status=running 2>/dev/null | head -1
+}
+
+# Runs a shell command where the app's Ruby and test DB live: in the app container when
+# GATE_CONTAINER is set, else on the host with the test DB credentials. Those live in
+# ~/.bashrc after the interactive-shell guard, so fall back to `bash -ic` when they are not set.
 run_with_credentials() {
   local cmd="cd '$GATE_ROOT' && $1"
-  if [ -n "${DND_TEST_USER:-}" ]; then
+  if [ -n "${GATE_CONTAINER:-}" ]; then
+    timeout 240 docker exec "$GATE_CONTAINER" sh -c "$1"
+  elif [ -n "${DND_TEST_USER:-}" ]; then
     timeout 240 bash -c "$cmd"
   else
     timeout 240 bash -ic "$cmd" 2> >(grep -v 'job control\|process group' >&2)
@@ -49,12 +60,13 @@ failure_excerpt() {
   if [ -n "$excerpt" ]; then printf '%s\n' "$excerpt"; else printf '%s\n' "$out" | strip_noise | tail -40; fi
 }
 
-INFRA_PATTERN='PG::ConnectionBad|ConnectionNotEstablished|no password supplied|password authentication failed|could not connect|Connection refused|command not found|Could not find'
+INFRA_PATTERN='No such container|is not running|PG::ConnectionBad|ConnectionNotEstablished|no password supplied|password authentication failed|could not connect|Connection refused|command not found|Could not find'
 
 # Runs rubocop (changed files) and the full test suite under a lock.
 # Sets: GATE_RESULT (green|red|infra), GATE_SUMMARY, GATE_TAIL, GATE_COMMANDS.
 run_verification() {
   local out rc counts failures errors
+  GATE_CONTAINER="$(app_container)"
   GATE_COMMANDS="bin/rails test"
   GATE_TAIL=""
   GATE_SUMMARY=""
@@ -65,7 +77,7 @@ run_verification() {
     GATE_COMMANDS="bundle exec rubocop <changed .rb files> && $GATE_COMMANDS"
     local -a rb_array
     mapfile -t rb_array <<< "$rb_files"
-    out="$(timeout 240 bundle exec rubocop --force-exclusion "${rb_array[@]}" 2>&1)"
+    out="$(run_with_credentials "bundle exec rubocop --force-exclusion $(printf '%q ' "${rb_array[@]}")" 2>&1)"
     rc=$?
     if [ "$rc" -eq 1 ]; then
       GATE_RESULT="red"; GATE_SUMMARY="rubocop encontrou infrações"
@@ -80,6 +92,7 @@ run_verification() {
 
   out="$(run_with_credentials 'bin/rails test' 2>&1)"
   rc=$?
+  [ -n "$GATE_CONTAINER" ] && GATE_COMMANDS="$GATE_COMMANDS (no container app do compose)"
   counts="$(printf '%s\n' "$out" | grep -E '[0-9]+ runs, [0-9]+ assertions, [0-9]+ failures, [0-9]+ errors' | tail -1)"
   GATE_TAIL="$(failure_excerpt "$out")"
 

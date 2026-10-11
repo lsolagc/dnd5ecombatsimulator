@@ -70,9 +70,13 @@ Ao contrário das skills, executam fora do modelo:
 - A evidência (assinatura de conteúdo, comandos, contagem de testes) fica em
   `.git/claude-verify/evidence.json`. Os hooks só negam ou bloqueiam, nunca reescrevem comandos
   (rtk e caveman já reescrevem Bash e reescritas paralelas não são determinísticas).
-- **Credenciais do banco de teste:** `DND_TEST_USER`/`DND_TEST_PASS` só existem em shell interativa
-  (`~/.bashrc`). Os hooks usam `bash -ic` quando as variáveis não estão no ambiente; agentes que rodam
-  `bin/rails test` à mão devem fazer o mesmo (`bash -ic 'bin/rails test'`).
+- **Onde os gates rodam:** se o container `app` do `compose.yaml` está no ar montando este checkout,
+  rubocop e `bin/rails test` rodam nele (`docker exec`), com Ruby e banco de teste próprios; agentes
+  rodam à mão com `docker compose exec app bin/rails test`. Num worktree o caminho é outro, então
+  os gates caem no host.
+- **Credenciais do banco de teste (host):** `DND_TEST_USER`/`DND_TEST_PASS` só existem em shell
+  interativa (`~/.bashrc`). Sem o container, os hooks usam `bash -ic` quando as variáveis não estão
+  no ambiente; agentes que rodam `bin/rails test` à mão devem fazer o mesmo (`bash -ic 'bin/rails test'`).
 - **Escape:** iniciar o Claude Code com `CLAUDE_GATE_OFF=1` desliga os dois gates.
 - Contornos aceitos (não vale complexidade para fechá-los): editar os scripts por `sed` no Bash,
   `git commit-tree`, alias de git e `--no-verify`. Editar `.claude/hooks/` e `.claude/settings.json`

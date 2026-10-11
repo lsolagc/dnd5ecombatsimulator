@@ -67,7 +67,7 @@ if [ -z "$EVENTS" ]; then
 fi
 
 counted_runs="$(printf '%s' "$EVENTS" | jq '[.[] | select(.kind == "run" and .counted)] | length')"
-[ "$counted_runs" -ge 1 ] || problems+=("o transcript não mostra nenhuma execução real da suíte (saída com \"N runs, M assertions, F failures, E errors\"); rode bash -ic 'bin/rails test' e mostre o resultado")
+[ "$counted_runs" -ge 1 ] || problems+=("o transcript não mostra nenhuma execução real da suíte (saída com \"N runs, M assertions, F failures, E errors\"); rode docker compose exec app bin/rails test (ou bash -ic 'bin/rails test' sem o compose) e mostre o resultado")
 
 if ! printf '%s' "$REPORT" | grep -Eiq 'Sem invariantes:[[:space:]]*[^[:space:]]'; then
   sabotaged="$(printf '%s' "$EVENTS" | jq '
