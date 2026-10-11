@@ -20,14 +20,9 @@ status: stable
 # Vocabulary
 
 Decided with the user on 2026-10-11, when the basic attack moved into
-[the Combat::* pipeline](/architecture/combat-effect-pipeline.md):
-
-| Term | In code | Meaning |
-|---|---|---|
-| **Action** | `Combat::CombatAction` | What a combatant does with the action of its turn: Attack, cast a spell, use a feature; later Disengage, Dodge, Hide. |
-| **Attack action** | `CombatAction(source_type: :attack)` | The action every combatant has, with the equipped weapon or bare fists. It holds `attacks_per_action` attacks (Extra Attack). |
-| **Attack** | one weapon attack inside the Attack action | One attack roll against one target; on a hit it produces a damage effect. |
-| **Effect** | `Combat::EffectInstance` | The atomic outcome of an action: damage or healing, with an optional attack roll or saving throw. |
+[the Combat::* pipeline](/architecture/combat-effect-pipeline.md). The terms
+(action, Attack action, attack, effect) and their names in code are in the
+[ubiquitous language](/ubiquitous-language.md).
 
 The basic attack *has* an effect: weapon damage on a hit. That is why it
 belongs in the pipeline rather than beside it. A spell attack such as Fire

@@ -7,6 +7,7 @@ tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
+verified: { by: human:lsolagc, at: 2026-10-11T19:06:20Z }
 sources:
   - id: combat-simulator-rb
     title: app/services/combat_simulator_service.rb
@@ -129,7 +130,10 @@ chosen target replaces `resolve_feature_target` for features and spells; every
 attack of the action re-runs the rule's pick, falling back to the first living
 enemy in initiative order. No rule fires → the turn logs `action: { type: :idle }`
 with empty `results`. Gambit choices draw nothing from `@rng`, and actors with
-no enabled gambit take the old random path unchanged. Rules are loaded once per
+no enabled gambit take the old random path unchanged. Open:
+[issue #40](https://github.com/lsolagc/dnd5ecombatsimulator/issues/40) makes
+`any` pick a random target and merges the dice RNG (`srand`) and `@rng` into
+one stream. Rules are loaded once per
 simulation and evaluated over `Gambit` objects (saved or not).
 
 **Log.** `gambits:` (optional, a batch's `gambit_settings`) makes the

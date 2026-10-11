@@ -6,7 +6,24 @@ tags: [combat, gambits]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
-status: draft
+verified: { by: human:lsolagc, at: 2026-10-11T20:21:03Z }
+sources:
+  - id: issue-41
+    title: "GitHub issue #41: gambit targets filtered by action, and an \"Outro aliado\" target"
+    resource: https://github.com/lsolagc/dnd5ecombatsimulator/issues/41
+  - id: issue-39
+    title: "GitHub issue #39: D&D 5e action economy in the simulator"
+    resource: https://github.com/lsolagc/dnd5ecombatsimulator/issues/39
+  - id: issue-42
+    title: "GitHub issue #42: a resource condition that names the resource"
+    resource: https://github.com/lsolagc/dnd5ecombatsimulator/issues/42
+  - id: issue-43
+    title: "GitHub issue #43: rename the gambit condition to criterion in code and UI"
+    resource: https://github.com/lsolagc/dnd5ecombatsimulator/issues/43
+  - id: issue-44
+    title: "GitHub issue #44: gambit preset CRUD (list, edit, delete)"
+    resource: https://github.com/lsolagc/dnd5ecombatsimulator/issues/44
+status: stable
 ---
 
 # Context
@@ -38,13 +55,13 @@ condition per slot, conditions limited to what the simulator can observe.
 |---|---|---|
 | Slots with gaps (FFXII allows empty slots between rules)? | Compact list: positions 1..n, n ≤ 6; the UI shows 6-n empty slots after the rules. | An empty slot is skipped anyway, so gaps carry no behavior; compact positions keep reorder a permutation. |
 | Several valid targets — which one? | Candidates are walked in initiative order; the first that satisfies the condition wins (selector conditions take the min/max, ties by initiative order). | Task requires a fixed criterion, never a draw; initiative order is already seeded and deterministic. |
-| Does "Aliado" include the actor? | Yes. | Same meaning as the existing payload `"ally"` target and FFXII's Ally. |
+| Does "Aliado" include the actor? | Yes. | Same meaning as the existing payload `"ally"` target and FFXII's Ally. Caveat: 5e abilities that exclude the user (Bardic Inspiration, Commander's Strike) would make one label mean two things; [issue #41](https://github.com/lsolagc/dnd5ecombatsimulator/issues/41) plans a separate "Outro aliado" target and a target select filtered by action.[^issue-41] |
 | Can any target be paired with any action? | No: validated against the action's natural target. Attack and enemy payloads → Inimigo; `self` payloads → Self (Action Surge joins in pass 2); `ally` payloads → Aliado or Self. | Avoids rules that can never fire or would heal an enemy. |
 | A rule references an action the character lacks (e.g. preset from another subclass)? | Valid record; skipped at runtime as "action unavailable". | Lets presets be applied across characters, like FFXII skipping an unknown ability. |
 | An action with several attacks loses its target mid-action? | The remaining attacks re-run the rule's target pick; if nothing qualifies, the first living enemy in initiative order. | 5e lets the fighter switch targets; stopping would waste attacks. |
 | RNG draws for gambit-driven actors? | A gambit-driven choice consumes no `@rng` draw (no `sample`). Random-mode actors keep the exact same draw sequence. | Determinism of existing simulations and tests. |
 | Gambits with all slots disabled? | Same as no gambits: random. | Task decision "sem nenhum gambit ligado". |
-| Which payload decides a class feature's natural target? | The highest-level unlock that has a payload; payloads with a `trigger` (passives) or a kind other than heal/damage are rejected. | Matches what the simulator offers as an action; a passive rule could never fire. |
+| Which payload decides a class feature's natural target? | The highest-level unlock that has a payload; payloads with a `trigger` (passives) or a kind other than heal/damage are rejected. | Matches what the simulator offers as an action; a passive rule could never fire. Caveat: the simulator reads the highest unlock up to the character's level, so the two diverge if a feature ever changes target by level; [issue #41](https://github.com/lsolagc/dnd5ecombatsimulator/issues/41) moves validation to the character's level.[^issue-41] |
 | Gambits snapshot for batches? | Deferred to pass 3 (log): pass 1 reads `combatant.gambits` live. | Reviewer flagged that editing gambits mid-batch breaks seed reproduction; pass 3 fixes it with a snapshot the simulator runs from. |
 
 **Pass 1 status (2026-10-09):** code complete and suite green, but the adversarial
@@ -70,12 +87,12 @@ Inventory of the Fighter's existing features (the only class with features today
 
 | Question | Decision | Why |
 |---|---|---|
-| Should reactions and passives (Indomitable, War Magic, Eldritch Strike) be gambit actions? | No — they stay automatic. | FFXII gambits only pick the turn's action; reactions fire on their own. "Every feature can be fired by a gambit" is read as every *turn action*. |
+| Should reactions and passives (Indomitable, War Magic, Eldritch Strike) be gambit actions? | No — they stay automatic. | FFXII gambits only pick the turn's action; reactions fire on their own. "Every feature can be fired by a gambit" is read as every *turn action*. Caveat: anything the player chooses to use gets a gambit eventually (reactions like opportunity attacks and Counterspell, War Magic's bonus attack, Indomitable's single use); only always-on effects stay automatic. Planned with the action economy in [issue #39](https://github.com/lsolagc/dnd5ecombatsimulator/issues/39).[^issue-39] |
 | How does Action Surge fit an FFXII rule? | It is a gambit action (target Self). When its rule wins, one use is spent, a marker turn is logged, and the actor evaluates its gambits twice more (normal action, then `extra: true`); Action Surge rules are skipped inside those two. | Lets the user decide *when* to surge (e.g. "Self: HP < 50% → Action Surge"), and the two actions still follow the list. |
-| Does a gambit-driven actor still get the automatic random Action Surge? | No: only through a rule. Random-mode actors keep the automatic one. | Fixes the pass-1 gap where an idle actor still acted at random; FFXII never acts outside the list. |
-| War Magic bonus attack target for a gambit-driven actor? | The spell's target if it is a living enemy, else the first living enemy in initiative order; no `@rng`. | It stays automatic, but must be deterministic like every other gambit choice. |
-| What is a "status" condition? | The only status the simulator tracks is the Distracting Strike advantage mark: `marked` = the target carries a mark the actor would use (from someone else), `unmarked` = it does not. | No other condition/status system exists; marks expire at their owner's next turn start, so the owner never sees its own mark. |
-| "Resource available" condition? | `resource_at_least N`: the actor's remaining resource **for the rule's own action** is ≥ N (feature uses, the superiority-dice pool for maneuvers, slots of the spell's level). Rejected for Ataque and cantrips. The target is the first candidate in initiative order. | Availability (≥ 1) is already implied by the action check; the parameter lets a rule keep a reserve (e.g. "dados ≥ 2 → Precision Attack"). |
+| Does a gambit-driven actor still get the automatic random Action Surge? | No: only through a rule. Random-mode actors keep the automatic one. A gambit-driven Fighter with no Action Surge rule never surges. | The "automatic random Action Surge" is what an actor without gambits does: right after its normal action, on the first turn it has a use left, it takes one extra action drawn at random. In pass 1 gambit-driven actors got it too, so a Fighter whose list matched nothing stood idle and then still acted at random through the surge. FFXII never acts outside the list, and a rule lets the user choose *when* to surge instead of always on the first turn. |
+| War Magic bonus attack target for a gambit-driven actor? | The spell's target if it is a living enemy, else the first living enemy in initiative order; no `@rng`. | It stays automatic, but must be deterministic like every other gambit choice. Caveat: this works only because the simulator has no range or reach. A cantrip can hit a distant enemy that a weapon cannot reach, and 5e does not require the bonus attack to hit the spell's target, so once range exists the bonus attack needs its own target pick. |
+| What is a "status" condition? | The only status the simulator tracks is the Distracting Strike advantage mark: `marked` = the target carries a mark the actor would use (from someone else), `unmarked` = it does not. | No other condition/status system exists; marks expire at their owner's next turn start, so the owner never sees its own mark. Note: "condition" here is the gambit rule's test, now called **criterion**, and "status" is anything with a duration on a combatant; see the [ubiquitous language](/ubiquitous-language.md). The rename in code and UI is [issue #43](https://github.com/lsolagc/dnd5ecombatsimulator/issues/43).[^issue-43] |
+| "Resource available" condition? | `resource_at_least N`: the actor's remaining resource **for the rule's own action** is ≥ N (feature uses, the superiority-dice pool for maneuvers, slots of the spell's level). Rejected for Ataque and cantrips. The target is the first candidate in initiative order. | Availability (≥ 1) is already implied by the action check; the parameter lets a rule keep a reserve (e.g. "dados ≥ 2 → Precision Attack"). Caveat: once a character can hold several pools (multiclass, e.g. superiority dice and ki), the condition should name the resource ("Self: [recurso] ≥ N", like FFXII's "Self: MP ≥ X%", which never needs a name because MP is the only pool), defaulting to the action's own resource. Not needed today: a character has one class and no natural rule crosses its pools. Tracked, not planned soon, in [issue #42](https://github.com/lsolagc/dnd5ecombatsimulator/issues/42).[^issue-42] |
 | Inventory tests on fixtures or real content? | Real content: each test loads `db/seeds` (SeedData.load_all, inside the test transaction) and fires the feature through a single gambit. | Proves reachability with the content the user actually runs, not a fixture double. |
 
 Smaller choices taken while building pass 2:
@@ -141,7 +158,7 @@ Smaller choices taken while building pass 4:
 | Question | Decision | Why |
 |---|---|---|
 | Model? | `gambit_presets` (`name` unique, case-insensitive, stripped), `has_many :gambits, as: :owner, dependent: :destroy`, reusing the `gambits` table, validations and labels. | Task decision: same table, same validations. |
-| Where is the preset UI? | A "Presets" panel on the character's gambits screen: "Salvar como preset" (new name, or overwrite a chosen one) and "Aplicar preset" (select + confirm). No preset index or editor screen. | "Editar um preset fora de um personagem" is out of scope; everything starts from a character. |
+| Where is the preset UI? | A "Presets" panel on the character's gambits screen: "Salvar como preset" (new name, or overwrite a chosen one) and "Aplicar preset" (select + confirm). No preset index or editor screen. | "Editar um preset fora de um personagem" is out of scope; everything starts from a character. Caveat: the user wants a preset CRUD eventually (list, edit screen, delete); tracked, not planned soon, in [issue #44](https://github.com/lsolagc/dnd5ecombatsimulator/issues/44).[^issue-44] |
 | Copy semantics? | Save and apply both delete the destination's rules and insert copies (position, enabled, target, condition, value, action), in one transaction; no link is kept. | Task decision: copy both ways. |
 | Saving a character with no rules? | Refused ("sem regras para salvar"). | An empty preset would wipe characters it is applied to. |
 | Applying a preset with an action the character lacks? | Copied anyway; the screen shows it "(indisponível)" and the simulator skips it. | Same rule as pass 1; presets are meant to travel between characters. |
@@ -172,3 +189,13 @@ Dueling, knows Disarming Attack, Distracting Strike and Precision Attack).
 | Corwin (aggressive) | 1 Self: qualquer → Action Surge · 2 Inimigo: recurso ≥ 2 → Precision Attack · 3 Self: HP < 25% → Second Wind · 4 Inimigo: menor HP → Disarming Attack · 5 (desligada) Inimigo: não marcado → Distracting Strike · 6 Inimigo: menor HP → Ataque | Surges on the first turn, spends dice on Precision while keeping one back for Disarming (the last die), heals only when nearly down. Distracting Strike's mark only helps other attackers (`marked_for?` ignores the actor's own mark), so enabled in a 1x1 it won every turn and swallowed the pool (Precision and Disarming fired 0 times in 300 seeds); it stays disabled, ready for group fights. |
 
 **Pass 6 status (2026-10-09):** done. Review iteration 1 blocked on a real configuration bug (Corwin's "não marcado → Distracting Strike" won every turn in a 1x1, so Precision and Disarming never fired) and weak tests (exact name, presets, attributes); iteration 2 fixed both. Dry run on dev (ids 17/18, seeds 1–100, rolled back): every enabled rule fires — Brenna 1/2/3 = 77/61/503, Corwin 1/2/3/4/6 = 100/550/15/65/1. Corwin's rule 6 (Ataque) is nearly unreachable in a 1x1: Disarming ("menor HP", always true) takes every turn while a die is left, and fights usually end first. The test rebuilds the two with default ability scores, so its firing seeds differ from dev's.
+
+[^issue-41]: Source: GitHub issue #41: gambit targets filtered by action, and an "Outro aliado" target
+
+[^issue-39]: Source: GitHub issue #39: D&D 5e action economy in the simulator
+
+[^issue-42]: Source: GitHub issue #42: a resource condition that names the resource
+
+[^issue-43]: Source: GitHub issue #43: rename the gambit condition to criterion in code and UI
+
+[^issue-44]: Source: GitHub issue #44: gambit preset CRUD (list, edit, delete)

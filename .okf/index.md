@@ -8,3 +8,4 @@ okf_version: "0.2"
 * [models/](models/) - Persisted ActiveRecord models: characters, classes, progression, combatants, and class features.
 * [ui/](ui/) - ERB view layer styled with Bootstrap.
 * [ops/](ops/) - Local development setup and testing.
+* [Ubiquitous language](ubiquitous-language.md) - The agreed vocabulary in one place (action, attack, effect; condition, status, criterion) and each term's name in code.

@@ -6,7 +6,8 @@ tags: [combat, gambits]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-09T22:20:00Z
-status: draft
+verified: { by: human:lsolagc, at: 2026-10-11T20:24:03Z }
+status: stable
 ---
 
 # Context

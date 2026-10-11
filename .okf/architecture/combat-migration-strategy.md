@@ -6,6 +6,7 @@ tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
   at: 2026-10-11T00:00:00Z
+verified: { by: human:lsolagc, at: 2026-10-11T18:34:04Z }
 status: stable
 ---
 
