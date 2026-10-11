@@ -49,7 +49,7 @@ up to 6 [gambits](/models/gambit.md) that choose for them; decisions are in
 | Mode | Brenna wins | Corwin wins | Avg rounds | Idle turns |
 |---|---|---|---|---|
 | Random (no gambits) | 87 (43.5%) | 113 (56.5%) | 5.64 | 0 |
-| Gambits (pass-6 setup) | 81 (40.5%) | 119 (59.5%) | 5.36 | 0 |
+| Gambits (Brenna and Corwin setup) | 81 (40.5%) | 119 (59.5%) | 5.36 | 0 |
 
 A 3-point shift toward Corwin and 0.28 fewer rounds — within the noise of 200 runs
 (±3.5 points standard error on the win rate), so the setups do not distort this

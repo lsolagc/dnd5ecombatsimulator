@@ -64,7 +64,7 @@ file — never hand-write a migration timestamp.
 
 `bash -ic 'bin/rails gambits:brenna_corwin'` gives the dev-only characters Brenna
 Ironhide and Corwin Vale their gambits (rules in `lib/gambit_setups.rb`, reasons in
-[gambits-decisions.md](/architecture/gambits-decisions.md), Pass 6). Found by exact
+[gambits-decisions.md](/architecture/gambits-decisions.md), "Dev characters"). Found by exact
 name; replaces only their gambits, in one transaction, so running it again is a
 no-op — and also undoes manual edits made to their rules since.
 

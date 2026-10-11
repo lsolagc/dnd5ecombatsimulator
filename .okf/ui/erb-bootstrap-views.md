@@ -106,7 +106,7 @@ submits.
   Below the slots, a **Presets** panel saves the rules as a new preset (unique
   name) or overwrites a chosen one, and applies a preset to this character
   (both with a Turbo confirm), copying rules without a live link.
-  Decisions: [gambits-decisions.md](/architecture/gambits-decisions.md) (Pass 4, 5).
+  Decisions: [gambits-decisions.md](/architecture/gambits-decisions.md) ("Gambits screen", "Presets").
 - **`player_characters#new`**: a 4-step wizard (Atributos / Combate /
   Features / Revisão) navigated client-side by `wizard_controller.js`[^wizard-controller] — no
   server round-trip between steps, one form submitted on the last step. The Revisão HP
