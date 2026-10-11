@@ -500,6 +500,8 @@ class CombatSimulatorService
       results = Combat::ActionRunner.call(action:, crit:)
       consume_feature_use!(actor:, class_feature_id: resource_class_feature_id(feature:, combat_superiority_unlock: combat_superiority_unlock_for(actor:)))
 
+      # ponytail: `debuff` is one string with one supported value, no duration and one effect per payload;
+      # replace it with a list of status applications once a feature or spell applies a status (issue #45).
       debuff = maneuver[:payload]["debuff"]
       case debuff
       when nil then nil
