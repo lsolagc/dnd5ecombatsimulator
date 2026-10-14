@@ -41,7 +41,10 @@ random and gambit-driven, one cut at `max_rounds: 2`.[^compositions]
   transaction that rolls back. Each round also times a yardstick (30 `SELECT 1` and a fixed Marshal
   round trip); the check compares the **relative** time (ms ÷ yardstick), which cancels the machine's
   own drift: absolute ms moved ±25% between runs of unchanged code on WSL, the relative time ±6%.
-  Exits 1 when any composition is over its baseline + 10%; a slowdown of ~12% was caught. The
+  Unchanged code still moves up to ~7.5% between runs in Docker, so one run over the baseline + 10%
+  triggers a second, fresh measurement, and the task exits 1 only when that one is over too; a
+  slowdown of ~12% was caught. The hard performance gate is the query ceiling above; the time
+  benchmark is the alarm for slowdowns that add no queries. The
   yardstick does **not** cancel a change of environment or entry point: unchanged code measured +40%
   on the host (no YJIT) against the Docker + YJIT baseline, and +18% under `bin/rails runner` against
   the rake task. So the task aborts when the docker flag, Ruby build or CPU differ from the
