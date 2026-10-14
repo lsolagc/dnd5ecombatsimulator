@@ -99,17 +99,6 @@ class Combat::ActionRunnerTest < ActiveSupport::TestCase
     assert_equal 3, result.amount # half of 6, since the reroll succeeded
   end
 
-  test "PlayerCharacter#use_class_feature delegates to ActionRunner" do
-    Random.srand(1)
-    @fighter.current_hit_points = 3
-
-    results = @fighter.use_class_feature(slug: "second-wind")
-
-    assert_equal 1, results.size
-    assert_equal :heal, results.first.kind
-    assert results.first.hp_after > 3
-  end
-
   test "PlayerCharacter#cast_spell delegates to ActionRunner and consumes a spell slot" do
     merlin = player_characters(:merlin) # level 1 wizard, 2 level-1 slots
     target = player_characters(:aragorn)

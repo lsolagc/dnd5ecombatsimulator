@@ -6,7 +6,7 @@ resource: app/services/combat
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-14T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T18:30:17Z }
 sources:
   - id: combat-pipeline-rb
@@ -143,11 +143,5 @@ This is the field that connects the persisted class-feature model (see
 [models/class-feature-unlock.md](/models/class-feature-unlock.md)) to this
 pipeline: a class feature's unlock row describes an executable effect
 without new orchestrator logic.[^combat-pipeline-rb]
-
-# Model shortcut
-
-`PlayerCharacter#use_class_feature(slug:, targets: [])` builds the
-`CombatAction` and delegates to `Combat::ActionRunner`, so callers do not
-construct the intent object by hand.
 
 [^combat-pipeline-rb]: Source: `app/services/combat/*.rb`

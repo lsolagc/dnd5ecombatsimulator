@@ -1,11 +1,10 @@
 module Combat
   class RollContext
-    attr_reader :actor, :target, :combat_state
+    attr_reader :actor, :target
 
-    def initialize(actor:, target: nil, combat_state: {})
+    def initialize(actor:, target: nil)
       @actor = actor
       @target = target
-      @combat_state = combat_state
     end
 
     def resolve(variable)

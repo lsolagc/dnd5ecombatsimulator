@@ -6,7 +6,7 @@ resource: app/models/spell.rb
 tags: [spell, class, feature, combat, persistence, progression]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-14T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:31:33Z }
 sources:
   - id: spell-rb
@@ -77,8 +77,9 @@ keeping several copies of one character. Planned in
 
 # Casting a spell
 
-`PlayerCharacter#cast_spell(slug:, targets:)` mirrors
-`#use_class_feature`[^spell-rb] but goes through a real, enforced resource:
+`PlayerCharacter#cast_spell(slug:, targets:)` builds a `Combat::CombatAction`
+and runs it through `Combat::ActionRunner`, like a class feature,[^spell-rb] but
+goes through a real, enforced resource:
 
 1. Looks up the spell in `spells` (must be prepared by this character).
 2. If `spell.level.positive?`, decrements `available_spell_slots[spell.level]`

@@ -75,13 +75,6 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     assert_nil character.class_progression
   end
 
-  # can_improve_ability_scores?
-
-  test "can_improve_ability_scores? is false at a non-ASI level" do
-    character = player_characters(:aragorn)
-    assert_not character.can_improve_ability_scores?
-  end
-
   # Champion subclass passives
 
   test "critical_hit_threshold is 20 when Champion critical features are not unlocked" do
@@ -223,23 +216,6 @@ class PlayerCharacterTest < ActiveSupport::TestCase
 
   # basic attack configuration
 
-  test "roll_an_attack applies the combatant's configured attack_bonus as the to-hit modifier" do
-    character = player_characters(:aragorn)
-    character.combatant.update!(attack_bonus: 100)
-
-    attack_roll = character.roll_an_attack
-
-    assert attack_roll.total >= 101
-  end
-
-  test "roll_an_attack defaults the to-hit modifier to zero when attack_bonus is not configured" do
-    character = player_characters(:aragorn)
-
-    attack_roll = character.roll_an_attack
-
-    assert attack_roll.total <= 20
-  end
-
   test "armor_class includes the +1 bonus from Fighting Style: Defense" do
     character = player_characters(:fighter_defender)
 
@@ -250,103 +226,6 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     character = player_characters(:aragorn)
 
     assert_equal character.combatant.armor_class, character.armor_class
-  end
-
-  test "roll_an_attack applies the +2 to-hit bonus from Fighting Style: Archery" do
-    archer = player_characters(:fighter_archer)
-    no_style = player_characters(:aragorn)
-
-    Random.srand(42) # to-hit natural: 7 (no crit)
-    archer_total = archer.roll_an_attack.total
-
-    Random.srand(42) # same natural roll again, so Archery's bonus is the only difference
-    no_style_total = no_style.roll_an_attack.total
-
-    assert_equal no_style_total + 2, archer_total
-  end
-
-  test "roll_an_attack applies the +2 damage bonus from Fighting Style: Dueling" do
-    duelist = player_characters(:fighter_duelist)
-    duelist.combatant.update!(damage_dice: "1d1")
-    no_style = player_characters(:aragorn)
-    no_style.combatant.update!(damage_dice: "1d1")
-
-    Random.srand(42) # to-hit natural: 7 (no crit), so damage isn't doubled
-    duelist_damage = duelist.roll_an_attack.damage
-
-    Random.srand(42) # same rolls again, so Dueling's bonus is the only difference
-    no_style_damage = no_style.roll_an_attack.damage
-
-    assert_equal no_style_damage + 2, duelist_damage
-  end
-
-  test "damage_roll returns the combatant's configured damage_dice" do
-    character = player_characters(:aragorn)
-    character.combatant.update!(damage_dice: "1d8+3")
-
-    assert_equal "1d8+3", character.damage_roll
-  end
-
-  test "damage_roll defaults to 1d4 when damage_dice is not configured" do
-    character = player_characters(:aragorn)
-
-    assert_equal "1d4", character.damage_roll
-  end
-
-  test "get_attacked applies the combatant's configured damage_type on a hit" do
-    character = player_characters(:aragorn)
-    character.combatant.update!(damage_type: "piercing")
-    character.combatant.immunities["damage_types"]["piercing"] = true
-    character.current_hit_points = character.max_hit_points
-    attack_roll = Struct.new(:natural, :total, :damage).new(10, 999, 10)
-
-    character.get_attacked(attack_roll: attack_roll)
-
-    assert_equal character.max_hit_points, character.current_hit_points, "expected the configured piercing immunity to block all damage"
-  end
-
-  test "get_attacked defaults to bludgeoning damage_type when not configured" do
-    character = player_characters(:aragorn)
-    character.combatant.vulnerabilities["damage_types"]["bludgeoning"] = true
-    character.current_hit_points = character.max_hit_points
-    attack_roll = Struct.new(:natural, :total, :damage).new(10, 999, 3)
-
-    character.get_attacked(attack_roll: attack_roll)
-
-    assert_equal character.max_hit_points - 6, character.current_hit_points, "expected the default bludgeoning type to trigger vulnerability (double damage)"
-  end
-
-  test "get_attacked takes a hit that rolled 0 damage without raising" do
-    character = player_characters(:aragorn)
-    character.current_hit_points = character.max_hit_points
-    attack_roll = Struct.new(:natural, :total, :damage).new(10, 999, 0)
-
-    result = character.get_attacked(attack_roll: attack_roll)
-
-    assert result[:success]
-    assert_equal character.max_hit_points, character.current_hit_points
-  end
-
-  test "get_attacked always hits on a natural 20, even when the total is below the armor class" do
-    character = player_characters(:aragorn)
-    character.current_hit_points = character.max_hit_points
-    attack_roll = Struct.new(:natural, :total, :damage).new(20, 1, 4)
-
-    result = character.get_attacked(attack_roll: attack_roll)
-
-    assert result[:success]
-    assert_equal character.max_hit_points - 4, character.current_hit_points
-  end
-
-  test "get_attacked always misses on a natural 1, even when the total beats the armor class" do
-    character = player_characters(:aragorn)
-    character.current_hit_points = character.max_hit_points
-    attack_roll = Struct.new(:natural, :total, :damage).new(1, 999, 4)
-
-    result = character.get_attacked(attack_roll: attack_roll)
-
-    assert_not result[:success]
-    assert_equal character.max_hit_points, character.current_hit_points
   end
 
   # Spellcasting

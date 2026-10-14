@@ -6,7 +6,7 @@ resource: app/models/player_character.rb
 tags: [persistence, combat]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-14T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:21:20Z }
 sources:
   - id: player-character-rb
@@ -32,8 +32,7 @@ persisted "identity" record (`PlayerCharacter`) is thin, and the "sheet"
 (scores, defenses, HP ceiling) is on `Combatant`.[^player-character-rb]
 
 `current_hit_points` is **not persisted at all** — it is a plain
-`attr_accessor` on the `CombatantBehavior` concern, reset to `max_hit_points`
-by `initialize_for_combat`.[^combatant-behavior-rb] In-combat HP is therefore
+`attr_accessor` on the `CombatantBehavior` concern.[^combatant-behavior-rb] In-combat HP is therefore
 transient, per Ruby object instance, matching how
 [CombatSimulatorService](/architecture/combat-simulator-service.md) resets
 it at the start of an encounter rather than reading a stored value.
@@ -77,14 +76,6 @@ immunity/resistance/vulnerability (delegated to `Combatant`, see
 [combatant.md](/models/combatant.md)) before subtracting from
 `current_hit_points`, floored at 0.
 
-**Legacy, kept but no longer called by the simulator:** `roll_an_attack`
-builds a `Dice::AttackRoll` from the same numbers, and `get_attacked` decides
-the hit with `Dice.hit?`. Unlike the pipeline, `get_attacked` applies damage
-with the **defender's own** `damage_type`. That was the bug fixed when the
-Attack action moved to the pipeline (see
-[combat-action-language.md](/architecture/combat-action-language.md)). The
-pair stays until its replacement has been walked through with the user.
-
 # Critical hit threshold and passives (Champion)
 
 `critical_hit_threshold` scans unlocked `class_feature_unlocks` for
@@ -105,10 +96,10 @@ passive has no explicit actor intent to model.
 
 # Class features
 
-`use_class_feature(slug:, targets: [])` looks up the feature by `slug` on
-the character's class and delegates to
+A class feature runs through
 [the combat effect-execution pipeline](/architecture/combat-effect-pipeline.md)
-via `Combat::CombatAction` + `Combat::ActionRunner`.
+via `Combat::CombatAction` + `Combat::ActionRunner`, built by
+[CombatSimulatorService](/architecture/combat-simulator-service.md).
 
 `spellcasting_ability` returns the ability name the character casts with: the
 chosen subclass's spellcasting feature (`spellcasting_feature`) wins, falling

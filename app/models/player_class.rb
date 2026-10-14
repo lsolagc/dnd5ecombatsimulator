@@ -1,6 +1,4 @@
 class PlayerClass < ApplicationRecord
-  include Tableable
-
   enum :spellcasting_modifier, [ :intelligence, :wisdom, :charisma ]
   enum :hit_die, [ :d4, :d6, :d8, :d10, :d12 ]
 

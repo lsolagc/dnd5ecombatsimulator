@@ -18,11 +18,6 @@ module CombatantBehavior
                 :immune_to?,
                 :resistant_to?,
                 :vulnerable_to?,
-                # :current_hit_points,
-                # :current_hit_points=,
-                # :initiative,
-                # :dead?,
-                # :initialize_for_combat,
                 to: :combatant
     end
   end
@@ -30,10 +25,6 @@ module CombatantBehavior
   # ---
   # Instance methods
   # ---
-
-  def initialize_for_combat
-    self.current_hit_points = max_hit_points || hit_points_at_level_one
-  end
 
   def dead?
     current_hit_points.nil? || current_hit_points <= 0

@@ -5,7 +5,7 @@ description: Why the Combat::* pipeline was introduced additively in three phase
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-14T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T18:34:04Z }
 status: stable
 ---
@@ -73,9 +73,9 @@ experiment stayed open until the user settled it: `CombatSimulatorService`
 By then it had passives, spells, maneuvers, Action Surge, gambits and
 simulation batches, while `EncounterService` still only rolled basic attacks
 and had no caller outside its own test. `EncounterService` and its test were
-deleted; nothing else depended on it (`roll_an_attack`, `get_attacked` and
-`attacks_per_action` stayed, since the simulator used them then; the first
-two have since been replaced by the Attack action, see
+deleted; nothing else depended on it (`attacks_per_action` and the
+attack-roll methods it called stayed, since the simulator used them then;
+those methods have since been replaced by the Attack action and removed, see
 [combat-action-language.md](/architecture/combat-action-language.md)).
 
 Phases 2 and 3 now apply to `CombatSimulatorService`. The basic attack

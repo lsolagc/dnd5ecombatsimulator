@@ -20,15 +20,14 @@ module Combat
 
     # crit: the effect rides on a weapon attack that was a critical hit (doubles its dice).
     # advantage: the effect's attack roll is made with advantage.
-    def self.call(effect:, actor:, target:, combat_state: {}, reroll_saving_throw: false, disadvantage_on_save: false, crit: false, advantage: false)
-      new(effect:, actor:, target:, combat_state:, reroll_saving_throw:, disadvantage_on_save:, crit:, advantage:).execute
+    def self.call(effect:, actor:, target:, reroll_saving_throw: false, disadvantage_on_save: false, crit: false, advantage: false)
+      new(effect:, actor:, target:, reroll_saving_throw:, disadvantage_on_save:, crit:, advantage:).execute
     end
 
-    def initialize(effect:, actor:, target:, combat_state: {}, reroll_saving_throw: false, disadvantage_on_save: false, crit: false, advantage: false)
+    def initialize(effect:, actor:, target:, reroll_saving_throw: false, disadvantage_on_save: false, crit: false, advantage: false)
       @effect               = effect
       @actor                = actor
       @target               = target
-      @combat_state         = combat_state
       @reroll_saving_throw  = reroll_saving_throw
       @disadvantage_on_save = disadvantage_on_save
       @crit                 = crit
@@ -99,7 +98,7 @@ module Combat
       end
 
       def roll_for_effect(crit: false)
-        context = RollContext.new(actor: @actor, target: @target, combat_state: @combat_state)
+        context = RollContext.new(actor: @actor, target: @target)
         RollExpression.new(expression: @effect.roll_expression).resolve(context:, crit: !!crit)
       end
 

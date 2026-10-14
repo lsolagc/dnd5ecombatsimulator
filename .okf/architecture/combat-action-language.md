@@ -5,7 +5,7 @@ description: The project's vocabulary for what a combatant does in combat (actio
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-14T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T18:27:39Z }
 sources:
   - id: action-runner-rb
@@ -44,10 +44,12 @@ weapon path apply resistances with the wrong damage type (see below).
   hit, and the Eldritch Strike mark.
 - **War Magic's bonus attack uses the same Attack action**, although in 5e
   it is a bonus action. It is the known gap in the next section.
-- **The legacy pair stays for now.** `PlayerCharacter#roll_an_attack`,
-  `#get_attacked` and `Dice::AttackRoll` are no longer called by the
-  simulator, but they were kept at the user's request. The user wants a
-  walkthrough of what replaces each of them before they are removed.
+- **The legacy pair is gone.** `PlayerCharacter`'s pre-pipeline attack-roll
+  and attack-receiving methods were removed in phase 1.1 of the DDD refactor; the rules
+  only their tests guarded (Archery, Dueling, a 0-damage hit, the `1d4`
+  default) are now tested on the Attack action, and `Dice::AttackRoll` went
+  with them. The Attack action has no disadvantage yet: see
+  [issue #48](https://github.com/lsolagc/dnd5ecombatsimulator/issues/48).
 
 # Open: the action economy
 
@@ -75,7 +77,7 @@ Strike advantage produced byte-identical logs before and after. The weapon
 attack makes the same dice draws in the same order: a d20, a second d20 with
 advantage, then the damage dice.
 
-**Fixed along the way:** the legacy `get_attacked` applied resistances using
+**Fixed along the way:** the legacy attack path (since removed) applied resistances using
 the **defender's** own weapon damage type. The pipeline applies the effect's
 type, which is the attacker's weapon. This changes results only when the
 two types differ and the defender has a resistance, immunity or

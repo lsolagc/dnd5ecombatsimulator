@@ -90,6 +90,38 @@ class Combat::AttackActionTest < ActiveSupport::TestCase
     assert_equal 17, result.attack_roll.natural
   end
 
+  test "Fighting Style: Archery adds +2 to the weapon attack roll" do
+    @attacker = player_characters(:fighter_archer)
+    (_, result, _), = with_rolls(10) { attack(next_target: -> { @target }) }
+
+    assert_equal 10 + @attacker.combatant.attack_bonus + 2, result.attack_roll.total
+  end
+
+  test "Fighting Style: Dueling adds +2 to the weapon damage" do
+    @attacker = player_characters(:fighter_duelist)
+    @target.combatant.armor_class = 0
+    (_, result, _), = with_rolls(10) { attack(next_target: -> { @target }) }
+
+    assert result.attack_roll.hit
+    assert_equal 4 + @attacker.strength_modifier + 2, result.amount
+  end
+
+  test "a hit that rolls 0 damage hits for nothing instead of raising" do
+    @attacker.combatant.strength = 2 # STR mod -4: the stubbed 1d8 rolls 4, so the hit deals 4 - 4 = 0
+    @target.combatant.armor_class = 0
+    (_, result, _), = with_rolls(10) { attack(next_target: -> { @target }) }
+
+    assert result.attack_roll.hit
+    assert_equal 0, result.amount
+    assert_equal @target.max_hit_points, @target.current_hit_points
+  end
+
+  test "a combatant with no configured weapon attacks with the 1d4 default" do
+    action = Combat::CombatAction.new(source_type: :attack, source_id: nil, actor: player_characters(:aragorn_copy))
+
+    assert_match(/\A1d4 /, Combat::EffectResolver.call(action:).first.roll_expression)
+  end
+
   test "a malformed weapon die fails loudly instead of dealing 0 damage" do
     @attacker.combatant.damage_dice = "oops"
 

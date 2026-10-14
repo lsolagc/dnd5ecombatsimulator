@@ -6,7 +6,7 @@ resource: app/services/combat_simulator_service.rb
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-14T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T19:06:20Z }
 sources:
   - id: combat-simulator-rb
@@ -80,7 +80,7 @@ action per turn:
    *not* one of the [passive triggers](/architecture/passive-effect-triggers.md)),
    and still has uses remaining; the feature is run through
    `Combat::CombatAction` + `Combat::ActionRunner`, exactly like
-   [PlayerCharacter#use_class_feature](/models/player-character.md).
+   [PlayerCharacter#cast_spell](/models/spell.md) does for spells.
    A payload with `"applies_to": "weapon_attack"` (every Battle Master
    maneuver) is *not* an action of its own: choosing it makes the turn a normal
    weapon attack, and only if the attack hits is the maneuver's die rolled

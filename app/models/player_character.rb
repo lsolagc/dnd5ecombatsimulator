@@ -61,17 +61,6 @@ class PlayerCharacter < ApplicationRecord
     hit_die.to_s.delete("d").to_i
   end
 
-  def roll_an_attack(advantage: false, disadvantage: false)
-    Dice::AttackRoll.new(
-      to_hit_modifier: weapon_attack_bonus,
-      damage_dice: damage_roll,
-      damage_modifier: weapon_damage_modifier,
-      critical_hit_threshold: critical_hit_threshold,
-      advantage: advantage,
-      disadvantage: disadvantage
-    )
-  end
-
   # To-hit bonus of the equipped weapon, with passive bonuses (e.g. Fighting Style: Archery).
   def weapon_attack_bonus
     attack_bonus + modifier_bonus("attack_bonus")
@@ -117,20 +106,6 @@ class PlayerCharacter < ApplicationRecord
     end
   end
 
-  def damage_roll
-    damage_dice
-  end
-
-  def get_attacked(attack_roll:)
-    if Dice.hit?(natural: attack_roll.natural, total: attack_roll.total, armor_class:)
-      # A negative damage modifier can bring a hit to 0 damage (e.g. 1d4 - 1 rolling a 1): it still hits, for nothing.
-      take_damage(amount: attack_roll.damage, damage_type: damage_type.to_sym) if attack_roll.damage.positive?
-      { success: true, attack_roll: attack_roll, message: "Hit!" }
-    else
-      { success: false, attack_roll: attack_roll, message: "Miss!" }
-    end
-  end
-
   def take_damage(amount:, damage_type:)
     raise ArgumentError, "Amount must be a positive Integer" unless amount.is_a?(Integer) && amount.positive?
     return if immune_to?(damage_type:)
@@ -164,21 +139,6 @@ class PlayerCharacter < ApplicationRecord
 
   def attacks_per_action
     class_progression&.attacks_per_action || 1
-  end
-
-  def can_improve_ability_scores?
-    class_progression&.grants_ability_score_improvement? || false
-  end
-
-  def use_class_feature(slug:, targets: [])
-    feature = player_class.class_features.find_by!(slug: slug)
-    action = Combat::CombatAction.new(
-      source_type: :class_feature,
-      source_id:   feature.id,
-      actor:       self,
-      targets:     targets
-    )
-    Combat::ActionRunner.call(action: action)
   end
 
   def spellcasting_feature
