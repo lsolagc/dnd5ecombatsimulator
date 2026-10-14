@@ -5,7 +5,7 @@ description: Golden files, query ceiling and time benchmark that prove a CombatS
 tags: [testing, performance, combat]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-14T00:30:00Z
+  at: 2026-10-14T00:00:00Z
 sources:
   - id: compositions
     title: lib/combat_regression.rb
@@ -24,16 +24,18 @@ status: draft
 Phase 0 of the DDD refactor of [CombatSimulatorService](/architecture/combat-simulator-service.md):
 three checks over the same compositions, defined once in `CombatRegression::COMPOSITIONS`, on the
 content of `db/seeds` (Campeão, Cavaleiro Arcano, Mestre de Batalha, levels and choices adjusted per
-composition, every change rolled back). Five compositions × seeds 1–12 = 60 simulations: 1v1 and 2v1,
-random and gambit-driven, one cut at `max_rounds: 2`.[^compositions]
+composition, every change rolled back). Six compositions × seeds 1–12 = 72 simulations: 1v1 and 2v1,
+random and gambit-driven, one cut at `max_rounds: 2`, and one (`defesas`) that gives the characters
+resistances, an immunity and a vulnerability, which no seed character has.[^compositions]
 
 - **Golden files** (`test/fixtures/files/combat_regression/<composition>.yml`): the whole result of
   every seed, compared byte for byte. YAML keeps symbols apart from strings; record ids (which change
   between runs) become the character's name or the feature's or spell's slug. The test also fails if
   the set stops covering a critical hit, a maneuver rider (also on a crit), Distracting Strike's
   advantage, a spell turn, War Magic's bonus attack, Action Surge at random and by gambit, a Second
-  Wind heal, a gambit entry, an idle entry, both outcomes, and Eldritch Strike's disadvantage on a save
-  (counted by a spy on `Combat::ActionRunner.call`).[^test]
+  Wind heal, a gambit entry, an idle entry, both outcomes, Eldritch Strike's disadvantage on a save
+  (counted by a spy on `Combat::ActionRunner.call`), and damage halved by a resistance, blocked by an
+  immunity and doubled by a vulnerability (read off the log: damage rolled against HP lost).[^test]
 - **Query ceiling** (`queries.yml`): per composition, the most queries any seed runs (schema lookups
   aside) must stay within the baseline + 10%. In the suite: query counts are deterministic.[^test]
 - **Time benchmark** (`benchmark.yml`, outside the suite): median ms per simulation over 40 rounds
@@ -73,18 +75,20 @@ learned and `CLUSTER`s `class_feature_unlocks` by primary key after loading the 
 the test's transaction). Outside the harness the same seed can still replay differently once the
 table order changes; ordering those queries is a later step of the refactor.
 
-# Baseline (2026-10-14)
+# Baseline (2026-10-13)
 
-Docker Desktop on WSL2 (Linux 6.18), AMD Ryzen 7 2700 (16 threads), Ruby 3.4.2 + YJIT, Rails 8.0.2,
-Postgres 16.15, 40 rounds.
+Docker Desktop on WSL2 (Linux 6.18.54), AMD Ryzen 7 2700 (16 threads), Ruby 3.4.2 + YJIT, Rails 8.0.2,
+Postgres 16.15, 40 rounds. Re-record it (`RECORD=1`) whenever a composition is added, or the kernel
+or Docker changes: a WSL kernel update alone moved absolute times by ~18%.
 
 | Composition | ms/sim | relative | queries/sim (max) |
 |---|---|---|---|
-| campeao-vs-mestre | 35.02 | 1.095 | 29 |
-| mestre-cavaleiro-vs-campeao-gambits | 57.20 | 1.790 | 47 |
-| cavaleiro-vs-campeao | 37.58 | 1.184 | 29 |
-| campeao-cavaleiro-vs-mestre | 53.57 | 1.669 | 47 |
-| mestre-vs-cavaleiro-curto | 29.88 | 0.923 | 30 |
+| campeao-vs-mestre | 35.75 | 1.022 | 29 |
+| mestre-cavaleiro-vs-campeao-gambits | 57.84 | 1.650 | 47 |
+| cavaleiro-vs-campeao | 38.20 | 1.087 | 29 |
+| campeao-cavaleiro-vs-mestre | 54.24 | 1.538 | 47 |
+| defesas | 67.36 | 1.904 | 51 |
+| mestre-vs-cavaleiro-curto | 29.57 | 0.842 | 30 |
 
 Not covered: Indomitable (no seed feature forces a save, so its reroll never runs on real content).
 

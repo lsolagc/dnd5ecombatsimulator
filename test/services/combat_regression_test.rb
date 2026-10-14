@@ -52,6 +52,10 @@ class CombatRegressionTest < ActiveSupport::TestCase
       entries = results.flat_map { |result| result[:round_log].flat_map { |round| round[:turns] } }
       attacks = entries.flat_map { |entry| entry[:results] }.select { |effect| effect[:kind] == :attack }
       type = ->(entry) { entry.dig(:action, :type) }
+      # Damage as rolled (an attack's damage, an effect's amount, before defenses) against the HP it took.
+      damage = entries.flat_map { |entry| entry[:results].flat_map { |effect| [ effect, effect[:rider] ].compact } }
+        .filter_map { |effect| [ effect[:kind] == :attack ? effect[:damage] : effect[:amount], effect[:hp_before] - effect[:hp_after], effect[:hp_after] ] if effect[:kind].in?(%i[attack damage]) }
+        .select { |rolled, _taken, hp_after| rolled.to_i.positive? && hp_after.positive? }
       {
         "critical hit" => attacks.any? { |attack| attack[:success] && attack.dig(:attack_roll, :crit) },
         "maneuver rider" => attacks.any? { |attack| attack[:rider] },
@@ -66,7 +70,10 @@ class CombatRegressionTest < ActiveSupport::TestCase
         "idle entry" => entries.any? { |entry| type.(entry) == :idle },
         "victory" => results.any? { |result| result[:outcome] == :victory },
         "max_rounds_reached" => results.any? { |result| result[:outcome] == :max_rounds_reached },
-        "Eldritch Strike disadvantage on a save" => eldritch_saves.positive?
+        "Eldritch Strike disadvantage on a save" => eldritch_saves.positive?,
+        "damage halved by a resistance" => damage.any? { |rolled, taken, _| rolled >= 2 && taken == rolled / 2 },
+        "damage blocked by an immunity" => damage.any? { |_, taken, _| taken.zero? },
+        "damage doubled by a vulnerability" => damage.any? { |rolled, taken, _| taken == rolled * 2 }
       }.reject { |_, covered| covered }.keys
     end
 end

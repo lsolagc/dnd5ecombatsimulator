@@ -1,6 +1,6 @@
 ---
 environment:
-  recorded_at: '2026-10-14T01:16:14Z'
+  recorded_at: '2026-10-14T02:15:41Z'
   runs: 40
   seeds: 12
   host: Linux 6.18.54.1-microsoft-standard-WSL2 x86_64
@@ -12,22 +12,26 @@ environment:
   postgres: 16.15 (Debian 16.15-1.pgdg13+2)
 compositions:
   campeao-vs-mestre:
-    ms_per_sim: 40.98
-    relative: 1.18
+    ms_per_sim: 35.75
+    relative: 1.022
     queries_per_sim: 29
   mestre-cavaleiro-vs-campeao-gambits:
-    ms_per_sim: 67.03
-    relative: 1.892
+    ms_per_sim: 57.84
+    relative: 1.65
     queries_per_sim: 47
   cavaleiro-vs-campeao:
-    ms_per_sim: 44.99
-    relative: 1.236
+    ms_per_sim: 38.2
+    relative: 1.087
     queries_per_sim: 29
   campeao-cavaleiro-vs-mestre:
-    ms_per_sim: 63.3
-    relative: 1.784
+    ms_per_sim: 54.24
+    relative: 1.538
     queries_per_sim: 47
+  defesas:
+    ms_per_sim: 67.36
+    relative: 1.904
+    queries_per_sim: 51
   mestre-vs-cavaleiro-curto:
-    ms_per_sim: 35.54
-    relative: 0.988
+    ms_per_sim: 29.57
+    relative: 0.842
     queries_per_sim: 30

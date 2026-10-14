@@ -44,6 +44,14 @@ module CombatRegression
       party_one: [ { name: "Campeão" }, { name: "Cavaleiro Arcano", level: 18, spells: %w[fireball] } ],
       party_two: [ { name: "Mestre de Batalha", level: 15 } ]
     },
+    # 2v1, random, with defenses (no seed character has any): the Battle Master resists the weapons'
+    # slashing, is immune to Fire Bolt and vulnerable to Ray of Frost; the Champion resists the
+    # maneuvers' bludgeoning rider.
+    "defesas" => {
+      max_rounds: 20,
+      party_one: [ { name: "Campeão", defenses: { "bludgeoning" => "R" } }, { name: "Cavaleiro Arcano", level: 7 } ],
+      party_two: [ { name: "Mestre de Batalha", level: 10, defenses: { "slashing" => "R", "fire" => "I", "cold" => "V" } } ]
+    },
     # 1v1 cut short: reaches :max_rounds_reached.
     "mestre-vs-cavaleiro-curto" => {
       max_rounds: 2,
@@ -76,7 +84,18 @@ module CombatRegression
         spec[:maneuvers].each { |slug| character.player_character_maneuvers.create!(maneuver: feature(character, "battle-master-maneuver-#{slug}")) }
       end
       Array(spec[:gambits]).each.with_index(1) { |rule, position| add_rule!(character, position:, **rule) }
+      set_defenses!(character, spec[:defenses]) if spec[:defenses]
     end
+  end
+
+  # defenses: { damage type => "I" | "R" | "V" }, the flags of SimulationBatch::DEFENSE_COLUMNS.
+  def set_defenses!(character, defenses)
+    combatant = character.combatant
+    SimulationBatch::DEFENSE_COLUMNS.each do |flag, column|
+      flagged = defenses.select { |_type, value| value == flag }.transform_values { true }
+      combatant[column] = combatant[column].deep_merge("damage_types" => flagged)
+    end
+    combatant.save!
   end
 
   # Runs the block with the composition applied, rolling the changes back (compositions change the same
