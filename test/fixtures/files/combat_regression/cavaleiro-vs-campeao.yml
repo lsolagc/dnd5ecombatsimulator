@@ -1,0 +1,5764 @@
+---
+1:
+  :gambits:
+    :party_one:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Campeão
+      :name: Campeão
+      :mode: aleatório
+      :rules: []
+  :winning_party: :party_two
+  :total_rounds: 5
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 18
+        :hp_before: 60
+        :hp_after: 60
+        :message: Campeão heals 18 hit points (1d10+9).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+9
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers:
+            actor_level: 9
+          :total: 18
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 9
+        :hp_before: 36
+        :hp_after: 27
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 9
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 27
+        :hp_after: 27
+        :attack_roll:
+          :natural: 6
+          :total: 12
+          :crit: false
+          :damage: 13
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 60
+        :hp_after: 60
+        :message: 'Campeão takes 0 fire damage (1d10). Spell attack 9 vs AC 17: miss.'
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 1
+        :attack_roll:
+          :natural: 1
+          :total: 9
+          :armor_class: 17
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 60
+        :hp_after: 60
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :crit: false
+          :damage: 7
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 60
+        :hp_after: 60
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 60
+        :hp_after: 60
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :crit: false
+          :damage: 4
+        :message: Miss!
+      :bonus: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 16
+        :hp_before: 27
+        :hp_after: 36
+        :message: Cavaleiro Arcano heals 16 hit points (1d10+13).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+13
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers:
+            actor_level: 13
+          :total: 16
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 6
+          :total: 12
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 36
+        :hp_after: 26
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 10
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 60
+        :hp_after: 53
+        :attack_roll:
+          :natural: 11
+          :total: 17
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 5
+        :hp_before: 53
+        :hp_after: 48
+        :attack_roll:
+          :natural: 15
+          :total: 21
+          :crit: false
+          :damage: 5
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 48
+        :hp_after: 48
+        :attack_roll:
+          :natural: 5
+          :total: 11
+          :crit: false
+          :damage: 10
+        :message: Miss!
+      :gambit: aleatório
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 26
+        :hp_after: 19
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 19
+        :hp_after: 19
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 12
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 3
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 4
+        :hp_before: 48
+        :hp_after: 44
+        :attack_roll:
+          :natural: 14
+          :total: 20
+          :crit: false
+          :damage: 4
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 44
+        :hp_after: 44
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 10
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 44
+        :hp_after: 44
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :crit: false
+          :damage: 3
+        :message: Miss!
+      :gambit: aleatório
+  - :round: 4
+    :turns:
+    - :round: 4
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 6
+        :hp_before: 19
+        :hp_after: 13
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 6
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 9
+        :hp_before: 13
+        :hp_after: 4
+        :attack_roll:
+          :natural: 14
+          :total: 20
+          :crit: false
+          :damage: 9
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 4
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 5
+        :hp_before: 44
+        :hp_after: 39
+        :attack_roll:
+          :natural: 16
+          :total: 22
+          :crit: false
+          :damage: 5
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 39
+        :hp_after: 39
+        :attack_roll:
+          :natural: 9
+          :total: 15
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 39
+        :hp_after: 39
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      :gambit: aleatório
+  - :round: 5
+    :turns:
+    - :round: 5
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 4
+        :hp_after: 4
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :crit: false
+          :damage: 11
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 4
+        :hp_after: 0
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :victory
+2:
+  :gambits:
+    :party_one:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Campeão
+      :name: Campeão
+      :mode: aleatório
+      :rules: []
+  :winning_party: :party_two
+  :total_rounds: 6
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 6
+        :hp_before: 36
+        :hp_after: 30
+        :attack_roll:
+          :natural: 14
+          :total: 20
+          :crit: false
+          :damage: 6
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 30
+        :hp_after: 22
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 8
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 18
+        :hp_before: 60
+        :hp_after: 60
+        :message: Campeão heals 18 hit points (1d10+9).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+9
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers:
+            actor_level: 9
+          :total: 18
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 60
+        :hp_after: 60
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 5
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 60
+        :hp_after: 50
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 10
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 50
+        :hp_after: 42
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 8
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 8
+        :hp_before: 42
+        :hp_after: 34
+        :message: 'Campeão takes 8 cold damage (1d8). Spell attack 24 vs AC 17: hit.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 8
+        :attack_roll:
+          :natural: 16
+          :total: 24
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 22
+        :hp_after: 22
+        :attack_roll:
+          :natural: 6
+          :total: 12
+          :crit: false
+          :damage: 13
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 22
+        :hp_after: 22
+        :attack_roll:
+          :natural: 4
+          :total: 10
+          :crit: false
+          :damage: 12
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 34
+        :hp_after: 34
+        :attack_roll:
+          :natural: 5
+          :total: 11
+          :crit: false
+          :damage: 5
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 6
+        :hp_before: 34
+        :hp_after: 28
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 6
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 28
+        :hp_after: 28
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      :gambit: aleatório
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 22
+        :hp_after: 15
+        :attack_roll:
+          :natural: 11
+          :total: 17
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 15
+        :hp_after: 15
+        :attack_roll:
+          :natural: 4
+          :total: 10
+          :crit: false
+          :damage: 11
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 3
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 22
+        :hp_before: 15
+        :hp_after: 36
+        :message: Cavaleiro Arcano heals 22 hit points (1d10+13).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+13
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers:
+            actor_level: 13
+          :total: 22
+      :gambit: aleatório
+  - :round: 4
+    :turns:
+    - :round: 4
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 5
+          :total: 11
+          :crit: false
+          :damage: 12
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :crit: false
+          :damage: 13
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 4
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 6
+        :hp_before: 28
+        :hp_after: 22
+        :attack_roll:
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 6
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 22
+        :hp_after: 22
+        :attack_roll:
+          :natural: 3
+          :total: 9
+          :crit: false
+          :damage: 3
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 22
+        :hp_after: 15
+        :attack_roll:
+          :natural: 15
+          :total: 21
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 5
+    :turns:
+    - :round: 5
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 15
+        :hp_before: 36
+        :hp_after: 21
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: true
+          :damage: 15
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 21
+        :hp_after: 14
+        :attack_roll:
+          :natural: 16
+          :total: 22
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 5
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: chromatic-orb
+        :spell_slug: chromatic-orb
+        :spell_name: Chromatic Orb
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 15
+        :hp_after: 15
+        :message: 'Campeão takes 0 force damage (3d8). Spell attack 16 vs AC 17: miss.'
+        :roll_outcome:
+          :expression: 3d8
+          :resolved_expression: 3d8
+          :dice:
+          - 3d8
+          :rolls:
+          - 16
+          :modifiers: {}
+          :total: 16
+        :attack_roll:
+          :natural: 8
+          :total: 16
+          :armor_class: 17
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+  - :round: 6
+    :turns:
+    - :round: 6
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 17
+        :hp_before: 14
+        :hp_after: 0
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: true
+          :damage: 17
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :victory
+3:
+  :gambits:
+    :party_one:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Campeão
+      :name: Campeão
+      :mode: aleatório
+      :rules: []
+  :winning_party: :party_one
+  :total_rounds: 5
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 1
+        :hp_before: 60
+        :hp_after: 59
+        :message: 'Campeão takes 1 cold damage (1d8). Spell attack 17 vs AC 17: hit.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 1
+        :attack_roll:
+          :natural: 9
+          :total: 17
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 59
+        :hp_after: 51
+        :attack_roll:
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 8
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 4
+        :hp_before: 51
+        :hp_after: 47
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 4
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 47
+        :hp_after: 47
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 5
+        :message: Miss!
+      :bonus: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 47
+        :hp_after: 47
+        :message: 'Campeão takes 0 cold damage (1d8). Spell attack 15 vs AC 17: miss.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 1
+        :attack_roll:
+          :natural: 7
+          :total: 15
+          :armor_class: 17
+          :hit: false
+          :crit: false
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 36
+        :hp_after: 25
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 11
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 25
+        :hp_after: 25
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 12
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 25
+        :hp_after: 17
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 8
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 17
+        :hp_after: 17
+        :attack_roll:
+          :natural: 3
+          :total: 9
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fireball
+        :spell_slug: fireball
+        :spell_name: Fireball
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 29
+        :hp_before: 47
+        :hp_after: 18
+        :message: Campeão takes 29 fire damage (8d6). Campeão fails the dexterity
+          save (DC 16).
+        :roll_outcome:
+          :expression: 8d6
+          :resolved_expression: 8d6
+          :dice:
+          - 8d6
+          :rolls:
+          - 29
+          :modifiers: {}
+          :total: 29
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 17
+        :hp_after: 17
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 17
+        :hp_after: 10
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 14
+        :hp_before: 10
+        :hp_after: 24
+        :message: Cavaleiro Arcano heals 14 hit points (1d10+13).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+13
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers:
+            actor_level: 13
+          :total: 14
+      :gambit: aleatório
+    - :round: 3
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 24
+        :hp_after: 24
+        :attack_roll:
+          :natural: 6
+          :total: 12
+          :crit: false
+          :damage: 10
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 24
+        :hp_after: 13
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 11
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 4
+    :turns:
+    - :round: 4
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 18
+        :hp_after: 11
+        :attack_roll:
+          :natural: 15
+          :total: 21
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 11
+        :hp_after: 11
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 3
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 11
+        :hp_after: 11
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 5
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 4
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 13
+        :hp_after: 13
+        :attack_roll:
+          :natural: 6
+          :total: 12
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 13
+        :hp_after: 13
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 11
+        :message: Miss!
+      :gambit: aleatório
+  - :round: 5
+    :turns:
+    - :round: 5
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 4
+        :hp_before: 11
+        :hp_after: 7
+        :attack_roll:
+          :natural: 15
+          :total: 21
+          :crit: false
+          :damage: 4
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 4
+        :hp_before: 7
+        :hp_after: 3
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 4
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 6
+        :hp_before: 3
+        :hp_after: 0
+        :attack_roll:
+          :natural: 11
+          :total: 17
+          :crit: false
+          :damage: 6
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :victory
+4:
+  :gambits:
+    :party_one:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Campeão
+      :name: Campeão
+      :mode: aleatório
+      :rules: []
+  :winning_party: :party_two
+  :total_rounds: 5
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 60
+        :hp_after: 60
+        :message: 'Campeão takes 0 cold damage (1d8). Spell attack 10 vs AC 17: miss.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 1
+        :attack_roll:
+          :natural: 2
+          :total: 10
+          :armor_class: 17
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 60
+        :hp_after: 60
+        :attack_roll:
+          :natural: 9
+          :total: 15
+          :crit: false
+          :damage: 5
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 60
+        :hp_after: 60
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 5
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 60
+        :hp_after: 60
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      :bonus: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 60
+        :hp_after: 60
+        :attack_roll:
+          :natural: 9
+          :total: 15
+          :crit: false
+          :damage: 7
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 60
+        :hp_after: 53
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 53
+        :hp_after: 53
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 14
+        :hp_before: 53
+        :hp_after: 60
+        :message: Campeão heals 14 hit points (1d10+9).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+9
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers:
+            actor_level: 9
+          :total: 14
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 4
+          :total: 10
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 12
+        :hp_before: 36
+        :hp_after: 24
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 12
+        :message: Hit!
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 60
+        :hp_after: 60
+        :message: 'Campeão takes 0 cold damage (1d8). Spell attack 15 vs AC 17: miss.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 1
+        :attack_roll:
+          :natural: 7
+          :total: 15
+          :armor_class: 17
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 60
+        :hp_after: 60
+        :attack_roll:
+          :natural: 3
+          :total: 9
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 60
+        :hp_after: 60
+        :attack_roll:
+          :natural: 9
+          :total: 15
+          :crit: false
+          :damage: 4
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 60
+        :hp_after: 60
+        :attack_roll:
+          :natural: 3
+          :total: 9
+          :crit: false
+          :damage: 5
+        :message: Miss!
+      :bonus: true
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 24
+        :hp_after: 24
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 24
+        :hp_after: 13
+        :attack_roll:
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 11
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 15
+        :hp_before: 13
+        :hp_after: 28
+        :message: Cavaleiro Arcano heals 15 hit points (1d10+13).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+13
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers:
+            actor_level: 13
+          :total: 15
+      :gambit: aleatório
+    - :round: 3
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 28
+        :hp_after: 28
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 12
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 28
+        :hp_after: 18
+        :attack_roll:
+          :natural: 14
+          :total: 20
+          :crit: false
+          :damage: 10
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 4
+    :turns:
+    - :round: 4
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 60
+        :hp_after: 60
+        :attack_roll:
+          :natural: 4
+          :total: 10
+          :crit: false
+          :damage: 5
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 18
+        :hp_before: 60
+        :hp_after: 42
+        :attack_roll:
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 18
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 42
+        :hp_after: 42
+        :attack_roll:
+          :natural: 3
+          :total: 9
+          :crit: false
+          :damage: 10
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 4
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 9
+        :hp_before: 18
+        :hp_after: 9
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: true
+          :damage: 9
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 9
+        :hp_after: 2
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 5
+    :turns:
+    - :round: 5
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 4
+        :hp_before: 42
+        :hp_after: 38
+        :message: 'Campeão takes 4 cold damage (1d8). Spell attack 18 vs AC 17: hit.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 4
+        :attack_roll:
+          :natural: 10
+          :total: 18
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 5
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 38
+        :hp_after: 31
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 9
+        :hp_before: 31
+        :hp_after: 22
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: false
+          :damage: 9
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 22
+        :hp_after: 22
+        :attack_roll:
+          :natural: 4
+          :total: 10
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      :bonus: true
+      :gambit: aleatório
+    - :round: 5
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 13
+        :hp_before: 2
+        :hp_after: 0
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 13
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :victory
+5:
+  :gambits:
+    :party_one:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Campeão
+      :name: Campeão
+      :mode: aleatório
+      :rules: []
+  :winning_party: :party_one
+  :total_rounds: 3
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 16
+        :hp_before: 60
+        :hp_after: 60
+        :message: Campeão heals 16 hit points (1d10+9).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+9
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers:
+            actor_level: 9
+          :total: 16
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 36
+        :hp_after: 29
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 29
+        :hp_after: 29
+        :attack_roll:
+          :natural: 9
+          :total: 15
+          :crit: false
+          :damage: 10
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 21
+        :hp_before: 29
+        :hp_after: 36
+        :message: Cavaleiro Arcano heals 21 hit points (1d10+13).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+13
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers:
+            actor_level: 13
+          :total: 21
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 9
+        :hp_before: 60
+        :hp_after: 51
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 9
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 51
+        :hp_after: 41
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 10
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 41
+        :hp_after: 31
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 10
+        :message: Hit!
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 36
+        :hp_after: 25
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 11
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 25
+        :hp_after: 25
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: scorching-ray
+        :spell_slug: scorching-ray
+        :spell_name: Scorching Ray
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 26
+        :hp_before: 31
+        :hp_after: 5
+        :message: 'Campeão takes 26 fire damage (6d6). Spell attack 21 vs AC 17: hit.'
+        :roll_outcome:
+          :expression: 6d6
+          :resolved_expression: 6d6
+          :dice:
+          - 6d6
+          :rolls:
+          - 26
+          :modifiers: {}
+          :total: 26
+        :attack_roll:
+          :natural: 13
+          :total: 21
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 25
+        :hp_after: 17
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 8
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 17
+        :hp_after: 10
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 3
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fireball
+        :spell_slug: fireball
+        :spell_name: Fireball
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 11
+        :hp_before: 5
+        :hp_after: 0
+        :message: Campeão takes 11 fire damage (8d6). Campeão succeeds the dexterity
+          save (DC 16).
+        :roll_outcome:
+          :expression: 8d6
+          :resolved_expression: 8d6
+          :dice:
+          - 8d6
+          :rolls:
+          - 22
+          :modifiers: {}
+          :total: 22
+      :gambit: aleatório
+  :draw: false
+  :outcome: :victory
+6:
+  :gambits:
+    :party_one:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Campeão
+      :name: Campeão
+      :mode: aleatório
+      :rules: []
+  :winning_party: :party_two
+  :total_rounds: 3
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fireball
+        :spell_slug: fireball
+        :spell_name: Fireball
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 26
+        :hp_before: 60
+        :hp_after: 34
+        :message: Campeão takes 26 fire damage (8d6). Campeão fails the dexterity
+          save (DC 16).
+        :roll_outcome:
+          :expression: 8d6
+          :resolved_expression: 8d6
+          :dice:
+          - 8d6
+          :rolls:
+          - 26
+          :modifiers: {}
+          :total: 26
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: chromatic-orb
+        :spell_slug: chromatic-orb
+        :spell_name: Chromatic Orb
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 13
+        :hp_before: 34
+        :hp_after: 21
+        :message: 'Campeão takes 13 force damage (3d8). Spell attack 22 vs AC 17:
+          hit.'
+        :roll_outcome:
+          :expression: 3d8
+          :resolved_expression: 3d8
+          :dice:
+          - 3d8
+          :rolls:
+          - 13
+          :modifiers: {}
+          :total: 13
+        :attack_roll:
+          :natural: 14
+          :total: 22
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :crit: false
+          :damage: 10
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 36
+        :hp_after: 26
+        :attack_roll:
+          :natural: 15
+          :total: 21
+          :crit: false
+          :damage: 10
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 11
+        :hp_before: 21
+        :hp_after: 32
+        :message: Campeão heals 11 hit points (1d10+9).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+9
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers:
+            actor_level: 9
+          :total: 11
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 32
+        :hp_after: 32
+        :attack_roll:
+          :natural: 9
+          :total: 15
+          :crit: false
+          :damage: 5
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 32
+        :hp_after: 25
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 25
+        :hp_after: 25
+        :attack_roll:
+          :natural: 3
+          :total: 9
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 26
+        :hp_after: 19
+        :attack_roll:
+          :natural: 16
+          :total: 22
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 13
+        :hp_before: 19
+        :hp_after: 6
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: true
+          :damage: 13
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 25
+        :hp_after: 25
+        :message: 'Campeão takes 0 cold damage (1d8). Spell attack 14 vs AC 17: miss.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 6
+        :attack_roll:
+          :natural: 6
+          :total: 14
+          :armor_class: 17
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+    - :round: 3
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 25
+        :hp_after: 18
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 18
+        :hp_after: 18
+        :attack_roll:
+          :natural: 6
+          :total: 12
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 5
+        :hp_before: 18
+        :hp_after: 13
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 5
+        :message: Hit!
+      :bonus: true
+      :gambit: aleatório
+    - :round: 3
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 6
+        :hp_after: 6
+        :attack_roll:
+          :natural: 3
+          :total: 9
+          :crit: false
+          :damage: 13
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 17
+        :hp_before: 6
+        :hp_after: 0
+        :attack_roll:
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 17
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :victory
+7:
+  :gambits:
+    :party_one:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Campeão
+      :name: Campeão
+      :mode: aleatório
+      :rules: []
+  :winning_party: :party_two
+  :total_rounds: 5
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 23
+        :hp_before: 36
+        :hp_after: 36
+        :message: Cavaleiro Arcano heals 23 hit points (1d10+13).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+13
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers:
+            actor_level: 13
+          :total: 23
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: chromatic-orb
+        :spell_slug: chromatic-orb
+        :spell_name: Chromatic Orb
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 60
+        :hp_after: 60
+        :message: 'Campeão takes 0 force damage (3d8). Spell attack 12 vs AC 17: miss.'
+        :roll_outcome:
+          :expression: 3d8
+          :resolved_expression: 3d8
+          :dice:
+          - 3d8
+          :rolls:
+          - 20
+          :modifiers: {}
+          :total: 20
+        :attack_roll:
+          :natural: 4
+          :total: 12
+          :armor_class: 17
+          :hit: false
+          :crit: false
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 19
+        :hp_before: 60
+        :hp_after: 60
+        :message: Campeão heals 19 hit points (1d10+9).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+9
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers:
+            actor_level: 9
+          :total: 19
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 13
+        :hp_before: 36
+        :hp_after: 23
+        :attack_roll:
+          :natural: 15
+          :total: 21
+          :crit: false
+          :damage: 13
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 23
+        :hp_after: 23
+        :attack_roll:
+          :natural: 9
+          :total: 15
+          :crit: false
+          :damage: 7
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: scorching-ray
+        :spell_slug: scorching-ray
+        :spell_name: Scorching Ray
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 18
+        :hp_before: 60
+        :hp_after: 42
+        :message: 'Campeão takes 18 fire damage (6d6). Spell attack 23 vs AC 17: hit.'
+        :roll_outcome:
+          :expression: 6d6
+          :resolved_expression: 6d6
+          :dice:
+          - 6d6
+          :rolls:
+          - 18
+          :modifiers: {}
+          :total: 18
+        :attack_roll:
+          :natural: 15
+          :total: 23
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 23
+        :hp_after: 23
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 23
+        :hp_after: 23
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      :gambit: aleatório
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 42
+        :hp_after: 32
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 10
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 32
+        :hp_after: 32
+        :attack_roll:
+          :natural: 6
+          :total: 12
+          :crit: false
+          :damage: 3
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 6
+        :hp_before: 32
+        :hp_after: 26
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 6
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 3
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 23
+        :hp_after: 23
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 12
+        :hp_before: 23
+        :hp_after: 11
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 12
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 4
+    :turns:
+    - :round: 4
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 26
+        :hp_after: 26
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :crit: false
+          :damage: 7
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 4
+        :hp_before: 26
+        :hp_after: 22
+        :attack_roll:
+          :natural: 15
+          :total: 21
+          :crit: false
+          :damage: 4
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 22
+        :hp_after: 22
+        :attack_roll:
+          :natural: 4
+          :total: 10
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 4
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 11
+        :hp_after: 11
+        :attack_roll:
+          :natural: 9
+          :total: 15
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 11
+        :hp_after: 4
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 5
+    :turns:
+    - :round: 5
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 22
+        :hp_after: 22
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 3
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 22
+        :hp_after: 15
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 15
+        :hp_after: 15
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 10
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 5
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 4
+        :hp_after: 0
+        :attack_roll:
+          :natural: 11
+          :total: 17
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :victory
+8:
+  :gambits:
+    :party_one:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Campeão
+      :name: Campeão
+      :mode: aleatório
+      :rules: []
+  :winning_party: :party_two
+  :total_rounds: 4
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 19
+        :hp_before: 60
+        :hp_after: 60
+        :message: Campeão heals 19 hit points (1d10+9).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+9
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers:
+            actor_level: 9
+          :total: 19
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 6
+          :total: 12
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 9
+          :total: 15
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 22
+        :hp_before: 36
+        :hp_after: 36
+        :message: Cavaleiro Arcano heals 22 hit points (1d10+13).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+13
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers:
+            actor_level: 13
+          :total: 22
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: scorching-ray
+        :spell_slug: scorching-ray
+        :spell_name: Scorching Ray
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 26
+        :hp_before: 60
+        :hp_after: 34
+        :message: 'Campeão takes 26 fire damage (6d6). Spell attack 25 vs AC 17: hit.'
+        :roll_outcome:
+          :expression: 6d6
+          :resolved_expression: 6d6
+          :dice:
+          - 6d6
+          :rolls:
+          - 26
+          :modifiers: {}
+          :total: 26
+        :attack_roll:
+          :natural: 17
+          :total: 25
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 36
+        :hp_after: 25
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 11
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 25
+        :hp_after: 14
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 11
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 34
+        :hp_after: 26
+        :attack_roll:
+          :natural: 16
+          :total: 22
+          :crit: false
+          :damage: 8
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 26
+        :hp_after: 26
+        :attack_roll:
+          :natural: 3
+          :total: 9
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 9
+        :hp_before: 26
+        :hp_after: 17
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: false
+          :damage: 9
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 14
+        :hp_after: 14
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :crit: false
+          :damage: 11
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 9
+        :hp_before: 14
+        :hp_after: 5
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 9
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 3
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 17
+        :hp_after: 17
+        :message: 'Campeão takes 0 fire damage (1d10). Spell attack 13 vs AC 17: miss.'
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 6
+        :attack_roll:
+          :natural: 5
+          :total: 13
+          :armor_class: 17
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+    - :round: 3
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 17
+        :hp_after: 17
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 4
+        :hp_before: 17
+        :hp_after: 13
+        :attack_roll:
+          :natural: 11
+          :total: 17
+          :crit: false
+          :damage: 4
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 13
+        :hp_after: 13
+        :attack_roll:
+          :natural: 3
+          :total: 9
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      :bonus: true
+      :gambit: aleatório
+  - :round: 4
+    :turns:
+    - :round: 4
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 5
+        :hp_after: 0
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 11
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :victory
+9:
+  :gambits:
+    :party_one:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Campeão
+      :name: Campeão
+      :mode: aleatório
+      :rules: []
+  :winning_party: :party_one
+  :total_rounds: 6
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 6
+        :hp_before: 36
+        :hp_after: 30
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 6
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 30
+        :hp_after: 30
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :crit: false
+          :damage: 11
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 30
+        :hp_after: 30
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 10
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 9
+        :hp_before: 30
+        :hp_after: 21
+        :attack_roll:
+          :natural: 15
+          :total: 21
+          :crit: false
+          :damage: 9
+        :message: Hit!
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 9
+        :hp_before: 60
+        :hp_after: 51
+        :message: 'Campeão takes 9 fire damage (1d10). Spell attack 19 vs AC 17: hit.'
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 9
+        :attack_roll:
+          :natural: 11
+          :total: 19
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 51
+        :hp_after: 44
+        :attack_roll:
+          :natural: 11
+          :total: 17
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 5
+        :hp_before: 44
+        :hp_after: 39
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 5
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 39
+        :hp_after: 39
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :crit: false
+          :damage: 3
+        :message: Miss!
+      :bonus: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 39
+        :hp_after: 39
+        :message: 'Campeão takes 0 cold damage (1d8). Spell attack 12 vs AC 17: miss.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 4
+        :attack_roll:
+          :natural: 4
+          :total: 12
+          :armor_class: 17
+          :hit: false
+          :crit: false
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 21
+        :hp_after: 21
+        :attack_roll:
+          :natural: 6
+          :total: 12
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 21
+        :hp_after: 21
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :crit: false
+          :damage: 13
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 39
+        :hp_after: 39
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 3
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 39
+        :hp_after: 29
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 10
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 29
+        :hp_after: 29
+        :attack_roll:
+          :natural: 9
+          :total: 15
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      :gambit: aleatório
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 21
+        :hp_after: 21
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :crit: false
+          :damage: 11
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 21
+        :hp_after: 13
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 8
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 3
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 3
+        :hp_before: 29
+        :hp_after: 26
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: false
+          :damage: 3
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 26
+        :hp_after: 26
+        :attack_roll:
+          :natural: 5
+          :total: 11
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 26
+        :hp_after: 26
+        :attack_roll:
+          :natural: 4
+          :total: 10
+          :crit: false
+          :damage: 7
+        :message: Miss!
+      :gambit: aleatório
+  - :round: 4
+    :turns:
+    - :round: 4
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 10
+        :hp_before: 26
+        :hp_after: 36
+        :message: Campeão heals 10 hit points (1d10+9).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+9
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers:
+            actor_level: 9
+          :total: 10
+      :gambit: aleatório
+    - :round: 4
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 22
+        :hp_before: 13
+        :hp_after: 35
+        :message: Cavaleiro Arcano heals 22 hit points (1d10+13).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+13
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers:
+            actor_level: 13
+          :total: 22
+      :gambit: aleatório
+  - :round: 5
+    :turns:
+    - :round: 5
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 35
+        :hp_after: 25
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 10
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 25
+        :hp_after: 14
+        :attack_roll:
+          :natural: 16
+          :total: 22
+          :crit: false
+          :damage: 11
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 5
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 16
+        :hp_before: 36
+        :hp_after: 20
+        :attack_roll:
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 16
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 20
+        :hp_after: 20
+        :attack_roll:
+          :natural: 9
+          :total: 15
+          :crit: false
+          :damage: 7
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 20
+        :hp_after: 20
+        :attack_roll:
+          :natural: 9
+          :total: 15
+          :crit: false
+          :damage: 3
+        :message: Miss!
+      :gambit: aleatório
+  - :round: 6
+    :turns:
+    - :round: 6
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 14
+        :hp_after: 14
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 9
+        :hp_before: 14
+        :hp_after: 5
+        :attack_roll:
+          :natural: 14
+          :total: 20
+          :crit: false
+          :damage: 9
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 6
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 6
+        :hp_before: 20
+        :hp_after: 14
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 6
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 14
+        :hp_after: 4
+        :attack_roll:
+          :natural: 14
+          :total: 20
+          :crit: false
+          :damage: 10
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 4
+        :hp_after: 0
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: false
+          :damage: 10
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :victory
+10:
+  :gambits:
+    :party_one:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Campeão
+      :name: Campeão
+      :mode: aleatório
+      :rules: []
+  :winning_party: :party_one
+  :total_rounds: 3
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: scorching-ray
+        :spell_slug: scorching-ray
+        :spell_name: Scorching Ray
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 20
+        :hp_before: 60
+        :hp_after: 40
+        :message: 'Campeão takes 20 fire damage (6d6). Spell attack 24 vs AC 17: hit.'
+        :roll_outcome:
+          :expression: 6d6
+          :resolved_expression: 6d6
+          :dice:
+          - 6d6
+          :rolls:
+          - 20
+          :modifiers: {}
+          :total: 20
+        :attack_roll:
+          :natural: 16
+          :total: 24
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 40
+        :hp_after: 32
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 8
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 5
+        :hp_before: 32
+        :hp_after: 27
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 5
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 27
+        :hp_after: 27
+        :attack_roll:
+          :natural: 9
+          :total: 15
+          :crit: false
+          :damage: 4
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 10
+        :hp_before: 27
+        :hp_after: 37
+        :message: Campeão heals 10 hit points (1d10+9).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+9
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers:
+            actor_level: 9
+          :total: 10
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 6
+        :hp_before: 36
+        :hp_after: 30
+        :attack_roll:
+          :natural: 11
+          :total: 17
+          :crit: false
+          :damage: 6
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 30
+        :hp_after: 30
+        :attack_roll:
+          :natural: 5
+          :total: 11
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 5
+        :hp_before: 37
+        :hp_after: 32
+        :message: 'Campeão takes 5 cold damage (1d8). Spell attack 25 vs AC 17: hit.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 5
+        :attack_roll:
+          :natural: 17
+          :total: 25
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 6
+        :hp_before: 32
+        :hp_after: 26
+        :attack_roll:
+          :natural: 16
+          :total: 22
+          :crit: false
+          :damage: 6
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 5
+        :hp_before: 26
+        :hp_after: 21
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 5
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 21
+        :hp_after: 21
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :crit: false
+          :damage: 3
+        :message: Miss!
+      :bonus: true
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 30
+        :hp_after: 30
+        :attack_roll:
+          :natural: 5
+          :total: 11
+          :crit: false
+          :damage: 12
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 9
+        :hp_before: 30
+        :hp_after: 21
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 9
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 6
+        :hp_before: 21
+        :hp_after: 15
+        :message: 'Campeão takes 6 cold damage (1d8). Spell attack 22 vs AC 17: hit.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 6
+        :attack_roll:
+          :natural: 14
+          :total: 22
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 3
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 6
+        :hp_before: 15
+        :hp_after: 9
+        :attack_roll:
+          :natural: 14
+          :total: 20
+          :crit: false
+          :damage: 6
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 9
+        :hp_after: 2
+        :attack_roll:
+          :natural: 14
+          :total: 20
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 4
+        :hp_before: 2
+        :hp_after: 0
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 4
+        :message: Hit!
+      :bonus: true
+      :gambit: aleatório
+  :draw: false
+  :outcome: :victory
+11:
+  :gambits:
+    :party_one:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Campeão
+      :name: Campeão
+      :mode: aleatório
+      :rules: []
+  :winning_party: :party_two
+  :total_rounds: 5
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 17
+        :hp_before: 60
+        :hp_after: 60
+        :message: Campeão heals 17 hit points (1d10+9).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+9
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers:
+            actor_level: 9
+          :total: 17
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 36
+        :hp_after: 26
+        :attack_roll:
+          :natural: 14
+          :total: 20
+          :crit: false
+          :damage: 10
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 26
+        :hp_after: 26
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :crit: false
+          :damage: 13
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 16
+        :hp_before: 26
+        :hp_after: 36
+        :message: Cavaleiro Arcano heals 16 hit points (1d10+13).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+13
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers:
+            actor_level: 13
+          :total: 16
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 1
+        :hp_before: 60
+        :hp_after: 59
+        :message: 'Campeão takes 1 fire damage (1d10). Spell attack 22 vs AC 17: hit.'
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 1
+        :attack_roll:
+          :natural: 14
+          :total: 22
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 11
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 36
+        :hp_after: 25
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 11
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 59
+        :hp_after: 59
+        :attack_roll:
+          :natural: 5
+          :total: 11
+          :crit: false
+          :damage: 5
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 4
+        :hp_before: 59
+        :hp_after: 55
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 4
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 55
+        :hp_after: 47
+        :attack_roll:
+          :natural: 11
+          :total: 17
+          :crit: false
+          :damage: 8
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 25
+        :hp_after: 25
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 10
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 9
+        :hp_before: 25
+        :hp_after: 16
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 9
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 3
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: chromatic-orb
+        :spell_slug: chromatic-orb
+        :spell_name: Chromatic Orb
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 15
+        :hp_before: 47
+        :hp_after: 32
+        :message: 'Campeão takes 15 force damage (3d8). Spell attack 26 vs AC 17:
+          hit.'
+        :roll_outcome:
+          :expression: 3d8
+          :resolved_expression: 3d8
+          :dice:
+          - 3d8
+          :rolls:
+          - 15
+          :modifiers: {}
+          :total: 15
+        :attack_roll:
+          :natural: 18
+          :total: 26
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+  - :round: 4
+    :turns:
+    - :round: 4
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 16
+        :hp_after: 5
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: true
+          :damage: 11
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 5
+        :hp_after: 5
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 11
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 4
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 3
+        :hp_before: 32
+        :hp_after: 29
+        :attack_roll:
+          :natural: 16
+          :total: 22
+          :crit: false
+          :damage: 3
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 29
+        :hp_after: 29
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :crit: false
+          :damage: 4
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 5
+        :hp_before: 29
+        :hp_after: 24
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 5
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 5
+    :turns:
+    - :round: 5
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 5
+        :hp_after: 0
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 11
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :victory
+12:
+  :gambits:
+    :party_one:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Campeão
+      :name: Campeão
+      :mode: aleatório
+      :rules: []
+  :winning_party: :party_one
+  :total_rounds: 5
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 5
+        :hp_before: 60
+        :hp_after: 55
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 5
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 55
+        :hp_after: 55
+        :attack_roll:
+          :natural: 4
+          :total: 10
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 3
+        :hp_before: 55
+        :hp_after: 52
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 3
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fireball
+        :spell_slug: fireball
+        :spell_name: Fireball
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 31
+        :hp_before: 52
+        :hp_after: 21
+        :message: Campeão takes 31 fire damage (8d6). Campeão fails the dexterity
+          save (DC 16).
+        :roll_outcome:
+          :expression: 8d6
+          :resolved_expression: 8d6
+          :dice:
+          - 8d6
+          :rolls:
+          - 31
+          :modifiers: {}
+          :total: 31
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 12
+        :hp_before: 21
+        :hp_after: 33
+        :message: Campeão heals 12 hit points (1d10+9).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+9
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers:
+            actor_level: 9
+          :total: 12
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 4
+          :total: 10
+          :crit: false
+          :damage: 12
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 5
+          :total: 11
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 15
+        :hp_before: 36
+        :hp_after: 36
+        :message: Cavaleiro Arcano heals 15 hit points (1d10+13).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+13
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers:
+            actor_level: 13
+          :total: 15
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 36
+        :hp_after: 29
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: true
+          :damage: 7
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 33
+        :hp_after: 33
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 4
+        :hp_before: 33
+        :hp_after: 29
+        :attack_roll:
+          :natural: 14
+          :total: 20
+          :crit: false
+          :damage: 4
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 9
+        :hp_before: 29
+        :hp_after: 20
+        :attack_roll:
+          :natural: 14
+          :total: 20
+          :crit: false
+          :damage: 9
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 3
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 6
+        :hp_before: 29
+        :hp_after: 23
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 6
+        :message: Hit!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 9
+        :hp_before: 23
+        :hp_after: 14
+        :attack_roll:
+          :natural: 15
+          :total: 21
+          :crit: false
+          :damage: 9
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 4
+    :turns:
+    - :round: 4
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: scorching-ray
+        :spell_slug: scorching-ray
+        :spell_name: Scorching Ray
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 16
+        :hp_before: 20
+        :hp_after: 4
+        :message: 'Campeão takes 16 fire damage (6d6). Spell attack 24 vs AC 17: hit.'
+        :roll_outcome:
+          :expression: 6d6
+          :resolved_expression: 6d6
+          :dice:
+          - 6d6
+          :rolls:
+          - 16
+          :modifiers: {}
+          :total: 16
+        :attack_roll:
+          :natural: 16
+          :total: 24
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 4
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 14
+        :hp_after: 14
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :crit: false
+          :damage: 9
+        :message: Miss!
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 14
+        :hp_after: 3
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 11
+        :message: Hit!
+      :gambit: aleatório
+  - :round: 5
+    :turns:
+    - :round: 5
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 4
+        :hp_after: 0
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 8
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :victory

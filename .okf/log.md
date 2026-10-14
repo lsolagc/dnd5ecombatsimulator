@@ -1,5 +1,8 @@
 # Update Log
 
+## 2026-10-14
+* **Creation**: [ops/combat-regression.md](ops/combat-regression.md), the safety net for refactoring `CombatSimulatorService` (phase 0 of the DDD refactor): 60 seeded simulations on the `db/seeds` content compared byte for byte against YAML golden files (with a coverage check of the mechanics they guard), a per-composition query ceiling in the suite, and an out-of-suite time benchmark compared by relative time against a recorded baseline. It records that the simulator's spell and unlock lists load with no `ORDER BY`, so a seed replays only on a stable table order.
+
 ## 2026-10-11
 * **Update**: [ops/dev-setup.md](ops/dev-setup.md) documents the always-on Docker Compose stack (`compose.yaml`, `Dockerfile.dev`): Postgres, the portal through `bin/dev` (web, Sass watcher, job workers) and the OKF viewer, which `bin/okf-server` restarts whenever `.okf/` changes. `config/database.yml` reads an optional `DB_HOST` for it, in development and test, so the suite and the system tests (headless Chromium in the image) also run inside the container.
 * **Refine**: [architecture/gambits-decisions.md](architecture/gambits-decisions.md), now "Gambits — design decisions", groups its decisions by subject (evaluation, which features are gambit actions, Action Surge and War Magic, batch copy and log, gambits screen, presets, dev characters) instead of by build pass, and drops the per-pass review narration, which git already holds. Its durable remains became a "Known limitations" section. **Fix**: the row on two tabs saving a preset with the same name said the race gave a 500; the controller rescues `RecordNotUnique` into the same 422 as a duplicate name. The user re-read and verified the new layout.

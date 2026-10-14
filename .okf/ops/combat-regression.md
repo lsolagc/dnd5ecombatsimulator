@@ -1,0 +1,90 @@
+---
+type: Runbook
+title: Combat regression safety net
+description: Golden files, query ceiling and time benchmark that prove a CombatSimulatorService refactor changes neither behavior nor performance; how to run, regenerate and read the baseline.
+tags: [testing, performance, combat]
+generated:
+  by: claude-code/claude-opus-5-5
+  at: 2026-10-14T00:30:00Z
+sources:
+  - id: compositions
+    title: lib/combat_regression.rb
+    resource: ../../lib/combat_regression.rb
+  - id: test
+    title: test/services/combat_regression_test.rb
+    resource: ../../test/services/combat_regression_test.rb
+  - id: tasks
+    title: lib/tasks/combat_regression.rake
+    resource: ../../lib/tasks/combat_regression.rake
+status: draft
+---
+
+# Overview
+
+Phase 0 of the DDD refactor of [CombatSimulatorService](/architecture/combat-simulator-service.md):
+three checks over the same compositions, defined once in `CombatRegression::COMPOSITIONS`, on the
+content of `db/seeds` (Campeão, Cavaleiro Arcano, Mestre de Batalha, levels and choices adjusted per
+composition, every change rolled back). Five compositions × seeds 1–12 = 60 simulations: 1v1 and 2v1,
+random and gambit-driven, one cut at `max_rounds: 2`.[^compositions]
+
+- **Golden files** (`test/fixtures/files/combat_regression/<composition>.yml`): the whole result of
+  every seed, compared byte for byte. YAML keeps symbols apart from strings; record ids (which change
+  between runs) become the character's name or the feature's or spell's slug. The test also fails if
+  the set stops covering a critical hit, a maneuver rider (also on a crit), Distracting Strike's
+  advantage, a spell turn, War Magic's bonus attack, Action Surge at random and by gambit, a Second
+  Wind heal, a gambit entry, an idle entry, both outcomes, and Eldritch Strike's disadvantage on a save
+  (counted by a spy on `Combat::ActionRunner.call`).[^test]
+- **Query ceiling** (`queries.yml`): per composition, the most queries any seed runs (schema lookups
+  aside) must stay within the baseline + 10%. In the suite: query counts are deterministic.[^test]
+- **Time benchmark** (`benchmark.yml`, outside the suite): median ms per simulation over 40 rounds
+  that take turns over the compositions, in one process, test environment, seeds loaded in a
+  transaction that rolls back. Each round also times a yardstick (30 `SELECT 1` and a fixed Marshal
+  round trip); the check compares the **relative** time (ms ÷ yardstick), which cancels the machine's
+  own drift: absolute ms moved ±25% between runs of unchanged code on WSL, the relative time ±6%.
+  Exits 1 when any composition is over its baseline + 10%; a slowdown of ~12% was caught. The
+  yardstick does **not** cancel a change of environment or entry point: unchanged code measured +40%
+  on the host (no YJIT) against the Docker + YJIT baseline, and +18% under `bin/rails runner` against
+  the rake task. So the task aborts when the docker flag, Ruby build or CPU differ from the
+  baseline's, and comparisons go only through `combat_regression:benchmark`.[^tasks]
+
+# Steps
+
+```bash
+docker compose exec app bin/rails test test/services/combat_regression_test.rb   # golden + queries (also part of bin/rails test)
+docker compose exec app bin/rails combat_regression:regenerate                   # rewrite goldens and queries.yml from the current code
+docker compose exec -e RAILS_ENV=test app bin/rails combat_regression:benchmark  # compare with benchmark.yml (RUNS=n to change the 40 rounds)
+docker compose exec -e RAILS_ENV=test -e RECORD=1 app bin/rails combat_regression:benchmark  # record a new baseline
+```
+
+On the host, wrap them in `bash -ic '…'` (test DB credentials). Regenerate only on purpose (a change
+that is meant to alter combat) and review the diff; on unchanged code it is a no-op. Record the
+benchmark baseline on the machine that compares, right before the refactor; `benchmark.yml` keeps
+the machine and versions it was recorded on.
+
+# Determinism
+
+The simulator reads two lists with no `ORDER BY`, and the order decides what a seed picks: the
+character's spells (a hash join on `spells`, which `SeedData` updates in place, so their order moved
+between runs) and the class feature unlocks. The harness preloads the spells in the order they were
+learned and `CLUSTER`s `class_feature_unlocks` by primary key after loading the seeds (both inside
+the test's transaction). Outside the harness the same seed can still replay differently once the
+table order changes; ordering those queries is a later step of the refactor.
+
+# Baseline (2026-10-14)
+
+Docker Desktop on WSL2 (Linux 6.18), AMD Ryzen 7 2700 (16 threads), Ruby 3.4.2 + YJIT, Rails 8.0.2,
+Postgres 16.15, 40 rounds.
+
+| Composition | ms/sim | relative | queries/sim (max) |
+|---|---|---|---|
+| campeao-vs-mestre | 35.02 | 1.095 | 29 |
+| mestre-cavaleiro-vs-campeao-gambits | 57.20 | 1.790 | 47 |
+| cavaleiro-vs-campeao | 37.58 | 1.184 | 29 |
+| campeao-cavaleiro-vs-mestre | 53.57 | 1.669 | 47 |
+| mestre-vs-cavaleiro-curto | 29.88 | 0.923 | 30 |
+
+Not covered: Indomitable (no seed feature forces a save, so its reroll never runs on real content).
+
+[^compositions]: Source: `lib/combat_regression.rb`
+[^test]: Source: `test/services/combat_regression_test.rb`
+[^tasks]: Source: `lib/tasks/combat_regression.rake`

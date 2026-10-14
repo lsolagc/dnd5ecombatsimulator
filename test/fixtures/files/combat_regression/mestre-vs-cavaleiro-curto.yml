@@ -1,0 +1,2441 @@
+---
+1:
+  :gambits:
+    :party_one:
+    - :id: Mestre de Batalha
+      :name: Mestre de Batalha
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+  :winning_party:
+  :total_rounds: 2
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 3
+        :hp_before: 36
+        :hp_after: 33
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 3
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 33
+        :hp_after: 33
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 9
+        :hp_before: 33
+        :hp_after: 36
+        :message: Mestre de Batalha heals 9 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 6
+          :modifiers:
+            actor_level: 3
+          :total: 9
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 1
+          :hp_before: 32
+          :hp_after: 31
+          :message: Cavaleiro Arcano takes 1 bludgeoning damage (1d8).
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 1
+            :modifiers: {}
+            :total: 1
+          :feature_name: 'Maneuver: Precision Attack'
+        :damage: 4
+        :hp_before: 36
+        :hp_after: 32
+        :attack_roll:
+          :natural: 16
+          :total: 21
+          :crit: false
+          :damage: 4
+        :message: Hit!
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 36
+        :hp_after: 36
+        :message: 'Mestre de Batalha takes 0 fire damage (1d10). Spell attack 7 vs
+          AC 19: miss.'
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 8
+        :attack_roll:
+          :natural: 2
+          :total: 7
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 31
+        :hp_after: 21
+        :attack_roll:
+          :natural: 14
+          :total: 19
+          :crit: false
+          :damage: 10
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :max_rounds_reached
+2:
+  :gambits:
+    :party_one:
+    - :id: Mestre de Batalha
+      :name: Mestre de Batalha
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+  :winning_party:
+  :total_rounds: 2
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 12
+        :hp_before: 36
+        :hp_after: 36
+        :message: Cavaleiro Arcano heals 12 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers:
+            actor_level: 3
+          :total: 12
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 5
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 8
+          :hp_before: 24
+          :hp_after: 16
+          :message: Cavaleiro Arcano takes 8 bludgeoning damage (1d8).
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 8
+            :modifiers: {}
+            :total: 8
+          :feature_name: 'Maneuver: Precision Attack'
+        :damage: 12
+        :hp_before: 36
+        :hp_after: 24
+        :attack_roll:
+          :natural: 12
+          :total: 17
+          :crit: false
+          :damage: 12
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 16
+        :hp_after: 16
+        :attack_roll:
+          :natural: 3
+          :total: 8
+          :crit: false
+          :damage: 5
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 5
+          :hp_before: 8
+          :hp_after: 3
+          :message: Cavaleiro Arcano takes 5 bludgeoning damage (1d8).
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 5
+            :modifiers: {}
+            :total: 5
+          :feature_name: 'Maneuver: Precision Attack'
+        :damage: 8
+        :hp_before: 16
+        :hp_after: 8
+        :attack_roll:
+          :natural: 16
+          :total: 21
+          :crit: false
+          :damage: 8
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :max_rounds_reached
+3:
+  :gambits:
+    :party_one:
+    - :id: Mestre de Batalha
+      :name: Mestre de Batalha
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+  :winning_party:
+  :total_rounds: 2
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 9
+          :total: 14
+          :crit: false
+          :damage: 4
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 23
+        :hp_before: 36
+        :hp_after: 13
+        :attack_roll:
+          :natural: 20
+          :total: 25
+          :crit: true
+          :damage: 23
+        :message: Hit!
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 36
+        :hp_after: 36
+        :message: 'Mestre de Batalha takes 0 fire damage (1d10). Spell attack 15 vs
+          AC 19: miss.'
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 6
+        :attack_roll:
+          :natural: 10
+          :total: 15
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :crit: false
+          :damage: 3
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 13
+        :hp_after: 2
+        :attack_roll:
+          :natural: 13
+          :total: 18
+          :crit: false
+          :damage: 11
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: chromatic-orb
+        :spell_slug: chromatic-orb
+        :spell_name: Chromatic Orb
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 6
+        :hp_before: 36
+        :hp_after: 30
+        :message: 'Mestre de Batalha takes 6 force damage (3d8). Spell attack 20 vs
+          AC 19: hit.'
+        :roll_outcome:
+          :expression: 3d8
+          :resolved_expression: 3d8
+          :dice:
+          - 3d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 6
+        :attack_roll:
+          :natural: 15
+          :total: 20
+          :armor_class: 19
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+  :draw: false
+  :outcome: :max_rounds_reached
+4:
+  :gambits:
+    :party_one:
+    - :id: Mestre de Batalha
+      :name: Mestre de Batalha
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+  :winning_party:
+  :total_rounds: 2
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 2
+          :total: 7
+          :crit: false
+          :damage: 12
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 9
+          :total: 14
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 36
+        :hp_after: 36
+        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 15 vs
+          AC 19: miss.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 3
+        :attack_roll:
+          :natural: 10
+          :total: 15
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 9
+          :total: 14
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: chromatic-orb
+        :spell_slug: chromatic-orb
+        :spell_name: Chromatic Orb
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 19
+        :hp_before: 36
+        :hp_after: 17
+        :message: 'Mestre de Batalha takes 19 force damage (3d8). Spell attack 24
+          vs AC 19: hit.'
+        :roll_outcome:
+          :expression: 3d8
+          :resolved_expression: 3d8
+          :dice:
+          - 3d8
+          :rolls:
+          - 19
+          :modifiers: {}
+          :total: 19
+        :attack_roll:
+          :natural: 19
+          :total: 24
+          :armor_class: 19
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+  :draw: false
+  :outcome: :max_rounds_reached
+5:
+  :gambits:
+    :party_one:
+    - :id: Mestre de Batalha
+      :name: Mestre de Batalha
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+  :winning_party:
+  :total_rounds: 2
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 10
+        :hp_before: 36
+        :hp_after: 36
+        :message: Cavaleiro Arcano heals 10 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers:
+            actor_level: 3
+          :total: 10
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 10
+        :hp_before: 36
+        :hp_after: 26
+        :message: 'Mestre de Batalha takes 10 fire damage (1d10). Spell attack 22
+          vs AC 19: hit.'
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 10
+        :attack_roll:
+          :natural: 17
+          :total: 22
+          :armor_class: 19
+          :hit: true
+          :crit: false
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 9
+          :total: 14
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 8
+          :total: 13
+          :crit: false
+          :damage: 4
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 8
+        :hp_before: 26
+        :hp_after: 18
+        :message: 'Mestre de Batalha takes 8 fire damage (1d10). Spell attack 22 vs
+          AC 19: hit.'
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 8
+        :attack_roll:
+          :natural: 17
+          :total: 22
+          :armor_class: 19
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 5
+        :hp_before: 36
+        :hp_after: 31
+        :attack_roll:
+          :natural: 13
+          :total: 18
+          :crit: false
+          :damage: 5
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :max_rounds_reached
+6:
+  :gambits:
+    :party_one:
+    - :id: Mestre de Batalha
+      :name: Mestre de Batalha
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+  :winning_party:
+  :total_rounds: 2
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 4
+          :total: 9
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 4
+        :hp_before: 36
+        :hp_after: 36
+        :message: Mestre de Batalha heals 4 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers:
+            actor_level: 3
+          :total: 4
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :crit: false
+          :damage: 6
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 10
+        :hp_before: 36
+        :hp_after: 26
+        :message: 'Mestre de Batalha takes 10 fire damage (1d10). Spell attack 19
+          vs AC 19: hit.'
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 10
+        :attack_roll:
+          :natural: 14
+          :total: 19
+          :armor_class: 19
+          :hit: true
+          :crit: false
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 5
+        :hp_before: 36
+        :hp_after: 31
+        :attack_roll:
+          :natural: 16
+          :total: 21
+          :crit: false
+          :damage: 5
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 26
+        :hp_after: 26
+        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 18 vs
+          AC 19: miss.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 7
+        :attack_roll:
+          :natural: 13
+          :total: 18
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+  :draw: false
+  :outcome: :max_rounds_reached
+7:
+  :gambits:
+    :party_one:
+    - :id: Mestre de Batalha
+      :name: Mestre de Batalha
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+  :winning_party:
+  :total_rounds: 2
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 4
+          :total: 9
+          :crit: false
+          :damage: 7
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 11
+        :hp_before: 36
+        :hp_after: 36
+        :message: Mestre de Batalha heals 11 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers:
+            actor_level: 3
+          :total: 11
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 11
+        :hp_before: 36
+        :hp_after: 36
+        :message: Cavaleiro Arcano heals 11 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers:
+            actor_level: 3
+          :total: 11
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: chromatic-orb
+        :spell_slug: chromatic-orb
+        :spell_name: Chromatic Orb
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 11
+        :hp_before: 36
+        :hp_after: 25
+        :message: 'Mestre de Batalha takes 11 force damage (3d8). Spell attack 20
+          vs AC 19: hit.'
+        :roll_outcome:
+          :expression: 3d8
+          :resolved_expression: 3d8
+          :dice:
+          - 3d8
+          :rolls:
+          - 11
+          :modifiers: {}
+          :total: 11
+        :attack_roll:
+          :natural: 15
+          :total: 20
+          :armor_class: 19
+          :hit: true
+          :crit: false
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 8
+          :hp_before: 24
+          :hp_after: 16
+          :message: Cavaleiro Arcano takes 8 bludgeoning damage (1d8).
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 8
+            :modifiers: {}
+            :total: 8
+          :feature_name: 'Maneuver: Precision Attack'
+        :damage: 12
+        :hp_before: 36
+        :hp_after: 24
+        :attack_roll:
+          :natural: 15
+          :total: 20
+          :crit: false
+          :damage: 12
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: chromatic-orb
+        :spell_slug: chromatic-orb
+        :spell_name: Chromatic Orb
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 25
+        :hp_after: 25
+        :message: 'Mestre de Batalha takes 0 force damage (3d8). Spell attack 12 vs
+          AC 19: miss.'
+        :roll_outcome:
+          :expression: 3d8
+          :resolved_expression: 3d8
+          :dice:
+          - 3d8
+          :rolls:
+          - 14
+          :modifiers: {}
+          :total: 14
+        :attack_roll:
+          :natural: 7
+          :total: 12
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+  :draw: false
+  :outcome: :max_rounds_reached
+8:
+  :gambits:
+    :party_one:
+    - :id: Mestre de Batalha
+      :name: Mestre de Batalha
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+  :winning_party:
+  :total_rounds: 2
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 36
+        :hp_after: 36
+        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 15 vs
+          AC 19: miss.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 6
+        :attack_roll:
+          :natural: 10
+          :total: 15
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 12
+        :hp_before: 36
+        :hp_after: 36
+        :message: Cavaleiro Arcano heals 12 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers:
+            actor_level: 3
+          :total: 12
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 7
+        :hp_before: 36
+        :hp_after: 36
+        :message: Mestre de Batalha heals 7 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers:
+            actor_level: 3
+          :total: 7
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 9
+          :total: 14
+          :crit: false
+          :damage: 4
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 6
+        :hp_before: 36
+        :hp_after: 30
+        :message: 'Mestre de Batalha takes 6 fire damage (1d10). Spell attack 19 vs
+          AC 19: hit.'
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 6
+        :attack_roll:
+          :natural: 14
+          :total: 19
+          :armor_class: 19
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 3
+          :hp_before: 29
+          :hp_after: 26
+          :message: Cavaleiro Arcano takes 3 bludgeoning damage (1d8).
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 3
+            :modifiers: {}
+            :total: 3
+          :feature_name: 'Maneuver: Precision Attack'
+        :damage: 7
+        :hp_before: 36
+        :hp_after: 29
+        :attack_roll:
+          :natural: 18
+          :total: 23
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :max_rounds_reached
+9:
+  :gambits:
+    :party_one:
+    - :id: Mestre de Batalha
+      :name: Mestre de Batalha
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+  :winning_party:
+  :total_rounds: 2
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 3
+        :hp_before: 36
+        :hp_after: 33
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 3
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 33
+        :hp_after: 33
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :crit: false
+          :damage: 8
+        :message: Miss!
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 1
+          :total: 6
+          :crit: false
+          :damage: 12
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 12
+        :hp_before: 33
+        :hp_after: 36
+        :message: Mestre de Batalha heals 12 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers:
+            actor_level: 3
+          :total: 12
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 36
+        :hp_after: 36
+        :attack_roll:
+          :natural: 11
+          :total: 17
+          :crit: false
+          :damage: 7
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 7
+          :hp_before: 30
+          :hp_after: 23
+          :message: Cavaleiro Arcano takes 7 bludgeoning damage (1d8).
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 7
+            :modifiers: {}
+            :total: 7
+          :feature_name: 'Maneuver: Precision Attack'
+        :damage: 6
+        :hp_before: 36
+        :hp_after: 30
+        :attack_roll:
+          :natural: 13
+          :total: 18
+          :crit: false
+          :damage: 6
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :max_rounds_reached
+10:
+  :gambits:
+    :party_one:
+    - :id: Mestre de Batalha
+      :name: Mestre de Batalha
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+  :winning_party:
+  :total_rounds: 2
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 4
+        :hp_before: 36
+        :hp_after: 36
+        :message: Mestre de Batalha heals 4 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers:
+            actor_level: 3
+          :total: 4
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 6
+          :hp_before: 23
+          :hp_after: 17
+          :message: Cavaleiro Arcano takes 6 bludgeoning damage (1d8).
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 6
+            :modifiers: {}
+            :total: 6
+          :feature_name: 'Maneuver: Precision Attack'
+        :damage: 13
+        :hp_before: 36
+        :hp_after: 23
+        :attack_roll:
+          :natural: 18
+          :total: 23
+          :crit: false
+          :damage: 13
+        :message: Hit!
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 36
+        :hp_after: 28
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 8
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 5
+        :hp_before: 17
+        :hp_after: 22
+        :message: Cavaleiro Arcano heals 5 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers:
+            actor_level: 3
+          :total: 5
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 22
+        :hp_after: 22
+        :attack_roll:
+          :natural: 9
+          :total: 14
+          :crit: false
+          :damage: 13
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 28
+        :hp_after: 28
+        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 6 vs
+          AC 19: miss.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 3
+        :attack_roll:
+          :natural: 1
+          :total: 6
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+  :draw: false
+  :outcome: :max_rounds_reached
+11:
+  :gambits:
+    :party_one:
+    - :id: Mestre de Batalha
+      :name: Mestre de Batalha
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+  :winning_party:
+  :total_rounds: 2
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 36
+        :hp_after: 29
+        :attack_roll:
+          :natural: 14
+          :total: 20
+          :crit: false
+          :damage: 7
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 29
+        :hp_after: 29
+        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 7 vs
+          AC 19: miss.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 8
+        :attack_roll:
+          :natural: 2
+          :total: 7
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 6
+        :hp_before: 29
+        :hp_after: 35
+        :message: Mestre de Batalha heals 6 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers:
+            actor_level: 3
+          :total: 6
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 6
+          :hp_before: 32
+          :hp_after: 26
+          :message: Cavaleiro Arcano takes 6 bludgeoning damage (1d8).
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 6
+            :modifiers: {}
+            :total: 6
+          :feature_name: 'Maneuver: Precision Attack'
+        :damage: 4
+        :hp_before: 36
+        :hp_after: 32
+        :attack_roll:
+          :natural: 14
+          :total: 19
+          :crit: false
+          :damage: 4
+        :message: Hit!
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 35
+        :hp_after: 35
+        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 6 vs
+          AC 19: miss.'
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 6
+        :attack_roll:
+          :natural: 1
+          :total: 6
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 3
+          :hp_before: 18
+          :hp_after: 15
+          :message: Cavaleiro Arcano takes 3 bludgeoning damage (1d8).
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 3
+            :modifiers: {}
+            :total: 3
+          :feature_name: 'Maneuver: Precision Attack'
+        :damage: 8
+        :hp_before: 26
+        :hp_after: 18
+        :attack_roll:
+          :natural: 13
+          :total: 18
+          :crit: false
+          :damage: 8
+        :message: Hit!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :max_rounds_reached
+12:
+  :gambits:
+    :party_one:
+    - :id: Mestre de Batalha
+      :name: Mestre de Batalha
+      :mode: aleatório
+      :rules: []
+    :party_two:
+    - :id: Cavaleiro Arcano
+      :name: Cavaleiro Arcano
+      :mode: aleatório
+      :rules: []
+  :winning_party:
+  :total_rounds: 2
+  :round_log:
+  - :round: 1
+    :turns:
+    - :round: 1
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 4
+          :hp_before: 30
+          :hp_after: 26
+          :message: Cavaleiro Arcano takes 4 bludgeoning damage (1d8).
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 4
+            :modifiers: {}
+            :total: 4
+          :feature_name: 'Maneuver: Precision Attack'
+        :damage: 6
+        :hp_before: 36
+        :hp_after: 30
+        :attack_roll:
+          :natural: 18
+          :total: 23
+          :crit: false
+          :damage: 6
+        :message: Hit!
+      :gambit: aleatório
+    - :round: 1
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 7
+        :hp_before: 36
+        :hp_after: 36
+        :message: Mestre de Batalha heals 7 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers:
+            actor_level: 3
+          :total: 7
+      :extra: true
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 4
+        :hp_before: 26
+        :hp_after: 30
+        :message: Cavaleiro Arcano heals 4 hit points (1d10+3).
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers:
+            actor_level: 3
+          :total: 4
+      :gambit: aleatório
+    - :round: 1
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :cast_spell
+        :spell_id: chromatic-orb
+        :spell_slug: chromatic-orb
+        :spell_name: Chromatic Orb
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 17
+        :hp_before: 36
+        :hp_after: 19
+        :message: 'Mestre de Batalha takes 17 force damage (3d8). Spell attack 23
+          vs AC 19: hit.'
+        :roll_outcome:
+          :expression: 3d8
+          :resolved_expression: 3d8
+          :dice:
+          - 3d8
+          :rolls:
+          - 17
+          :modifiers: {}
+          :total: 17
+        :attack_roll:
+          :natural: 18
+          :total: 23
+          :armor_class: 19
+          :hit: true
+          :crit: false
+      :extra: true
+      :gambit: aleatório
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 30
+        :hp_after: 30
+        :attack_roll:
+          :natural: 3
+          :total: 8
+          :crit: false
+          :damage: 10
+        :message: Miss!
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 19
+        :hp_after: 19
+        :attack_roll:
+          :natural: 11
+          :total: 17
+          :crit: false
+          :damage: 3
+        :message: Miss!
+      :gambit: aleatório
+  :draw: false
+  :outcome: :max_rounds_reached
