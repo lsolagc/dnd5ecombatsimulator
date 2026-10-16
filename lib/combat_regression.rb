@@ -66,11 +66,10 @@ module CombatRegression
   def query_baseline_path = DIR.join("queries.yml")
   def benchmark_baseline_path = DIR.join("benchmark.yml")
 
-  # Loads db/seeds and pins the physical order of the unlocks, which the simulator reads with no ORDER BY:
-  # the turn's candidate actions follow that order, so without this a seed would not always replay.
+  # Loads db/seeds. No need to pin the tables' physical order: the simulator reads spells and unlocks in
+  # a fixed order (PlayerCharacter#spells, #feature_unlocks).
   def load_seeds!
     SeedData.load_all
-    ActiveRecord::Base.connection.execute("CLUSTER class_feature_unlocks USING class_feature_unlocks_pkey")
   end
 
   # Applies the composition's changes to the seed characters (load_seeds! must have run).
@@ -113,7 +112,7 @@ module CombatRegression
   # One simulation on fresh records (HP, spell slots and caches start over).
   def simulate(composition, seed)
     party_one, party_two = composition.values_at(:party_one, :party_two).map do |party|
-      party.map { |spec| with_ordered_spells(PlayerCharacter.find_by!(name: spec[:name])) }
+      party.map { |spec| PlayerCharacter.find_by!(name: spec[:name]) }
     end
     yield CombatSimulatorService.new(party_one:, party_two:, seed:, max_rounds: composition[:max_rounds])
   end
@@ -174,13 +173,6 @@ module CombatRegression
     started = Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
     yield
     Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond) - started
-  end
-
-  # The spells load with no ORDER BY either (a hash join on a table SeedData updates in place, so their
-  # order changes between runs): preloaded here in the order they were learned.
-  def with_ordered_spells(character)
-    character.association(:spells).target = character.spells.order("player_character_spells.id").to_a
-    character
   end
 
   def characters(composition) = composition.values_at(:party_one, :party_two).flatten

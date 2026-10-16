@@ -29,6 +29,21 @@ class CombatRegressionTest < ActiveSupport::TestCase
     assert_empty missing_coverage(results, eldritch_saves:), "the regression set no longer exercises these"
   end
 
+  # The spells and unlocks are read in a fixed order (PlayerCharacter#spells, #feature_unlocks), not in the
+  # tables' physical order: reversed here (near enough: each UPDATE writes a new row version), the seeds still replay.
+  test "a seed replays the same whatever the physical order of the spells and unlocks" do
+    skip "write mode" if WRITE
+
+    tables = %w[spells player_character_spells class_features class_feature_unlocks]
+    tables.each { |table| reverse_physical_order!(table) }
+
+    CombatRegression::COMPOSITIONS.each do |name, composition|
+      each_composition_seed(name, composition) do |seeded|
+        assert_equal File.read(CombatRegression.golden_path(name)), YAML.dump(seeded), "#{name}: the simulation changed with the table order"
+      end
+    end
+  end
+
   test "no composition goes over its query ceiling per simulation" do
     counts = CombatRegression::COMPOSITIONS.to_h do |name, composition|
       [ name, CombatRegression.within(composition) { CombatRegression.queries_per_sim(composition) } ]
@@ -46,6 +61,13 @@ class CombatRegressionTest < ActiveSupport::TestCase
       CombatRegression.within(composition) do
         yield CombatRegression::SEEDS.to_h { |seed| [ seed, CombatRegression.normalize(CombatRegression.simulate(composition, seed, &:call)) ] }
       end
+    end
+
+    def reverse_physical_order!(table)
+      connection = ActiveRecord::Base.connection
+      ids = connection.select_values("SELECT id FROM #{table} ORDER BY id")
+      ids.reverse_each { |id| connection.execute("UPDATE #{table} SET id = id WHERE id = #{Integer(id)}") }
+      assert_not_equal ids, connection.select_values("SELECT id FROM #{table} ORDER BY ctid"), "#{table}: the physical order did not change"
     end
 
     def missing_coverage(results, eldritch_saves:)

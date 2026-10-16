@@ -276,6 +276,54 @@ class GambitsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, preset.gambits.count
   end
 
+  test "apply_preset with a rule that does not hold at the character's level refuses the whole preset, naming the rule" do
+    second_wind = class_features(:fighter_second_wind)
+    second_wind.class_feature_unlocks.create!(level: 10, description: "Test: becomes an attack.",
+                                              effect_payload: { kind: "damage", roll: "1d6", target: "enemy" })
+    preset = GambitPreset.create!(name: "Alto nível")
+    Gambit.create!(owner: preset, position: 1, target: :enemy, condition: :lowest_hp, action_kind: :attack)
+    Gambit.create!(owner: preset, position: 2, target: :enemy, condition: :any, action_kind: :class_feature, class_feature: second_wind)
+    before = rule_rows(@character)
+
+    patch apply_preset_player_character_gambits_url(@character), params: { preset_id: preset.id }
+
+    assert_response :unprocessable_entity
+    assert_select "#preset_errors", /regra 2 \(Inimigo: qualquer → Second Wind\) não vale para Thorin no nível 5\. O alvo não combina/
+    assert_equal before, rule_rows(@character), "nothing changes, not even the rules before the invalid one"
+    assert_select "#preset_errors", count: 1
+  end
+
+  test "save_preset and overwrite_preset refuse a rule that holds at the character's level but not at the feature's highest" do
+    class_features(:fighter_second_wind).class_feature_unlocks.create!(level: 10, description: "Test: becomes an attack.",
+                                                                       effect_payload: { kind: "damage", roll: "1d6", target: "enemy" })
+    preset = GambitPreset.create!(name: "Existente")
+    Gambit.create!(owner: preset, position: 1, target: :enemy, condition: :lowest_hp, action_kind: :attack)
+    before = rule_rows(preset)
+
+    assert_no_difference -> { GambitPreset.count } do
+      post save_preset_player_character_gambits_url(@character), params: { name: "Novo" }
+    end
+    assert_response :unprocessable_entity
+    assert_select "#preset_errors", /regra 2 \(Self: qualquer → Second Wind\) não vale para o preset Novo\. O alvo não combina/
+
+    patch overwrite_preset_player_character_gambits_url(@character), params: { preset_id: preset.id }
+    assert_response :unprocessable_entity
+    assert_select "#preset_errors", /regra 2 \(Self: qualquer → Second Wind\) não vale para o preset Existente/
+    assert_equal before, rule_rows(preset)
+  end
+
+  test "apply_preset keeps a rule for a feature the character has not unlocked yet: an action it lacks, skipped at runtime" do
+    level_one = player_characters(:aragorn)
+    preset = GambitPreset.create!(name: "Mestre")
+    Gambit.create!(owner: preset, position: 1, target: :enemy, condition: :any, action_kind: :class_feature,
+                   class_feature: class_features(:fighter_battle_master_maneuver_precision_attack))
+
+    patch apply_preset_player_character_gambits_url(level_one), params: { preset_id: preset.id }
+
+    assert_redirected_to player_character_gambits_url(level_one)
+    assert_equal [ class_features(:fighter_battle_master_maneuver_precision_attack).id ], level_one.gambits.reload.map(&:class_feature_id)
+  end
+
   test "an unknown preset is a 404 on overwrite and apply, a malformed id a 400, changing nothing" do
     before = rule_rows(@character)
 

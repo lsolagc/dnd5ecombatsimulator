@@ -1,14 +1,20 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+# Explicit ids in file order: a character reads its spells in the order they were learned
+# (player_character_spells.id), and the simulator's random picks follow that order.
+
 merlin_fire_bolt:
+  id: 1
   player_character: merlin
   spell: fire_bolt
 
 merlin_magic_missile:
+  id: 2
   player_character: merlin
   spell: magic_missile
 
 merlin_shield:
+  id: 3
   player_character: merlin
   spell: shield
 
@@ -17,31 +23,38 @@ merlin_shield:
 # capacity on purpose, so tests can exercise the spells_known limit by trying to add
 # a 4th spell.
 eldritch_knight_seven_fire_bolt:
+  id: 4
   player_character: eldritch_knight_seven
   spell: fire_bolt
 
 eldritch_knight_seven_magic_missile:
+  id: 5
   player_character: eldritch_knight_seven
   spell: magic_missile
 
 eldritch_knight_seven_shield:
+  id: 6
   player_character: eldritch_knight_seven
   spell: shield
 
 eldritch_knight_seven_chromatic_orb:
+  id: 7
   player_character: eldritch_knight_seven
   spell: chromatic_orb
 
 eldritch_knight_ten_test_save_spell:
+  id: 8
   player_character: eldritch_knight_ten
   spell: test_save_spell
 
 eldritch_knight_eighteen_magic_missile:
+  id: 9
   player_character: eldritch_knight_eighteen
   spell: magic_missile
 
 # A second caster who knows test_save_spell, used to prove Eldritch Strike's
 # disadvantage does not leak to an attacker other than the one who landed the hit.
 eldritch_knight_eighteen_test_save_spell:
+  id: 10
   player_character: eldritch_knight_eighteen
   spell: test_save_spell

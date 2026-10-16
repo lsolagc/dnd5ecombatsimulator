@@ -87,7 +87,7 @@
                     <% if player_class.class_features.any? %>
                       <div class="d-flex flex-wrap gap-2 mb-2">
                         <% player_class.class_features.each do |feature| %>
-                          <% has_effect = feature.class_feature_unlocks.any? { |unlock| unlock.effect_payload.present? } %>
+                          <% has_effect = feature.effect_payload_at.present? %>
                           <span class="badge rounded-pill <%= feature.action_type_passive? ? "bg-body-secondary text-body-secondary border" : "border border-2 text-body bg-body" %>">
                             <% if has_effect %><span class="text-primary">●</span> <% end %><%= feature.name %>
                           </span>

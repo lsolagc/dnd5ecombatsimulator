@@ -6,7 +6,7 @@ resource: app/services/combat_simulator_service.rb
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-14T00:00:00Z
+  at: 2026-10-15T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T19:06:20Z }
 sources:
   - id: combat-simulator-rb
@@ -158,10 +158,10 @@ target if it is a living enemy, else the first living enemy in initiative order.
 
 A character's class, level and choices cannot change mid-combat, so the
 lookups the turn loop repeats are loaded once per simulation:
-`highest_unlock_per_feature` and the known-maneuver ids are memoized per
-combatant on the service instance (one instance per simulation), and
-`PlayerCharacter` caches its unlocked feature unlocks, class progression and
-spellcasting feature (see [player-character.md](/models/player-character.md)).
+the known-maneuver ids are memoized per combatant on the service instance
+(one instance per simulation), and `PlayerCharacter` caches its feature
+unlocks (`#feature_unlocks`, the simulator's only unlock lookup), class
+progression and spellcasting feature (see [player-character.md](/models/player-character.md)).
 This cut a typical simulation from ~259 queries / ~590 ms to ~39 / ~97 ms;
 60 seeded results across four compositions were byte-identical before and
 after, and a test pins the unlock lookups to one per combatant per side of the

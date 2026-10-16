@@ -24,6 +24,34 @@ class ClassFeature < ApplicationRecord
   validate :subclass_marker_belongs_to_the_same_subclass_tree
   validate :spellcasting_ability_is_known, if: :grants_spellcasting
 
+  # The feature whose superiority dice every Battle Master maneuver spends. Found by name until phase 5.2.
+  COMBAT_SUPERIORITY = "Combat Superiority".freeze
+
+  def combat_superiority?
+    name == COMBAT_SUPERIORITY
+  end
+
+  # A maneuver: a feature paid from +combat_superiority+'s resource (its superiority dice) rather than uses
+  # of its own. +combat_superiority+ is that feature, or nil where there is none.
+  def maneuver_of?(combat_superiority)
+    !combat_superiority.nil? && resource_name.present? && resource_name == combat_superiority.resource_name
+  end
+
+  # The effect in force at +level+: the payload of the highest unlock at or below it that has one, so an
+  # unlock without a payload inherits the one before it. With no level (a preset), the highest unlock's.
+  # Nil when there is none. Reads the loaded unlocks (PlayerCharacter#feature_unlocks loads them).
+  def effect_payload_at(level = nil)
+    class_feature_unlocks.select { |unlock| unlock.effect_payload.present? && (level.nil? || unlock.level <= level) }
+                         .max_by(&:level)&.effect_payload&.deep_stringify_keys
+  end
+
+  # The effect at +level+ if the simulator can choose it as a turn action: a heal or damage with no
+  # passive trigger. Nil otherwise.
+  def action_payload_at(level = nil)
+    payload = effect_payload_at(level)
+    payload if payload && payload["kind"].in?(%w[heal damage]) && payload["trigger"].blank?
+  end
+
   # A feature is part of this marker's subclass tree if it *is* the marker itself, or if it's a
   # subclass_progression pointing back at this marker via subclass_marker_id.
   def subclass_tree_member?(feature)

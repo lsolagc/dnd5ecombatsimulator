@@ -6,7 +6,7 @@ resource: app/services/combat
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-14T00:00:00Z
+  at: 2026-10-15T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T18:30:17Z }
 sources:
   - id: combat-pipeline-rb
@@ -99,7 +99,10 @@ breakdown instead of just a final number.[^combat-pipeline-rb]
 # Data shape: `effect_payload`
 
 `class_feature_unlocks.effect_payload` (jsonb) declares the effect an
-`EffectResolver` turns into an `EffectInstance`:
+`EffectResolver` turns into an `EffectInstance`. For a class feature the
+resolver reads the effect in force at the actor's level
+(`ClassFeature#effect_payload_at`: an unlock without a payload inherits the
+one before it; see [class-feature-unlock.md](/models/class-feature-unlock.md)):
 
 ```json
 { "kind": "heal", "roll": "1d10 + fighter_level", "target": "self" }

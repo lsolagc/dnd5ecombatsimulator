@@ -132,14 +132,32 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     unlock_lookups = 0
     subscription = ActiveSupport::Notifications.subscribe("sql.active_record") do |*, payload|
-      unlock_lookups += 1 if payload[:sql].include?('FROM "class_feature_unlocks" INNER JOIN "class_features"')
+      unlock_lookups += 1 if payload[:sql].include?('FROM "class_features" LEFT OUTER JOIN "class_feature_unlocks"')
     end
     result = CombatSimulatorService.new(party_one:, party_two:, seed: 3, max_rounds: 10).call
     ActiveSupport::Notifications.unsubscribe(subscription)
 
     assert_equal 10, result[:total_rounds], "the fight must be long enough for a per-turn lookup to show"
-    # One lookup in the simulator and one in PlayerCharacter (passives) per combatant, however long the fight.
-    assert_equal 6, unlock_lookups
+    # One lookup per combatant (PlayerCharacter#feature_unlocks, shared by the simulator and the passives),
+    # however long the fight.
+    assert_equal 3, unlock_lookups
+  end
+
+  test "an unlock without an effect inherits the one before it: the simulator, the resolver and the gambits all see it" do
+    second_wind = class_features(:fighter_second_wind)
+    ClassFeatureUnlock.create!(class_feature: second_wind, level: 10, uses: 2, description: "Test: one more use, same effect.")
+    fighter = player_characters(:eldritch_knight_ten)
+
+    service = CombatSimulatorService.new(party_one: [ fighter ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+    action = service.send(:available_actions_for, actor: fighter).find { |candidate| candidate[:class_feature] == second_wind }
+    assert_equal [ "heal", 2 ], [ action&.dig(:payload, "kind"), action&.dig(:uses_remaining) ]
+
+    effects = Combat::EffectResolver.call(action: Combat::CombatAction.new(source_type: :class_feature, source_id: second_wind.id, actor: fighter))
+    assert_equal [ "heal" ], effects.map(&:kind).map(&:to_s)
+
+    assert_includes fighter.gambit_action_options, [ second_wind.name, "class_feature:#{second_wind.id}" ]
+    assert Gambit.new(owner: fighter, position: 1, target: :self, condition: :any, action_kind: :class_feature, class_feature: second_wind).valid?
   end
 
   test "respects max_rounds stop condition" do

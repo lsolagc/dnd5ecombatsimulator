@@ -96,7 +96,7 @@ class PlayerCharacterMartialArchetypeTest < ActiveSupport::TestCase
   private
 
     def unlocked_slugs_and_types(character)
-      character.send(:unlocked_class_feature_unlocks).map { |unlock| [ unlock.class_feature.slug, unlock.class_feature.feature_type ] }
+      character.feature_unlocks.map { |unlock| [ unlock.class_feature.slug, unlock.class_feature.feature_type ] }
     end
 
     def unlocked_slugs(character)

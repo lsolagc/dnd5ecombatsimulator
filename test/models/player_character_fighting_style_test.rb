@@ -64,6 +64,6 @@ class PlayerCharacterFightingStyleTest < ActiveSupport::TestCase
   private
 
     def unlocked_slugs(character)
-      character.send(:unlocked_class_feature_unlocks).map { |unlock| unlock.class_feature.slug }
+      character.feature_unlocks.map { |unlock| unlock.class_feature.slug }
     end
 end

@@ -16,7 +16,8 @@ class PlayerCharacter < ApplicationRecord
   accepts_nested_attributes_for :combatant
 
   has_many :player_character_spells, dependent: :destroy
-  has_many :spells, through: :player_character_spells
+  # In the order they were learned: the simulator's random picks follow it, so the same seed replays.
+  has_many :spells, -> { order("player_character_spells.id") }, through: :player_character_spells
 
   has_many :player_character_maneuvers, dependent: :destroy
   has_many :known_maneuvers, through: :player_character_maneuvers, source: :maneuver
@@ -92,18 +93,33 @@ class PlayerCharacter < ApplicationRecord
     apply_turn_passives!(trigger: "turn_end")
   end
 
+  # One payload per unlocked feature, the one in force at the character's level (ClassFeature#effect_payload_at).
   def passive_effect_payloads(trigger:)
-    unlocked_class_feature_unlocks.filter_map do |unlock|
-      payload = unlock.effect_payload&.deep_stringify_keys
-      next if payload.blank?
-      next unless payload["trigger"] == trigger
+    feature_unlocks.filter_map do |unlock|
+      feature = unlock.class_feature
+      payload = feature.effect_payload_at(level)
+      next unless payload && payload["trigger"] == trigger
 
-      payload.merge(
-        "feature_slug" => unlock.class_feature.slug,
-        "feature_name" => unlock.class_feature.name,
-        "unlock_level" => unlock.level
-      )
+      payload.merge("feature_slug" => feature.slug, "feature_name" => feature.name)
     end
+  end
+
+  # The highest unlock at or below the character's level of every feature the character can see
+  # (ClassFeature.visible_for?), each feature's unlocks loaded. In a fixed order, by the id of the
+  # feature's first unlock at or below the level, since the simulator's random picks follow it.
+  def feature_unlocks
+    cached(:feature_unlocks, [ player_class_id, level, martial_archetype_id, fighting_style_id ]) do
+      ClassFeature.where(player_class_id:).eager_load(:class_feature_unlocks).order("class_feature_unlocks.id")
+        .select { |feature| ClassFeature.visible_for?(feature, martial_archetype:, fighting_style:) }
+        .filter_map { |feature| feature.class_feature_unlocks.select { |unlock| unlock.level <= level }.presence }
+        .sort_by { |unlocks| unlocks.first.id }
+        .map { |unlocks| unlocks.max_by(&:level) }
+    end
+  end
+
+  # The superiority-dice feature (ClassFeature#combat_superiority?) if unlocked: its uses pay for every maneuver.
+  def combat_superiority
+    feature_unlocks.map(&:class_feature).find(&:combat_superiority?)
   end
 
   def take_damage(amount:, damage_type:)
@@ -191,19 +207,18 @@ class PlayerCharacter < ApplicationRecord
   end
 
   # The turn actions a gambit of this character can choose, as [label, value] select options (value as in
-  # Gambit#action_choice): Ataque, unlocked features the simulator runs as an action (Gambit's own filter,
-  # Action Surge included) by unlock level, maneuvers only when known, and known spells with an effect by level.
+  # Gambit#action_choice): Ataque, unlocked features the simulator runs as an action at the character's level
+  # (ClassFeature#action_payload_at, Action Surge included) by first unlock level, maneuvers only when known,
+  # and known spells with an effect by level.
   def gambit_action_options
-    unlocked_features = unlocked_class_feature_unlocks.sort_by { |unlock| [ unlock.level, unlock.class_feature.name ] }.map(&:class_feature).uniq
-    combat_superiority = unlocked_features.find { |feature| feature.name == "Combat Superiority" }
     known_maneuver_ids = known_maneuvers.ids
-    features = unlocked_features.reject do |feature|
-      combat_superiority && feature.resource_name == combat_superiority.resource_name && !known_maneuver_ids.include?(feature.id)
-    end
+    features = feature_unlocks.map(&:class_feature)
+      .reject { |feature| feature.maneuver_of?(combat_superiority) && !known_maneuver_ids.include?(feature.id) }
+      .sort_by { |feature| [ feature.class_feature_unlocks.map(&:level).min, feature.name ] }
 
     choices = [ Gambit.new(action_kind: :attack) ] +
       features.map { |feature| Gambit.new(action_kind: :class_feature, class_feature: feature) }
-              .select { |gambit| gambit.action_surge? || gambit.active_feature_payload } +
+              .select { |gambit| gambit.action_surge? || gambit.class_feature.action_payload_at(level) } +
       spells.select { |spell| spell.effect_payload.present? }.sort_by { |spell| [ spell.level, spell.name ] }.map { |spell| Gambit.new(action_kind: :spell, spell:) }
     choices.map { |gambit| [ gambit.action_label, gambit.action_choice ] }
   end
@@ -227,17 +242,6 @@ class PlayerCharacter < ApplicationRecord
       raise "No level #{spell_level} spell slots remaining for #{name}" if remaining <= 0
 
       available_spell_slots[spell_level] = remaining - 1
-    end
-
-    def unlocked_class_feature_unlocks
-      cached(:unlocked_class_feature_unlocks, [ player_class_id, level, martial_archetype_id, fighting_style_id ]) do
-        ClassFeatureUnlock
-          .joins(:class_feature)
-          .includes(:class_feature)
-          .where(class_features: { player_class_id: player_class_id })
-          .where("class_feature_unlocks.level <= ?", level)
-          .select { |unlock| ClassFeature.visible_for?(unlock.class_feature, martial_archetype: martial_archetype, fighting_style: fighting_style) }
-      end
     end
 
     # Per-instance cache for lookups that depend only on the character's class, level and choices. The combat

@@ -65,7 +65,8 @@ class Gambit < ApplicationRecord
   # Replaces the rules of `to` with new copies of the rules of `from` (presets: save, overwrite and apply),
   # in one transaction holding a row lock on `to`. Copies take positions 1..n in the source's priority
   # order; being new rows, they keep no link to the source. Returns false, changing nothing, when `from`
-  # has no rules.
+  # has no rules. Each copy is validated for `to` (a character's level, see #active_feature_payload): the
+  # first one that does not hold raises ActiveRecord::RecordInvalid, changing nothing.
   def self.copy_rules(from:, to:)
     transaction do
       to.lock!
@@ -76,9 +77,10 @@ class Gambit < ApplicationRecord
       rules.each.with_index(1) do |rule, position|
         create!(rule.attributes.slice(*SNAPSHOT_ATTRIBUTES).merge("owner" => to, "position" => position))
       end
-      to.gambits.reset
       true
     end
+  ensure
+    to.gambits.reset
   end
 
   def label
@@ -127,14 +129,16 @@ class Gambit < ApplicationRecord
     action_class_feature? && class_feature&.name == "Action Surge"
   end
 
-  # The feature's effect at its highest unlock level, if the simulator can choose it as an action: a
-  # heal or damage that is not a passive trigger (same filter as CombatSimulatorService#available_actions_for).
-  # Not tied to the owner's level, since a preset has none.
+  # The feature's effect if the simulator can choose it as an action (ClassFeature#action_payload_at), at
+  # the owner's level; a preset has none, so its rules read the feature's highest unlock. A feature with no
+  # effect yet at the owner's level is an action the owner lacks: read like a preset's, so the rule stays
+  # valid and is skipped at runtime, as a feature from another subclass is.
   def active_feature_payload
     return if class_feature.nil?
 
-    payload = class_feature.class_feature_unlocks.where.not(effect_payload: nil).order(level: :desc).first&.effect_payload
-    payload if payload && payload["kind"].in?(%w[heal damage]) && payload["trigger"].blank?
+    level = owner.try(:level)
+    level = nil if level && class_feature.effect_payload_at(level).nil?
+    class_feature.action_payload_at(level)
   end
 
   private

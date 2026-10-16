@@ -90,6 +90,8 @@ class GambitsController < ApplicationController
     rescue ActiveRecord::RecordNotUnique # another tab saved the same name after this one validated
       preset = GambitPreset.new(name:)
       preset.errors.add(:name, GambitPreset::NAME_TAKEN)
+    rescue ActiveRecord::RecordInvalid => error
+      return rule_refused(error.record, name:)
     end
     return preset_refused(preset.errors.map(&:message).to_sentence, name:) unless preset.persisted?
 
@@ -102,14 +104,19 @@ class GambitsController < ApplicationController
     return preset_refused(NO_RULES_TO_SAVE) unless Gambit.copy_rules(from: @player_character, to: preset)
 
     preset_done(preset, "sobrescrito")
+  rescue ActiveRecord::RecordInvalid => error
+    rule_refused(error.record)
   end
 
-  # preset_id: the character's rules are replaced by a copy of the preset's.
+  # preset_id: the character's rules are replaced by a copy of the preset's; a rule that does not hold at
+  # the character's level refuses the whole preset.
   def apply_preset
     preset = GambitPreset.find(params.expect(:preset_id))
     return preset_refused("O preset #{preset.name} não tem regras") unless Gambit.copy_rules(from: preset, to: @player_character)
 
     preset_done(preset, "aplicado")
+  rescue ActiveRecord::RecordInvalid => error
+    rule_refused(error.record)
   end
 
   private
@@ -123,6 +130,15 @@ class GambitsController < ApplicationController
 
     def preset_done(preset, verb)
       redirect_to player_character_gambits_path(@player_character), status: :see_other, notice: "Preset #{preset.name} #{verb}."
+    end
+
+    # A copied rule that does not hold where it lands (Gambit.copy_rules changed nothing): a character's
+    # rules are checked at its level, a preset's at the feature's highest.
+    def rule_refused(rule, name: nil)
+      owner = rule.owner
+      destination = owner.is_a?(PlayerCharacter) ? "#{owner.name} no nível #{owner.level}" : "o preset #{owner.name}"
+      preset_refused("Nada foi alterado: a regra #{rule.position} (#{rule.label}) não vale para #{destination}. " \
+                     "#{rule.errors.map(&:message).to_sentence}.", name:)
     end
 
     # The screen again (422) with the error in the presets panel; name refills the new preset's field.

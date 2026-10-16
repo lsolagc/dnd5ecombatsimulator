@@ -84,7 +84,7 @@ class CombatSimulatorService
     def resolve_initial_uses_for(combatant:)
       feature_uses = {}
 
-      highest_unlock_per_feature(combatant:).each do |unlock|
+      combatant.feature_unlocks.each do |unlock|
         uses = resolve_uses_for_unlock(combatant:, unlock:)
         feature_uses[unlock.class_feature_id] = uses unless uses.nil?
       end
@@ -308,7 +308,7 @@ class CombatSimulatorService
     end
 
     def action_surge_unlock_for(actor:)
-      highest_unlock_per_feature(combatant: actor).find { |unlock| unlock.class_feature.name == "Action Surge" }
+      actor.feature_unlocks.find { |unlock| unlock.class_feature.name == "Action Surge" }
     end
 
     # War Magic / Improved War Magic: casting a spell as the turn's normal action grants
@@ -331,14 +331,14 @@ class CombatSimulatorService
     def war_magic_available?(actor:, chosen_action:)
       return false unless chosen_action[:type] == :cast_spell
 
-      unlocks = highest_unlock_per_feature(combatant: actor)
+      unlocks = actor.feature_unlocks
       return true if unlocks.any? { |unlock| unlock.class_feature.name == "Improved War Magic" }
 
       unlocks.any? { |unlock| unlock.class_feature.name == "War Magic" } && chosen_action[:spell].cantrip?
     end
 
     def eldritch_strike_unlocked?(actor:)
-      highest_unlock_per_feature(combatant: actor).any? { |unlock| unlock.class_feature.name == "Eldritch Strike" }
+      actor.feature_unlocks.any? { |unlock| unlock.class_feature.name == "Eldritch Strike" }
     end
 
     def turn_passive_log(actor:, trigger:, round_number:, turn_index:)
@@ -358,24 +358,20 @@ class CombatSimulatorService
 
     def available_actions_for(actor:)
       actions = [ { type: :attack } ]
-      combat_superiority_unlock = combat_superiority_unlock_for(actor:)
+      combat_superiority = actor.combat_superiority
 
-      highest_unlock_per_feature(combatant: actor).each do |unlock|
-        next if unlock.effect_payload.blank?
+      actor.feature_unlocks.each do |unlock|
+        feature = unlock.class_feature
+        payload = feature.action_payload_at(actor.level)
+        next unless payload
+        next if feature.maneuver_of?(combat_superiority) && !known_maneuver_ids(actor:).include?(feature.id)
 
-        payload = unlock.effect_payload.deep_stringify_keys
-        next unless payload["kind"].in?([ "heal", "damage" ])
-        next if payload["trigger"].present?
-
-        resource_feature_id = resource_class_feature_id(feature: unlock.class_feature, combat_superiority_unlock:)
-        next if resource_feature_id == combat_superiority_unlock&.class_feature_id && !known_maneuver_ids(actor:).include?(unlock.class_feature_id)
-
-        uses = @uses_remaining.dig(actor.id, resource_feature_id)
+        uses = @uses_remaining.dig(actor.id, resource_class_feature_id(actor:, feature:))
         next if uses.is_a?(Integer) && uses <= 0
 
         actions << {
           type: :class_feature,
-          class_feature: unlock.class_feature,
+          class_feature: feature,
           unlock: unlock,
           payload: payload,
           uses_remaining: uses
@@ -498,7 +494,7 @@ class CombatSimulatorService
       feature = maneuver[:class_feature]
       action = Combat::CombatAction.new(source_type: :class_feature, source_id: feature.id, actor:, targets: [ target ])
       results = Combat::ActionRunner.call(action:, crit:)
-      consume_feature_use!(actor:, class_feature_id: resource_class_feature_id(feature:, combat_superiority_unlock: combat_superiority_unlock_for(actor:)))
+      consume_feature_use!(actor:, class_feature_id: resource_class_feature_id(actor:, feature:))
 
       # ponytail: `debuff` is one string with one supported value, no duration and one effect per payload;
       # replace it with a list of status applications once a feature or spell applies a status (issue #45).
@@ -538,8 +534,7 @@ class CombatSimulatorService
       reroll_saving_throw = indomitable_unlock && indomitable_available?(combatant: target, unlock: indomitable_unlock)
 
       results = Combat::ActionRunner.call(action:, reroll_saving_throw: !!reroll_saving_throw)
-      resource_feature_id = resource_class_feature_id(feature:, combat_superiority_unlock: combat_superiority_unlock_for(actor:))
-      consume_feature_use!(actor:, class_feature_id: resource_feature_id)
+      consume_feature_use!(actor:, class_feature_id: resource_class_feature_id(actor:, feature:))
 
       if reroll_saving_throw
         results.each do |result|
@@ -636,19 +631,15 @@ class CombatSimulatorService
       @uses_remaining[actor.id][class_feature_id] = [ uses - 1, 0 ].max
     end
 
-    # A maneuver's "uses remaining" is tracked on the shared Combat Superiority pool
-    # (identified by matching resource_name), not on the maneuver's own class_feature_id,
-    # since maneuvers never carry their own uses.
-    def resource_class_feature_id(feature:, combat_superiority_unlock:)
-      return feature.id if combat_superiority_unlock.nil?
-      return feature.id if feature.resource_name.blank?
-      return feature.id unless feature.resource_name == combat_superiority_unlock.class_feature.resource_name
-
-      combat_superiority_unlock.class_feature_id
+    # The feature whose uses +feature+ spends: a maneuver (ClassFeature#maneuver_of?) spends the shared
+    # superiority-dice pool, since maneuvers never carry uses of their own; anything else its own.
+    def resource_class_feature_id(actor:, feature:)
+      combat_superiority = actor.combat_superiority
+      feature.maneuver_of?(combat_superiority) ? combat_superiority.id : feature.id
     end
 
     def indomitable_unlock_for(combatant:)
-      highest_unlock_per_feature(combatant:).find { |unlock| unlock.class_feature.name == "Indomitable" }
+      combatant.feature_unlocks.find { |unlock| unlock.class_feature.name == "Indomitable" }
     end
 
     def indomitable_available?(combatant:, unlock:)
@@ -656,31 +647,9 @@ class CombatSimulatorService
       uses.is_a?(Integer) && uses.positive?
     end
 
-    def combat_superiority_unlock_for(actor:)
-      highest_unlock_per_feature(combatant: actor).find { |unlock| unlock.class_feature.name == "Combat Superiority" }
-    end
-
     # Cached per combatant for this simulation: a character's class, level and choices don't change mid-combat.
     def known_maneuver_ids(actor:)
       (@known_maneuver_ids ||= {})[actor.id] ||= actor.known_maneuvers.pluck(:id).to_set
-    end
-
-    def highest_unlock_per_feature(combatant:)
-      (@highest_unlocks ||= {})[combatant.id] ||= load_highest_unlock_per_feature(combatant:)
-    end
-
-    def load_highest_unlock_per_feature(combatant:)
-      unlocks = ClassFeatureUnlock
-                  .joins(:class_feature)
-                  .includes(:class_feature)
-                  .where(class_features: { player_class_id: combatant.player_class_id })
-                  .where("class_feature_unlocks.level <= ?", combatant.level)
-                  .select { |unlock| ClassFeature.visible_for?(unlock.class_feature, martial_archetype: combatant.martial_archetype, fighting_style: combatant.fighting_style) }
-
-      unlocks
-        .group_by(&:class_feature_id)
-        .values
-        .map { |group| group.max_by(&:level) }
     end
 
     def build_result(round_number:)

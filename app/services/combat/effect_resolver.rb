@@ -1,8 +1,8 @@
 module Combat
   # Translates a CombatAction into an array of EffectInstances.
   #
-  # For :class_feature actions, it looks up the ClassFeatureUnlock valid for
-  # the actor's current level and reads its effect_payload.
+  # For :class_feature actions, it reads the effect in force at the actor's
+  # level (ClassFeature#effect_payload_at).
   #
   # For :spell actions, it reads the effect_payload directly off the Spell
   # record (no per-level scaling/upcasting support yet).
@@ -65,15 +65,11 @@ module Combat
         actor   = @action.actor
         level   = actor.respond_to?(:level) ? actor.level : 1
 
-        unlock = feature.class_feature_unlocks
-                        .where("level <= ?", level)
-                        .order(level: :desc)
-                        .first
+        payload = feature.effect_payload_at(level)
 
-        raise "No unlock found for '#{feature.name}' at level #{level}" unless unlock
-        raise "No effect_payload defined for '#{feature.name}' unlock at level #{unlock.level}" if unlock.effect_payload.blank?
+        raise "No effect_payload defined for '#{feature.name}' at level #{level}" if payload.nil?
 
-        [ EffectInstance.from_payload(unlock.effect_payload) ]
+        [ EffectInstance.from_payload(payload) ]
       end
   end
 end

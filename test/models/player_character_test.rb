@@ -107,6 +107,20 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     assert_equal "turn_start", payloads.first["trigger"]
   end
 
+  test "a passive with an effect at two levels applies once, the higher level's" do
+    survivor = class_features(:fighter_champion_survivor)
+    payload = survivor.class_feature_unlocks.find_by!(level: 18).effect_payload.merge("roll" => "10")
+    ClassFeatureUnlock.create!(class_feature: survivor, level: 20, description: "Test: heals more.", effect_payload: payload)
+    character = PlayerCharacter.create!(name: "Champion 20", level: 20, player_class: player_classes(:fighter),
+                                        martial_archetype: class_features(:fighter_champion_archetype))
+
+    assert_equal [ "10" ], character.passive_effect_payloads(trigger: "turn_start").map { |passive| passive["roll"] }
+
+    character.current_hit_points = character.max_hit_points / 2 - 20
+    results = character.apply_start_of_turn_passives!
+    assert_equal [ 10 ], results.map(&:amount)
+  end
+
   test "passive_effect_payloads returns always-on modifier payloads" do
     fighter = player_classes(:fighter)
     character = PlayerCharacter.create!(name: "Champion 15 Passive Mod", level: 15, player_class: fighter,

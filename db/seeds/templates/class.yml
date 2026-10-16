@@ -25,6 +25,8 @@ features:
         uses: 1
         description: Omitida = herda a descrição da habilidade.
         effect_payload: { kind: heal, roll: "1d10 + actor_level", target: self }  # opcional; target: self | enemy | ally
+        # Omitido = herda o efeito do unlock anterior com effect_payload (num nível, vale o do maior unlock até
+        # ele que tem um; ClassFeature#effect_payload_at). Repita-o só quando o efeito muda no nível.
         # Manobras (kind: damage) acrescentam applies_to: weapon_attack (o dado é somado ao dano de um ataque com
         # arma que acertou, em vez de ser uma ação própria) e, opcionalmente, debuff: next_attack_advantage.
         notes: Simplificações do motor, se houver.

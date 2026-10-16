@@ -20,7 +20,8 @@ class PlayerCharacterManeuver < ApplicationRecord
     def maneuver_is_a_battle_master_maneuver
       return if maneuver.nil? || player_character.nil?
 
-      unless maneuver.feature_type_subclass_progression? && maneuver.resource_name == combat_superiority_resource_name
+      combat_superiority = ClassFeature.find_by(player_class_id: player_character.player_class_id, name: ClassFeature::COMBAT_SUPERIORITY)
+      unless maneuver.feature_type_subclass_progression? && maneuver.maneuver_of?(combat_superiority)
         errors.add(:maneuver, "must be a Battle Master maneuver")
       end
     end
@@ -42,9 +43,5 @@ class PlayerCharacterManeuver < ApplicationRecord
       if already_known >= limit
         errors.add(:maneuver, "exceeds the number of maneuvers known at the character's level")
       end
-    end
-
-    def combat_superiority_resource_name
-      ClassFeature.find_by(player_class_id: player_character.player_class_id, name: "Combat Superiority")&.resource_name
     end
 end

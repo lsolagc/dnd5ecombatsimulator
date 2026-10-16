@@ -5,7 +5,7 @@ description: Golden files, query ceiling and time benchmark that prove a CombatS
 tags: [testing, performance, combat]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-14T00:00:00Z
+  at: 2026-10-15T00:00:00Z
 sources:
   - id: compositions
     title: lib/combat_regression.rb
@@ -68,12 +68,11 @@ the machine and versions it was recorded on.
 
 # Determinism
 
-The simulator reads two lists with no `ORDER BY`, and the order decides what a seed picks: the
-character's spells (a hash join on `spells`, which `SeedData` updates in place, so their order moved
-between runs) and the class feature unlocks. The harness preloads the spells in the order they were
-learned and `CLUSTER`s `class_feature_unlocks` by primary key after loading the seeds (both inside
-the test's transaction). Outside the harness the same seed can still replay differently once the
-table order changes; ordering those queries is a later step of the refactor.
+The order of two lists decides what a seed picks: the character's spells and the class feature
+unlocks. Both load in a fixed order since phase 1.2 (`PlayerCharacter#spells` in the order learned,
+`#feature_unlocks` by unlock id), so a seed replays the same whatever the tables' physical order; a
+test reorders the rows and checks it. Before that they loaded with no `ORDER BY` (the spells through a
+hash join on a table `SeedData` updates in place), and the harness had to pin the order itself.
 
 # Baseline (2026-10-13)
 

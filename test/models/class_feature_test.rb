@@ -21,6 +21,23 @@ class ClassFeatureTest < ActiveSupport::TestCase
     assert feature.valid?
   end
 
+  test "the effect in force at a level is the highest unlock's at or below it that has one; with no level, the highest" do
+    second_wind = class_features(:fighter_second_wind)
+    ClassFeatureUnlock.create!(class_feature: second_wind, level: 10, description: "Test: becomes an attack.",
+                               effect_payload: { kind: "damage", roll: "1d6", target: "enemy" })
+    ClassFeatureUnlock.create!(class_feature: second_wind, level: 15, description: "Test: no effect of its own.")
+    ClassFeatureUnlock.create!(class_feature: second_wind, level: 17, description: "Test: a passive.",
+                               effect_payload: { kind: "heal", roll: "1", target: "self", trigger: "turn_start" })
+    kind_at = ->(level) { second_wind.effect_payload_at(level)&.fetch("kind") }
+
+    assert_equal %w[heal heal damage damage heal], [ 1, 9, 10, 15, 17 ].map(&kind_at)
+    assert_equal "heal", kind_at.(nil)
+    assert_nil second_wind.effect_payload_at(0)
+    assert_equal %w[self self enemy enemy], [ 1, 9, 10, 16 ].map { |level| second_wind.action_payload_at(level)["target"] }
+    assert_nil second_wind.action_payload_at(17), "a triggered passive is not a turn action"
+    assert_nil second_wind.action_payload_at, "nor at the highest level"
+  end
+
   test "a spellcasting feature needs a spellcasting ability of its own when the class has none" do
     attrs = { name: "Subclass Casting", slug: "subclass-casting", description: "Casts.", feature_type: :core,
               action_type: :passive, recharge_type: :none, grants_spellcasting: true, source_book: "PHB 2014" }

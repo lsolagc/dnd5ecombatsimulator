@@ -75,8 +75,9 @@ class GambitTest < ActiveSupport::TestCase
     assert_not build_gambit(target: :ally).valid?
     assert_not build_gambit(target: :self).valid?
     assert_not build_gambit(action_kind: :class_feature, target: :enemy, class_feature: second_wind).valid?
-    assert_not build_gambit(action_kind: :class_feature, target: :self, class_feature: precision).valid?
-    assert build_gambit(action_kind: :class_feature, target: :enemy, class_feature: precision).valid?
+    battle_master = player_characters(:battle_master_seven)
+    assert_not build_gambit(owner: battle_master, action_kind: :class_feature, target: :self, class_feature: precision).valid?
+    assert build_gambit(owner: battle_master, action_kind: :class_feature, target: :enemy, class_feature: precision).valid?
     assert build_gambit(action_kind: :spell, target: :ally, spell: healing_word).valid?
     assert build_gambit(action_kind: :spell, target: :self, spell: healing_word).valid?
     assert_not build_gambit(action_kind: :spell, target: :enemy, spell: healing_word).valid?
@@ -104,17 +105,23 @@ class GambitTest < ActiveSupport::TestCase
     ClassFeatureUnlock.create!(class_feature: second_wind, level: 10, description: "Test: becomes a buff.",
                                effect_payload: { kind: "modifier", modifier: "armor_class", value: 1, target: "self" })
 
-    assert_not build_gambit(action_kind: :class_feature, target: :self, class_feature: second_wind).valid?
+    assert_not build_gambit(owner: player_characters(:champion_eighteen), action_kind: :class_feature, target: :self, class_feature: second_wind).valid?
   end
 
-  test "a feature's natural target comes from its highest unlock level that has an effect" do
+  test "a character's rule reads the feature's effect at the character's level, a preset's at its highest unlock with one" do
     second_wind = class_features(:fighter_second_wind)
     ClassFeatureUnlock.create!(class_feature: second_wind, level: 10, description: "Test: becomes an attack.",
                                effect_payload: { kind: "damage", roll: "1d6", target: "enemy" })
     ClassFeatureUnlock.create!(class_feature: second_wind, level: 15, description: "Test: no effect of its own.")
+    rule = ->(owner, target) { build_gambit(owner:, action_kind: :class_feature, target:, class_feature: second_wind) }
 
-    assert build_gambit(action_kind: :class_feature, target: :enemy, class_feature: second_wind).valid?
-    assert_not build_gambit(action_kind: :class_feature, target: :self, class_feature: second_wind).valid?
+    [ GambitPreset.new(name: "Sem nível"), player_characters(:champion_eighteen) ].each do |owner|
+      assert rule.(owner, :enemy).valid?, "#{owner.name}: the level 10 effect, inherited past level 15"
+      assert_not rule.(owner, :self).valid?, owner.name
+    end
+    level_one = player_characters(:aragorn)
+    assert rule.(level_one, :self).valid?, "level 1 still heals itself"
+    assert_not rule.(level_one, :enemy).valid?
   end
 
   test "condition_value is required within 1..99 for hp_below and blank otherwise" do
@@ -151,8 +158,8 @@ class GambitTest < ActiveSupport::TestCase
     assert_includes build_gambit(condition: :resource_at_least, condition_value: 1, action_kind: :spell, spell: spells(:fire_bolt))
                       .tap(&:validate).errors.attribute_names, :condition
     assert build_gambit(condition: :resource_at_least, condition_value: 1, action_kind: :spell, spell: spells(:magic_missile)).valid?
-    assert build_gambit(condition: :resource_at_least, condition_value: 1, action_kind: :class_feature,
-                        class_feature: class_features(:fighter_battle_master_maneuver_precision_attack)).valid?
+    assert build_gambit(owner: player_characters(:battle_master_seven), condition: :resource_at_least, condition_value: 1,
+                        action_kind: :class_feature, class_feature: class_features(:fighter_battle_master_maneuver_precision_attack)).valid?
     assert build_gambit(condition: :resource_at_least, condition_value: 1, action_kind: :class_feature, target: :self,
                         class_feature: class_features(:fighter_action_surge)).valid?
   end

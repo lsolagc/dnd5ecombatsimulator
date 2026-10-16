@@ -6,7 +6,7 @@ resource: app/models/player_character.rb
 tags: [persistence, combat]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-14T00:00:00Z
+  at: 2026-10-15T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:21:20Z }
 sources:
   - id: player-character-rb
@@ -114,8 +114,10 @@ and `"dc": "spell"` saves — see
 
 # Cached class lookups
 
-`unlocked_class_feature_unlocks` (behind every passive: attack and AC
-modifiers, critical threshold, turn passives), `class_progression` (attacks
+`feature_unlocks` (the highest unlock at or below the level of every
+feature the character can see, one query with each feature's unlocks loaded,
+in a fixed order; behind the simulator's actions and uses and every passive:
+attack and AC modifiers, critical threshold, turn passives), `class_progression` (attacks
 per action, proficiency bonus) and `spellcasting_feature` are cached on the
 instance, keyed by what they depend on (`player_class_id`, `level`,
 `martial_archetype_id`, `fighting_style_id`): changing one of those on the
@@ -123,6 +125,14 @@ same instance recomputes, and `#reload` clears the cache. The combat loop asks
 for them on every attack, and [CombatSimulatorService](/architecture/combat-simulator-service.md)
 builds fresh instances per simulation. Rows edited in the database while an
 instance is alive (unlocks, progressions) are not seen until `reload`.
+
+Passives take one payload per feature, the one in force at the character's
+level (`ClassFeature#effect_payload_at`), so a feature with a payload at two
+levels applies once. `spells` loads in the order the spells were learned and
+`feature_unlocks` by unlock id: the simulator's random picks follow those
+lists, so a seed replays the same whatever the tables' physical order.
+`combat_superiority` is the unlocked superiority-dice feature, whose pool every
+maneuver (`ClassFeature#maneuver_of?`) spends.
 
 # Schema
 

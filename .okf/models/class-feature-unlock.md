@@ -6,7 +6,7 @@ resource: app/models/class_feature_unlock.rb
 tags: [class, feature, combat, persistence, passive]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-15T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:06:51Z }
 sources:
   - id: unlock-rb
@@ -35,6 +35,15 @@ it lets an unlocked feature describe an executable effect (`kind`, `roll`,
 [CombatSimulatorService](/architecture/combat-simulator-service.md).[^unlock-rb]
 `Combat::EffectResolver` reads this payload to build the runtime
 `EffectInstance`.
+
+**Inheritance.** An unlock without an `effect_payload` inherits the one before
+it: the effect in force at a level is the payload of the highest unlock at or
+below that level that has one (`ClassFeature#effect_payload_at(level)`; with no
+level, as for a preset, the highest unlock's). `#action_payload_at` keeps it
+only when the simulator can choose it as a turn action (heal or damage, no
+`trigger`). The simulator, `Combat::EffectResolver`, gambit validation, the
+gambits screen and the passives all read it, so a seed only repeats the payload
+on the level where the effect changes (`db/seeds/templates/class.yml`).
 
 Beyond the active-use shape, `effect_payload` also carries an optional
 `trigger` (`"always"`, `"turn_start"`, `"turn_end"`) and `conditions` map —
