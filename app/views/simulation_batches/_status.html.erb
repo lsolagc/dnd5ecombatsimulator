@@ -97,6 +97,6 @@
   </div>
 
   <% if total.positive? %>
-    <%= link_to "Baixar logs (JSON, .zip)", logs_simulation_batch_path(batch), class: "btn btn-primary", data: { turbo: false } %>
+    <%= link_to "Baixar logs (JSON)", logs_simulation_batch_path(batch), class: "btn btn-primary", data: { turbo: false } %>
   <% end %>
 <% end %>

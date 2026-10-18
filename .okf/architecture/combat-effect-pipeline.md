@@ -6,7 +6,7 @@ resource: app/services/combat
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-15T00:00:00Z
+  at: 2026-10-17T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T18:30:17Z }
 sources:
   - id: combat-pipeline-rb
@@ -85,7 +85,9 @@ or more atomic `Combat::EffectInstance` objects (`heal`, `damage`,
 
 **3. Execution — `Combat::EffectExecutor`** applies an `EffectInstance` to
 combat state and returns a `Result` carrying `kind`, `applied`, `amount`,
-`hp_before`/`hp_after`, a `roll_outcome`, and a `message`.[^combat-pipeline-rb]
+`hp_before`/`hp_after`, a `roll_outcome`, the `saving_throw` and the
+`attack_roll` (each nil when the effect has none); no human-readable message
+(removed 2026-10-17).[^combat-pipeline-rb]
 
 **4. Orchestration — `Combat::ActionRunner`** runs resolver + executor for a
 `CombatAction` in one call: `Combat::ActionRunner.call(action:)`.

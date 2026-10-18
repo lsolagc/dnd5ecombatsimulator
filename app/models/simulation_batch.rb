@@ -7,7 +7,7 @@ class SimulationBatch < ApplicationRecord
   DICE_FORMAT = /\A[1-9]\d*d[1-9]\d*\z/
   # Parallel workers can finish many simulations a second: push progress at most this often.
   PROGRESS_BROADCAST_INTERVAL = 0.2.seconds
-  GAMBIT_RULE_KEYS = %w[ position enabled target condition action rule ].freeze
+  SIMULATION_LOG_KEYS = %w[ outcome winning_party total_rounds draw initiative round_log ].freeze
 
   has_many :simulation_runs, -> { order(:id) }
 
@@ -60,8 +60,10 @@ class SimulationBatch < ApplicationRecord
   end
 
   # A new, unsaved experiment with the same combatants and parameters, ready to be tweaked and run again.
+  # The names are left out: the new batch freezes each character's name as it is then.
   def rerun
-    SimulationBatch.new(slice(:party_one_ids, :party_two_ids, :combatant_settings, :requested_count, :seed))
+    SimulationBatch.new(slice(:party_one_ids, :party_two_ids, :requested_count, :seed)
+      .merge(combatant_settings: combatant_settings.transform_values { |settings| settings.except("name") }))
   end
 
   def settings_for(character)
@@ -140,33 +142,27 @@ class SimulationBatch < ApplicationRecord
     }
   end
 
-  # One JSON file per simulation (each carrying its seed) plus a batch.json with the setup and summary.
-  def logs_zip
-    Zip::OutputStream.write_buffer do |zip|
-      names = PlayerCharacter.where(id: party_one_ids + party_two_ids).pluck(:id, :name).to_h
-      zip.put_next_entry("batch.json")
-      zip.write(JSON.pretty_generate(
-        id:, status:, requested_count:, seed:,
-        party_one: names.slice(*party_one_ids),
-        party_two: names.slice(*party_two_ids),
-        combatant_settings:,
-        gambits: { party_one: party_one_ids, party_two: party_two_ids }.transform_values do |ids|
-          ids.map { |id| Gambit.log_section(id:, name: names[id], snapshots: gambit_settings.fetch(id.to_s, [])) }
-        end,
-        summary:
-      ))
-
-      simulation_runs.find_each.with_index(1) do |run, index|
-        zip.put_next_entry(format("simulation-%04d.json", index))
-        # jsonb doesn't keep key order: the gambits section is put back right after the run's identity, in
-        # the same reading order as batch.json.
-        gambits = run.result["gambits"]&.transform_values do |side|
-          side.map { |entry| entry.slice("id", "name", "mode").merge("rules" => entry["rules"].map { |rule| rule.slice(*GAMBIT_RULE_KEYS) }) }
-        end
-        zip.write(JSON.pretty_generate({ "simulation" => index, "seed" => run.seed, "elapsed_ms" => run.elapsed_ms, "gambits" => gambits }
-          .compact.merge(run.result.except("gambits"))))
+  # The download: one pretty JSON with the batch's setup (each combatant's name, settings and gambits as
+  # frozen at creation) in a header, then every simulation in order. jsonb doesn't keep key order, so the
+  # hashes are rebuilt here in reading order; keys an older run still carries go after the known ones.
+  def logs_json
+    parties = { "party_one" => party_one_ids, "party_two" => party_two_ids }.transform_values do |ids|
+      ids.map do |id|
+        settings = combatant_settings.fetch(id.to_s)
+        { "id" => id, "name" => settings["name"], "settings" => settings.except("name"),
+          "gambits" => Gambit.log_section(snapshots: gambit_settings.fetch(id.to_s, [])) }
       end
-    end.string
+    end
+    simulations = simulation_runs.map.with_index(1) do |run, index|
+      { "simulation" => index, "seed" => run.seed, "elapsed_ms" => run.elapsed_ms }
+        .merge(run.result.slice(*SIMULATION_LOG_KEYS), run.result.except(*SIMULATION_LOG_KEYS))
+    end
+
+    JSON.pretty_generate(
+      "header" => { "batch" => { "id" => id, "status" => status, "requested_count" => requested_count, "seed" => seed, "summary" => summary },
+                    "parties" => parties },
+      "simulations" => simulations
+    )
   end
 
   private
@@ -208,13 +204,17 @@ class SimulationBatch < ApplicationRecord
     end
 
     # Keeps exactly one settings entry per selected character, filling the missing ones from the
-    # blueprint, so every batch records the parameters it actually ran with.
+    # blueprint, so every batch records the parameters it actually ran with, and the character's name
+    # once, at creation (the log's header): never overwritten, so renaming the character later changes
+    # nothing, and a batch from before names were frozen keeps none.
     def snapshot_blueprint_settings
       self.party_one_ids = party_one_ids.compact.uniq
       self.party_two_ids = party_two_ids.compact.uniq
       @blueprints = nil
       self.combatant_settings = blueprints.to_h do |id, character|
-        [ id.to_s, combatant_settings[id.to_s] || self.class.blueprint_settings(character) ]
+        settings = combatant_settings[id.to_s] || self.class.blueprint_settings(character)
+        settings = settings.reverse_merge("name" => character.name) if new_record?
+        [ id.to_s, settings ]
       end
     end
 

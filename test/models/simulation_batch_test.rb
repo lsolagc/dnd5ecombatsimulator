@@ -76,7 +76,7 @@ class SimulationBatchTest < ActiveSupport::TestCase
     record.validate
 
     aragorn = player_characters(:aragorn)
-    assert_equal({ "current_hit_points" => aragorn.max_hit_points, "armor_class" => 16, "attack_bonus" => aragorn.combatant.attack_bonus,
+    assert_equal({ "name" => "Aragorn", "current_hit_points" => aragorn.max_hit_points, "armor_class" => 16, "attack_bonus" => aragorn.combatant.attack_bonus,
                    "damage_dice" => aragorn.combatant.damage_dice, "damage_type" => aragorn.combatant.damage_type, "defenses" => {} },
                  record.combatant_settings[aragorn.id.to_s])
     assert_equal [ aragorn.id, player_characters(:merlin).id ].map(&:to_s).sort, record.combatant_settings.keys.sort
@@ -92,7 +92,7 @@ class SimulationBatchTest < ActiveSupport::TestCase
     assert record.valid?, record.errors.full_messages.to_sentence
     assert_equal [ aragorn.id ], record.party_one_ids
     assert_equal [ merlin.id ], record.party_two_ids
-    assert_equal({ "current_hit_points" => 5, "armor_class" => 18, "attack_bonus" => 4, "damage_dice" => "1d8", "damage_type" => "slashing",
+    assert_equal({ "name" => "Aragorn", "current_hit_points" => 5, "armor_class" => 18, "attack_bonus" => 4, "damage_dice" => "1d8", "damage_type" => "slashing",
                    "defenses" => { "fire" => "R" } }, record.combatant_settings[aragorn.id.to_s])
   end
 
@@ -139,7 +139,7 @@ class SimulationBatchTest < ActiveSupport::TestCase
 
     copy = record.rerun
     assert copy.new_record?
-    assert_equal [ record.party_one_ids, record.party_two_ids, record.combatant_settings, 1, 7 ],
+    assert_equal [ record.party_one_ids, record.party_two_ids, record.combatant_settings.transform_values { |settings| settings.except("name") }, 1, 7 ],
                  [ copy.party_one_ids, copy.party_two_ids, copy.combatant_settings, copy.requested_count, copy.seed ]
   end
 
@@ -197,45 +197,62 @@ class SimulationBatchTest < ActiveSupport::TestCase
     assert_equal [ true ], record.reload.gambit_settings[aragorn.id.to_s].pluck("enabled")
   end
 
-  test "logs_zip puts the gambits right after each run's identity, and per side in batch.json" do
+  test "the log is one JSON: a header with the batch and each side's combatants, then every simulation in order" do
     aragorn, merlin = player_characters(:aragorn), player_characters(:merlin)
     aragorn.gambits.create!(position: 1, target: :enemy, condition: :any, action_kind: :attack)
-    record = batch(seed: 3)
+    record = batch(requested_count: 2)
     record.save!
-    SimulationRunJob.perform_now(record)
+    2.times { SimulationRunJob.perform_now(record) }
 
-    files = read_zip(record.reload.logs_zip)
+    log = JSON.parse(record.reload.logs_json)
+    assert_equal JSON.pretty_generate(log), record.logs_json, "formatted for reading"
 
-    simulation = files["simulation-0001.json"]
-    assert_equal %w[ simulation seed elapsed_ms gambits ], simulation.keys.first(4)
-    assert_operator simulation.keys.index("gambits"), :<, simulation.keys.index("round_log")
-    assert_equal [ [ aragorn.id, "gambits" ] ], simulation.dig("gambits", "party_one").map { |entry| entry.values_at("id", "mode") }
-    entry = simulation.dig("gambits", "party_one", 0)
-    assert_equal %w[ id name mode rules ], entry.keys, "the section reads in the same order as batch.json"
-    assert_equal %w[ position enabled target condition action rule ], entry["rules"].first.keys
+    assert_equal %w[ header simulations ], log.keys
+    assert_equal %w[ batch parties ], log["header"].keys
+    assert_equal %w[ id status requested_count seed summary ], log.dig("header", "batch").keys
+    assert_equal [ record.id, "completed", 2, nil, 2 ], log.dig("header", "batch").values_at("id", "status", "requested_count", "seed").push(log.dig("header", "batch", "summary", "total"))
+    assert_equal %w[ party_one party_two ], log.dig("header", "parties").keys
+    aragorn_entry = log.dig("header", "parties", "party_one").sole
+    assert_equal %w[ id name settings gambits ], aragorn_entry.keys
+    assert_equal [ aragorn.id, "Aragorn", record.combatant_settings[aragorn.id.to_s].except("name") ], aragorn_entry.values_at("id", "name", "settings")
+    assert_equal({ "mode" => "gambits", "rules" => [
+      { "position" => 1, "enabled" => true, "target" => "Inimigo", "condition" => "qualquer", "action" => "Ataque", "rule" => "Inimigo: qualquer → Ataque" }
+    ] }, aragorn_entry["gambits"])
+    assert_equal [ merlin.id, merlin.name, { "mode" => "aleatório", "rules" => [] } ],
+                 log.dig("header", "parties", "party_two").sole.values_at("id", "name", "gambits")
 
-    setup = files["batch.json"]
-    assert_equal %w[ combatant_settings gambits ], setup.keys.values_at(setup.keys.index("combatant_settings"), setup.keys.index("combatant_settings") + 1)
-    assert_equal({
-      "party_one" => [ { "id" => aragorn.id, "name" => "Aragorn", "mode" => "gambits", "rules" => [
-        { "position" => 1, "enabled" => true, "target" => "Inimigo", "condition" => "qualquer", "action" => "Ataque", "rule" => "Inimigo: qualquer → Ataque" }
-      ] } ],
-      "party_two" => [ { "id" => merlin.id, "name" => merlin.name, "mode" => "aleatório", "rules" => [] } ]
-    }, setup["gambits"])
-    assert_equal setup["gambits"], simulation["gambits"]
+    simulations = log["simulations"]
+    assert_equal [ 1, 2 ], simulations.pluck("simulation")
+    assert_equal record.simulation_runs.map(&:seed), simulations.pluck("seed")
+    simulations.each do |simulation|
+      assert_equal %w[ simulation seed elapsed_ms outcome winning_party total_rounds draw initiative round_log ], simulation.keys
+    end
+  end
+
+  test "the log keeps each combatant's name from the batch's creation; a rerun takes the current one" do
+    aragorn = player_characters(:aragorn)
+    record = batch
+    record.save!
+    aragorn.update!(name: "Aragorn Renomeado")
+    record.cancel!
+
+    assert_equal "Aragorn", JSON.parse(SimulationBatch.find(record.id).logs_json).dig("header", "parties", "party_one", 0, "name")
+
+    copy = record.rerun
+    copy.save!
+    assert_equal "Aragorn Renomeado", JSON.parse(copy.logs_json).dig("header", "parties", "party_one", 0, "name")
+  end
+
+  test "a batch from before names were frozen never gets today's name on a later save" do
+    record = batch
+    record.save!
+    record.update_columns(combatant_settings: record.combatant_settings.transform_values { |settings| settings.except("name") })
+    SimulationBatch.find(record.id).cancel!
+
+    assert_nil JSON.parse(SimulationBatch.find(record.id).logs_json).dig("header", "parties", "party_one", 0, "name")
   end
 
   private
-
-    def read_zip(data)
-      files = {}
-      Zip::InputStream.open(StringIO.new(data)) do |zip|
-        while (entry = zip.get_next_entry)
-          files[entry.name] = JSON.parse(zip.read)
-        end
-      end
-      files
-    end
 
     # A form entry carrying Aragorn-like defaults, overridden per test.
     def form_entry(side, **overrides)

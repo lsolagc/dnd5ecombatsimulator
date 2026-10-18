@@ -695,31 +695,6 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_equal first, second
   end
 
-  test "gambits: the result opens with each side's rules, enabled or not, in priority order, and its mode" do
-    actor = fresh_character(:aragorn)
-    add_gambit(actor, position: 2, enabled: false)
-    add_gambit(actor, position: 1, target: :self, action_kind: :class_feature, class_feature: class_features(:fighter_second_wind))
-    all_disabled = fresh_character(:thorin)
-    add_gambit(all_disabled, position: 1, condition: :hp_below, condition_value: 50, enabled: false)
-    without_rules = fresh_character(:aragorn_copy)
-
-    result = CombatSimulatorService.new(party_one: [ actor, all_disabled ], party_two: [ without_rules ], seed: 1, max_rounds: 1).call
-
-    assert_equal :gambits, result.keys.first
-    assert_equal({
-      party_one: [
-        { id: actor.id, name: "Aragorn", mode: "gambits", rules: [
-          { position: 1, enabled: true, target: "Self", condition: "qualquer", action: "Second Wind", rule: "Self: qualquer → Second Wind" },
-          { position: 2, enabled: false, target: "Inimigo", condition: "qualquer", action: "Ataque", rule: "Inimigo: qualquer → Ataque" }
-        ] },
-        { id: all_disabled.id, name: "Thorin", mode: "aleatório", rules: [
-          { position: 1, enabled: false, target: "Inimigo", condition: "HP < 50%", action: "Ataque", rule: "Inimigo: HP < 50% → Ataque" }
-        ] }
-      ],
-      party_two: [ { id: without_rules.id, name: "Aragorn Copy", mode: "aleatório", rules: [] } ]
-    }, result[:gambits])
-  end
-
   test "gambits: given a copy of the rules, the simulation plays and logs the copy, not the combatant's own gambits" do
     actor = sturdy(fresh_character(:aragorn))
     add_gambit(actor, position: 1) # its own rule: an attack
@@ -731,9 +706,22 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     turn = actor_turns(actor:, result:).first
     assert_equal [ :class_feature, { position: 1, rule: "rótulo da cópia" } ], [ turn.dig(:action, :type), turn[:gambit] ]
-    assert_equal [ [ 1, true, "rótulo da cópia" ], [ 2, false, "Inimigo: qualquer → Ataque" ] ],
-                 result.dig(:gambits, :party_one, 0, :rules).map { |rule| rule.values_at(:position, :enabled, :rule) }
-    assert_equal({ mode: "aleatório", rules: [] }, result.dig(:gambits, :party_two, 0).slice(:mode, :rules), "a combatant missing from the copy has no rules")
+  end
+
+  test "the result lists every combatant's initiative roll in the order they act" do
+    combatants = %i[aragorn thorin aragorn_copy merlin].map { |name| sturdy(fresh_character(name)) }
+
+    result = CombatSimulatorService.new(party_one: combatants.first(2), party_two: combatants.last(2), seed: 1, max_rounds: 1).call
+
+    initiative = result[:initiative]
+    assert_equal combatants.map(&:id).sort, initiative.pluck(:actor_id).sort
+    assert_equal initiative.pluck(:actor_id), result[:round_log].first[:turns].pluck(:actor_id).uniq, "round 1 plays in the logged order"
+    assert_not_equal combatants.map(&:id), initiative.pluck(:actor_id), "the seed must put them out of party order"
+    assert_equal initiative.pluck(:total).sort.reverse, initiative.pluck(:total)
+    initiative.each do |entry|
+      assert_equal entry[:natural] + combatants.find { |combatant| combatant.id == entry[:actor_id] }.initiative, entry[:total]
+      assert_includes 1..20, entry[:natural]
+    end
   end
 
   test "without gambits, every decision entry is logged as random, Action Surge's extra and the War Magic bonus included" do
@@ -758,9 +746,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     end
 
     without, disabled = run.(with_disabled_gambits: false), run.(with_disabled_gambits: true)
-    # Only the gambits section differs: it lists the disabled rules, still in "aleatório" mode.
-    assert_equal without.except(:gambits), disabled.except(:gambits)
-    assert_equal [ "aleatório", [ false, false ] ], disabled.dig(:gambits, :party_one, 0).then { |entry| [ entry[:mode], entry[:rules].pluck(:enabled) ] }
+    assert_equal without, disabled
   end
 
   test "gambits: a feature fired by a gambit spends exactly one use" do

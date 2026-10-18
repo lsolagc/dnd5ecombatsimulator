@@ -1,18 +1,14 @@
 ---
 1:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 1
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 12
+    :total: 13
+  - :actor_id: Campeão
+    :natural: 6
+    :total: 8
   :round_log:
   - :round: 1
     :turns:
@@ -33,7 +29,6 @@
         :amount: 12
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 12 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -68,7 +63,6 @@
           :total: 15
           :crit: false
           :damage: 9
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -93,7 +87,6 @@
           :total: 22
           :crit: false
           :damage: 6
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -108,7 +101,6 @@
           :total: 23
           :crit: false
           :damage: 7
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -132,7 +124,6 @@
           :total: 19
           :crit: false
           :damage: 13
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -147,25 +138,20 @@
           :total: 20
           :crit: false
           :damage: 10
-        :message: Hit!
       :extra: true
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 2:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_two
   :total_rounds: 5
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 16
+    :total: 17
+  - :actor_id: Campeão
+    :natural: 9
+    :total: 11
   :round_log:
   - :round: 1
     :turns:
@@ -191,7 +177,6 @@
           :total: 19
           :crit: false
           :damage: 12
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -210,7 +195,6 @@
         :amount: 10
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 10 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -245,7 +229,6 @@
           :total: 18
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -260,7 +243,6 @@
           :total: 18
           :crit: false
           :damage: 6
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -284,7 +266,6 @@
           :total: 14
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -299,7 +280,6 @@
           :total: 24
           :crit: false
           :damage: 13
-        :message: Hit!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -324,7 +304,6 @@
           :amount: 8
           :hp_before: 39
           :hp_after: 31
-          :message: Campeão takes 8 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -343,7 +322,6 @@
           :total: 17
           :crit: false
           :damage: 9
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -367,7 +345,6 @@
           :total: 12
           :crit: false
           :damage: 13
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -382,7 +359,6 @@
           :total: 10
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -409,7 +385,6 @@
           :total: 10
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -433,7 +408,6 @@
           :total: 14
           :crit: false
           :damage: 12
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -448,7 +422,6 @@
           :total: 17
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -475,7 +448,6 @@
           :total: 9
           :crit: false
           :damage: 9
-        :message: Miss!
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -499,7 +471,6 @@
           :total: 11
           :crit: false
           :damage: 12
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -514,7 +485,6 @@
           :total: 13
           :crit: false
           :damage: 13
-        :message: Miss!
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -538,7 +508,6 @@
           :amount: 16
           :hp_before: 8
           :hp_after: 0
-          :message: Campeão takes 16 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -557,24 +526,19 @@
           :total: 25
           :crit: true
           :damage: 23
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 3:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 10
+  :initiative:
+  - :actor_id: Campeão
+    :natural: 11
+    :total: 13
+  - :actor_id: Mestre de Batalha
+    :natural: 4
+    :total: 5
   :round_log:
   - :round: 1
     :turns:
@@ -600,7 +564,6 @@
           :total: 15
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -615,7 +578,6 @@
           :total: 26
           :crit: true
           :damage: 11
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -639,7 +601,6 @@
           :total: 18
           :crit: false
           :damage: 7
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -654,7 +615,6 @@
           :total: 16
           :crit: false
           :damage: 8
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -674,7 +634,6 @@
         :amount: 9
         :hp_before: 25
         :hp_after: 34
-        :message: Mestre de Batalha heals 9 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -709,7 +668,6 @@
           :total: 12
           :crit: false
           :damage: 4
-        :message: Miss!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -736,7 +694,6 @@
           :total: 19
           :crit: false
           :damage: 11
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -751,7 +708,6 @@
           :total: 14
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -775,7 +731,6 @@
           :total: 23
           :crit: false
           :damage: 10
-        :message: Hit!
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -801,7 +756,6 @@
           :total: 9
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -816,7 +770,6 @@
           :total: 8
           :crit: false
           :damage: 9
-        :message: Miss!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -841,7 +794,6 @@
           :total: 11
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -862,7 +814,6 @@
         :amount: 7
         :hp_before: 50
         :hp_after: 57
-        :message: Campeão heals 7 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -897,7 +848,6 @@
           :total: 16
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -923,7 +873,6 @@
           :total: 14
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -938,7 +887,6 @@
           :total: 18
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
     - :round: 5
       :turn: 2
@@ -962,7 +910,6 @@
           :total: 21
           :crit: false
           :damage: 4
-        :message: Hit!
       :gambit: aleatório
   - :round: 6
     :turns:
@@ -988,7 +935,6 @@
           :total: 12
           :crit: false
           :damage: 10
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1003,7 +949,6 @@
           :total: 24
           :crit: false
           :damage: 11
-        :message: Hit!
       :gambit: aleatório
     - :round: 6
       :turn: 2
@@ -1025,7 +970,6 @@
           :amount: 5
           :hp_before: 45
           :hp_after: 40
-          :message: Campeão takes 5 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -1044,7 +988,6 @@
           :total: 20
           :crit: false
           :damage: 8
-        :message: Hit!
       :gambit: aleatório
   - :round: 7
     :turns:
@@ -1070,7 +1013,6 @@
           :total: 7
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1085,7 +1027,6 @@
           :total: 16
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
     - :round: 7
       :turn: 2
@@ -1110,7 +1051,6 @@
           :total: 11
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
   - :round: 8
     :turns:
@@ -1136,7 +1076,6 @@
           :total: 14
           :crit: false
           :damage: 11
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1151,7 +1090,6 @@
           :total: 21
           :crit: false
           :damage: 7
-        :message: Hit!
       :gambit: aleatório
     - :round: 8
       :turn: 2
@@ -1173,7 +1111,6 @@
           :amount: 6
           :hp_before: 35
           :hp_after: 29
-          :message: Campeão takes 6 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -1192,7 +1129,6 @@
           :total: 23
           :crit: false
           :damage: 5
-        :message: Hit!
       :gambit: aleatório
   - :round: 9
     :turns:
@@ -1218,7 +1154,6 @@
           :total: 17
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1233,7 +1168,6 @@
           :total: 11
           :crit: false
           :damage: 9
-        :message: Miss!
       :gambit: aleatório
     - :round: 9
       :turn: 2
@@ -1257,7 +1191,6 @@
           :total: 22
           :crit: false
           :damage: 4
-        :message: Hit!
       :gambit: aleatório
   - :round: 10
     :turns:
@@ -1283,7 +1216,6 @@
           :total: 7
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1298,24 +1230,19 @@
           :total: 25
           :crit: true
           :damage: 11
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 4:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 7
+  :initiative:
+  - :actor_id: Campeão
+    :natural: 15
+    :total: 17
+  - :actor_id: Mestre de Batalha
+    :natural: 6
+    :total: 7
   :round_log:
   - :round: 1
     :turns:
@@ -1341,7 +1268,6 @@
           :total: 8
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1356,7 +1282,6 @@
           :total: 15
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -1380,7 +1305,6 @@
           :total: 16
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1395,7 +1319,6 @@
           :total: 14
           :crit: false
           :damage: 11
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -1415,7 +1338,6 @@
         :amount: 11
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 11 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -1450,7 +1372,6 @@
           :total: 14
           :crit: false
           :damage: 8
-        :message: Miss!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -1477,7 +1398,6 @@
           :total: 25
           :crit: true
           :damage: 15
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1492,7 +1412,6 @@
           :total: 13
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -1517,7 +1436,6 @@
           :total: 16
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -1543,7 +1461,6 @@
           :total: 10
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1558,7 +1475,6 @@
           :total: 16
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -1582,7 +1498,6 @@
           :total: 12
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -1603,7 +1518,6 @@
         :amount: 8
         :hp_before: 60
         :hp_after: 60
-        :message: Campeão heals 8 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -1637,7 +1551,6 @@
           :total: 20
           :crit: false
           :damage: 9
-        :message: Hit!
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -1663,7 +1576,6 @@
           :total: 15
           :crit: false
           :damage: 7
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1678,7 +1590,6 @@
           :total: 9
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
     - :round: 5
       :turn: 2
@@ -1702,7 +1613,6 @@
           :total: 6
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
   - :round: 6
     :turns:
@@ -1728,7 +1638,6 @@
           :total: 26
           :crit: true
           :damage: 11
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1743,7 +1652,6 @@
           :total: 20
           :crit: false
           :damage: 7
-        :message: Hit!
       :gambit: aleatório
     - :round: 6
       :turn: 2
@@ -1768,7 +1676,6 @@
           :total: 6
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
   - :round: 7
     :turns:
@@ -1794,24 +1701,19 @@
           :total: 25
           :crit: true
           :damage: 13
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 5:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 3
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 15
+    :total: 16
+  - :actor_id: Campeão
+    :natural: 4
+    :total: 6
   :round_log:
   - :round: 1
     :turns:
@@ -1835,7 +1737,6 @@
           :amount: 7
           :hp_before: 50
           :hp_after: 43
-          :message: Campeão takes 7 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -1854,7 +1755,6 @@
           :total: 21
           :crit: false
           :damage: 10
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -1873,7 +1773,6 @@
         :amount: 4
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 4 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -1908,7 +1807,6 @@
           :total: 16
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1923,7 +1821,6 @@
           :total: 11
           :crit: false
           :damage: 13
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -1947,7 +1844,6 @@
           :total: 23
           :crit: false
           :damage: 12
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1962,7 +1858,6 @@
           :total: 23
           :crit: false
           :damage: 13
-        :message: Hit!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -1989,7 +1884,6 @@
           :total: 18
           :crit: false
           :damage: 5
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -2008,7 +1902,6 @@
         :amount: 11
         :hp_before: 38
         :hp_after: 49
-        :message: Campeão heals 11 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -2044,7 +1937,6 @@
           :total: 13
           :crit: false
           :damage: 4
-        :message: Miss!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -2068,24 +1960,19 @@
           :total: 19
           :crit: false
           :damage: 11
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 6:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 8
+  :initiative:
+  - :actor_id: Campeão
+    :natural: 11
+    :total: 13
+  - :actor_id: Mestre de Batalha
+    :natural: 10
+    :total: 11
   :round_log:
   - :round: 1
     :turns:
@@ -2111,7 +1998,6 @@
           :total: 10
           :crit: false
           :damage: 10
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2126,7 +2012,6 @@
           :total: 17
           :crit: false
           :damage: 11
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -2145,7 +2030,6 @@
         :amount: 6
         :hp_before: 60
         :hp_after: 60
-        :message: Campeão heals 6 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -2180,7 +2064,6 @@
           :total: 7
           :crit: false
           :damage: 13
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -2202,7 +2085,6 @@
           :amount: 5
           :hp_before: 55
           :hp_after: 50
-          :message: Campeão takes 5 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -2221,7 +2103,6 @@
           :total: 21
           :crit: false
           :damage: 5
-        :message: Hit!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -2248,7 +2129,6 @@
           :total: 21
           :crit: false
           :damage: 10
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2263,7 +2143,6 @@
           :total: 8
           :crit: false
           :damage: 6
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -2282,7 +2161,6 @@
         :amount: 6
         :hp_before: 26
         :hp_after: 32
-        :message: Mestre de Batalha heals 6 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -2318,7 +2196,6 @@
           :total: 19
           :crit: false
           :damage: 10
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2333,7 +2210,6 @@
           :total: 9
           :crit: false
           :damage: 11
-        :message: Miss!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -2355,7 +2231,6 @@
           :amount: 7
           :hp_before: 37
           :hp_after: 30
-          :message: Campeão takes 7 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -2374,7 +2249,6 @@
           :total: 21
           :crit: false
           :damage: 13
-        :message: Hit!
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -2400,7 +2274,6 @@
           :total: 25
           :crit: true
           :damage: 13
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2415,7 +2288,6 @@
           :total: 12
           :crit: false
           :damage: 11
-        :message: Miss!
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -2439,7 +2311,6 @@
           :total: 23
           :crit: false
           :damage: 8
-        :message: Hit!
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -2465,7 +2336,6 @@
           :total: 12
           :crit: false
           :damage: 12
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2480,7 +2350,6 @@
           :total: 23
           :crit: false
           :damage: 8
-        :message: Hit!
       :gambit: aleatório
     - :round: 5
       :turn: 2
@@ -2504,7 +2373,6 @@
           :total: 8
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
   - :round: 6
     :turns:
@@ -2530,7 +2398,6 @@
           :total: 18
           :crit: false
           :damage: 7
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2545,7 +2412,6 @@
           :total: 12
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
     - :round: 6
       :turn: 2
@@ -2569,7 +2435,6 @@
           :total: 20
           :crit: false
           :damage: 11
-        :message: Hit!
       :gambit: aleatório
   - :round: 7
     :turns:
@@ -2595,7 +2460,6 @@
           :total: 15
           :crit: false
           :damage: 11
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2610,7 +2474,6 @@
           :total: 13
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
     - :round: 7
       :turn: 2
@@ -2635,7 +2498,6 @@
           :total: 16
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
   - :round: 8
     :turns:
@@ -2661,7 +2523,6 @@
           :total: 18
           :crit: false
           :damage: 7
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2676,24 +2537,19 @@
           :total: 25
           :crit: true
           :damage: 13
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 7:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 5
+  :initiative:
+  - :actor_id: Campeão
+    :natural: 16
+    :total: 18
+  - :actor_id: Mestre de Batalha
+    :natural: 5
+    :total: 6
   :round_log:
   - :round: 1
     :turns:
@@ -2714,7 +2570,6 @@
         :amount: 15
         :hp_before: 60
         :hp_after: 60
-        :message: Campeão heals 15 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -2748,7 +2603,6 @@
           :total: 10
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2763,7 +2617,6 @@
           :total: 14
           :crit: false
           :damage: 10
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -2788,7 +2641,6 @@
           :total: 20
           :crit: false
           :damage: 11
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -2807,7 +2659,6 @@
         :amount: 12
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 12 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -2844,7 +2695,6 @@
           :total: 21
           :crit: false
           :damage: 8
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2859,7 +2709,6 @@
           :total: 15
           :crit: false
           :damage: 13
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -2883,7 +2732,6 @@
           :total: 12
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -2909,7 +2757,6 @@
           :total: 23
           :crit: false
           :damage: 13
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2924,7 +2771,6 @@
           :total: 14
           :crit: false
           :damage: 10
-        :message: Miss!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -2949,7 +2795,6 @@
           :total: 6
           :crit: false
           :damage: 11
-        :message: Miss!
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -2975,7 +2820,6 @@
           :total: 13
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2990,7 +2834,6 @@
           :total: 19
           :crit: false
           :damage: 13
-        :message: Hit!
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -3015,7 +2858,6 @@
           :total: 11
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -3041,24 +2883,19 @@
           :total: 23
           :crit: false
           :damage: 9
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 8:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 3
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 18
+    :total: 19
+  - :actor_id: Campeão
+    :natural: 4
+    :total: 6
   :round_log:
   - :round: 1
     :turns:
@@ -3084,7 +2921,6 @@
           :total: 15
           :crit: false
           :damage: 9
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -3103,7 +2939,6 @@
         :amount: 12
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 12 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -3133,7 +2968,6 @@
         :amount: 9
         :hp_before: 60
         :hp_after: 60
-        :message: Campeão heals 9 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -3167,7 +3001,6 @@
           :total: 15
           :crit: false
           :damage: 13
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3182,7 +3015,6 @@
           :total: 23
           :crit: false
           :damage: 11
-        :message: Hit!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -3207,7 +3039,6 @@
           :amount: 3
           :hp_before: 53
           :hp_after: 50
-          :message: Campeão takes 3 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -3226,7 +3057,6 @@
           :total: 23
           :crit: false
           :damage: 7
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -3250,7 +3080,6 @@
           :total: 19
           :crit: false
           :damage: 11
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3265,7 +3094,6 @@
           :total: 16
           :crit: false
           :damage: 11
-        :message: Miss!
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -3291,7 +3119,6 @@
           :total: 21
           :crit: false
           :damage: 6
-        :message: Hit!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -3315,24 +3142,19 @@
           :total: 25
           :crit: true
           :damage: 19
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 9:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 7
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 9
+    :total: 10
+  - :actor_id: Campeão
+    :natural: 2
+    :total: 4
   :round_log:
   - :round: 1
     :turns:
@@ -3356,7 +3178,6 @@
           :amount: 6
           :hp_before: 48
           :hp_after: 42
-          :message: Campeão takes 6 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -3375,7 +3196,6 @@
           :total: 23
           :crit: false
           :damage: 12
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -3399,7 +3219,6 @@
           :total: 7
           :crit: false
           :damage: 4
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -3424,7 +3243,6 @@
           :total: 21
           :crit: false
           :damage: 9
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3439,7 +3257,6 @@
           :total: 17
           :crit: false
           :damage: 6
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -3458,7 +3275,6 @@
         :amount: 14
         :hp_before: 42
         :hp_after: 56
-        :message: Campeão heals 14 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -3493,7 +3309,6 @@
           :amount: 7
           :hp_before: 50
           :hp_after: 43
-          :message: Campeão takes 7 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -3512,7 +3327,6 @@
           :total: 18
           :crit: false
           :damage: 6
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -3536,7 +3350,6 @@
           :total: 8
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3551,7 +3364,6 @@
           :total: 10
           :crit: false
           :damage: 9
-        :message: Miss!
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -3577,7 +3389,6 @@
           :total: 11
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -3601,7 +3412,6 @@
           :total: 13
           :crit: false
           :damage: 13
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3616,7 +3426,6 @@
           :total: 16
           :crit: false
           :damage: 6
-        :message: Miss!
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -3640,7 +3449,6 @@
           :amount: 6
           :hp_before: 31
           :hp_after: 25
-          :message: Campeão takes 6 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -3659,7 +3467,6 @@
           :total: 23
           :crit: false
           :damage: 12
-        :message: Hit!
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -3683,7 +3490,6 @@
           :total: 8
           :crit: false
           :damage: 11
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3698,7 +3504,6 @@
           :total: 19
           :crit: false
           :damage: 8
-        :message: Hit!
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -3719,7 +3524,6 @@
         :amount: 10
         :hp_before: 19
         :hp_after: 29
-        :message: Mestre de Batalha heals 10 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -3753,7 +3557,6 @@
           :total: 25
           :crit: true
           :damage: 7
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3768,7 +3571,6 @@
           :total: 11
           :crit: false
           :damage: 11
-        :message: Miss!
       :gambit: aleatório
   - :round: 6
     :turns:
@@ -3795,7 +3597,6 @@
           :total: 9
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
     - :round: 6
       :turn: 2
@@ -3819,7 +3620,6 @@
           :total: 7
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3834,7 +3634,6 @@
           :total: 23
           :crit: false
           :damage: 10
-        :message: Hit!
       :gambit: aleatório
   - :round: 7
     :turns:
@@ -3860,7 +3659,6 @@
           :total: 21
           :crit: false
           :damage: 9
-        :message: Hit!
       :gambit: aleatório
     - :round: 7
       :turn: 2
@@ -3884,24 +3682,19 @@
           :total: 26
           :crit: true
           :damage: 19
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 10:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 4
+  :initiative:
+  - :actor_id: Campeão
+    :natural: 10
+    :total: 12
+  - :actor_id: Mestre de Batalha
+    :natural: 5
+    :total: 6
   :round_log:
   - :round: 1
     :turns:
@@ -3922,7 +3715,6 @@
         :amount: 6
         :hp_before: 60
         :hp_after: 60
-        :message: Campeão heals 6 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -3956,7 +3748,6 @@
           :total: 24
           :crit: false
           :damage: 9
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3971,7 +3762,6 @@
           :total: 23
           :crit: false
           :damage: 11
-        :message: Hit!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -3991,7 +3781,6 @@
         :amount: 5
         :hp_before: 16
         :hp_after: 21
-        :message: Mestre de Batalha heals 5 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -4025,7 +3814,6 @@
           :total: 14
           :crit: false
           :damage: 13
-        :message: Miss!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -4052,7 +3840,6 @@
           :total: 7
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4067,7 +3854,6 @@
           :total: 15
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -4092,7 +3878,6 @@
           :total: 10
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -4118,7 +3903,6 @@
           :total: 23
           :crit: false
           :damage: 10
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4133,7 +3917,6 @@
           :total: 22
           :crit: false
           :damage: 9
-        :message: Hit!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -4157,7 +3940,6 @@
           :total: 17
           :crit: false
           :damage: 5
-        :message: Hit!
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -4183,7 +3965,6 @@
           :total: 15
           :crit: false
           :damage: 10
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4198,24 +3979,19 @@
           :total: 21
           :crit: false
           :damage: 7
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 11:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 4
+  :initiative:
+  - :actor_id: Campeão
+    :natural: 17
+    :total: 19
+  - :actor_id: Mestre de Batalha
+    :natural: 18
+    :total: 19
   :round_log:
   - :round: 1
     :turns:
@@ -4236,7 +4012,6 @@
         :amount: 13
         :hp_before: 60
         :hp_after: 60
-        :message: Campeão heals 13 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -4270,7 +4045,6 @@
           :total: 20
           :crit: false
           :damage: 10
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4285,7 +4059,6 @@
           :total: 8
           :crit: false
           :damage: 13
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -4310,7 +4083,6 @@
           :total: 24
           :crit: false
           :damage: 12
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -4329,7 +4101,6 @@
         :amount: 4
         :hp_before: 26
         :hp_after: 30
-        :message: Mestre de Batalha heals 4 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -4366,7 +4137,6 @@
           :total: 7
           :crit: false
           :damage: 11
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4381,7 +4151,6 @@
           :total: 19
           :crit: false
           :damage: 11
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -4406,7 +4175,6 @@
           :total: 10
           :crit: false
           :damage: 6
-        :message: Miss!
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -4432,7 +4200,6 @@
           :total: 19
           :crit: false
           :damage: 7
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4447,7 +4214,6 @@
           :total: 17
           :crit: false
           :damage: 11
-        :message: Miss!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -4472,7 +4238,6 @@
           :total: 13
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -4498,7 +4263,6 @@
           :total: 24
           :crit: false
           :damage: 9
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4513,24 +4277,19 @@
           :total: 24
           :crit: false
           :damage: 9
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 12:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 8
+  :initiative:
+  - :actor_id: Campeão
+    :natural: 12
+    :total: 14
+  - :actor_id: Mestre de Batalha
+    :natural: 7
+    :total: 8
   :round_log:
   - :round: 1
     :turns:
@@ -4551,7 +4310,6 @@
         :amount: 7
         :hp_before: 60
         :hp_after: 60
-        :message: Campeão heals 7 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -4585,7 +4343,6 @@
           :total: 9
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4600,7 +4357,6 @@
           :total: 10
           :crit: false
           :damage: 10
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -4623,7 +4379,6 @@
           :amount: 2
           :hp_before: 50
           :hp_after: 48
-          :message: Campeão takes 2 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -4642,7 +4397,6 @@
           :total: 22
           :crit: false
           :damage: 10
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -4661,7 +4415,6 @@
         :amount: 8
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 8 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -4698,7 +4451,6 @@
           :total: 12
           :crit: false
           :damage: 11
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4713,7 +4465,6 @@
           :total: 9
           :crit: false
           :damage: 9
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -4738,7 +4489,6 @@
           :total: 16
           :crit: false
           :damage: 4
-        :message: Miss!
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -4764,7 +4514,6 @@
           :total: 15
           :crit: false
           :damage: 10
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4779,7 +4528,6 @@
           :total: 20
           :crit: false
           :damage: 8
-        :message: Hit!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -4803,7 +4551,6 @@
           :total: 9
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -4829,7 +4576,6 @@
           :total: 10
           :crit: false
           :damage: 7
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4844,7 +4590,6 @@
           :total: 7
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -4866,7 +4611,6 @@
           :amount: 5
           :hp_before: 44
           :hp_after: 39
-          :message: Campeão takes 5 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -4885,7 +4629,6 @@
           :total: 24
           :crit: false
           :damage: 4
-        :message: Hit!
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -4911,7 +4654,6 @@
           :total: 13
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4926,7 +4668,6 @@
           :total: 20
           :crit: false
           :damage: 7
-        :message: Hit!
       :gambit: aleatório
     - :round: 5
       :turn: 2
@@ -4948,7 +4689,6 @@
           :amount: 1
           :hp_before: 35
           :hp_after: 34
-          :message: Campeão takes 1 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -4967,7 +4707,6 @@
           :total: 19
           :crit: false
           :damage: 4
-        :message: Hit!
       :gambit: aleatório
   - :round: 6
     :turns:
@@ -4993,7 +4732,6 @@
           :total: 21
           :crit: false
           :damage: 9
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5008,7 +4746,6 @@
           :total: 22
           :crit: false
           :damage: 7
-        :message: Hit!
       :gambit: aleatório
     - :round: 6
       :turn: 2
@@ -5032,7 +4769,6 @@
           :total: 7
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
   - :round: 7
     :turns:
@@ -5058,7 +4794,6 @@
           :total: 11
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5073,7 +4808,6 @@
           :total: 11
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
     - :round: 7
       :turn: 2
@@ -5097,7 +4831,6 @@
           :total: 17
           :crit: false
           :damage: 9
-        :message: Hit!
       :gambit: aleatório
   - :round: 8
     :turns:
@@ -5123,7 +4856,6 @@
           :total: 18
           :crit: false
           :damage: 11
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5138,7 +4870,6 @@
           :total: 26
           :crit: true
           :damage: 15
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory

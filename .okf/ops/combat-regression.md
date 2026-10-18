@@ -5,7 +5,7 @@ description: Golden files, query ceiling and time benchmark that prove a CombatS
 tags: [testing, performance, combat]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-15T00:00:00Z
+  at: 2026-10-17T00:00:00Z
 sources:
   - id: compositions
     title: lib/combat_regression.rb
@@ -65,6 +65,12 @@ On the host, wrap them in `bash -ic '…'` (test DB credentials). Regenerate onl
 that is meant to alter combat) and review the diff; on unchanged code it is a no-op. Record the
 benchmark baseline on the machine that compares, right before the refactor; `benchmark.yml` keeps
 the machine and versions it was recorded on.
+
+A change meant to touch only the result's shape, not the combat, regenerates the goldens and proves
+it: load the old ones from git (`git show HEAD:<path>`, `YAML.unsafe_load`), drop the removed keys,
+drop the added ones from the new, and compare every seed. Phase 2.1 (2026-10-17) did so: without
+`message` (recursively) and the top-level `gambits` on the old side and `initiative` on the new, all
+six compositions were identical, which also shows recording the initiative rolls drew nothing extra.
 
 # Determinism
 

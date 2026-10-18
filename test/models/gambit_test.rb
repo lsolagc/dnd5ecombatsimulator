@@ -1,6 +1,18 @@
 require "test_helper"
 
 class GambitTest < ActiveSupport::TestCase
+  test "log_section lists every rule, enabled or not, in priority order, and the mode they put the combatant in" do
+    second_wind = Gambit.new(position: 1, target: :self, condition: :any, action_kind: :class_feature, class_feature: class_features(:fighter_second_wind))
+    disabled = Gambit.new(position: 2, target: :enemy, condition: :any, action_kind: :attack, enabled: false)
+
+    assert_equal({ mode: "gambits", rules: [
+      { position: 1, enabled: true, target: "Self", condition: "qualquer", action: "Second Wind", rule: "Self: qualquer → Second Wind" },
+      { position: 2, enabled: false, target: "Inimigo", condition: "qualquer", action: "Ataque", rule: "Inimigo: qualquer → Ataque" }
+    ] }, Gambit.log_section(snapshots: [ disabled.snapshot, second_wind.snapshot ]))
+    assert_equal "aleatório", Gambit.log_section(snapshots: [ disabled.snapshot ])[:mode], "only disabled rules"
+    assert_equal({ mode: "aleatório", rules: [] }, Gambit.log_section(snapshots: []))
+  end
+
   test "a valid attack rule saves and reads back with prefixed enums" do
     gambit = build_gambit(target: :enemy, condition: :hp_below, condition_value: 50)
 

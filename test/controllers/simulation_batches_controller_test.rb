@@ -95,24 +95,19 @@ class SimulationBatchesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to simulation_batch_url(batch)
   end
 
-  test "logs downloads a zip with one JSON per simulation, each with its seed" do
+  test "logs downloads one JSON file with the header and every simulation, each with its seed" do
     batch = SimulationBatch.create!(party_one_ids: [ player_characters(:aragorn).id ], party_two_ids: [ player_characters(:merlin).id ], requested_count: 2)
     2.times { SimulationRunJob.perform_now(batch) }
 
     get logs_simulation_batch_url(batch)
 
     assert_response :success
-    assert_equal "application/zip", response.media_type
-    entries = Zip::InputStream.open(StringIO.new(response.body)) do |zip|
-      files = {}
-      while (entry = zip.get_next_entry)
-        files[entry.name] = JSON.parse(zip.read)
-      end
-      files
-    end
-    assert_equal %w[ batch.json simulation-0001.json simulation-0002.json ], entries.keys
-    assert_equal batch.simulation_runs.map(&:seed), [ entries["simulation-0001.json"]["seed"], entries["simulation-0002.json"]["seed"] ]
-    assert entries["simulation-0001.json"].key?("round_log")
+    assert_equal "application/json", response.media_type
+    assert_includes response.headers["Content-Disposition"], %(filename="simulacoes-batch-#{batch.id}.json")
+    log = JSON.parse(response.body)
+    assert_equal %w[ header simulations ], log.keys
+    assert_equal batch.simulation_runs.map(&:seed), log["simulations"].pluck("seed")
+    assert log["simulations"].first.key?("round_log")
   end
 
   test "show summarizes a finished batch" do

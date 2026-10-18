@@ -50,10 +50,9 @@ class Gambit < ApplicationRecord
 
   # A combatant's gambits as the log shows them, from snapshots: every rule (enabled or not) in priority
   # order, and "aleatório" when none is enabled (the simulator then picks at random).
-  def self.log_section(id:, name:, snapshots:)
+  def self.log_section(snapshots:)
     rules = snapshots.sort_by { |rule| rule["position"] }
     {
-      id:, name:,
       mode: rules.any? { |rule| rule["enabled"] } ? "gambits" : "aleatório",
       rules: rules.map do |rule|
         { position: rule["position"], enabled: rule["enabled"], target: rule["target_label"], condition: rule["condition_label"],

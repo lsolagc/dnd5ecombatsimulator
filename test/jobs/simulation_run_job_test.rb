@@ -140,7 +140,7 @@ class SimulationRunJobTest < ActiveJob::TestCase
       assert_equal [ "second-wind", { "position" => 1, "rule" => "Self: qualquer → Second Wind" } ],
                    [ first_turn.dig("action", "feature_slug"), first_turn["gambit"] ], "#{name}: the run must follow the copy"
       assert_equal [ "gambits", [ "Self: qualquer → Second Wind" ] ],
-                   result.dig("gambits", "party_one", 0).then { |entry| [ entry["mode"], entry["rules"].pluck("rule") ] }, name
+                   JSON.parse(batch.logs_json).dig("header", "parties", "party_one", 0, "gambits").then { |entry| [ entry["mode"], entry["rules"].pluck("rule") ] }, name
     end
   end
 
@@ -151,28 +151,15 @@ class SimulationRunJobTest < ActiveJob::TestCase
     aragorn.gambits.create!(position: 2, target: :self, condition: :hp_below, condition_value: 50, action_kind: :class_feature, class_feature: second_wind)
     batch = SimulationBatch.create!(party_one_ids: [ aragorn.id ], party_two_ids: [ player_characters(:aragorn_copy).id ], seed: 1)
     SimulationRunJob.perform_now(batch)
-    before = zip_contents(batch.reload.logs_zip)
+    before = JSON.parse(batch.reload.logs_json)
 
     rule.update!(condition: :lowest_hp, enabled: false)
     second_wind.update!(name: "Fôlego Renomeado") # the log keeps the action's name from the copy
     aragorn.gambits.create!(position: 3, target: :self, condition: :any, action_kind: :class_feature, class_feature: second_wind)
 
-    assert_equal before, zip_contents(SimulationBatch.find(batch.id).logs_zip)
-    rules = before["batch.json"].dig("gambits", "party_one", 0, "rules")
+    assert_equal before, JSON.parse(SimulationBatch.find(batch.id).logs_json)
+    rules = before.dig("header", "parties", "party_one", 0, "gambits", "rules")
     assert_equal [ "Inimigo: qualquer → Ataque", "Self: HP < 50% → Second Wind" ], rules.pluck("rule")
     assert_equal [ "Ataque", "Second Wind" ], rules.pluck("action")
-    assert_equal [ "Ataque", "Second Wind" ], before["simulation-0001.json"].dig("gambits", "party_one", 0, "rules").pluck("action")
   end
-
-  private
-
-    def zip_contents(data)
-      files = {}
-      Zip::InputStream.open(StringIO.new(data)) do |zip|
-        while (entry = zip.get_next_entry)
-          files[entry.name] = JSON.parse(zip.read)
-        end
-      end
-      files
-    end
 end

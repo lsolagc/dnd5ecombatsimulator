@@ -10,9 +10,8 @@ module Combat
   #   roll_outcome  - Combat::RollOutcome with full roll breakdown
   #   saving_throw  - Combat::SavingThrow rolled by the target, or nil if the effect has no save
   #   attack_roll   - AttackRoll rolled by the actor, or nil if the effect makes no attack
-  #   message       - human-readable description
   class EffectExecutor
-    Result = Data.define(:kind, :applied, :amount, :hp_before, :hp_after, :roll_outcome, :saving_throw, :attack_roll, :message)
+    Result = Data.define(:kind, :applied, :amount, :hp_before, :hp_after, :roll_outcome, :saving_throw, :attack_roll)
     AttackRoll = Data.define(:natural, :total, :armor_class, :hit, :crit)
 
     # A save "dc" of this value means the actor's spell save DC instead of a fixed number.
@@ -68,8 +67,7 @@ module Combat
           hp_after:     hp_after,
           roll_outcome: roll_outcome,
           saving_throw: saving_throw,
-          attack_roll:  nil,
-          message:      effect_message(verb: "heals", noun: "hit points", target:, amount:, roll_outcome:, saving_throw:)
+          attack_roll:  nil
         )
       end
 
@@ -92,8 +90,7 @@ module Combat
           hp_after:     target.current_hit_points,
           roll_outcome: roll_outcome,
           saving_throw: saving_throw,
-          attack_roll:  attack_roll,
-          message:      effect_message(verb: "takes", noun: "#{damage_type} damage", target:, amount:, roll_outcome:, saving_throw:, attack_roll:)
+          attack_roll:  attack_roll
         )
       end
 
@@ -137,21 +134,6 @@ module Combat
 
       def save_dc(save)
         save.fetch("dc") == SPELL_SAVE_DC ? @actor.spell_save_dc : save.fetch("dc")
-      end
-
-      def effect_message(verb:, noun:, target:, amount:, roll_outcome:, saving_throw:, attack_roll: nil)
-        base = "#{target.name} #{verb} #{amount} #{noun} (#{roll_outcome.resolved_expression})."
-        base += " #{@effect.attack.capitalize} attack #{attack_roll.total} vs AC #{attack_roll.armor_class}: #{attack_outcome(attack_roll)}." if attack_roll
-        return base unless saving_throw
-
-        outcome = saving_throw.success ? "succeeds" : "fails"
-        "#{base} #{target.name} #{outcome} the #{saving_throw.ability} save (DC #{saving_throw.dc})."
-      end
-
-      def attack_outcome(attack_roll)
-        return "miss" unless attack_roll.hit
-
-        attack_roll.crit ? "critical hit" : "hit"
       end
   end
 end

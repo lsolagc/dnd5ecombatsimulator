@@ -40,16 +40,6 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
     assert result.roll_outcome.total >= 2 # min 1d10(1) + level(1)
   end
 
-  test "heal effect returns a descriptive message" do
-    Random.srand(1)
-    effect = Combat::EffectInstance.new(kind: :heal, roll_expression: "1d4", target_type: "self")
-
-    result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: @fighter)
-
-    assert_includes result.message, @fighter.name
-    assert_includes result.message, "heals"
-  end
-
   test "damage effect reduces target HP" do
     Random.srand(1)
     effect = Combat::EffectInstance.new(
@@ -111,7 +101,6 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
 
     refute result.saving_throw.success
     assert_equal 6, result.amount
-    assert_includes result.message, "fails the dexterity save"
   end
 
   test "damage effect with a save applies half damage when the target succeeds" do
@@ -129,7 +118,6 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
 
     assert result.saving_throw.success
     assert_equal 3, result.amount
-    assert_includes result.message, "succeeds the dexterity save"
   end
 
   test "damage effect with a save negates damage entirely on success" do
@@ -195,7 +183,7 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
     refute result.attack_roll.crit
     assert_equal 6, result.attack_roll.total - result.attack_roll.natural # proficiency +3, INT +3
     assert_equal 9, result.amount
-    assert_includes result.message, "Spell attack 15 vs AC 0: hit"
+    assert_equal [ 15, 0 ], [ result.attack_roll.total, result.attack_roll.armor_class ]
   end
 
   test "a spell attack that misses deals no damage" do
@@ -205,7 +193,6 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
     refute result.attack_roll.hit
     assert_equal 0, result.amount
     assert_equal result.hp_before, result.hp_after
-    assert_includes result.message, "miss"
   end
 
   test "a natural 20 on a spell attack always hits, even past the target's AC, and doubles the damage dice" do
@@ -215,7 +202,6 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
     assert result.attack_roll.hit
     assert result.attack_roll.crit
     assert_equal 14, result.amount
-    assert_includes result.message, "critical hit"
   end
 
   test "a natural 1 on a spell attack always misses, even when the total beats the target's AC" do
@@ -225,7 +211,6 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
     refute result.attack_roll.hit
     refute result.attack_roll.crit
     assert_equal 0, result.amount
-    assert_includes result.message, "miss"
   end
 
   test "an effect without an attack type never rolls a spell attack" do

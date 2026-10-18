@@ -105,18 +105,16 @@ class CombatSimulatorService
       value.to_f.floor
     end
 
+    # One d20 per combatant, in party order (the RNG sequence), sorted by total with ties kept in that
+    # order. The rolls stay in @initiative for the result.
     def build_initiative_order
       initiative_entries = all_combatants.each_with_index.map do |combatant, index|
-        {
-          combatant: combatant,
-          initiative: Dice.d20(modifier: combatant.initiative).total,
-          tie_breaker: index
-        }
+        roll = Dice.d20(modifier: combatant.initiative)
+        { combatant:, natural: roll.natural, total: roll.total, tie_breaker: index }
       end
 
-      initiative_entries
-        .sort_by { |entry| [ -entry[:initiative], entry[:tie_breaker] ] }
-        .map { |entry| entry[:combatant] }
+      @initiative = initiative_entries.sort_by { |entry| [ -entry[:total], entry[:tie_breaker] ] }
+      @initiative.map { |entry| entry[:combatant] }
     end
 
     def execute_round(round_number:, initiative_order:)
@@ -467,8 +465,7 @@ class CombatSimulatorService
             total: result.attack_roll.total,
             crit: result.attack_roll.crit,
             damage: damage
-          },
-          message: hit ? "Hit!" : "Miss!"
+          }
         }
       end
 
@@ -596,7 +593,6 @@ class CombatSimulatorService
           amount: result.amount,
           hp_before: result.hp_before,
           hp_after: result.hp_after,
-          message: result.message,
           roll_outcome: {
             expression: result.roll_outcome.expression,
             resolved_expression: result.roll_outcome.resolved_expression,
@@ -676,11 +672,9 @@ class CombatSimulatorService
       end
 
       {
-        gambits: { party_one: @party_one, party_two: @party_two }.transform_values do |party|
-          party.map { |combatant| Gambit.log_section(id: combatant.id, name: combatant.name, snapshots: gambit_snapshots(combatant)) }
-        end,
         winning_party: winning_party,
         total_rounds: round_number,
+        initiative: @initiative.map { |entry| { actor_id: entry[:combatant].id, natural: entry[:natural], total: entry[:total] } },
         round_log: @round_log,
         draw: draw,
         outcome: outcome

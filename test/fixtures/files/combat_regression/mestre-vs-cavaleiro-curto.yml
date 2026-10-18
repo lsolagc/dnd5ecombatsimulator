@@ -1,18 +1,14 @@
 ---
 1:
-  :gambits:
-    :party_one:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
   :winning_party:
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Cavaleiro Arcano
+    :natural: 12
+    :total: 14
+  - :actor_id: Mestre de Batalha
+    :natural: 6
+    :total: 7
   :round_log:
   - :round: 1
     :turns:
@@ -38,7 +34,6 @@
           :total: 19
           :crit: false
           :damage: 3
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -62,7 +57,6 @@
           :total: 16
           :crit: false
           :damage: 6
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -82,7 +76,6 @@
         :amount: 9
         :hp_before: 33
         :hp_after: 36
-        :message: Mestre de Batalha heals 9 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -114,7 +107,6 @@
           :amount: 1
           :hp_before: 32
           :hp_after: 31
-          :message: Cavaleiro Arcano takes 1 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -133,7 +125,6 @@
           :total: 21
           :crit: false
           :damage: 4
-        :message: Hit!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -155,8 +146,6 @@
         :amount: 0
         :hp_before: 36
         :hp_after: 36
-        :message: 'Mestre de Batalha takes 0 fire damage (1d10). Spell attack 7 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -195,24 +184,19 @@
           :total: 19
           :crit: false
           :damage: 10
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached
 2:
-  :gambits:
-    :party_one:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
   :winning_party:
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Cavaleiro Arcano
+    :natural: 16
+    :total: 18
+  - :actor_id: Mestre de Batalha
+    :natural: 9
+    :total: 10
   :round_log:
   - :round: 1
     :turns:
@@ -233,7 +217,6 @@
         :amount: 12
         :hp_before: 36
         :hp_after: 36
-        :message: Cavaleiro Arcano heals 12 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -267,7 +250,6 @@
           :total: 18
           :crit: false
           :damage: 5
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -290,7 +272,6 @@
           :amount: 8
           :hp_before: 24
           :hp_after: 16
-          :message: Cavaleiro Arcano takes 8 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -309,7 +290,6 @@
           :total: 17
           :crit: false
           :damage: 12
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -334,7 +314,6 @@
           :total: 8
           :crit: false
           :damage: 5
-        :message: Miss!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -361,7 +340,6 @@
           :total: 18
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -383,7 +361,6 @@
           :amount: 5
           :hp_before: 8
           :hp_after: 3
-          :message: Cavaleiro Arcano takes 5 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -402,24 +379,19 @@
           :total: 21
           :crit: false
           :damage: 8
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached
 3:
-  :gambits:
-    :party_one:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
   :winning_party:
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 11
+    :total: 12
+  - :actor_id: Cavaleiro Arcano
+    :natural: 4
+    :total: 6
   :round_log:
   - :round: 1
     :turns:
@@ -446,7 +418,6 @@
           :total: 14
           :crit: false
           :damage: 4
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -470,7 +441,6 @@
           :total: 25
           :crit: true
           :damage: 23
-        :message: Hit!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -490,8 +460,6 @@
         :amount: 0
         :hp_before: 36
         :hp_after: 36
-        :message: 'Mestre de Batalha takes 0 fire damage (1d10). Spell attack 15 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -530,7 +498,6 @@
           :total: 13
           :crit: false
           :damage: 3
-        :message: Miss!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -557,7 +524,6 @@
           :total: 18
           :crit: false
           :damage: 11
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -576,8 +542,6 @@
         :amount: 6
         :hp_before: 36
         :hp_after: 30
-        :message: 'Mestre de Batalha takes 6 force damage (3d8). Spell attack 20 vs
-          AC 19: hit.'
         :roll_outcome:
           :expression: 3d8
           :resolved_expression: 3d8
@@ -597,19 +561,15 @@
   :draw: false
   :outcome: :max_rounds_reached
 4:
-  :gambits:
-    :party_one:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
   :winning_party:
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 15
+    :total: 16
+  - :actor_id: Cavaleiro Arcano
+    :natural: 6
+    :total: 8
   :round_log:
   - :round: 1
     :turns:
@@ -636,7 +596,6 @@
           :total: 7
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -661,7 +620,6 @@
           :total: 14
           :crit: false
           :damage: 6
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -681,8 +639,6 @@
         :amount: 0
         :hp_before: 36
         :hp_after: 36
-        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 15 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -721,7 +677,6 @@
           :total: 14
           :crit: false
           :damage: 8
-        :message: Miss!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -748,7 +703,6 @@
           :total: 14
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -767,8 +721,6 @@
         :amount: 19
         :hp_before: 36
         :hp_after: 17
-        :message: 'Mestre de Batalha takes 19 force damage (3d8). Spell attack 24
-          vs AC 19: hit.'
         :roll_outcome:
           :expression: 3d8
           :resolved_expression: 3d8
@@ -788,19 +740,15 @@
   :draw: false
   :outcome: :max_rounds_reached
 5:
-  :gambits:
-    :party_one:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
   :winning_party:
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Cavaleiro Arcano
+    :natural: 15
+    :total: 17
+  - :actor_id: Mestre de Batalha
+    :natural: 4
+    :total: 5
   :round_log:
   - :round: 1
     :turns:
@@ -821,7 +769,6 @@
         :amount: 10
         :hp_before: 36
         :hp_after: 36
-        :message: Cavaleiro Arcano heals 10 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -850,8 +797,6 @@
         :amount: 10
         :hp_before: 36
         :hp_after: 26
-        :message: 'Mestre de Batalha takes 10 fire damage (1d10). Spell attack 22
-          vs AC 19: hit.'
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -892,7 +837,6 @@
           :total: 14
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -917,7 +861,6 @@
           :total: 13
           :crit: false
           :damage: 4
-        :message: Miss!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -939,8 +882,6 @@
         :amount: 8
         :hp_before: 26
         :hp_after: 18
-        :message: 'Mestre de Batalha takes 8 fire damage (1d10). Spell attack 22 vs
-          AC 19: hit.'
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -979,24 +920,19 @@
           :total: 18
           :crit: false
           :damage: 5
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached
 6:
-  :gambits:
-    :party_one:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
   :winning_party:
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 11
+    :total: 12
+  - :actor_id: Cavaleiro Arcano
+    :natural: 10
+    :total: 12
   :round_log:
   - :round: 1
     :turns:
@@ -1023,7 +959,6 @@
           :total: 9
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -1042,7 +977,6 @@
         :amount: 4
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 4 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -1077,7 +1011,6 @@
           :total: 8
           :crit: false
           :damage: 6
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -1096,8 +1029,6 @@
         :amount: 10
         :hp_before: 36
         :hp_after: 26
-        :message: 'Mestre de Batalha takes 10 fire damage (1d10). Spell attack 19
-          vs AC 19: hit.'
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -1139,7 +1070,6 @@
           :total: 21
           :crit: false
           :damage: 5
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -1158,8 +1088,6 @@
         :amount: 0
         :hp_before: 26
         :hp_after: 26
-        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 18 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -1179,19 +1107,15 @@
   :draw: false
   :outcome: :max_rounds_reached
 7:
-  :gambits:
-    :party_one:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
   :winning_party:
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 16
+    :total: 17
+  - :actor_id: Cavaleiro Arcano
+    :natural: 5
+    :total: 7
   :round_log:
   - :round: 1
     :turns:
@@ -1217,7 +1141,6 @@
           :total: 9
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -1236,7 +1159,6 @@
         :amount: 11
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 11 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -1266,7 +1188,6 @@
         :amount: 11
         :hp_before: 36
         :hp_after: 36
-        :message: Cavaleiro Arcano heals 11 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -1295,8 +1216,6 @@
         :amount: 11
         :hp_before: 36
         :hp_after: 25
-        :message: 'Mestre de Batalha takes 11 force damage (3d8). Spell attack 20
-          vs AC 19: hit.'
         :roll_outcome:
           :expression: 3d8
           :resolved_expression: 3d8
@@ -1336,7 +1255,6 @@
           :amount: 8
           :hp_before: 24
           :hp_after: 16
-          :message: Cavaleiro Arcano takes 8 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -1355,7 +1273,6 @@
           :total: 20
           :crit: false
           :damage: 12
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -1374,8 +1291,6 @@
         :amount: 0
         :hp_before: 25
         :hp_after: 25
-        :message: 'Mestre de Batalha takes 0 force damage (3d8). Spell attack 12 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 3d8
           :resolved_expression: 3d8
@@ -1395,19 +1310,15 @@
   :draw: false
   :outcome: :max_rounds_reached
 8:
-  :gambits:
-    :party_one:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
   :winning_party:
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Cavaleiro Arcano
+    :natural: 18
+    :total: 20
+  - :actor_id: Mestre de Batalha
+    :natural: 4
+    :total: 5
   :round_log:
   - :round: 1
     :turns:
@@ -1428,8 +1339,6 @@
         :amount: 0
         :hp_before: 36
         :hp_after: 36
-        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 15 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -1463,7 +1372,6 @@
         :amount: 12
         :hp_before: 36
         :hp_after: 36
-        :message: Cavaleiro Arcano heals 12 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -1493,7 +1401,6 @@
         :amount: 7
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 7 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -1527,7 +1434,6 @@
           :total: 14
           :crit: false
           :damage: 4
-        :message: Miss!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -1549,8 +1455,6 @@
         :amount: 6
         :hp_before: 36
         :hp_after: 30
-        :message: 'Mestre de Batalha takes 6 fire damage (1d10). Spell attack 19 vs
-          AC 19: hit.'
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -1587,7 +1491,6 @@
           :amount: 3
           :hp_before: 29
           :hp_after: 26
-          :message: Cavaleiro Arcano takes 3 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -1606,24 +1509,19 @@
           :total: 23
           :crit: false
           :damage: 7
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached
 9:
-  :gambits:
-    :party_one:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
   :winning_party:
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Cavaleiro Arcano
+    :natural: 9
+    :total: 11
+  - :actor_id: Mestre de Batalha
+    :natural: 2
+    :total: 3
   :round_log:
   - :round: 1
     :turns:
@@ -1649,7 +1547,6 @@
           :total: 24
           :crit: false
           :damage: 3
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -1673,7 +1570,6 @@
           :total: 8
           :crit: false
           :damage: 8
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -1699,7 +1595,6 @@
           :total: 6
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -1718,7 +1613,6 @@
         :amount: 12
         :hp_before: 33
         :hp_after: 36
-        :message: Mestre de Batalha heals 12 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -1755,7 +1649,6 @@
           :total: 17
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -1777,7 +1670,6 @@
           :amount: 7
           :hp_before: 30
           :hp_after: 23
-          :message: Cavaleiro Arcano takes 7 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -1796,24 +1688,19 @@
           :total: 18
           :crit: false
           :damage: 6
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached
 10:
-  :gambits:
-    :party_one:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
   :winning_party:
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 10
+    :total: 11
+  - :actor_id: Cavaleiro Arcano
+    :natural: 5
+    :total: 7
   :round_log:
   - :round: 1
     :turns:
@@ -1834,7 +1721,6 @@
         :amount: 4
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 4 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -1866,7 +1752,6 @@
           :amount: 6
           :hp_before: 23
           :hp_after: 17
-          :message: Cavaleiro Arcano takes 6 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -1885,7 +1770,6 @@
           :total: 23
           :crit: false
           :damage: 13
-        :message: Hit!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -1910,7 +1794,6 @@
           :total: 23
           :crit: false
           :damage: 8
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -1929,7 +1812,6 @@
         :amount: 5
         :hp_before: 17
         :hp_after: 22
-        :message: Cavaleiro Arcano heals 5 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -1967,7 +1849,6 @@
           :total: 14
           :crit: false
           :damage: 13
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -1986,8 +1867,6 @@
         :amount: 0
         :hp_before: 28
         :hp_after: 28
-        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 6 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -2007,19 +1886,15 @@
   :draw: false
   :outcome: :max_rounds_reached
 11:
-  :gambits:
-    :party_one:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
   :winning_party:
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Cavaleiro Arcano
+    :natural: 18
+    :total: 20
+  - :actor_id: Mestre de Batalha
+    :natural: 17
+    :total: 18
   :round_log:
   - :round: 1
     :turns:
@@ -2045,7 +1920,6 @@
           :total: 20
           :crit: false
           :damage: 7
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -2064,8 +1938,6 @@
         :amount: 0
         :hp_before: 29
         :hp_after: 29
-        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 7 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -2100,7 +1972,6 @@
         :amount: 6
         :hp_before: 29
         :hp_after: 35
-        :message: Mestre de Batalha heals 6 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -2132,7 +2003,6 @@
           :amount: 6
           :hp_before: 32
           :hp_after: 26
-          :message: Cavaleiro Arcano takes 6 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -2151,7 +2021,6 @@
           :total: 19
           :crit: false
           :damage: 4
-        :message: Hit!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -2173,8 +2042,6 @@
         :amount: 0
         :hp_before: 35
         :hp_after: 35
-        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 6 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -2211,7 +2078,6 @@
           :amount: 3
           :hp_before: 18
           :hp_after: 15
-          :message: Cavaleiro Arcano takes 3 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -2230,24 +2096,19 @@
           :total: 18
           :crit: false
           :damage: 8
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached
 12:
-  :gambits:
-    :party_one:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
   :winning_party:
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 12
+    :total: 13
+  - :actor_id: Cavaleiro Arcano
+    :natural: 7
+    :total: 9
   :round_log:
   - :round: 1
     :turns:
@@ -2271,7 +2132,6 @@
           :amount: 4
           :hp_before: 30
           :hp_after: 26
-          :message: Cavaleiro Arcano takes 4 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -2290,7 +2150,6 @@
           :total: 23
           :crit: false
           :damage: 6
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -2309,7 +2168,6 @@
         :amount: 7
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 7 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -2339,7 +2197,6 @@
         :amount: 4
         :hp_before: 26
         :hp_after: 30
-        :message: Cavaleiro Arcano heals 4 hit points (1d10+3).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+3
@@ -2368,8 +2225,6 @@
         :amount: 17
         :hp_before: 36
         :hp_after: 19
-        :message: 'Mestre de Batalha takes 17 force damage (3d8). Spell attack 23
-          vs AC 19: hit.'
         :roll_outcome:
           :expression: 3d8
           :resolved_expression: 3d8
@@ -2411,7 +2266,6 @@
           :total: 8
           :crit: false
           :damage: 10
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -2435,7 +2289,6 @@
           :total: 17
           :crit: false
           :damage: 3
-        :message: Miss!
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached

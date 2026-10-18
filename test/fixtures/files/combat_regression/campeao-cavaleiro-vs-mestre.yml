@@ -1,22 +1,17 @@
 ---
 1:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 5
+  :initiative:
+  - :actor_id: Cavaleiro Arcano
+    :natural: 12
+    :total: 14
+  - :actor_id: Mestre de Batalha
+    :natural: 13
+    :total: 14
+  - :actor_id: Campeão
+    :natural: 6
+    :total: 8
   :round_log:
   - :round: 1
     :turns:
@@ -42,7 +37,6 @@
           :total: 15
           :crit: false
           :damage: 10
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -57,7 +51,6 @@
           :total: 16
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -72,7 +65,6 @@
           :total: 12
           :crit: false
           :damage: 10
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -96,7 +88,6 @@
           :total: 7
           :crit: false
           :damage: 3
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -111,7 +102,6 @@
           :total: 8
           :crit: false
           :damage: 7
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -126,7 +116,6 @@
           :total: 14
           :crit: false
           :damage: 8
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -146,7 +135,6 @@
         :amount: 22
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 22 hit points (1d10+15).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+15
@@ -178,7 +166,6 @@
           :amount: 7
           :hp_before: 28
           :hp_after: 21
-          :message: Cavaleiro Arcano takes 7 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -197,7 +184,6 @@
           :total: 24
           :crit: false
           :damage: 8
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -212,7 +198,6 @@
           :total: 11
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -227,7 +212,6 @@
           :total: 17
           :crit: false
           :damage: 6
-        :message: Hit!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -252,7 +236,6 @@
           :total: 11
           :crit: false
           :damage: 13
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -267,7 +250,6 @@
           :total: 16
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 3
@@ -286,7 +268,6 @@
         :amount: 13
         :hp_before: 54
         :hp_after: 60
-        :message: Campeão heals 13 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -318,7 +299,6 @@
         :amount: 19
         :hp_before: 21
         :hp_after: 36
-        :message: Cavaleiro Arcano heals 19 hit points (1d10+18).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+18
@@ -347,8 +327,6 @@
         :amount: 13
         :hp_before: 36
         :hp_after: 23
-        :message: Mestre de Batalha takes 13 fire damage (8d6). Mestre de Batalha
-          succeeds the dexterity save (DC 17).
         :roll_outcome:
           :expression: 8d6
           :resolved_expression: 8d6
@@ -382,7 +360,6 @@
           :total: 14
           :crit: false
           :damage: 12
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -397,7 +374,6 @@
           :total: 19
           :crit: false
           :damage: 7
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -412,7 +388,6 @@
           :total: 21
           :crit: false
           :damage: 13
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 3
@@ -436,7 +411,6 @@
           :total: 15
           :crit: false
           :damage: 12
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -451,7 +425,6 @@
           :total: 14
           :crit: false
           :damage: 9
-        :message: Miss!
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -477,7 +450,6 @@
           :total: 13
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -492,7 +464,6 @@
           :total: 24
           :crit: false
           :damage: 4
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -507,7 +478,6 @@
           :total: 10
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -531,7 +501,6 @@
           :total: 23
           :crit: false
           :damage: 8
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -546,7 +515,6 @@
           :total: 22
           :crit: false
           :damage: 7
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -561,7 +529,6 @@
           :total: 15
           :crit: false
           :damage: 6
-        :message: Miss!
       :gambit: aleatório
     - :round: 3
       :turn: 3
@@ -585,7 +552,6 @@
           :total: 22
           :crit: false
           :damage: 6
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -600,7 +566,6 @@
           :total: 11
           :crit: false
           :damage: 7
-        :message: Miss!
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -621,8 +586,6 @@
         :amount: 3
         :hp_before: 13
         :hp_after: 10
-        :message: 'Mestre de Batalha takes 3 cold damage (1d8). Spell attack 25 vs
-          AC 19: hit.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -661,7 +624,6 @@
           :total: 14
           :crit: false
           :damage: 5
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -676,7 +638,6 @@
           :total: 15
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -691,7 +652,6 @@
           :total: 16
           :crit: false
           :damage: 6
-        :message: Miss!
       :bonus: true
       :gambit: aleatório
     - :round: 4
@@ -716,7 +676,6 @@
           :total: 13
           :crit: false
           :damage: 11
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -731,7 +690,6 @@
           :total: 10
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -746,7 +704,6 @@
           :total: 25
           :crit: true
           :damage: 17
-        :message: Hit!
       :gambit: aleatório
     - :round: 4
       :turn: 3
@@ -770,7 +727,6 @@
           :total: 15
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -785,7 +741,6 @@
           :total: 9
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -811,28 +766,22 @@
           :total: 22
           :crit: false
           :damage: 10
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 2:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Cavaleiro Arcano
+    :natural: 16
+    :total: 18
+  - :actor_id: Mestre de Batalha
+    :natural: 14
+    :total: 15
+  - :actor_id: Campeão
+    :natural: 9
+    :total: 11
   :round_log:
   - :round: 1
     :turns:
@@ -853,7 +802,6 @@
         :amount: 27
         :hp_before: 36
         :hp_after: 36
-        :message: Cavaleiro Arcano heals 27 hit points (1d10+18).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+18
@@ -887,7 +835,6 @@
           :total: 18
           :crit: false
           :damage: 5
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -902,7 +849,6 @@
           :total: 18
           :crit: false
           :damage: 3
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -917,7 +863,6 @@
           :total: 14
           :crit: false
           :damage: 5
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -940,7 +885,6 @@
           :amount: 8
           :hp_before: 27
           :hp_after: 19
-          :message: Cavaleiro Arcano takes 8 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -959,7 +903,6 @@
           :total: 23
           :crit: false
           :damage: 9
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -974,7 +917,6 @@
           :total: 11
           :crit: false
           :damage: 11
-        :message: Miss!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -989,7 +931,6 @@
           :total: 9
           :crit: false
           :damage: 10
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -1013,7 +954,6 @@
           :total: 10
           :crit: false
           :damage: 7
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -1028,7 +968,6 @@
           :total: 13
           :crit: false
           :damage: 10
-        :message: Miss!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -1043,7 +982,6 @@
           :total: 16
           :crit: false
           :damage: 5
-        :message: Hit!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -1063,7 +1001,6 @@
         :amount: 9
         :hp_before: 60
         :hp_after: 60
-        :message: Campeão heals 9 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -1097,7 +1034,6 @@
           :total: 12
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1112,7 +1048,6 @@
           :total: 11
           :crit: false
           :damage: 12
-        :message: Miss!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -1134,8 +1069,6 @@
         :amount: 14
         :hp_before: 36
         :hp_after: 22
-        :message: Mestre de Batalha takes 14 fire damage (8d6). Mestre de Batalha
-          succeeds the dexterity save (DC 17).
         :roll_outcome:
           :expression: 8d6
           :resolved_expression: 8d6
@@ -1168,7 +1101,6 @@
           :total: 24
           :crit: false
           :damage: 10
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1183,7 +1115,6 @@
           :total: 21
           :crit: false
           :damage: 3
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1198,7 +1129,6 @@
           :total: 25
           :crit: false
           :damage: 8
-        :message: Hit!
       :bonus: true
       :gambit: aleatório
     - :round: 2
@@ -1218,8 +1148,6 @@
         :amount: 2
         :hp_before: 1
         :hp_after: 0
-        :message: 'Mestre de Batalha takes 2 cold damage (1d8). Spell attack 25 vs
-          AC 19: hit.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -1240,23 +1168,18 @@
   :draw: false
   :outcome: :victory
 3:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 3
+  :initiative:
+  - :actor_id: Campeão
+    :natural: 11
+    :total: 13
+  - :actor_id: Mestre de Batalha
+    :natural: 9
+    :total: 10
+  - :actor_id: Cavaleiro Arcano
+    :natural: 4
+    :total: 6
   :round_log:
   - :round: 1
     :turns:
@@ -1282,7 +1205,6 @@
           :total: 7
           :crit: false
           :damage: 11
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1297,7 +1219,6 @@
           :total: 26
           :crit: true
           :damage: 11
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -1321,7 +1242,6 @@
           :total: 18
           :crit: false
           :damage: 7
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1336,7 +1256,6 @@
           :total: 16
           :crit: false
           :damage: 8
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -1356,7 +1275,6 @@
         :amount: 21
         :hp_before: 25
         :hp_after: 36
-        :message: Mestre de Batalha heals 21 hit points (1d10+15).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+15
@@ -1391,7 +1309,6 @@
           :total: 12
           :crit: false
           :damage: 4
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -1403,7 +1320,6 @@
           :amount: 7
           :hp_before: 49
           :hp_after: 42
-          :message: Campeão takes 7 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -1422,7 +1338,6 @@
           :total: 18
           :crit: false
           :damage: 11
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -1437,7 +1352,6 @@
           :total: 23
           :crit: false
           :damage: 10
-        :message: Hit!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -1457,8 +1371,6 @@
         :amount: 27
         :hp_before: 36
         :hp_after: 9
-        :message: Mestre de Batalha takes 27 fire damage (8d6). Mestre de Batalha
-          fails the dexterity save (DC 17).
         :roll_outcome:
           :expression: 8d6
           :resolved_expression: 8d6
@@ -1491,7 +1403,6 @@
           :total: 8
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1506,7 +1417,6 @@
           :total: 17
           :crit: false
           :damage: 3
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1521,7 +1431,6 @@
           :total: 14
           :crit: false
           :damage: 3
-        :message: Miss!
       :bonus: true
       :gambit: aleatório
     - :round: 1
@@ -1541,8 +1450,6 @@
         :amount: 2
         :hp_before: 9
         :hp_after: 7
-        :message: 'Mestre de Batalha takes 2 fire damage (1d10). Spell attack 21 vs
-          AC 19: hit.'
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -1579,7 +1486,6 @@
         :amount: 6
         :hp_before: 32
         :hp_after: 38
-        :message: Campeão heals 6 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -1614,7 +1520,6 @@
           :total: 11
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -1626,7 +1531,6 @@
           :amount: 8
           :hp_before: 29
           :hp_after: 21
-          :message: Campeão takes 8 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -1645,7 +1549,6 @@
           :total: 23
           :crit: false
           :damage: 9
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -1660,7 +1563,6 @@
           :total: 20
           :crit: false
           :damage: 8
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 3
@@ -1684,7 +1586,6 @@
           :total: 7
           :crit: false
           :damage: 3
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1699,7 +1600,6 @@
           :total: 16
           :crit: false
           :damage: 5
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1714,7 +1614,6 @@
           :total: 12
           :crit: false
           :damage: 3
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 3
@@ -1733,8 +1632,6 @@
         :amount: 0
         :hp_before: 7
         :hp_after: 7
-        :message: 'Mestre de Batalha takes 0 force damage (3d8). Spell attack 17 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 3d8
           :resolved_expression: 3d8
@@ -1776,7 +1673,6 @@
           :total: 8
           :crit: false
           :damage: 7
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1791,7 +1687,6 @@
           :total: 8
           :crit: false
           :damage: 11
-        :message: Miss!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -1815,7 +1710,6 @@
           :total: 16
           :crit: false
           :damage: 8
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -1830,7 +1724,6 @@
           :total: 9
           :crit: false
           :damage: 4
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -1845,7 +1738,6 @@
           :total: 22
           :crit: false
           :damage: 4
-        :message: Hit!
       :gambit: aleatório
     - :round: 3
       :turn: 3
@@ -1864,8 +1756,6 @@
         :amount: 3
         :hp_before: 7
         :hp_after: 4
-        :message: 'Mestre de Batalha takes 3 cold damage (1d8). Spell attack 26 vs
-          AC 19: hit.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -1904,29 +1794,23 @@
           :total: 25
           :crit: false
           :damage: 6
-        :message: Hit!
       :bonus: true
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 4:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 3
+  :initiative:
+  - :actor_id: Campeão
+    :natural: 15
+    :total: 17
+  - :actor_id: Cavaleiro Arcano
+    :natural: 6
+    :total: 8
+  - :actor_id: Mestre de Batalha
+    :natural: 2
+    :total: 3
   :round_log:
   - :round: 1
     :turns:
@@ -1952,7 +1836,6 @@
           :total: 15
           :crit: false
           :damage: 13
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -1967,7 +1850,6 @@
           :total: 15
           :crit: false
           :damage: 8
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -1991,7 +1873,6 @@
           :total: 16
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2006,7 +1887,6 @@
           :total: 14
           :crit: false
           :damage: 11
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -2026,8 +1906,6 @@
         :amount: 0
         :hp_before: 36
         :hp_after: 36
-        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 18 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -2066,7 +1944,6 @@
           :total: 25
           :crit: false
           :damage: 7
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2081,7 +1958,6 @@
           :total: 13
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2096,7 +1972,6 @@
           :total: 17
           :crit: false
           :damage: 7
-        :message: Miss!
       :bonus: true
       :gambit: aleatório
     - :round: 1
@@ -2121,7 +1996,6 @@
           :total: 10
           :crit: false
           :damage: 3
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2136,7 +2010,6 @@
           :total: 16
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2151,7 +2024,6 @@
           :total: 13
           :crit: false
           :damage: 3
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -2176,7 +2048,6 @@
           :total: 8
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -2191,7 +2062,6 @@
           :total: 14
           :crit: false
           :damage: 5
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -2206,7 +2076,6 @@
           :total: 8
           :crit: false
           :damage: 11
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 3
@@ -2230,7 +2099,6 @@
           :total: 6
           :crit: false
           :damage: 12
-        :message: Miss!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -2245,7 +2113,6 @@
           :total: 25
           :crit: true
           :damage: 7
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -2260,7 +2127,6 @@
           :total: 6
           :crit: false
           :damage: 7
-        :message: Miss!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -2282,7 +2148,6 @@
         :amount: 8
         :hp_before: 60
         :hp_after: 60
-        :message: Campeão heals 8 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -2316,7 +2181,6 @@
           :total: 26
           :crit: true
           :damage: 18
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2331,7 +2195,6 @@
           :total: 9
           :crit: false
           :damage: 10
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2346,7 +2209,6 @@
           :total: 25
           :crit: false
           :damage: 4
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -2365,8 +2227,6 @@
         :amount: 6
         :hp_before: 7
         :hp_after: 1
-        :message: 'Mestre de Batalha takes 6 force damage (3d8). Spell attack 26 vs
-          AC 19: hit.'
         :roll_outcome:
           :expression: 3d8
           :resolved_expression: 3d8
@@ -2404,7 +2264,6 @@
           :amount: 3
           :hp_before: 49
           :hp_after: 46
-          :message: Campeão takes 3 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -2423,7 +2282,6 @@
           :total: 22
           :crit: false
           :damage: 11
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -2438,7 +2296,6 @@
           :total: 9
           :crit: false
           :damage: 11
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -2453,7 +2310,6 @@
           :total: 24
           :crit: false
           :damage: 10
-        :message: Hit!
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -2479,7 +2335,6 @@
           :total: 14
           :crit: false
           :damage: 11
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2494,7 +2349,6 @@
           :total: 17
           :crit: false
           :damage: 13
-        :message: Miss!
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -2513,8 +2367,6 @@
         :amount: 31
         :hp_before: 1
         :hp_after: 0
-        :message: Mestre de Batalha takes 31 fire damage (8d6). Mestre de Batalha
-          fails the dexterity save (DC 17).
         :roll_outcome:
           :expression: 8d6
           :resolved_expression: 8d6
@@ -2538,23 +2390,18 @@
   :draw: false
   :outcome: :victory
 5:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Cavaleiro Arcano
+    :natural: 15
+    :total: 17
+  - :actor_id: Mestre de Batalha
+    :natural: 16
+    :total: 17
+  - :actor_id: Campeão
+    :natural: 4
+    :total: 6
   :round_log:
   - :round: 1
     :turns:
@@ -2575,7 +2422,6 @@
         :amount: 25
         :hp_before: 36
         :hp_after: 36
-        :message: Cavaleiro Arcano heals 25 hit points (1d10+18).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+18
@@ -2609,7 +2455,6 @@
           :total: 23
           :crit: false
           :damage: 4
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2624,7 +2469,6 @@
           :total: 15
           :crit: false
           :damage: 7
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2639,7 +2483,6 @@
           :total: 14
           :crit: false
           :damage: 9
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -2659,7 +2502,6 @@
         :amount: 16
         :hp_before: 32
         :hp_after: 36
-        :message: Mestre de Batalha heals 16 hit points (1d10+15).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+15
@@ -2693,7 +2535,6 @@
           :total: 22
           :crit: false
           :damage: 11
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -2708,7 +2549,6 @@
           :total: 18
           :crit: false
           :damage: 5
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -2723,7 +2563,6 @@
           :total: 13
           :crit: false
           :damage: 4
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -2743,7 +2582,6 @@
         :amount: 7
         :hp_before: 49
         :hp_after: 56
-        :message: Campeão heals 7 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -2777,7 +2615,6 @@
           :total: 22
           :crit: false
           :damage: 12
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2792,7 +2629,6 @@
           :total: 25
           :crit: true
           :damage: 19
-        :message: Hit!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -2819,7 +2655,6 @@
           :total: 16
           :crit: false
           :damage: 5
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2834,7 +2669,6 @@
           :total: 16
           :crit: false
           :damage: 4
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2849,7 +2683,6 @@
           :total: 8
           :crit: false
           :damage: 5
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 1
@@ -2873,7 +2706,6 @@
           :total: 14
           :crit: false
           :damage: 3
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2888,29 +2720,23 @@
           :total: 21
           :crit: false
           :damage: 8
-        :message: Hit!
       :extra: true
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 6:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 1
+  :initiative:
+  - :actor_id: Campeão
+    :natural: 11
+    :total: 13
+  - :actor_id: Cavaleiro Arcano
+    :natural: 10
+    :total: 12
+  - :actor_id: Mestre de Batalha
+    :natural: 4
+    :total: 5
   :round_log:
   - :round: 1
     :turns:
@@ -2936,7 +2762,6 @@
           :total: 17
           :crit: false
           :damage: 11
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -2951,7 +2776,6 @@
           :total: 22
           :crit: false
           :damage: 8
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -2970,7 +2794,6 @@
         :amount: 6
         :hp_before: 60
         :hp_after: 60
-        :message: Campeão heals 6 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -3005,7 +2828,6 @@
           :total: 8
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3020,7 +2842,6 @@
           :total: 20
           :crit: false
           :damage: 4
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3035,7 +2856,6 @@
           :total: 22
           :crit: false
           :damage: 4
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -3054,8 +2874,6 @@
         :amount: 30
         :hp_before: 20
         :hp_after: 0
-        :message: Mestre de Batalha takes 30 fire damage (8d6). Mestre de Batalha
-          fails the dexterity save (DC 17).
         :roll_outcome:
           :expression: 8d6
           :resolved_expression: 8d6
@@ -3070,23 +2888,18 @@
   :draw: false
   :outcome: :victory
 7:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 2
+  :initiative:
+  - :actor_id: Campeão
+    :natural: 16
+    :total: 18
+  - :actor_id: Cavaleiro Arcano
+    :natural: 5
+    :total: 7
+  - :actor_id: Mestre de Batalha
+    :natural: 4
+    :total: 5
   :round_log:
   - :round: 1
     :turns:
@@ -3107,7 +2920,6 @@
         :amount: 9
         :hp_before: 60
         :hp_after: 60
-        :message: Campeão heals 9 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -3141,7 +2953,6 @@
           :total: 14
           :crit: false
           :damage: 10
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3156,7 +2967,6 @@
           :total: 21
           :crit: false
           :damage: 13
-        :message: Hit!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -3181,7 +2991,6 @@
           :total: 15
           :crit: false
           :damage: 4
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3196,7 +3005,6 @@
           :total: 21
           :crit: false
           :damage: 5
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3211,7 +3019,6 @@
           :total: 15
           :crit: false
           :damage: 10
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -3230,8 +3037,6 @@
         :amount: 0
         :hp_before: 18
         :hp_after: 18
-        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 16 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -3271,7 +3076,6 @@
           :total: 22
           :crit: false
           :damage: 11
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -3286,7 +3090,6 @@
           :total: 18
           :crit: false
           :damage: 4
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -3301,7 +3104,6 @@
           :total: 17
           :crit: false
           :damage: 11
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 3
@@ -3325,7 +3127,6 @@
           :total: 12
           :crit: false
           :damage: 7
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -3340,7 +3141,6 @@
           :total: 18
           :crit: false
           :damage: 9
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -3355,7 +3155,6 @@
           :total: 22
           :crit: false
           :damage: 4
-        :message: Hit!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -3382,7 +3181,6 @@
           :total: 9
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3397,7 +3195,6 @@
           :total: 16
           :crit: false
           :damage: 12
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -3416,7 +3213,6 @@
         :amount: 25
         :hp_before: 14
         :hp_after: 36
-        :message: Cavaleiro Arcano heals 25 hit points (1d10+18).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+18
@@ -3445,8 +3241,6 @@
         :amount: 23
         :hp_before: 18
         :hp_after: 0
-        :message: Mestre de Batalha takes 23 fire damage (8d6). Mestre de Batalha
-          fails the dexterity save (DC 17).
         :roll_outcome:
           :expression: 8d6
           :resolved_expression: 8d6
@@ -3461,23 +3255,18 @@
   :draw: false
   :outcome: :victory
 8:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 3
+  :initiative:
+  - :actor_id: Cavaleiro Arcano
+    :natural: 18
+    :total: 20
+  - :actor_id: Mestre de Batalha
+    :natural: 10
+    :total: 11
+  - :actor_id: Campeão
+    :natural: 4
+    :total: 6
   :round_log:
   - :round: 1
     :turns:
@@ -3498,8 +3287,6 @@
         :amount: 0
         :hp_before: 36
         :hp_after: 36
-        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 15 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -3538,7 +3325,6 @@
           :total: 15
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3553,7 +3339,6 @@
           :total: 15
           :crit: false
           :damage: 10
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3568,7 +3353,6 @@
           :total: 23
           :crit: false
           :damage: 8
-        :message: Hit!
       :bonus: true
       :gambit: aleatório
     - :round: 1
@@ -3588,7 +3372,6 @@
         :amount: 24
         :hp_before: 36
         :hp_after: 36
-        :message: Cavaleiro Arcano heals 24 hit points (1d10+18).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+18
@@ -3618,7 +3401,6 @@
         :amount: 17
         :hp_before: 28
         :hp_after: 36
-        :message: Mestre de Batalha heals 17 hit points (1d10+15).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+15
@@ -3652,7 +3434,6 @@
           :total: 25
           :crit: true
           :damage: 23
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -3667,7 +3448,6 @@
           :total: 21
           :crit: false
           :damage: 6
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -3682,7 +3462,6 @@
           :total: 24
           :crit: false
           :damage: 10
-        :message: Hit!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -3702,7 +3481,6 @@
         :amount: 14
         :hp_before: 27
         :hp_after: 41
-        :message: Campeão heals 14 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -3736,7 +3514,6 @@
           :total: 16
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3751,7 +3528,6 @@
           :total: 11
           :crit: false
           :damage: 11
-        :message: Miss!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -3778,7 +3554,6 @@
           :total: 14
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3793,7 +3568,6 @@
           :total: 17
           :crit: false
           :damage: 4
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3808,7 +3582,6 @@
           :total: 9
           :crit: false
           :damage: 9
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 1
@@ -3827,8 +3600,6 @@
         :amount: 33
         :hp_before: 36
         :hp_after: 3
-        :message: Mestre de Batalha takes 33 fire damage (8d6). Mestre de Batalha
-          fails the dexterity save (DC 17).
         :roll_outcome:
           :expression: 8d6
           :resolved_expression: 8d6
@@ -3860,7 +3631,6 @@
           :amount: 8
           :hp_before: 26
           :hp_after: 18
-          :message: Cavaleiro Arcano takes 8 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -3879,7 +3649,6 @@
           :total: 21
           :crit: false
           :damage: 4
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -3894,7 +3663,6 @@
           :total: 19
           :crit: false
           :damage: 6
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -3909,7 +3677,6 @@
           :total: 12
           :crit: false
           :damage: 11
-        :message: Miss!
       :gambit: aleatório
     - :round: 2
       :turn: 3
@@ -3933,7 +3700,6 @@
           :total: 11
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3948,7 +3714,6 @@
           :total: 13
           :crit: false
           :damage: 9
-        :message: Miss!
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -3974,7 +3739,6 @@
           :total: 11
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -3989,7 +3753,6 @@
           :total: 18
           :crit: false
           :damage: 5
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4004,28 +3767,22 @@
           :total: 25
           :crit: false
           :damage: 9
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 9:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 1
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 18
+    :total: 19
+  - :actor_id: Cavaleiro Arcano
+    :natural: 9
+    :total: 11
+  - :actor_id: Campeão
+    :natural: 2
+    :total: 4
   :round_log:
   - :round: 1
     :turns:
@@ -4052,7 +3809,6 @@
           :total: 7
           :crit: false
           :damage: 4
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -4064,7 +3820,6 @@
           :amount: 3
           :hp_before: 48
           :hp_after: 45
-          :message: Campeão takes 3 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -4083,7 +3838,6 @@
           :total: 20
           :crit: false
           :damage: 12
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -4098,7 +3852,6 @@
           :total: 16
           :crit: false
           :damage: 12
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -4120,7 +3873,6 @@
           :amount: 7
           :hp_before: 39
           :hp_after: 32
-          :message: Campeão takes 7 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -4139,7 +3891,6 @@
           :total: 18
           :crit: false
           :damage: 6
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -4154,7 +3905,6 @@
           :total: 7
           :crit: false
           :damage: 12
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -4169,7 +3919,6 @@
           :total: 9
           :crit: false
           :damage: 9
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -4194,7 +3943,6 @@
           :total: 26
           :crit: true
           :damage: 16
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4209,7 +3957,6 @@
           :total: 16
           :crit: false
           :damage: 3
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4224,7 +3971,6 @@
           :total: 24
           :crit: false
           :damage: 10
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -4243,8 +3989,6 @@
         :amount: 0
         :hp_before: 10
         :hp_after: 10
-        :message: 'Mestre de Batalha takes 0 force damage (3d8). Spell attack 18 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 3d8
           :resolved_expression: 3d8
@@ -4279,7 +4023,6 @@
         :amount: 7
         :hp_before: 32
         :hp_after: 39
-        :message: Campeão heals 7 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -4313,29 +4056,23 @@
           :total: 20
           :crit: false
           :damage: 11
-        :message: Hit!
       :extra: true
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 10:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 1
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 16
+    :total: 17
+  - :actor_id: Campeão
+    :natural: 10
+    :total: 12
+  - :actor_id: Cavaleiro Arcano
+    :natural: 5
+    :total: 7
   :round_log:
   - :round: 1
     :turns:
@@ -4356,7 +4093,6 @@
         :amount: 16
         :hp_before: 36
         :hp_after: 36
-        :message: Mestre de Batalha heals 16 hit points (1d10+15).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+15
@@ -4388,7 +4124,6 @@
           :amount: 6
           :hp_before: 47
           :hp_after: 41
-          :message: Campeão takes 6 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -4407,7 +4142,6 @@
           :total: 23
           :crit: false
           :damage: 13
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -4422,7 +4156,6 @@
           :total: 22
           :crit: false
           :damage: 5
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -4437,7 +4170,6 @@
           :total: 14
           :crit: false
           :damage: 13
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -4457,7 +4189,6 @@
         :amount: 6
         :hp_before: 41
         :hp_after: 47
-        :message: Campeão heals 6 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -4491,7 +4222,6 @@
           :total: 17
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4506,7 +4236,6 @@
           :total: 11
           :crit: false
           :damage: 9
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -4526,8 +4255,6 @@
         :amount: 5
         :hp_before: 36
         :hp_after: 31
-        :message: 'Mestre de Batalha takes 5 cold damage (1d8). Spell attack 26 vs
-          AC 19: hit.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -4566,7 +4293,6 @@
           :total: 22
           :crit: false
           :damage: 6
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4581,7 +4307,6 @@
           :total: 18
           :crit: false
           :damage: 5
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4596,7 +4321,6 @@
           :total: 8
           :crit: false
           :damage: 3
-        :message: Miss!
       :bonus: true
       :gambit: aleatório
     - :round: 1
@@ -4616,8 +4340,6 @@
         :amount: 35
         :hp_before: 25
         :hp_after: 0
-        :message: Mestre de Batalha takes 35 fire damage (8d6). Mestre de Batalha
-          fails the dexterity save (DC 17).
         :roll_outcome:
           :expression: 8d6
           :resolved_expression: 8d6
@@ -4632,23 +4354,18 @@
   :draw: false
   :outcome: :victory
 11:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 3
+  :initiative:
+  - :actor_id: Cavaleiro Arcano
+    :natural: 18
+    :total: 20
+  - :actor_id: Campeão
+    :natural: 17
+    :total: 19
+  - :actor_id: Mestre de Batalha
+    :natural: 14
+    :total: 15
   :round_log:
   - :round: 1
     :turns:
@@ -4674,7 +4391,6 @@
           :total: 19
           :crit: false
           :damage: 4
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4689,7 +4405,6 @@
           :total: 14
           :crit: false
           :damage: 5
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4704,7 +4419,6 @@
           :total: 20
           :crit: false
           :damage: 7
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -4723,8 +4437,6 @@
         :amount: 6
         :hp_before: 25
         :hp_after: 19
-        :message: 'Mestre de Batalha takes 6 cold damage (1d8). Spell attack 26 vs
-          AC 19: hit.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -4759,7 +4471,6 @@
         :amount: 6
         :hp_before: 60
         :hp_after: 60
-        :message: Campeão heals 6 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -4793,7 +4504,6 @@
           :total: 20
           :crit: false
           :damage: 10
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4808,7 +4518,6 @@
           :total: 11
           :crit: false
           :damage: 8
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -4828,7 +4537,6 @@
         :amount: 17
         :hp_before: 9
         :hp_after: 26
-        :message: Mestre de Batalha heals 17 hit points (1d10+15).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+15
@@ -4862,7 +4570,6 @@
           :total: 16
           :crit: false
           :damage: 9
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -4877,7 +4584,6 @@
           :total: 13
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -4892,7 +4598,6 @@
           :total: 23
           :crit: false
           :damage: 12
-        :message: Hit!
       :extra: true
       :gambit: aleatório
   - :round: 2
@@ -4919,7 +4624,6 @@
           :total: 24
           :crit: false
           :damage: 6
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4934,7 +4638,6 @@
           :total: 13
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4949,7 +4652,6 @@
           :total: 25
           :crit: false
           :damage: 5
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 1
@@ -4973,7 +4675,6 @@
           :total: 7
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -4988,7 +4689,6 @@
           :total: 22
           :crit: false
           :damage: 3
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5003,7 +4703,6 @@
           :total: 13
           :crit: false
           :damage: 4
-        :message: Miss!
       :extra: true
       :gambit: aleatório
     - :round: 2
@@ -5028,7 +4727,6 @@
           :total: 18
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5043,7 +4741,6 @@
           :total: 19
           :crit: false
           :damage: 11
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 3
@@ -5065,7 +4762,6 @@
           :amount: 8
           :hp_before: 37
           :hp_after: 29
-          :message: Campeão takes 8 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -5084,7 +4780,6 @@
           :total: 20
           :crit: false
           :damage: 11
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -5099,7 +4794,6 @@
           :total: 21
           :crit: false
           :damage: 4
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -5114,7 +4808,6 @@
           :total: 14
           :crit: false
           :damage: 4
-        :message: Miss!
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -5135,8 +4828,6 @@
         :amount: 0
         :hp_before: 1
         :hp_after: 1
-        :message: 'Mestre de Batalha takes 0 force damage (3d8). Spell attack 15 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 3d8
           :resolved_expression: 3d8
@@ -5175,7 +4866,6 @@
           :total: 10
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5190,7 +4880,6 @@
           :total: 8
           :crit: false
           :damage: 3
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5205,7 +4894,6 @@
           :total: 10
           :crit: false
           :damage: 3
-        :message: Miss!
       :bonus: true
       :gambit: aleatório
     - :round: 3
@@ -5230,28 +4918,22 @@
           :total: 24
           :crit: false
           :damage: 10
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 12:
-  :gambits:
-    :party_one:
-    - :id: Campeão
-      :name: Campeão
-      :mode: aleatório
-      :rules: []
-    - :id: Cavaleiro Arcano
-      :name: Cavaleiro Arcano
-      :mode: aleatório
-      :rules: []
-    :party_two:
-    - :id: Mestre de Batalha
-      :name: Mestre de Batalha
-      :mode: aleatório
-      :rules: []
   :winning_party: :party_one
   :total_rounds: 5
+  :initiative:
+  - :actor_id: Mestre de Batalha
+    :natural: 18
+    :total: 19
+  - :actor_id: Campeão
+    :natural: 12
+    :total: 14
+  - :actor_id: Cavaleiro Arcano
+    :natural: 7
+    :total: 9
   :round_log:
   - :round: 1
     :turns:
@@ -5278,7 +4960,6 @@
           :total: 8
           :crit: false
           :damage: 7
-        :message: Miss!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -5293,7 +4974,6 @@
           :total: 9
           :crit: false
           :damage: 4
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -5305,7 +4985,6 @@
           :amount: 6
           :hp_before: 52
           :hp_after: 46
-          :message: Campeão takes 6 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -5324,7 +5003,6 @@
           :total: 23
           :crit: false
           :damage: 8
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -5348,7 +5026,6 @@
           :total: 19
           :crit: false
           :damage: 13
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -5363,7 +5040,6 @@
           :total: 8
           :crit: false
           :damage: 10
-        :message: Miss!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -5378,7 +5054,6 @@
           :total: 16
           :crit: false
           :damage: 4
-        :message: Hit!
       :extra: true
       :gambit: aleatório
     - :round: 1
@@ -5403,7 +5078,6 @@
           :total: 15
           :crit: false
           :damage: 10
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5418,7 +5092,6 @@
           :total: 20
           :crit: false
           :damage: 8
-        :message: Hit!
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -5437,7 +5110,6 @@
         :amount: 15
         :hp_before: 33
         :hp_after: 48
-        :message: Campeão heals 15 hit points (1d10+5).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+5
@@ -5472,7 +5144,6 @@
           :total: 10
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5487,7 +5158,6 @@
           :total: 11
           :crit: false
           :damage: 6
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5502,7 +5172,6 @@
           :total: 8
           :crit: false
           :damage: 9
-        :message: Miss!
       :gambit: aleatório
     - :round: 1
       :turn: 3
@@ -5521,8 +5190,6 @@
         :amount: 0
         :hp_before: 28
         :hp_after: 28
-        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 10 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -5562,7 +5229,6 @@
           :amount: 5
           :hp_before: 44
           :hp_after: 39
-          :message: Campeão takes 5 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -5581,7 +5247,6 @@
           :total: 24
           :crit: false
           :damage: 4
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -5596,7 +5261,6 @@
           :total: 12
           :crit: false
           :damage: 13
-        :message: Miss!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -5611,7 +5275,6 @@
           :total: 19
           :crit: false
           :damage: 4
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -5635,7 +5298,6 @@
           :total: 7
           :crit: false
           :damage: 12
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5650,7 +5312,6 @@
           :total: 22
           :crit: false
           :damage: 7
-        :message: Hit!
       :gambit: aleatório
     - :round: 2
       :turn: 3
@@ -5669,8 +5330,6 @@
         :amount: 0
         :hp_before: 21
         :hp_after: 21
-        :message: 'Mestre de Batalha takes 0 cold damage (1d8). Spell attack 11 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
@@ -5709,7 +5368,6 @@
           :total: 11
           :crit: false
           :damage: 3
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5724,7 +5382,6 @@
           :total: 11
           :crit: false
           :damage: 4
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5739,7 +5396,6 @@
           :total: 18
           :crit: false
           :damage: 7
-        :message: Miss!
       :bonus: true
       :gambit: aleatório
     - :round: 2
@@ -5759,8 +5415,6 @@
         :amount: 0
         :hp_before: 21
         :hp_after: 21
-        :message: 'Mestre de Batalha takes 0 fire damage (1d10). Spell attack 15 vs
-          AC 19: miss.'
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -5797,7 +5451,6 @@
         :amount: 19
         :hp_before: 21
         :hp_after: 36
-        :message: Mestre de Batalha heals 19 hit points (1d10+15).
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+15
@@ -5831,7 +5484,6 @@
           :total: 11
           :crit: false
           :damage: 11
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5846,7 +5498,6 @@
           :total: 18
           :crit: false
           :damage: 11
-        :message: Miss!
       :gambit: aleatório
     - :round: 3
       :turn: 3
@@ -5865,8 +5516,6 @@
         :amount: 1
         :hp_before: 36
         :hp_after: 35
-        :message: 'Mestre de Batalha takes 1 fire damage (1d10). Spell attack 21 vs
-          AC 19: hit.'
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -5905,7 +5554,6 @@
           :total: 17
           :crit: false
           :damage: 9
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5920,7 +5568,6 @@
           :total: 13
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -5935,7 +5582,6 @@
           :total: 10
           :crit: false
           :damage: 5
-        :message: Miss!
       :bonus: true
       :gambit: aleatório
   - :round: 4
@@ -5960,7 +5606,6 @@
           :amount: 4
           :hp_before: 20
           :hp_after: 16
-          :message: Cavaleiro Arcano takes 4 bludgeoning damage (1d8).
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -5979,7 +5624,6 @@
           :total: 16
           :crit: false
           :damage: 8
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -5994,7 +5638,6 @@
           :total: 17
           :crit: false
           :damage: 5
-        :message: Hit!
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -6009,7 +5652,6 @@
           :total: 15
           :crit: false
           :damage: 9
-        :message: Miss!
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -6033,7 +5675,6 @@
           :total: 26
           :crit: true
           :damage: 17
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -6048,7 +5689,6 @@
           :total: 18
           :crit: false
           :damage: 6
-        :message: Miss!
       :gambit: aleatório
     - :round: 4
       :turn: 3
@@ -6072,7 +5712,6 @@
           :total: 18
           :crit: false
           :damage: 5
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -6087,7 +5726,6 @@
           :total: 20
           :crit: false
           :damage: 9
-        :message: Hit!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -6102,7 +5740,6 @@
           :total: 13
           :crit: false
           :damage: 5
-        :message: Miss!
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -6128,7 +5765,6 @@
           :total: 25
           :crit: true
           :damage: 9
-        :message: Hit!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -6143,7 +5779,6 @@
           :total: 12
           :crit: false
           :damage: 8
-        :message: Miss!
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -6158,7 +5793,6 @@
           :total: 6
           :crit: false
           :damage: 4
-        :message: Miss!
       :gambit: aleatório
     - :round: 5
       :turn: 2
@@ -6182,7 +5816,6 @@
           :total: 12
           :crit: false
           :damage: 10
-        :message: Miss!
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
@@ -6197,7 +5830,6 @@
           :total: 23
           :crit: false
           :damage: 9
-        :message: Hit!
       :gambit: aleatório
   :draw: false
   :outcome: :victory

@@ -5,7 +5,7 @@ description: The design decisions behind the FFXII-style gambits, grouped by sub
 tags: [combat, gambits]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-15T00:00:00Z
+  at: 2026-10-17T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T20:38:56Z }
 sources:
   - id: issue-41
@@ -102,7 +102,7 @@ Inventory of the Fighter's existing features (the only class with features today
 | "Repetir com ajustes" (rerun)? | Does not copy the gambits; the new batch snapshots the characters' current rules. | Gambits are not editable in the experiment builder, only on the character; repeating after editing them is the point. |
 | Shape of the per-combatant section? | Per side, per combatant: `mode` ("gambits" or "aleatório") and every rule in priority order with position, on/off, target, condition, action and the full readable rule. All-disabled rules are listed with mode "aleatório". | The task asks for target, condition, action and on/off per rule; the mode makes the random fallback explicit. |
 | Which turn entries carry the fired gambit? | Every decision entry: `{ position, rule }`, `"nenhum aplicável: parado"` or `"aleatório"`. A War Magic bonus inherits the gambit of the spell turn that triggered it; turn-start/turn-end passives carry none. | Passives and the bonus are not decisions; inheriting keeps the bonus traceable to its rule. |
-| Where does the section sit in each simulation file? | Right after `simulation`, `seed` and `elapsed_ms`, before `round_log`. | "No começo" of the file while keeping the run's identity first. |
+| Where does the section sit in the log? | Once, in the header of the batch's single JSON log (since 2026-10-17, phase 2.1 of the DDD refactor), under each combatant of `parties` next to its frozen name and settings; the simulations no longer repeat it. (Before, every `simulation-NNNN.json` of a zip opened with it, right after `simulation`, `seed` and `elapsed_ms`.) | The section comes from the batch's copy, identical for every run: repeating it per simulation only grew the file. |
 
 # Gambits screen
 
@@ -154,7 +154,6 @@ Dueling, knows Disarming Attack, Distracting Strike and Precision Attack).
 
 - A tampered request can store a rule whose action is outside the character's options. It is consistent with "(indisponível)" rules and presets, and the simulator skips it.
 - The position writes hold a row lock (see "Concurrent writes to positions?") but no test exercises real concurrency.
-- The combatant's `name` in a batch log's gambits section is read from the database, so it is null once the character is deleted, like the `party_one`/`party_two` maps.
 
 [^issue-41]: Source: GitHub issue #41: gambit targets filtered by action, and an "Outro aliado" target
 

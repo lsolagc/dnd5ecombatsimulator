@@ -27,7 +27,7 @@ class SimulationBatchesController < ApplicationController
   end
 
   def logs
-    send_data @simulation_batch.logs_zip, filename: "simulacoes-batch-#{@simulation_batch.id}.zip", type: "application/zip"
+    send_data @simulation_batch.logs_json, filename: "simulacoes-batch-#{@simulation_batch.id}.json", type: "application/json"
   end
 
   private

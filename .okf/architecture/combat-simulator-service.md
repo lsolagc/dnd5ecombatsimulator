@@ -6,7 +6,7 @@ resource: app/services/combat_simulator_service.rb
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-15T00:00:00Z
+  at: 2026-10-17T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T19:06:20Z }
 sources:
   - id: combat-simulator-rb
@@ -45,6 +45,7 @@ result = CombatSimulatorService.new(
 # => {
 #   winning_party: :party_one | :party_two | nil,
 #   total_rounds: 6,
+#   initiative: [ { actor_id: 7, natural: 14, total: 16 }, ... ], # in the order they act
 #   round_log: [ { round: 1, turns: [ {...} ] }, ... ],
 #   draw: false,
 #   outcome: :victory | :draw | :max_rounds_reached
@@ -66,8 +67,11 @@ result = CombatSimulatorService.new(
 # Turn resolution
 
 Each living combatant, in initiative order (`Dice.d20(modifier:
-combatant.initiative)`, tie-broken by original array order), gets **one**
-action per turn:
+combatant.initiative)`, one roll per combatant in party order, tie-broken by
+that order), gets **one** action per turn. The rolls go to the result's
+`initiative` (`actor_id`, `natural`, `total`), in the order the combatants act;
+recording them draws nothing extra. Turn results carry no human-readable
+`message` (removed 2026-10-17: the structured fields already say it all):
 
 1. **Attack** is always available: a `Combat::CombatAction(source_type:
    :attack)` run by `Combat::ActionRunner.attack`, which makes
@@ -138,10 +142,11 @@ simulation and evaluated over `Gambit` objects (saved or not).
 
 **Log.** `gambits:` (optional, a batch's `gambit_settings`) makes the
 simulation run and log from that copy, rebuilding unsaved `Gambit`s. The result
-opens with `gambits: { party_one: [...], party_two: [...] }` — per combatant
-`id`, `name`, `mode` (`"gambits"`, or `"aleatório"` with no enabled rule) and
-every rule by priority (position, enabled, target, condition, action, rule).
-Every decision entry carries `gambit`: `{ position, rule }`,
+does not list the rules: a batch's log lists them once in its header, from the
+same copy, through `Gambit.log_section` (per combatant `mode`, `"gambits"` or
+`"aleatório"` with no enabled rule, and every rule by priority: position,
+enabled, target, condition, action, rule; see
+[simulation-batches.md](/architecture/simulation-batches.md)). Every decision entry carries `gambit`: `{ position, rule }`,
 `"nenhum aplicável: parado"` or `"aleatório"` (random choice and the automatic
 Action Surge); the War Magic bonus inherits its spell's, passives carry none.
 

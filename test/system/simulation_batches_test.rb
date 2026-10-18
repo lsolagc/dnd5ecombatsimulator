@@ -62,7 +62,7 @@ class SimulationBatchesTest < ApplicationSystemTestCase
     assert_equal 5, batch.simulation_runs.distinct.count(:seed), "every simulation gets its own seed"
     assert_equal({ "fire" => "R" }, batch.combatant_settings[player_characters(:aragorn).id.to_s]["defenses"])
     assert_equal 16, player_characters(:aragorn).reload.armor_class, "the character sheet is not changed"
-    assert_link "Baixar logs (JSON, .zip)"
+    assert_link "Baixar logs (JSON)"
   end
 
   test "a seeded experiment runs exactly one simulation, summarizes it and downloads its log" do
@@ -93,12 +93,11 @@ class SimulationBatchesTest < ApplicationSystemTestCase
     end
     page.save_screenshot(Rails.root.join("tmp/screenshots/simulation_batch_summary.png"))
 
-    files = download_zip(find_link("Baixar logs (JSON, .zip)")[:href])
-    assert_equal %w[ batch.json simulation-0001.json ], files.keys
-    assert_equal 42, files["simulation-0001.json"]["seed"]
-    assert_equal run.result["round_log"], files["simulation-0001.json"]["round_log"]
-    assert_equal 42, files["batch.json"]["seed"]
-    assert_equal 4, files["batch.json"]["combatant_settings"].size
+    log = download_json(find_link("Baixar logs (JSON)")[:href])
+    assert_equal [ [ 1, 42 ] ], log["simulations"].map { |simulation| simulation.values_at("simulation", "seed") }
+    assert_equal run.result["round_log"], log.dig("simulations", 0, "round_log")
+    assert_equal 42, log.dig("header", "batch", "seed")
+    assert_equal [ 2, 2 ], log.dig("header", "parties").values.map(&:size)
   end
 
   test "repeating an experiment brings back its combatants and parameters to tweak" do
@@ -225,17 +224,10 @@ class SimulationBatchesTest < ApplicationSystemTestCase
       ".sim-card[data-character-id='#{player_characters(fixture).id}']"
     end
 
-    # Fetches the link from the running app server and returns { entry name => parsed JSON }.
-    def download_zip(href)
+    # Fetches the link from the running app server and returns the parsed JSON.
+    def download_json(href)
       response = Net::HTTP.get_response(URI.join(page.current_url, href))
-      assert_equal "application/zip", response.content_type
-
-      files = {}
-      Zip::InputStream.open(StringIO.new(response.body)) do |zip|
-        while (entry = zip.get_next_entry)
-          files[entry.name] = JSON.parse(zip.read)
-        end
-      end
-      files
+      assert_equal "application/json", response.content_type
+      JSON.parse(response.body)
     end
 end

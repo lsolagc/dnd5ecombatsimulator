@@ -1,12 +1,12 @@
 ---
 type: Service
 title: Simulation batches — experiments running CombatSimulatorService N times in the background
-description: The SimulationBatch/SimulationRun models, SimulationRunJob (one per simulation, run in parallel by Solid Queue workers) and the simulation_batches screen that configure, run, poll, cancel and summarize up to 1000 seeded CombatSimulatorService combats, with a zipped JSON log download.
+description: The SimulationBatch/SimulationRun models, SimulationRunJob (one per simulation, run in parallel by Solid Queue workers) and the simulation_batches screen that configure, run, poll, cancel and summarize up to 1000 seeded CombatSimulatorService combats, with a single-JSON log download.
 resource: app/jobs/simulation_run_job.rb
 tags: [combat, ui]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-17T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:00:19Z }
 sources:
   - id: batch-model
@@ -51,17 +51,20 @@ between two sides of `PlayerCharacter`s and aggregates the results.[^batch-model
   `current_hit_points`); nothing in the combat path saves, so the sheet never
   changes. AC and attack bonus are the sheet's base values: passive bonuses
   such as the Defense or Archery fighting styles still stack on top.
+  The snapshot also freezes each character's `name` into its entry, once (a
+  missing name only, never rewritten, not even by `cancel!`'s `update!`), so
+  the log's header keeps the name the batch ran with.
   `combatants=` reads the form (`{ id => { side, current_hit_points, … } }`)
-  into the side arrays and settings; `rerun` copies combatants, settings,
-  count and seed into a new unsaved batch ("Repetir com ajustes").
+  into the side arrays and settings; `rerun` copies combatants, settings
+  (without the frozen names: the new batch freezes the current ones), count
+  and seed into a new unsaved batch ("Repetir com ajustes").
 - **`gambit_settings`** (jsonb, keyed by character id): a copy of each
   character's [gambits](/models/gambit.md) taken when the batch is created
   (missing keys only, never rewritten); every run is simulated from it and the
-  zip's `batch.json` and `simulation-NNNN.json` open with that per-side gambits
-  section, so editing a character later never changes an old log. `rerun` takes
-  the current rules. Each rule is copied with its readable texts (target,
-  condition, action, full rule), so renaming a feature later doesn't change the
-  log either; only the character's name is read from the database.
+  log's header lists it per combatant, so editing a character later never
+  changes an old log. `rerun` takes the current rules. Each rule is copied with
+  its readable texts (target, condition, action, full rule), so renaming a
+  feature later doesn't change the log either.
 - **`SimulationRun`**: one row per finished combat — its `seed`,
   `elapsed_ms`, `winning_party`, `outcome`, the full result (`round_log`
   included) as `jsonb`, and three metrics extracted at save time by
@@ -156,9 +159,19 @@ second since `started_at`, time left at that pace, "Interromper"). Once finished
 renders a headline ("Lado B venceu 52,0% dos combates"), a 100% win-rate bar
 (A / sem vencedor / B, with a legend carrying the numbers), tiles for
 healing done, wasted healing (also as a share of healing rolled), biggest
-round damage and average time, and "Baixar logs" (`#logs`): a zip (rubyzip)
-with `batch.json` (setup, `combatant_settings`, summary) and one
-`simulation-NNNN.json` per run, each carrying its `seed`.
+round damage and average time, and "Baixar logs (JSON)" (`#logs`):
+`SimulationBatch#logs_json`, one pretty `simulacoes-batch-<id>.json`
+(`application/json`). It opens with a `header`: `batch` (`id`, `status`,
+`requested_count`, `seed`, `summary`) and `parties` (`party_one`/`party_two`,
+per combatant `id`, the frozen `name`, `settings` (its `combatant_settings`
+entry without the name) and `gambits` (`mode`, `rules`, from `gambit_settings`
+through `Gambit.log_section`)). Then `simulations`, one per run in id order:
+`simulation` (1..n), `seed`, `elapsed_ms`, `outcome`, `winning_party`,
+`total_rounds`, `draw`, `initiative`, `round_log`. jsonb does not keep key
+order, so the export rebuilds the hashes in that order. Runs saved before
+2026-10-17 carry their old keys (a `gambits` section, `message`s, no
+`initiative`) after the known ones, and their batches no frozen names (`name:
+null`); they are kept as they are, not migrated.
 
 # Verification
 
@@ -166,7 +179,7 @@ with `batch.json` (setup, `combatant_settings`, summary) and one
 several characters per side with edited parameters (and the sheet left
 unchanged), repeating an experiment and restoring the sheet values, the
 one-side-only picker, the 1000 and max-HP caps (blocked by the browser), the seed
-locking the count, a seeded batch summarized and its zip downloaded from the
+locking the count, a seeded batch summarized and its JSON log downloaded from the
 running server, the progress frame picking up a run created after the page
 loaded, and cancellation.[^batch-system-test] System tests do not run the job
 while the page is open (`perform_enqueued_jobs` runs it synchronously), so
