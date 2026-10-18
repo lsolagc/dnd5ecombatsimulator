@@ -10,14 +10,17 @@ class CombatSimulatorService
   IDLE_GAMBIT = "nenhum aplicável: parado"
 
   # abort_if: optional callable checked before every round (e.g. a batch cancelled from the UI).
+  # party_one, party_two: the character sheets; each fights as a Combat::Participant (built in initialize_state),
+  # so the sheets are only read.
   # gambits: optional copy of the rules, { character id (string) => [Gambit#snapshot, ...] } (a batch's
   # gambit_settings); the simulation runs and logs from it instead of each combatant's own gambits.
-  def initialize(party_one:, party_two:, seed: nil, max_rounds: DEFAULT_MAX_ROUNDS, abort_if: nil, gambits: nil)
+  # hit_points: optional starting HP, { character id => HP } (an experiment's); the sheet's maximum otherwise.
+  def initialize(party_one:, party_two:, seed: nil, max_rounds: DEFAULT_MAX_ROUNDS, abort_if: nil, gambits: nil, hit_points: {})
     raise ArgumentError, "Both parties must be Arrays" unless party_one.is_a?(Array) && party_two.is_a?(Array)
     raise ArgumentError, "Parties must not be empty" if party_one.empty? || party_two.empty?
 
-    @party_one = party_one
-    @party_two = party_two
+    @sheets = [ party_one, party_two ]
+    @hit_points = hit_points.to_h.transform_keys(&:to_i)
     @seed = seed
     @abort_if = abort_if
     @gambit_settings = gambits
@@ -27,7 +30,6 @@ class CombatSimulatorService
 
     @rng = @seed.nil? ? Random.new : Random.new(@seed)
     @round_log = []
-    @uses_remaining = {}
     # Eldritch Strike pending marks (a disadvantage_on_next_save rider): target.id => attacker.id, consumed by the first
     # saving throw the target rolls against a spell from that same attacker. No
     # turn/round tracking — see notes on the Eldritch Strike class feature (db/seeds.rb).
@@ -71,20 +73,12 @@ class CombatSimulatorService
       end
     end
 
+    # In party order, so the uses rolled from a formula (Combat::Participant.new) keep the RNG sequence.
     def initialize_state
-      all_combatants.each do |combatant|
-        combatant.current_hit_points = combatant.max_hit_points if combatant.current_hit_points.nil?
+      @party_one, @party_two = @sheets.map do |sheets|
+        sheets.map { |sheet| Combat::Participant.new(sheet, hit_points: @hit_points[sheet.id]) }
       end
-
-      @feature_books = all_combatants.to_h { |combatant| [ combatant.id, Combat::FeatureBook.new(combatant) ] }
-      all_combatants.each do |combatant|
-        @uses_remaining[combatant.id] = feature_book(combatant).initial_uses
-      end
-    end
-
-    # What the combatant knows how to do this simulation (built in initialize_state).
-    def feature_book(combatant)
-      @feature_books.fetch(combatant.id)
+      @all_combatants = @party_one + @party_two
     end
 
     # One d20 per combatant, in party order (the RNG sequence), sorted by total with ties kept in that
@@ -164,7 +158,7 @@ class CombatSimulatorService
       return [ idle_turn(actor:, round_number:, turn_index:).with(extra:) ] unless chosen_action
 
       if chosen_action.action_surge?
-        consume_feature_use!(actor:, class_feature_id: chosen_action.class_feature.id)
+        actor.spend_use!(chosen_action.class_feature.id)
         marker = idle_turn(actor:, round_number:, turn_index:).with(action: { type: :action_surge }, gambit: gambit_log(chosen_action.gambit))
         return [ marker,
                  *gambit_turns(actor:, gambits:, round_number:, turn_index:, surging: true),
@@ -206,8 +200,8 @@ class CombatSimulatorService
 
     # Action Surge as a gambit action: unlocked and with a use left.
     def action_surge_action(actor:)
-      unlock = feature_book(actor).unlock_with("extra_action")
-      uses = unlock && @uses_remaining.dig(actor.id, unlock.class_feature_id)
+      unlock = actor.feature_book.unlock_with("extra_action")
+      uses = unlock && actor.uses_left(unlock.class_feature_id)
       Combat::ActionOption.new(type: :action_surge, class_feature: unlock.class_feature, uses_remaining: uses) if uses.is_a?(Integer) && uses.positive?
     end
 
@@ -269,17 +263,17 @@ class CombatSimulatorService
     def action_surge_turn(actor:, round_number:, turn_index:)
       return nil if combat_over?
 
-      unlock = feature_book(actor).unlock_with("extra_action")
+      unlock = actor.feature_book.unlock_with("extra_action")
       return nil unless unlock
 
-      uses = @uses_remaining.dig(actor.id, unlock.class_feature_id)
+      uses = actor.uses_left(unlock.class_feature_id)
       return nil unless uses.is_a?(Integer) && uses.positive?
 
       available = available_actions_for(actor:)
       return nil if available.empty?
 
       chosen_action = available.sample(random: @rng)
-      consume_feature_use!(actor:, class_feature_id: unlock.class_feature_id)
+      actor.spend_use!(unlock.class_feature_id)
       execute_action(actor:, chosen_action:, round_number:, turn_index:).with(extra: true, gambit: RANDOM_GAMBIT)
     end
 
@@ -291,7 +285,7 @@ class CombatSimulatorService
     # A gambit-driven actor aims it without @rng: the spell's target if it is a living enemy, else the
     # first living enemy in initiative order. The bonus entry carries the gambit of the spell's entry.
     def war_magic_turn(actor:, chosen_action:, round_number:, turn_index:)
-      attacks = feature_book(actor).weapon_attacks_after(chosen_action.spell) if chosen_action.spell?
+      attacks = actor.feature_book.weapon_attacks_after(chosen_action.spell) if chosen_action.spell?
       return nil unless attacks
 
       if chosen_action.chosen_by_gambit?
@@ -303,7 +297,7 @@ class CombatSimulatorService
     end
 
     def turn_passive_log(actor:, trigger:, round_number:, turn_index:)
-      results = trigger == :turn_start ? actor.apply_start_of_turn_passives! : actor.apply_end_of_turn_passives!
+      results = actor.apply_turn_passives!(trigger: trigger.to_s)
       return nil if results.empty?
 
       turn_record(actor:, round_number:, turn_index:, action: { type: :turn_passive, trigger: trigger.to_s }, results: serialize_effect_results(results:))
@@ -311,14 +305,14 @@ class CombatSimulatorService
 
     def available_actions_for(actor:)
       actions = [ Combat::ActionOption.new(type: :attack) ]
-      book = feature_book(actor)
+      book = actor.feature_book
 
       book.unlocks.each do |unlock|
         feature = unlock.class_feature
         payload = book.action_payload(feature)
         next unless payload
 
-        uses = @uses_remaining.dig(actor.id, book.resource_feature_id(feature))
+        uses = actor.uses_left(book.resource_feature_id(feature))
         next if uses.is_a?(Integer) && uses <= 0
 
         actions << Combat::ActionOption.new(type: :class_feature, class_feature: feature, payload:, uses_remaining: uses)
@@ -393,7 +387,7 @@ class CombatSimulatorService
         hit = result.attack_roll.hit
         damage = result.roll_outcome.total
 
-        @eldritch_strike_pending[target.id] = actor.id if hit && feature_book(actor).rider?(event: "weapon_hit", applies: "disadvantage_on_next_save")
+        @eldritch_strike_pending[target.id] = actor.id if hit && actor.feature_book.rider?(event: "weapon_hit", applies: "disadvantage_on_next_save")
 
         rider = apply_maneuver_rider(actor:, target:, maneuver: pending_maneuver, crit: result.attack_roll.crit) if pending_maneuver && hit
         pending_maneuver = nil if rider
@@ -428,7 +422,7 @@ class CombatSimulatorService
       feature = maneuver.class_feature
       action = Combat::CombatAction.new(source_type: :class_feature, source_id: feature.id, actor:, targets: [ target ])
       results = Combat::ActionRunner.call(action:, crit:)
-      consume_feature_use!(actor:, class_feature_id: feature_book(actor).resource_feature_id(feature))
+      actor.spend_use!(actor.feature_book.resource_feature_id(feature))
 
       # ponytail: `debuff` is one string with one supported value, no duration and one effect per payload;
       # replace it with a list of status applications once a feature or spell applies a status (issue #45).
@@ -464,17 +458,17 @@ class CombatSimulatorService
         targets: target.nil? ? [] : [ target ]
       )
 
-      indomitable_unlock = target && feature_book(target).unlock_with("reroll_save")
-      reroll_saving_throw = indomitable_unlock && indomitable_available?(combatant: target, unlock: indomitable_unlock)
+      indomitable_unlock = target && target.feature_book.unlock_with("reroll_save")
+      reroll_saving_throw = indomitable_unlock && target.uses_left(indomitable_unlock.class_feature_id).to_i.positive?
 
       results = Combat::ActionRunner.call(action:, reroll_saving_throw: !!reroll_saving_throw)
-      consume_feature_use!(actor:, class_feature_id: feature_book(actor).resource_feature_id(feature))
+      actor.spend_use!(actor.feature_book.resource_feature_id(feature))
 
       if reroll_saving_throw
         results.each do |result|
           next unless result.saving_throw&.rerolled
 
-          consume_feature_use!(actor: target, class_feature_id: indomitable_unlock.class_feature_id)
+          target.spend_use!(indomitable_unlock.class_feature_id)
         end
       end
 
@@ -495,7 +489,7 @@ class CombatSimulatorService
       disadvantage_on_save = target && @eldritch_strike_pending[target.id] == actor.id
       @eldritch_strike_pending.delete(target.id) if disadvantage_on_save
 
-      results = actor.cast_spell(slug: spell.slug, targets: [ target ].compact, disadvantage_on_save: !!disadvantage_on_save)
+      results = actor.cast_spell(spell, targets: [ target ].compact, disadvantage_on_save: !!disadvantage_on_save)
 
       turn_record(actor:, round_number:, turn_index:, results: serialize_effect_results(results:), action: {
         type: :cast_spell,
@@ -541,18 +535,6 @@ class CombatSimulatorService
       candidates.sample(random: @rng)
     end
 
-    def consume_feature_use!(actor:, class_feature_id:)
-      uses = @uses_remaining.dig(actor.id, class_feature_id)
-      return unless uses.is_a?(Integer)
-
-      @uses_remaining[actor.id][class_feature_id] = [ uses - 1, 0 ].max
-    end
-
-    def indomitable_available?(combatant:, unlock:)
-      uses = @uses_remaining.dig(combatant.id, unlock.class_feature_id)
-      uses.is_a?(Integer) && uses.positive?
-    end
-
     def build_result(round_number:)
       party_one_alive = alive_combatants(@party_one).any?
       party_two_alive = alive_combatants(@party_two).any?
@@ -590,9 +572,7 @@ class CombatSimulatorService
       alive_combatants(@party_one).empty? || alive_combatants(@party_two).empty?
     end
 
-    def all_combatants
-      @all_combatants ||= @party_one + @party_two
-    end
+    attr_reader :all_combatants
 
     def alive_combatants(collection)
       collection.reject(&:dead?)

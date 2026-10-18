@@ -74,14 +74,19 @@ class SimulationBatch < ApplicationRecord
     completed? || cancelled? || failed?
   end
 
-  # Fresh instances on every call, since the simulator mutates HP and spell slots in memory,
-  # with the experiment's parameters applied on top of the blueprint. Nothing is saved.
+  # Fresh, read-only instances on every call, with the experiment's parameters applied in memory on top of
+  # the blueprint: the simulator only reads them (a save raises ActiveRecord::ReadOnlyRecord).
   def party_one
     build_party(party_one_ids)
   end
 
   def party_two
     build_party(party_two_ids)
+  end
+
+  # The experiment's starting HP, { character id => HP }, for CombatSimulatorService's hit_points:.
+  def hit_points
+    (party_one_ids + party_two_ids).index_with { |id| combatant_settings.dig(id.to_s, "current_hit_points") }
   end
 
   def cancel!
@@ -195,8 +200,8 @@ class SimulationBatch < ApplicationRecord
           [ column, combatant.public_send(column).deep_merge("damage_types" => DAMAGE_TYPES.index_with { |type| defenses[type] == flag }) ]
         end
       )
-      character.current_hit_points = settings["current_hit_points"]
-      character
+      combatant.readonly!
+      character.tap(&:readonly!)
     end
 
     def blueprints

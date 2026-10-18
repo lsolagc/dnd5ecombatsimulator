@@ -2,8 +2,7 @@ require "test_helper"
 
 class Combat::EffectExecutorTest < ActiveSupport::TestCase
   setup do
-    @fighter = player_characters(:aragorn) # max_hit_points: 12, strength: 15 (mod +2)
-    @fighter.current_hit_points = 5
+    @fighter = Combat::Participant.new(player_characters(:aragorn), hit_points: 5) # max_hit_points: 12, strength: 15 (mod +2)
   end
 
   test "heal effect increases target HP" do
@@ -20,7 +19,7 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
   end
 
   test "heal effect caps at max HP" do
-    @fighter.current_hit_points = 11 # 1 below max
+    @fighter = Combat::Participant.new(@fighter.character, hit_points: 11) # 1 below max
 
     effect = Combat::EffectInstance.new(kind: :heal, roll_expression: "1d10", target_type: "self")
 
@@ -48,8 +47,7 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
       target_type: "target",
       damage_type: "fire"
     )
-    target = player_characters(:aragorn_copy)
-    target.current_hit_points = target.max_hit_points
+    target = Combat::Participant.new(player_characters(:aragorn_copy))
 
     result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target)
 
@@ -58,8 +56,7 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
   end
 
   test "damage effect defaults to bludgeoning damage type" do
-    target = player_characters(:aragorn_copy)
-    target.current_hit_points = target.max_hit_points
+    target = Combat::Participant.new(player_characters(:aragorn_copy))
     hp_before = target.current_hit_points
 
     effect = Combat::EffectInstance.new(kind: :damage, roll_expression: "1d4", target_type: "target")
@@ -70,8 +67,7 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
   end
 
   test "a crit doubles the dice of an effect riding on a weapon attack" do
-    target = player_characters(:aragorn_copy)
-    target.current_hit_points = target.max_hit_points
+    target = Combat::Participant.new(player_characters(:aragorn_copy))
     effect = Combat::EffectInstance.new(kind: :damage, roll_expression: "1d1", target_type: "enemy")
 
     assert_equal 1, Combat::EffectExecutor.call(effect:, actor: @fighter, target:).amount
@@ -94,8 +90,7 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
       target_type: "target",
       save: { "ability" => "dexterity", "dc" => 20, "on_success" => "half" }
     )
-    target = player_characters(:aragorn_copy)
-    target.current_hit_points = target.max_hit_points
+    target = Combat::Participant.new(player_characters(:aragorn_copy))
 
     result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target)
 
@@ -111,8 +106,7 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
       target_type: "target",
       save: { "ability" => "dexterity", "dc" => 5, "on_success" => "half" }
     )
-    target = player_characters(:aragorn_copy)
-    target.current_hit_points = target.max_hit_points
+    target = Combat::Participant.new(player_characters(:aragorn_copy))
 
     result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target)
 
@@ -128,8 +122,8 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
       target_type: "target",
       save: { "ability" => "dexterity", "dc" => 5, "on_success" => "negate" }
     )
-    target = player_characters(:aragorn_copy)
-    hp_before = target.current_hit_points = target.max_hit_points
+    target = Combat::Participant.new(player_characters(:aragorn_copy))
+    hp_before = target.current_hit_points
 
     result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target)
 
@@ -146,8 +140,7 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
       target_type: "target",
       save: { "ability" => "dexterity", "dc" => 10, "on_success" => "half" }
     )
-    target = player_characters(:aragorn_copy)
-    target.current_hit_points = target.max_hit_points
+    target = Combat::Participant.new(player_characters(:aragorn_copy))
 
     result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target, reroll_saving_throw: true)
 
@@ -164,8 +157,7 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
       target_type: "target",
       save: { "ability" => "dexterity", "dc" => 5, "on_success" => "half" }
     )
-    target = player_characters(:aragorn_copy)
-    target.current_hit_points = target.max_hit_points
+    target = Combat::Participant.new(player_characters(:aragorn_copy))
 
     result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target, reroll_saving_throw: true)
 
@@ -250,12 +242,11 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
       ClassLevelProgression.find_or_create_by!(player_class: caster.player_class, level: 5) do |progression|
         progression.proficiency_bonus = 3
       end
-      target = player_characters(:aragorn_copy)
-      target.combatant.update!(armor_class: target_armor_class)
-      target.current_hit_points = target.max_hit_points
+      player_characters(:aragorn_copy).combatant.update!(armor_class: target_armor_class)
+      target = Combat::Participant.new(player_characters(:aragorn_copy))
 
       effect = Combat::EffectInstance.new(kind: :damage, roll_expression: "1d10", target_type: "target", attack:, save:)
       Random.srand(seed) if seed
-      Combat::EffectExecutor.call(effect:, actor: caster, target:)
+      Combat::EffectExecutor.call(effect:, actor: Combat::Participant.new(caster), target:)
     end
 end

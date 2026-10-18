@@ -36,7 +36,7 @@ between two sides of `PlayerCharacter`s and aggregates the results.[^batch-model
   arrays; "Lado A" / "Lado B" in the UI), `requested_count` (1..1000),
   optional `seed`, `status` (`pending → running → completed | cancelled |
   failed`) and `error_message`. Validation: both sides non-empty, no
-  character on both sides (the simulator tells parties apart by AR equality),
+  character on both sides (one sheet fights as one participant on one side),
   every id exists. A `seed` forces `requested_count = 1`.
 - **Characters are blueprints.** `combatant_settings` (jsonb, keyed by
   character id) holds each combatant's experiment parameters: starting
@@ -46,10 +46,13 @@ between two sides of `PlayerCharacter`s and aggregates the results.[^batch-model
   flag per type, immunity outranking resistance as in the character
   wizard). `before_validation` snapshots missing entries from the sheet
   (`SimulationBatch.blueprint_settings`), so every batch records exactly what
-  it ran with. `party_one`/`party_two` load fresh characters and apply the
-  settings **in memory only** (`combatant.assign_attributes` +
-  `current_hit_points`); nothing in the combat path saves, so the sheet never
-  changes. AC and attack bonus are the sheet's base values: passive bonuses
+  it ran with. `party_one`/`party_two` load fresh characters, apply the
+  settings **in memory only** (`combatant.assign_attributes`) and mark
+  character and combatant `readonly!`, so an accidental save raises
+  `ActiveRecord::ReadOnlyRecord`; the starting HP goes to the simulator instead
+  (`SimulationBatch#hit_points`, `{ id => current_hit_points }`, passed by
+  `SimulationRunJob` as `hit_points:`), whose `Combat::Participant`s hold the
+  HP, slots and uses, so the sheet never changes. AC and attack bonus are the sheet's base values: passive bonuses
   such as the Defense or Archery fighting styles still stack on top.
   The snapshot also freezes each character's `name` into its entry, once (a
   missing name only, never rewritten, not even by `cancel!`'s `update!`), so

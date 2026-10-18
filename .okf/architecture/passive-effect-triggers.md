@@ -45,18 +45,18 @@ no `CombatAction` involved:
   Fighter subclass's improved-critical passive is modeled, purely as
   data.[^player-character-rb][^seeds]
 - **`turn_start`** / **`turn_end`** — read by
-  `apply_start_of_turn_passives!` / `apply_end_of_turn_passives!`. Each
+  `Combat::Participant#apply_turn_passives!(trigger:)` (on the character
+  until phase 3.3), from the sheet's `passive_effect_payloads`. Each
   matching, condition-satisfying payload with `kind: "heal"` or `kind:
   "damage"` is turned into a `Combat::EffectInstance` via
   `Combat::EffectInstance.from_payload` and applied with
-  `Combat::EffectExecutor.call(effect:, actor: self, target: self)` — always
-  self-targeted; a non-`"self"` `target` on a passive is silently skipped
-  (`apply_passive_effect_payload` returns `nil` unless `target_type ==
-  "self"`).
+  `Combat::EffectExecutor.call(effect:, actor: self, target: self)` on the
+  participant — always self-targeted; a non-`"self"` `target` on a passive is
+  silently skipped. The `conditions` below read the participant's HP.
 
 [CombatSimulatorService](/architecture/combat-simulator-service.md) calls
-`apply_start_of_turn_passives!` before each living combatant's action and
-`apply_end_of_turn_passives!` after it, logging any result as its own turn
+`apply_turn_passives!(trigger: "turn_start")` before each living combatant's
+action and `"turn_end"` after it, logging any result as its own turn
 entry (`turn_passive_log`).
 
 # `conditions`

@@ -3,7 +3,6 @@ require "test_helper"
 class Combat::RollExpressionTest < ActiveSupport::TestCase
   setup do
     @context = Combat::RollContext.new(actor: player_characters(:aragorn))
-    player_characters(:aragorn).current_hit_points = player_characters(:aragorn).max_hit_points
   end
 
   test "rolls a simple dice expression" do

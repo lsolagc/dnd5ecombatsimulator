@@ -40,16 +40,19 @@ combatants later without a schema change, but resolves the concrete type
 through `combatable_type`/`combatable_id` plus a generated `player_character`
 reader rather than a raw polymorphic association.
 
-**In-combat current HP is not stored here.** `current_hit_points` lives as
-a transient `attr_accessor` on the `combatable` (`PlayerCharacter`) via the
-`CombatantBehavior` concern, reset from this record's `max_hit_points` at
-the start of an encounter — see
-[player-character.md](/models/player-character.md).
+**In-combat current HP is not stored here, nor on the character.** Since
+phase 3.3 it belongs to the `Combat::Participant` the simulator builds for
+the character, starting from this record's `max_hit_points` (or an
+experiment's starting HP) — see
+[combat-simulator-service.md](/architecture/combat-simulator-service.md).
+"Combatant" (this record: the sheet's combat stats) and "participant" (who
+fights in one simulation) are distinct terms, see
+[ubiquitous-language.md](/ubiquitous-language.md).
 
 `immune_to?`/`resistant_to?`/`vulnerable_to?` look up
 `resistances/vulnerabilities/immunities.dig("damage_types"|"conditions",
-key)`; `PlayerCharacter#take_damage` calls these before applying
-damage.[^condition-logic-rb] This is the opposite of what earlier project
+key)`; `Combat::Participant#take_damage` calls these (delegated through the
+character) before applying damage.[^condition-logic-rb] This is the opposite of what earlier project
 documentation described — resistances/vulnerabilities/immunities are
 `Combatant` columns, not `PlayerCharacter` ones.[^combatant-rb]
 

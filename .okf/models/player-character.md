@@ -1,7 +1,7 @@
 ---
 type: Model
 title: PlayerCharacter
-description: The player's character record — name, class, and level — delegating all in-combat stats (ability scores, HP, armor class) to its Combatant, and hosting the attack/damage/passive-trigger behavior used in combat.
+description: The player's character record — name, class, and level — delegating all combat stats (ability scores, max HP, armor class) to its Combatant, and computing what combat reads from the sheet (attack and damage bonuses, passives, spell slots); a simulation only reads it.
 resource: app/models/player_character.rb
 tags: [persistence, combat]
 generated:
@@ -31,11 +31,12 @@ is a deliberate split from what earlier project documentation described: the
 persisted "identity" record (`PlayerCharacter`) is thin, and the "sheet"
 (scores, defenses, HP ceiling) is on `Combatant`.[^player-character-rb]
 
-`current_hit_points` is **not persisted at all** — it is a plain
-`attr_accessor` on the `CombatantBehavior` concern.[^combatant-behavior-rb] In-combat HP is therefore
-transient, per Ruby object instance, matching how
-[CombatSimulatorService](/architecture/combat-simulator-service.md) resets
-it at the start of an encounter rather than reading a stored value.
+**A simulation never writes the character.** Current HP, spell slots left
+and feature uses left belong to the `Combat::Participant` that
+[CombatSimulatorService](/architecture/combat-simulator-service.md) builds
+from the character (phase 3.3); the character has no `current_hit_points`
+any more. `CombatantBehavior` keeps the delegations to the `Combatant` and
+`initiative`.[^combatant-behavior-rb]
 
 `has_one :combatant, as: :combatable, touch: true` creates the `Combatant`
 automatically on `before_create` if one is not already present.[^player-character-rb]
@@ -71,10 +72,9 @@ which reads these from the character:[^player-character-rb]
   creation/edit wizard.
 - `critical_hit_threshold`: the natural roll a weapon attack crits on.
 
-`take_damage(amount:, damage_type:)` applies the target's
-immunity/resistance/vulnerability (delegated to `Combatant`, see
-[combatant.md](/models/combatant.md)) before subtracting from
-`current_hit_points`, floored at 0.
+Damage is taken by the participant (`Combat::Participant#take_damage`),
+which reads the immunity/resistance/vulnerability delegated to `Combatant`
+(see [combatant.md](/models/combatant.md)).
 
 # Critical hit threshold and passives (Champion)
 
@@ -87,9 +87,9 @@ subclass's improved-critical passive is modeled, entirely through
 Full trigger/condition mechanics are documented in
 [passive-effect-triggers.md](/architecture/passive-effect-triggers.md).
 
-`apply_start_of_turn_passives!` / `apply_end_of_turn_passives!` run any
-unlocked `heal`/`damage` `effect_payload` whose `trigger` is
-`turn_start`/`turn_end` and whose `conditions` are met, applying them via
+`passive_effect_payloads(trigger:)` lists them per trigger; the turn passives
+(`turn_start`/`turn_end` `heal`/`damage` payloads whose `conditions` are met)
+are applied by `Combat::Participant#apply_turn_passives!`, via
 `Combat::EffectInstance.from_payload` + `Combat::EffectExecutor` directly —
 bypassing `Combat::CombatAction`/`Combat::ActionRunner` entirely, since a
 passive has no explicit actor intent to model.
@@ -111,6 +111,9 @@ modifier (raising when the character has no ability), and from it
 `proficiency_bonus + modifier`. The combat pipeline reads them for spell attacks
 and `"dc": "spell"` saves — see
 [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md).
+`spell_slots` is `{ spell level => slots }` at the character's level (a new
+Hash on every call, empty without a spellcasting feature): a participant
+starts from it and spends its own.
 
 # Cached class lookups
 

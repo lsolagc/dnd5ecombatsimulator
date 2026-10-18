@@ -3,10 +3,6 @@ require "active_support/concern"
 module CombatantBehavior
   extend ActiveSupport::Concern
 
-  included do
-    attr_accessor :current_hit_points
-  end
-
   class_methods do
     def behave_as_combatant
       delegate  :armor_class,
@@ -25,10 +21,6 @@ module CombatantBehavior
   # ---
   # Instance methods
   # ---
-
-  def dead?
-    current_hit_points.nil? || current_hit_points <= 0
-  end
 
   def initiative
     dexterity_modifier

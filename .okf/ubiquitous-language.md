@@ -1,7 +1,7 @@
 ---
 type: Glossary
 title: Ubiquitous language
-description: The project's agreed vocabulary in one place (action, Attack action, attack, effect, rider, action cost, feature book; effect kinds; condition, status, criterion), with each term's name in code and its meaning, so code, UI and docs use the same words.
+description: The project's agreed vocabulary in one place (action, Attack action, attack, effect, rider, action cost, feature book, combatant, participant; effect kinds; condition, status, criterion), with each term's name in code and its meaning, so code, UI and docs use the same words.
 tags: [combat, gambits]
 generated:
   by: claude-code/claude-opus-5-5
@@ -35,7 +35,9 @@ decisions behind it are in
 | **Action option** | `Combat::ActionOption` | One action the simulator offers an actor this turn (Attack, a feature or maneuver, a spell, Action Surge), before it runs. A gambit's pick is the same option with the rule's target and gambit. Not an Action: running it builds the `CombatAction`. |
 | **Rider** | today the `rider` key of an attack, maneuvers only, and the `rider` effect kind (Eldritch Strike); `Combat::Rider` in phase 3.3 | An effect that rides along on an **attack**: chosen with the action or triggered by it, applied when the attack hits, on top of the attack's own damage. Today the Battle Master maneuvers (their die and, for Distracting Strike, the advantage mark) and Eldritch Strike (`kind: rider`, `event: weapon_hit`: the hit leaves disadvantage on the target's next save against the attacker's spells); later Divine Smite, Sneak Attack, Hunter's Mark. An attack can carry several. Agreed on 2026-10-18 as attack-only: whether something can ride on a spell or a feature is decided when the first such case arrives. |
 | **Action cost** | the `as` of a `grants_activity` (`action` \| `bonus_action` \| `reaction`, PHB terms) | What doing something takes from the turn's economy. Distinct from **Action** (the activity itself). Declared, not charged yet (issue #39). |
-| **Feature book** | `Combat::FeatureBook` | What a combatant knows how to do in a simulation: its unlocked features, which of them are actions, the ones the simulator runs by rules of its own (read by effect kind: Action Surge, War Magic, Eldritch Strike, Indomitable), whose uses each spends and the uses it starts with. Read-only: the uses left are combat state, not part of the book. |
+| **Feature book** | `Combat::FeatureBook` | What a combatant knows how to do in a simulation: its unlocked features, which of them are actions, the ones the simulator runs by rules of its own (read by effect kind: Action Surge, War Magic, Eldritch Strike, Indomitable), whose uses each spends and the uses it starts with. Read-only: the uses left are combat state, kept by the **participant**. |
+| **Combatant** | `Combatant` (the record), and "a combatant" in prose | The sheet's combat stats (ability scores, AC, max HP, weapon, defenses), persisted; the parent of anything that fights (today `PlayerCharacter`). Never written by a simulation. |
+| **Participant** | `Combat::Participant` | Who fights in one simulation, built from a sheet when it starts: owns current HP, spell slots left, uses left and its feature book, and reads everything else from the sheet (its `delegate` list is the contract another kind of combatant, a Monster, has to meet). |
 
 # Effect kinds
 

@@ -12,7 +12,7 @@ class SeedDataTest < ActiveSupport::TestCase
     assert fighter.progression_at(19).grants_ability_score_improvement?
 
     knight = PlayerCharacter.find_by!(name: "Cavaleiro Arcano")
-    assert_equal({ 1 => 2, 2 => 0, 3 => 0, 4 => 0 }, knight.available_spell_slots)
+    assert_equal({ 1 => 2, 2 => 0, 3 => 0, 4 => 0 }, knight.spell_slots)
     assert_equal %w[ chromatic-orb fire-bolt ray-of-frost shield ], knight.spells.pluck(:slug).sort
     assert_equal "intelligence", knight.spellcasting_ability
 

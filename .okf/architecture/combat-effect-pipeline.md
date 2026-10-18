@@ -37,7 +37,8 @@ feature declare an executable effect declaratively.[^combat-pipeline-rb]
 A later increment (September 2026) added a minimal `:spell` source_type
 alongside `:class_feature` — see [spell.md](/models/spell.md) — proven
 end-to-end the same way Second Wind was: through `Combat::ActionRunner` and
-`PlayerCharacter#cast_spell`, with a real, enforced spell-slot resource. It
+a cast that spends a real, enforced spell slot (`Combat::Participant#cast_spell`
+since phase 3.3). It
 is scoped to a single class (Fighter's Eldritch Knight): no spell lists,
 upcasting, or control conditions.
 

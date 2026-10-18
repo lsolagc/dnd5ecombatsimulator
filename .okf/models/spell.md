@@ -77,16 +77,17 @@ keeping several copies of one character. Planned in
 
 # Casting a spell
 
-`PlayerCharacter#cast_spell(slug:, targets:)` builds a `Combat::CombatAction`
+`Combat::Participant#cast_spell(spell, targets:)` (on `PlayerCharacter`, by
+slug, until phase 3.3) builds a `Combat::CombatAction`
 and runs it through `Combat::ActionRunner`, like a class feature,[^spell-rb] but
 goes through a real, enforced resource:
 
-1. Looks up the spell in `spells` (must be prepared by this character).
-2. If `spell.level.positive?`, decrements `available_spell_slots[spell.level]`
-   — raising if none remain. `available_spell_slots` is a runtime-only Hash
-   (not persisted), lazily built from the matching `SpellSlotProgression` row
-   for the character's current level, the same "ephemeral per-combat state"
-   pattern `current_hit_points` already uses.
+1. The simulator only offers the spells in the character's `spells`.
+2. If `spell.level.positive?`, decrements the participant's
+   `available_spell_slots[spell.level]` — raising if none remain. They start
+   from `PlayerCharacter#spell_slots`, a new Hash on every call built from the
+   matching `SpellSlotProgression` row for the character's level; the sheet's
+   own are never spent.
 3. Builds a `Combat::CombatAction` with `source_type: :spell` and runs it
    through `Combat::ActionRunner`, exactly like a class feature.
 

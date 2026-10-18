@@ -7,9 +7,8 @@ class Combat::AttackActionTest < ActiveSupport::TestCase
   setup do
     @attacker = player_characters(:aragorn) # strength 15 (mod +2)
     @attacker.combatant.assign_attributes(damage_dice: "1d8", damage_type: "slashing", attack_bonus: 3)
-    @target = player_characters(:aragorn_copy)
-    @other = player_characters(:thorin)
-    [ @target, @other ].each { |combatant| combatant.current_hit_points = combatant.max_hit_points }
+    @target = Combat::Participant.new(player_characters(:aragorn_copy))
+    @other = Combat::Participant.new(player_characters(:thorin))
   end
 
   # Each Dice.d20 call takes the next natural from the list; every die rolls 4 (8 on a crit).
@@ -21,12 +20,12 @@ class Combat::AttackActionTest < ActiveSupport::TestCase
 
   def attack(next_target:, attacks: 1, **)
     @attacker.define_singleton_method(:attacks_per_action) { attacks }
-    action = Combat::CombatAction.new(source_type: :attack, source_id: nil, actor: @attacker)
+    action = Combat::CombatAction.new(source_type: :attack, source_id: nil, actor: Combat::Participant.new(@attacker))
     Combat::ActionRunner.attack(action:, next_target:, **)
   end
 
   test "a hit adds weapon_attack_bonus to the d20 and deals the weapon's dice plus weapon_damage_modifier" do
-    @target.combatant.armor_class = 0
+    @target.character.combatant.armor_class = 0
     (_, result, _), = with_rolls(10) { attack(next_target: -> { @target }) }
 
     assert result.attack_roll.hit
@@ -36,7 +35,7 @@ class Combat::AttackActionTest < ActiveSupport::TestCase
   end
 
   test "Extra Attack: an attack after a kill goes to the next target, and the action ends when none is left" do
-    @target.current_hit_points = 1
+    @target = Combat::Participant.new(@target.character, hit_points: 1)
     picks = 0
     next_target = -> { picks += 1; [ @target, @other ].reject(&:dead?).first if picks <= 2 }
 
@@ -48,8 +47,8 @@ class Combat::AttackActionTest < ActiveSupport::TestCase
   end
 
   test "damage resistance follows the attacker's weapon type, not the target's own weapon" do
-    @target.combatant.damage_type = "bludgeoning"
-    @target.combatant.resistances["damage_types"]["slashing"] = true
+    @target.character.combatant.damage_type = "bludgeoning"
+    @target.character.combatant.resistances["damage_types"]["slashing"] = true
 
     (_, result, _), = with_rolls(15) { attack(next_target: -> { @target }) }
 
@@ -64,7 +63,7 @@ class Combat::AttackActionTest < ActiveSupport::TestCase
     (_, weapon, _), = with_rolls(19) { attack(next_target: -> { @target }) }
     spell = with_rolls(19) do
       Combat::EffectExecutor.call(effect: Combat::EffectInstance.new(kind: :damage, roll_expression: "1d8", target_type: "enemy", attack: "spell"),
-                                  actor: @attacker, target: @target)
+                                  actor: Combat::Participant.new(@attacker), target: @target)
     end
 
     assert weapon.attack_roll.crit
@@ -73,9 +72,9 @@ class Combat::AttackActionTest < ActiveSupport::TestCase
   end
 
   test "natural 20 always hits and natural 1 always misses, whatever the target's AC" do
-    @target.combatant.armor_class = 100
+    @target.character.combatant.armor_class = 100
     (_, twenty, _), = with_rolls(20) { attack(next_target: -> { @target }) }
-    @target.combatant.armor_class = 0
+    @target.character.combatant.armor_class = 0
     (_, one, _), = with_rolls(1) { attack(next_target: -> { @target }) }
 
     assert twenty.attack_roll.hit
@@ -99,7 +98,7 @@ class Combat::AttackActionTest < ActiveSupport::TestCase
 
   test "Fighting Style: Dueling adds +2 to the weapon damage" do
     @attacker = player_characters(:fighter_duelist)
-    @target.combatant.armor_class = 0
+    @target.character.combatant.armor_class = 0
     (_, result, _), = with_rolls(10) { attack(next_target: -> { @target }) }
 
     assert result.attack_roll.hit
@@ -108,7 +107,7 @@ class Combat::AttackActionTest < ActiveSupport::TestCase
 
   test "a hit that rolls 0 damage hits for nothing instead of raising" do
     @attacker.combatant.strength = 2 # STR mod -4: the stubbed 1d8 rolls 4, so the hit deals 4 - 4 = 0
-    @target.combatant.armor_class = 0
+    @target.character.combatant.armor_class = 0
     (_, result, _), = with_rolls(10) { attack(next_target: -> { @target }) }
 
     assert result.attack_roll.hit

@@ -27,7 +27,6 @@ class PlayerCharacter < ApplicationRecord
   MAX_HIT_POINTS_INPUT_CEILING = 2_147_483_647
 
   attr_accessor :max_hit_points_input
-  attr_writer :available_spell_slots
 
   validates :max_hit_points_input, numericality: {
     only_integer: true,
@@ -85,14 +84,6 @@ class PlayerCharacter < ApplicationRecord
     thresholds.min || 20
   end
 
-  def apply_start_of_turn_passives!
-    apply_turn_passives!(trigger: "turn_start")
-  end
-
-  def apply_end_of_turn_passives!
-    apply_turn_passives!(trigger: "turn_end")
-  end
-
   # One payload per unlocked feature, the one in force at the character's level (ClassFeature#effect_payload_at).
   # Cached like #feature_unlocks: every attack asks for them (attack and damage bonuses, AC, critical threshold).
   def passive_effect_payloads(trigger:)
@@ -146,25 +137,6 @@ class PlayerCharacter < ApplicationRecord
     end
   end
 
-  def take_damage(amount:, damage_type:)
-    raise ArgumentError, "Amount must be a positive Integer" unless amount.is_a?(Integer) && amount.positive?
-    return if immune_to?(damage_type:)
-
-    if resistant_to?(damage_type:)
-      amount = amount / 2
-    end
-
-    if vulnerable_to?(damage_type:)
-      amount = amount * 2
-    end
-
-    self.current_hit_points -= amount
-
-    if current_hit_points <= 0
-      self.current_hit_points = 0
-    end
-  end
-
   def initialize_combatant
     self.combatant = Combatant.new(combatable: self)
   end
@@ -213,21 +185,14 @@ class PlayerCharacter < ApplicationRecord
     proficiency_bonus + spellcasting_ability_modifier
   end
 
-  def available_spell_slots
-    @available_spell_slots ||= build_available_spell_slots
-  end
+  # { spell level => slots } at the character's level, a new Hash on every call (Combat::Participant spends
+  # its own); empty without a spellcasting feature.
+  def spell_slots
+    feature = spellcasting_feature
+    return {} unless feature
 
-  def cast_spell(slug:, targets: [], disadvantage_on_save: false)
-    spell = spells.find_by!(slug: slug)
-    consume_spell_slot!(spell.level) if spell.level.positive?
-
-    action = Combat::CombatAction.new(
-      source_type: :spell,
-      source_id:   spell.id,
-      actor:       self,
-      targets:     targets
-    )
-    Combat::ActionRunner.call(action: action, disadvantage_on_save:)
+    progression = feature.spell_slot_progressions.where("level <= ?", level).order(level: :desc).first
+    progression ? progression.slots_by_level : {}
   end
 
   # The turn actions a gambit of this character can choose, as [label, value] select options (value as in
@@ -248,25 +213,6 @@ class PlayerCharacter < ApplicationRecord
   end
 
   private
-
-    def build_available_spell_slots
-      feature = spellcasting_feature
-      return {} unless feature
-
-      progression = feature.spell_slot_progressions
-                            .where("level <= ?", level)
-                            .order(level: :desc)
-                            .first
-
-      progression ? progression.slots_by_level : {}
-    end
-
-    def consume_spell_slot!(spell_level)
-      remaining = available_spell_slots[spell_level].to_i
-      raise "No level #{spell_level} spell slots remaining for #{name}" if remaining <= 0
-
-      available_spell_slots[spell_level] = remaining - 1
-    end
 
     # What the unlocked features, and so their passives, depend on.
     def choices_key
@@ -307,44 +253,5 @@ class PlayerCharacter < ApplicationRecord
       if fighting_style.player_class_id != player_class_id
         errors.add(:fighting_style, "must belong to the character's class")
       end
-    end
-
-    def apply_turn_passives!(trigger:)
-      passive_effect_payloads(trigger:).filter_map do |payload|
-        next unless passive_payload_actionable?(payload)
-        next unless passive_conditions_met?(payload["conditions"])
-
-        apply_passive_effect_payload(payload)
-      end
-    end
-
-    def passive_payload_actionable?(payload)
-      payload["kind"].in?([ "heal", "damage" ])
-    end
-
-    def apply_passive_effect_payload(payload)
-      effect = Combat::EffectInstance.from_payload(payload)
-      return nil unless effect.target_type == "self"
-
-      Combat::EffectExecutor.call(effect:, actor: self, target: self)
-    end
-
-    def passive_conditions_met?(conditions)
-      cond = (conditions || {}).deep_stringify_keys
-
-      current_hp = current_hit_points.to_i
-      max_hp = max_hit_points.to_i
-
-      return false if cond.key?("current_hp_gt") && !(current_hp > cond["current_hp_gt"].to_i)
-      return false if cond.key?("current_hp_gte") && !(current_hp >= cond["current_hp_gte"].to_i)
-      return false if cond.key?("current_hp_lt") && !(current_hp < cond["current_hp_lt"].to_i)
-      return false if cond.key?("current_hp_lte") && !(current_hp <= cond["current_hp_lte"].to_i)
-
-      if cond.key?("current_hp_lte_max_hp_fraction")
-        threshold = max_hp * cond["current_hp_lte_max_hp_fraction"].to_f
-        return false unless current_hp <= threshold
-      end
-
-      true
     end
 end

@@ -2,8 +2,7 @@ require "test_helper"
 
 class Combat::ActionRunnerTest < ActiveSupport::TestCase
   setup do
-    @fighter = player_characters(:aragorn) # level 1 fighter, max_hit_points: 12
-    @fighter.current_hit_points = 4 # simulate damage taken
+    @fighter = Combat::Participant.new(player_characters(:aragorn), hit_points: 4) # level 1 fighter, max_hit_points: 12; damage taken
   end
 
   test "executes Second Wind to heal the fighter" do
@@ -30,8 +29,7 @@ class Combat::ActionRunnerTest < ActiveSupport::TestCase
   end
 
   test "Second Wind roll includes actor_level as modifier" do
-    fighter_level_5 = player_characters(:thorin) # level 5
-    fighter_level_5.current_hit_points = 10
+    fighter_level_5 = Combat::Participant.new(player_characters(:thorin), hit_points: 10) # level 5
 
     feature = class_features(:fighter_second_wind)
     action = Combat::CombatAction.new(
@@ -78,9 +76,8 @@ class Combat::ActionRunnerTest < ActiveSupport::TestCase
 
   test "reroll_saving_throw reflects the second saving throw when the first fails" do
     feature = class_features(:barbarian_test_save_strike) # test fixture, see class_features.yml
-    fighter = player_characters(:fighter_indomitable_nine) # constitution: 12 (mod +1)
-    fighter.current_hit_points = fighter.max_hit_points
-    attacker = player_characters(:barbarian_test_striker)
+    fighter = Combat::Participant.new(player_characters(:fighter_indomitable_nine)) # constitution: 12 (mod +1)
+    attacker = Combat::Participant.new(player_characters(:barbarian_test_striker))
 
     action = Combat::CombatAction.new(
       source_type: :class_feature,
@@ -99,45 +96,9 @@ class Combat::ActionRunnerTest < ActiveSupport::TestCase
     assert_equal 3, result.amount # half of 6, since the reroll succeeded
   end
 
-  test "PlayerCharacter#cast_spell delegates to ActionRunner and consumes a spell slot" do
-    merlin = player_characters(:merlin) # level 1 wizard, 2 level-1 slots
-    target = player_characters(:aragorn)
-    target.current_hit_points = 10
+  test "a spell without an effect_payload raises" do
+    action = Combat::CombatAction.new(source_type: :spell, source_id: spells(:shield).id, actor: Combat::Participant.new(player_characters(:merlin)))
 
-    assert_equal 2, merlin.available_spell_slots[1]
-
-    results = merlin.cast_spell(slug: "magic-missile", targets: [ target ])
-
-    assert_equal 1, results.size
-    assert_equal :damage, results.first.kind
-    assert_equal 1, merlin.available_spell_slots[1]
-  end
-
-  test "cast_spell does not consume a slot for cantrips" do
-    merlin = player_characters(:merlin)
-    target = player_characters(:aragorn)
-    target.current_hit_points = 10
-    slots_before = merlin.available_spell_slots.dup
-
-    merlin.cast_spell(slug: "fire-bolt", targets: [ target ])
-
-    assert_equal slots_before, merlin.available_spell_slots
-  end
-
-  test "cast_spell raises when no spell slots remain for that level" do
-    merlin = player_characters(:merlin)
-    merlin.available_spell_slots = { 1 => 0 }
-
-    assert_raises(RuntimeError) do
-      merlin.cast_spell(slug: "magic-missile", targets: [ player_characters(:aragorn) ])
-    end
-  end
-
-  test "cast_spell raises when the spell has no effect_payload" do
-    merlin = player_characters(:merlin)
-
-    assert_raises(RuntimeError) do
-      merlin.cast_spell(slug: "shield")
-    end
+    assert_raises(RuntimeError) { Combat::ActionRunner.call(action:) }
   end
 end

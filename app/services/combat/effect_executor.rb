@@ -1,5 +1,5 @@
 module Combat
-  # Applies an EffectInstance to a combatant and returns a structured result.
+  # Applies an EffectInstance to a Combat::Participant (its HP: #take_damage, #heal) and returns a structured result.
   #
   # result fields:
   #   kind          - :heal | :damage
@@ -51,13 +51,11 @@ module Combat
       end
 
       def execute_heal(target)
-        hp_before                = target.current_hit_points || target.max_hit_points
+        hp_before                = target.current_hit_points
         roll_outcome             = roll_for_effect
         full_amount              = [ roll_outcome.total, 0 ].max
         amount, saving_throw     = apply_save(full_amount:, target:)
-        hp_after                 = [ hp_before + amount, target.max_hit_points ].min
-
-        target.current_hit_points = hp_after
+        hp_after                 = target.heal(amount)
 
         Result.new(
           kind:         :heal,
@@ -72,7 +70,7 @@ module Combat
       end
 
       def execute_damage(target)
-        hp_before             = target.current_hit_points || target.max_hit_points
+        hp_before             = target.current_hit_points
         attack_roll           = roll_attack(target) if @effect.attack
         missed                = attack_roll && !attack_roll.hit
         roll_outcome          = roll_for_effect(crit: attack_roll&.crit || @crit)

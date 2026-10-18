@@ -134,8 +134,7 @@ class PlayerCharacterTest < ActiveSupport::TestCase
 
     assert_equal [ "10" ], character.passive_effect_payloads(trigger: "turn_start").map { |passive| passive["roll"] }
 
-    character.current_hit_points = character.max_hit_points / 2 - 20
-    results = character.apply_start_of_turn_passives!
+    results = Combat::Participant.new(character, hit_points: character.max_hit_points / 2 - 20).apply_turn_passives!(trigger: "turn_start")
     assert_equal [ 10 ], results.map(&:amount)
   end
 
@@ -149,30 +148,6 @@ class PlayerCharacterTest < ActiveSupport::TestCase
 
     assert modifiers.any? { |payload| payload["value"] == 19 }
     assert modifiers.any? { |payload| payload["value"] == 18 }
-  end
-
-  test "apply_start_of_turn_passives! heals with Survivor when eligible" do
-    fighter = player_classes(:fighter)
-    character = PlayerCharacter.create!(name: "Champion 18", level: 18, player_class: fighter,
-                                         martial_archetype: class_features(:fighter_champion_archetype))
-
-    character.current_hit_points = [ (character.max_hit_points / 2), 1 ].max
-    results = character.apply_start_of_turn_passives!
-
-    assert_equal 1, results.size
-    assert_equal :heal, results.first.kind
-    assert_equal 5, results.first.amount
-    assert_equal [ character.max_hit_points, (character.max_hit_points / 2) + 5 ].min, character.current_hit_points
-  end
-
-  test "apply_start_of_turn_passives! does not heal with Survivor above half HP" do
-    fighter = player_classes(:fighter)
-    character = PlayerCharacter.create!(name: "Champion 18 No Heal", level: 18, player_class: fighter)
-
-    character.current_hit_points = (character.max_hit_points / 2) + 1
-    results = character.apply_start_of_turn_passives!
-
-    assert_empty results
   end
 
   # max_hit_points_input override
@@ -272,14 +247,14 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     assert_nil aragorn.spellcasting_feature
   end
 
-  test "available_spell_slots reads from the matching SpellSlotProgression" do
+  test "spell_slots reads from the matching SpellSlotProgression" do
     merlin = player_characters(:merlin)
-    assert_equal({ 1 => 2, 2 => 0, 3 => 0, 4 => 0 }, merlin.available_spell_slots)
+    assert_equal({ 1 => 2, 2 => 0, 3 => 0, 4 => 0 }, merlin.spell_slots)
   end
 
-  test "available_spell_slots is empty when the character has no spellcasting feature" do
+  test "spell_slots is empty when the character has no spellcasting feature" do
     aragorn = player_characters(:aragorn)
-    assert_equal({}, aragorn.available_spell_slots)
+    assert_equal({}, aragorn.spell_slots)
   end
 
   test "gambit_action_options are the character's turn actions, encoded as Gambit#action_choice" do

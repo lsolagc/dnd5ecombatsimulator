@@ -119,7 +119,7 @@ class SimulationBatchTest < ActiveSupport::TestCase
     })
 
     fighter = record.party_one.sole
-    assert_equal 3, fighter.current_hit_points
+    assert_equal 3, record.hit_points[aragorn.id], "the starting HP goes to the simulator, not the sheet"
     assert_equal 20, fighter.armor_class
     assert_equal 9, fighter.attack_bonus
     assert_equal "2d6", fighter.damage_dice
@@ -127,6 +127,9 @@ class SimulationBatchTest < ActiveSupport::TestCase
     assert fighter.immune_to?(damage_type: :cold)
     assert fighter.vulnerable_to?(damage_type: :fire)
     assert_not fighter.resistant_to?(damage_type: :cold)
+
+    assert_raises(ActiveRecord::ReadOnlyRecord) { fighter.save! }
+    assert_raises(ActiveRecord::ReadOnlyRecord) { fighter.combatant.save! }
 
     aragorn.reload
     assert_equal 16, aragorn.armor_class

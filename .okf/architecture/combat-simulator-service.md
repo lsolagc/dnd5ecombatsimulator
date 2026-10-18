@@ -18,6 +18,9 @@ sources:
   - id: feature-book-rb
     title: app/services/combat/feature_book.rb
     resource: ../../app/services/combat/feature_book.rb
+  - id: participant-rb
+    title: app/services/combat/participant.rb
+    resource: ../../app/services/combat/participant.rb
 status: stable
 ---
 
@@ -43,7 +46,8 @@ playthrough.[^combat-simulator-test]
 
 ```ruby
 result = CombatSimulatorService.new(
-  party_one:, party_two:, seed: 1234, max_rounds: 20
+  party_one:, party_two:, seed: 1234, max_rounds: 20,
+  hit_points: { 7 => 9 }, gambits: nil, abort_if: nil # all optional
 ).call
 # => {
 #   winning_party: :party_one | :party_two | nil,
@@ -55,8 +59,13 @@ result = CombatSimulatorService.new(
 # }
 ```
 
-- `party_one` / `party_two`: non-empty arrays of combatants; raises
-  `ArgumentError` otherwise.
+- `party_one` / `party_two`: non-empty arrays of character sheets
+  (`PlayerCharacter`); raises `ArgumentError` otherwise. Each fights as a
+  `Combat::Participant` (see below) and the sheets are only read; the result's
+  ids are the sheets'.
+- `hit_points`: optional starting HP, `{ character id => HP }` (a
+  [batch](/architecture/simulation-batches.md)'s `current_hit_points`
+  settings); a combatant left out starts at its `max_hit_points`.
 - `seed`: optional; when given, both the instance RNG and the global
   `Random` seed (via `Random.srand`, restored after `call`) are pinned, so
   every dice roll — including inside `Combat::RollExpression` — is
@@ -87,7 +96,7 @@ recording them draws nothing extra. Turn results carry no human-readable
    *not* one of the [passive triggers](/architecture/passive-effect-triggers.md)),
    and still has uses remaining; the feature is run through
    `Combat::CombatAction` + `Combat::ActionRunner`, exactly like
-   [PlayerCharacter#cast_spell](/models/spell.md) does for spells.
+   `Combat::Participant#cast_spell` does for [spells](/models/spell.md).
    A payload with `"applies_to": "weapon_attack"` (every Battle Master
    maneuver) is *not* an action of its own: choosing it makes the turn a normal
    weapon attack, and only if the attack hits is the maneuver's die rolled
@@ -106,7 +115,7 @@ recording them draws nothing extra. Turn results carry no human-readable
    once the fight is already over.
 3. **Cast spell** actions are offered for each known [spell](/models/spell.md)
    with an `effect_payload` that is a cantrip or has a spell slot left, via
-   `PlayerCharacter#cast_spell`. A payload with `"attack": "spell"` rolls a spell
+   `Combat::Participant#cast_spell`. A payload with `"attack": "spell"` rolls a spell
    attack against the target's AC and a `"dc": "spell"` save uses the caster's spell
    save DC (both from the spellcasting ability, see
    [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)); the
@@ -176,12 +185,41 @@ Attack action, so no Extra Attack; since 2026-10-18, see the
 target if it is a living enemy, else the first living enemy in initiative order. Decisions:
 [gambits-decisions.md](/architecture/gambits-decisions.md).
 
+# Participant
+
+Who fights is a `Combat::Participant`, one per sheet, built in
+`initialize_state` in party order (phase 3.3 of the DDD refactor); the party
+arrays, the initiative order, gambit and feature targets and the pipeline
+(`Combat::EffectExecutor`, `EffectResolver`, `RollContext`, `SavingThrow`,
+`ActionRunner`, `TurnRecord`) all work on participants.[^participant-rb] It
+owns what changes during the fight, and nothing writes the sheet:
+
+| State | API |
+|---|---|
+| current HP | `current_hit_points`, `dead?`, `take_damage(amount:, damage_type:)` (defenses first, floored at 0), `heal(amount)` (capped at the maximum) |
+| spell slots left | `available_spell_slots` (from `PlayerCharacter#spell_slots`), `cast_spell(spell, targets:, disadvantage_on_save:)` (spends a slot of the spell's level, none for a cantrip) |
+| uses left | `uses_left(class_feature_id)` (nil: unlimited), `spend_use!(class_feature_id)` (floored at 0), from `FeatureBook#initial_uses` |
+| turn passives | `apply_turn_passives!(trigger:)` (see [passive-effect-triggers.md](/architecture/passive-effect-triggers.md)) |
+| what it can do | `feature_book` |
+
+Everything else it reads from the sheet through one explicit `delegate` list,
+the contract a future Monster has to meet: `id`, `name`, `level`,
+`max_hit_points`, `initiative`, `armor_class`, `damage_dice`, `damage_type`,
+`attacks_per_action`, `weapon_attack_bonus`, `weapon_damage_modifier`,
+`critical_hit_threshold`, `proficiency_bonus`, `spellcasting_feature`,
+`spell_save_dc`, `spell_attack_bonus`, `spells`, `gambits`,
+`passive_effect_payloads`, `immune_to?`/`resistant_to?`/`vulnerable_to?` and the
+six `*_modifier`s. Participants compare by identity, so a party lookup no longer
+compares records by id. Building one rolls any dice of a `uses_formula`, which is
+why they are built in party order inside the seeded block. Same RNG draws and
+golden files; casting a spell no longer looks it up by slug, one query less per
+cast (the query ceiling only went down).
+
 # Feature book
 
 What a combatant knows how to do is read from one `Combat::FeatureBook` per
-combatant, built in `initialize_state` and kept by combatant id
-(`feature_book(combatant)`); the simulator no longer walks unlocks or compares
-feature names.[^feature-book-rb] It is read-only and holds no counters:
+participant (`participant.feature_book`), built with it; the simulator no longer
+walks unlocks or compares feature names.[^feature-book-rb] It is read-only and holds no counters:
 
 | Query | Answers |
 |---|---|
@@ -221,10 +259,9 @@ At encounter start, each combatant's usable features get an initial use
 count (`FeatureBook#initial_uses`): a fixed `unlock.uses` if present, otherwise
 `unlock.uses_formula` resolved through `Combat::RollExpression`/`Combat::RollContext`
 and floored — e.g. a formula of `proficiency_bonus` becomes an
-integer use count. The simulator keeps the counts left in `@uses_remaining`
-(they move to `Combat::Participant` in phase 3.3). Each class-feature action decrements the actor's
-remaining uses for that feature by 1, floored at 0
-(`consume_feature_use!`); once exhausted, that action stops being offered.
+integer use count. Each participant keeps its counts left (`uses_left`). Each
+class-feature action decrements the actor's remaining uses for that feature by 1,
+floored at 0 (`spend_use!`); once exhausted, that action stops being offered.
 
 # Outcome
 
@@ -240,3 +277,5 @@ remaining uses for that feature by 1, floored at 0
 [^combat-simulator-test]: Source: `test/services/combat_simulator_service_test.rb`
 
 [^feature-book-rb]: Source: `app/services/combat/feature_book.rb`
+
+[^participant-rb]: Source: `app/services/combat/participant.rb`

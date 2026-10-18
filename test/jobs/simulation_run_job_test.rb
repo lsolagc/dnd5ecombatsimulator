@@ -27,6 +27,18 @@ class SimulationRunJobTest < ActiveJob::TestCase
     end
   end
 
+  test "a run starts each combatant at the experiment's HP, not the sheet's maximum" do
+    aragorn, copy = player_characters(:aragorn), player_characters(:aragorn_copy)
+    batch = SimulationBatch.create!(party_one_ids: [ aragorn.id ], party_two_ids: [ copy.id ], seed: 77,
+                                    combatant_settings: { copy.id.to_s => SimulationBatch.blueprint_settings(copy).merge("current_hit_points" => 3) })
+
+    SimulationRunJob.perform_now(batch)
+
+    simulate = ->(**hit_points) { CombatSimulatorService.new(party_one: batch.party_one, party_two: batch.party_two, seed: 77, **hit_points).call.as_json }
+    assert_equal simulate.(hit_points: { copy.id => 3 }), batch.simulation_runs.sole.result
+    assert_not_equal simulate.call, batch.simulation_runs.sole.result, "the seed must make the starting HP show"
+  end
+
   test "a seeded batch reproduces the simulator's result for that seed" do
     seeded = SimulationBatch.create!(party_one_ids: @batch.party_one_ids, party_two_ids: @batch.party_two_ids, seed: 77, requested_count: 50)
 

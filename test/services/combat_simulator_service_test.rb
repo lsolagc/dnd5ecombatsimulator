@@ -3,11 +3,14 @@ require "minitest/mock"
 
 class CombatSimulatorServiceTest < ActiveSupport::TestCase
   SEED_WITH_REVERSED_INITIATIVE = 3
+
+  setup { @hit_points = {} }
+
   test "returns the expected contract shape" do
     party_one = [ fresh_character(:aragorn) ]
     party_two = [ fresh_character(:aragorn_copy) ]
 
-    result = CombatSimulatorService.new(party_one:, party_two:, seed: 1234, max_rounds: 3).call
+    result = simulator(party_one:, party_two:, seed: 1234, max_rounds: 3).call
 
     assert_includes result.keys, :winning_party
     assert_includes result.keys, :total_rounds
@@ -19,14 +22,14 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
   end
 
   test "is deterministic when using the same seed" do
-    result_one = CombatSimulatorService.new(
+    result_one = simulator(
       party_one: [ fresh_character(:thorin) ],
       party_two: [ fresh_character(:aragorn), fresh_character(:aragorn_copy) ],
       seed: 77,
       max_rounds: 5
     ).call
 
-    result_two = CombatSimulatorService.new(
+    result_two = simulator(
       party_one: [ fresh_character(:thorin) ],
       party_two: [ fresh_character(:aragorn), fresh_character(:aragorn_copy) ],
       seed: 77,
@@ -42,7 +45,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     party_two = %i[aragorn aragorn_copy fighter_defender].map { |name| fresh_character(name) }
     name_of = %i[thorin fighter_archer aragorn aragorn_copy fighter_defender].index_by { |name| player_characters(name).id }
 
-    result = CombatSimulatorService.new(party_one:, party_two:, seed: 77, max_rounds: 3).call
+    result = simulator(party_one:, party_two:, seed: 77, max_rounds: 3).call
 
     choices = result[:round_log].flat_map { |round| round[:turns] }.flat_map do |turn|
       targets = turn[:results].filter_map { |entry| name_of[entry[:target_id]] }
@@ -65,7 +68,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     enemies = %i[aragorn aragorn_copy].map { |name| sturdy(fresh_character(name)) }
     name_of = { eldritch_knight.id => :eldritch_knight_seven, enemies.first.id => :aragorn, enemies.second.id => :aragorn_copy }
 
-    result = CombatSimulatorService.new(party_one: [ eldritch_knight ], party_two: enemies, seed: 6, max_rounds: 3).call
+    result = simulator(party_one: [ eldritch_knight ], party_two: enemies, seed: 6, max_rounds: 3).call
 
     choices = result[:round_log].flat_map { |round| round[:turns] }.flat_map do |turn|
       targets = turn[:results].filter_map { |entry| name_of[entry[:target_id]] }
@@ -81,13 +84,35 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     ], choices
   end
 
+  test "a simulation only reads the sheets: a batch's come out unchanged and cannot be saved" do
+    merlin, aragorn = player_characters(:merlin), player_characters(:aragorn)
+    batch = SimulationBatch.create!(party_one_ids: [ merlin.id ], party_two_ids: [ aragorn.id ], seed: 1)
+    sheets = [ batch.party_one.sole, batch.party_two.sole ]
+    reading = -> { sheets.map { |sheet| [ sheet.attributes, sheet.combatant.attributes, sheet.spell_slots ] } }
+    before = reading.call
+    service = CombatSimulatorService.new(party_one: [ sheets.first ], party_two: [ sheets.second ], seed: 3, hit_points: batch.hit_points)
+
+    rounds = service.call[:round_log]
+
+    assert rounds.flat_map { |round| round[:turns] }.any? { |turn| turn.dig(:action, :spell_slug) == "magic-missile" }, "the seed must spend a slot"
+    assert_operator participant_of(service, sheets.first).available_spell_slots[1], :<, merlin.spell_slots[1]
+    assert rounds.flat_map { |round| round[:turns] }.flat_map { |turn| turn[:results] }.any? { |result| result[:hp_after] < result[:hp_before] }
+    assert_equal before, reading.call
+    sheets.each do |sheet|
+      assert_not sheet.changed?
+      assert_not sheet.combatant.changed?
+      %i[current_hit_points current_hit_points= available_spell_slots take_damage cast_spell].each { |state| assert_not_respond_to sheet, state }
+      assert_raises(ActiveRecord::ReadOnlyRecord) { sheet.save! }
+      assert_raises(ActiveRecord::ReadOnlyRecord) { sheet.combatant.save! }
+    end
+  end
+
   test "signals explicit draw on simultaneous elimination" do
     fallen_one = fresh_character(:aragorn)
     fallen_two = fresh_character(:aragorn_copy)
-    fallen_one.current_hit_points = 0
-    fallen_two.current_hit_points = 0
+    @hit_points[fallen_one.id] = @hit_points[fallen_two.id] = 0
 
-    result = CombatSimulatorService.new(
+    result = simulator(
       party_one: [ fallen_one ],
       party_two: [ fallen_two ],
       seed: 1,
@@ -102,7 +127,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
   test "abort_if aborts the simulation in progress between rounds" do
     rounds_started = 0
-    service = CombatSimulatorService.new(
+    service = simulator(
       party_one: [ fresh_character(:thorin) ],
       party_two: [ fresh_character(:aragorn) ],
       seed: 42,
@@ -116,7 +141,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
   test "weapon attack entries carry the target's HP before and after the hit" do
     target = fresh_character(:aragorn_copy)
-    result = CombatSimulatorService.new(party_one: [ fresh_character(:thorin) ], party_two: [ target ], seed: 42, max_rounds: 3).call
+    result = simulator(party_one: [ fresh_character(:thorin) ], party_two: [ target ], seed: 42, max_rounds: 3).call
 
     attacks = result[:round_log].flat_map { |round| round[:turns] }.flat_map { |turn| turn[:results] }.select { |entry| entry[:kind] == :attack }
     assert attacks.any?
@@ -134,7 +159,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     subscription = ActiveSupport::Notifications.subscribe("sql.active_record") do |*, payload|
       unlock_lookups += 1 if payload[:sql].include?('FROM "class_features" LEFT OUTER JOIN "class_feature_unlocks"')
     end
-    result = CombatSimulatorService.new(party_one:, party_two:, seed: 3, max_rounds: 10).call
+    result = simulator(party_one:, party_two:, seed: 3, max_rounds: 10).call
     ActiveSupport::Notifications.unsubscribe(subscription)
 
     assert_equal 10, result[:total_rounds], "the fight must be long enough for a per-turn lookup to show"
@@ -148,12 +173,13 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     ClassFeatureUnlock.create!(class_feature: second_wind, level: 10, uses: 2, description: "Test: one more use, same effect.")
     fighter = player_characters(:eldritch_knight_ten)
 
-    service = CombatSimulatorService.new(party_one: [ fighter ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service = simulator(party_one: [ fighter ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
-    action = service.send(:available_actions_for, actor: fighter).find { |candidate| candidate.class_feature == second_wind }
+    participant = participant_of(service, fighter)
+    action = service.send(:available_actions_for, actor: participant).find { |candidate| candidate.class_feature == second_wind }
     assert_equal [ "heal", 2 ], [ action&.payload&.dig("kind"), action&.uses_remaining ]
 
-    effects = Combat::EffectResolver.call(action: Combat::CombatAction.new(source_type: :class_feature, source_id: second_wind.id, actor: fighter))
+    effects = Combat::EffectResolver.call(action: Combat::CombatAction.new(source_type: :class_feature, source_id: second_wind.id, actor: participant))
     assert_equal [ "heal" ], effects.map(&:kind).map(&:to_s)
 
     assert_includes fighter.gambit_action_options, [ second_wind.name, "class_feature:#{second_wind.id}" ]
@@ -161,7 +187,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
   end
 
   test "respects max_rounds stop condition" do
-    result = CombatSimulatorService.new(
+    result = simulator(
       party_one: [ fresh_character(:thorin) ],
       party_two: [ fresh_character(:aragorn) ],
       seed: 42,
@@ -173,22 +199,17 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
   test "Survivor heals a Champion at half HP or below at the start of their turn" do
     champion = fresh_character(:champion_eighteen)
-    champion.current_hit_points = champion.max_hit_points / 2
-    starting_hit_points = champion.current_hit_points
+    starting_hit_points = @hit_points[champion.id] = champion.max_hit_points / 2
 
-    result = CombatSimulatorService.new(
-      party_one: [ champion ],
-      party_two: [ fresh_character(:aragorn) ],
-      seed: 99,
-      max_rounds: 1
-    ).call
+    service = simulator(party_one: [ champion ], party_two: [ fresh_character(:aragorn) ], seed: 99, max_rounds: 1)
+    result = service.call
 
     passive_entries = result[:round_log].flat_map { |round| round[:turns] }
       .select { |turn| turn[:actor_id] == champion.id && turn.dig(:action, :type) == :turn_passive && turn.dig(:action, :trigger) == "turn_start" }
 
     assert_equal 1, passive_entries.size
     assert_equal :heal, passive_entries.first[:results].first[:kind]
-    assert_operator champion.current_hit_points, :>, starting_hit_points
+    assert_operator participant_of(service, champion).current_hit_points, :>, starting_hit_points
   end
 
   test "a maneuver rides on a weapon attack: its die is added on a hit, spending one superiority die, and nothing on a miss" do
@@ -201,7 +222,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_equal 4, action.uses_remaining
 
     Random.srand(1)
-    turn = service.send(:execute_action, actor: battle_master, chosen_action: action, round_number: 1, turn_index: 1)
+    turn = service.send(:execute_action, actor: participant_of(service, battle_master), chosen_action: action, round_number: 1, turn_index: 1)
 
     assert_equal :attack, turn.action[:type]
     assert_equal "Maneuver: Precision Attack", turn.action[:maneuver_name]
@@ -213,14 +234,13 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     target.combatant.update!(armor_class: 100)
     Random.srand(1)
-    miss = service.send(:execute_action, actor: battle_master, chosen_action: action, round_number: 1, turn_index: 1).results.first
+    miss = service.send(:execute_action, actor: participant_of(service, battle_master), chosen_action: action, round_number: 1, turn_index: 1).results.first
 
     assert_not miss[:success]
     assert_nil miss[:rider]
     assert_equal 3, maneuver_action(service:, actor: battle_master, slug: "precision-attack").uses_remaining, "a miss must not spend a die"
 
-    combat_superiority_id = class_features(:fighter_battle_master_combat_superiority).id
-    service.send(:instance_variable_get, :@uses_remaining)[battle_master.id][combat_superiority_id] = 0
+    spend_all_uses(participant_of(service, battle_master), class_features(:fighter_battle_master_combat_superiority))
 
     assert_nil maneuver_action(service:, actor: battle_master, slug: "precision-attack")
   end
@@ -232,8 +252,8 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     service = maneuver_service(battle_master:, target:, allies: [ ally ])
     marks = service.send(:instance_variable_get, :@advantage_marks)
     strike = maneuver_action(service:, actor: battle_master, slug: "distracting-strike")
-    strike_now = -> { service.send(:execute_action, actor: battle_master, chosen_action: strike, round_number: 1, turn_index: 1) }
-    attack_now = ->(actor) { service.send(:execute_attack_action, actor:, round_number: 1, turn_index: 1).results.first }
+    strike_now = -> { service.send(:execute_action, actor: participant_of(service, battle_master), chosen_action: strike, round_number: 1, turn_index: 1) }
+    attack_now = ->(actor) { service.send(:execute_attack_action, actor: participant_of(service, actor), round_number: 1, turn_index: 1).results.first }
 
     Random.srand(1) # AC 100: a miss
     assert_not strike_now.call.results.first[:success]
@@ -256,12 +276,12 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
     ally = fresh_character(:aragorn_copy)
     target = hittable_target(armor_class: 1)
+    @hit_points[target.id] = 0 # the fight is over, so the turn ends right after the expiry and no attack spends a mark
     service = maneuver_service(battle_master:, target:, allies: [ ally ])
     marks = service.send(:instance_variable_get, :@advantage_marks)
     marks[target.id] = [ ally.id, battle_master.id ]
-    target.current_hit_points = 0 # the fight is over, so the turn ends right after the expiry and no attack spends a mark
 
-    service.send(:execute_round, round_number: 1, initiative_order: [ battle_master ])
+    service.send(:execute_round, round_number: 1, initiative_order: [ participant_of(service, battle_master) ])
 
     assert_equal [ ally.id ], marks[target.id]
   end
@@ -270,7 +290,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
     battle_master.player_character_maneuvers.destroy_all
 
-    service = CombatSimulatorService.new(party_one: [ battle_master ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service = simulator(party_one: [ battle_master ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
 
     assert_nil precision_attack_action(service:, actor: battle_master)
@@ -278,26 +298,26 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
   test "Action Surge grants an extra action on the same turn and respects the uses limit" do
     actor = fresh_character(:fighter_no_archetype_seven)
-    service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ fresh_character(:aragorn_copy) ], seed: 1, max_rounds: 1)
+    service = simulator(party_one: [ actor ], party_two: [ fresh_character(:aragorn_copy) ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
+    fighter = participant_of(service, actor)
 
     # Second Wind is otherwise available at this level; disable it so the extra action
     # deterministically resolves to a plain attack (only remaining option).
-    uses_remaining = service.send(:instance_variable_get, :@uses_remaining)
-    uses_remaining[actor.id][class_features(:fighter_second_wind).id] = 0
+    spend_all_uses(fighter, class_features(:fighter_second_wind))
 
     action_surge_id = class_features(:fighter_action_surge).id
-    assert_equal 1, uses_remaining[actor.id][action_surge_id]
+    assert_equal 1, fighter.uses_left(action_surge_id)
 
     Random.srand(1)
-    extra_turn = service.send(:action_surge_turn, actor: actor, round_number: 1, turn_index: 1)
+    extra_turn = service.send(:action_surge_turn, actor: fighter, round_number: 1, turn_index: 1)
 
     assert extra_turn, "expected Action Surge to grant an extra action"
     assert_equal true, extra_turn.extra
     assert_equal :attack, extra_turn.action[:type]
-    assert_equal 0, uses_remaining[actor.id][action_surge_id]
+    assert_equal 0, fighter.uses_left(action_surge_id)
 
-    assert_nil service.send(:action_surge_turn, actor: actor, round_number: 1, turn_index: 2)
+    assert_nil service.send(:action_surge_turn, actor: fighter, round_number: 1, turn_index: 2)
   end
 
   test "Indomitable rerolls a failed saving throw against the fighter and consumes a use, whatever its name" do
@@ -305,8 +325,9 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     fighter = player_characters(:fighter_indomitable_nine) # constitution: 12 (mod +1)
     attacker = player_characters(:barbarian_test_striker)
 
-    service = CombatSimulatorService.new(party_one: [ attacker ], party_two: [ fighter ], seed: 1, max_rounds: 1)
+    service = simulator(party_one: [ attacker ], party_two: [ fighter ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
+    attacker, fighter = participant_of(service, attacker), participant_of(service, fighter)
 
     chosen_action = service.send(:available_actions_for, actor: attacker).find do |action|
       action.type == :class_feature && action.class_feature.slug == "test-save-strike"
@@ -314,8 +335,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert chosen_action, "expected the test save-strike fixture to be available to the attacker"
 
     indomitable_id = class_features(:fighter_indomitable).id
-    uses_remaining = service.send(:instance_variable_get, :@uses_remaining)
-    assert_equal 1, uses_remaining[fighter.id][indomitable_id]
+    assert_equal 1, fighter.uses_left(indomitable_id)
 
     Random.srand(46) # 1d6 roll = 6; 1st constitution save total 7 (fails dc 8); reroll total 10 (succeeds)
     turn = service.send(:execute_class_feature_action, actor: attacker, chosen_action: chosen_action, round_number: 1, turn_index: 1)
@@ -324,14 +344,14 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_equal :damage, damage_result[:kind]
     assert_equal 3, damage_result[:amount] # half of 6, since the reroll succeeded
 
-    assert_equal 0, uses_remaining[fighter.id][indomitable_id]
+    assert_equal 0, fighter.uses_left(indomitable_id)
   end
 
   test "an Eldritch Knight autonomously casts a spell during a simulated round" do
     caster = spellcaster_with_known_spells(:eldritch_knight_seven)
     target = fresh_character(:aragorn)
 
-    result = CombatSimulatorService.new(party_one: [ caster ], party_two: [ target ], seed: 2, max_rounds: 1).call
+    result = simulator(party_one: [ caster ], party_two: [ target ], seed: 2, max_rounds: 1).call
 
     cast_turn = result[:round_log].flat_map { |round| round[:turns] }
       .find { |turn| turn[:actor_id] == caster.id && turn.dig(:action, :type) == :cast_spell }
@@ -344,8 +364,9 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
   test "choose_turn_action picks the physical branch when the coin flip favors it" do
     caster = spellcaster_with_known_spells(:eldritch_knight_seven)
-    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service = simulator(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
+    caster = participant_of(service, caster)
 
     available = service.send(:available_actions_for, actor: caster)
     chosen = service.send(:choose_turn_action, available:, actor: caster)
@@ -355,8 +376,9 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
   test "choose_turn_action picks the spell branch when the coin flip favors it" do
     caster = spellcaster_with_known_spells(:eldritch_knight_seven)
-    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 3, max_rounds: 1)
+    service = simulator(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 3, max_rounds: 1)
     service.send(:initialize_state)
+    caster = participant_of(service, caster)
 
     available = service.send(:available_actions_for, actor: caster)
     chosen = service.send(:choose_turn_action, available:, actor: caster)
@@ -371,10 +393,11 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     # same element by coincidence. Compare the RNG's internal state instead, which only
     # matches if the exact same sequence of draws happened.
     actor = fresh_character(:aragorn)
-    plain_service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ fresh_character(:aragorn_copy) ], seed: 5, max_rounds: 1)
-    heuristic_service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ fresh_character(:aragorn_copy) ], seed: 5, max_rounds: 1)
+    plain_service = simulator(party_one: [ actor ], party_two: [ fresh_character(:aragorn_copy) ], seed: 5, max_rounds: 1)
+    heuristic_service = simulator(party_one: [ actor ], party_two: [ fresh_character(:aragorn_copy) ], seed: 5, max_rounds: 1)
 
     plain_service.send(:initialize_state)
+    actor = participant_of(plain_service, actor)
     available = plain_service.send(:available_actions_for, actor: actor)
     plain_rng = plain_service.send(:instance_variable_get, :@rng)
     heuristic_rng = heuristic_service.send(:instance_variable_get, :@rng)
@@ -388,8 +411,9 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
   test "cast_spell action disappears from available_actions_for once its spell slot is exhausted" do
     wizard = spellcaster_with_known_spells(:merlin)
-    service = CombatSimulatorService.new(party_one: [ wizard ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service = simulator(party_one: [ wizard ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
+    wizard = participant_of(service, wizard)
 
     cast_slugs = service.send(:available_actions_for, actor: wizard)
       .select(&:spell?)
@@ -408,8 +432,9 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
   test "War Magic grants a bonus weapon attack when the turn's normal action casts a cantrip" do
     caster = spellcaster_with_known_spells(:eldritch_knight_seven)
-    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service = simulator(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
+    caster = participant_of(service, caster)
 
     chosen_action = service.send(:available_actions_for, actor: caster).find do |action|
       action.spell&.slug == "fire-bolt"
@@ -427,16 +452,17 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
   test "War Magic does not grant a bonus attack for a non-cantrip spell before Improved War Magic" do
     caster = spellcaster_with_known_spells(:eldritch_knight_seven)
     chosen_action = Combat::ActionOption.new(type: :cast_spell, spell: spells(:magic_missile))
-    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service = simulator(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
 
-    assert_nil service.send(:war_magic_turn, actor: caster, chosen_action:, round_number: 1, turn_index: 1)
+    assert_nil service.send(:war_magic_turn, actor: participant_of(service, caster), chosen_action:, round_number: 1, turn_index: 1)
   end
 
   test "Improved War Magic grants a bonus weapon attack even for a non-cantrip spell" do
     caster = spellcaster_with_known_spells(:eldritch_knight_eighteen)
-    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
+    service = simulator(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
+    caster = participant_of(service, caster)
 
     chosen_action = service.send(:available_actions_for, actor: caster).find do |action|
       action.spell&.slug == "magic-missile"
@@ -455,11 +481,11 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     caster = spellcaster_with_known_spells(:eldritch_knight_ten)
     target = fresh_character(:aragorn)
 
-    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ target ], seed: 1, max_rounds: 1)
+    service = simulator(party_one: [ caster ], party_two: [ target ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
 
     Random.srand(1)
-    turn = service.send(:execute_attack_action, actor: caster, round_number: 1, turn_index: 1)
+    turn = service.send(:execute_attack_action, actor: participant_of(service, caster), round_number: 1, turn_index: 1)
 
     assert_equal true, turn.results.first[:success], "expected the attack to hit (attack_bonus is set high for determinism)"
     pending = service.send(:instance_variable_get, :@eldritch_strike_pending)
@@ -470,9 +496,10 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     caster = spellcaster_with_known_spells(:eldritch_knight_ten)
     target = fresh_character(:aragorn) # dexterity 12 (mod +1)
 
-    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ target ], seed: 1, max_rounds: 1)
+    service = simulator(party_one: [ caster ], party_two: [ target ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
     service.send(:instance_variable_get, :@eldritch_strike_pending)[target.id] = caster.id
+    caster = participant_of(service, caster)
 
     chosen_action = service.send(:available_actions_for, actor: caster).find do |action|
       action.spell&.slug == "test-save-spell"
@@ -500,9 +527,10 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     # A different attacker must not benefit from someone else's mark on the target.
     other_caster = spellcaster_with_known_spells(:eldritch_knight_eighteen)
-    attacker_leak_service = CombatSimulatorService.new(party_one: [ other_caster ], party_two: [ marked_target ], seed: 1, max_rounds: 1)
+    attacker_leak_service = simulator(party_one: [ other_caster ], party_two: [ marked_target ], seed: 1, max_rounds: 1)
     attacker_leak_service.send(:initialize_state)
     attacker_leak_service.send(:instance_variable_get, :@eldritch_strike_pending)[marked_target.id] = player_characters(:eldritch_knight_ten).id
+    other_caster = participant_of(attacker_leak_service, other_caster)
 
     other_action = attacker_leak_service.send(:available_actions_for, actor: other_caster).find do |action|
       action.spell&.slug == "test-save-spell"
@@ -518,9 +546,10 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     # The same attacker must not get disadvantage against a target they haven't marked.
     marker = spellcaster_with_known_spells(:eldritch_knight_ten)
     unmarked_target = fresh_character(:aragorn_copy)
-    target_leak_service = CombatSimulatorService.new(party_one: [ marker ], party_two: [ unmarked_target ], seed: 1, max_rounds: 1)
+    target_leak_service = simulator(party_one: [ marker ], party_two: [ unmarked_target ], seed: 1, max_rounds: 1)
     target_leak_service.send(:initialize_state)
     target_leak_service.send(:instance_variable_get, :@eldritch_strike_pending)[marked_target.id] = marker.id # a mark on someone else entirely
+    marker = participant_of(target_leak_service, marker)
 
     marker_action = target_leak_service.send(:available_actions_for, actor: marker).find do |action|
       action.spell&.slug == "test-save-spell"
@@ -533,11 +562,10 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
   end
 
   test "serialized results carry the spell attack roll only when the effect made one" do
-    caster = spellcaster_with_known_spells(:eldritch_knight_seven) # proficiency +2 (no progression), INT 10 (+0)
-    target = player_characters(:aragorn)
-    target.combatant.update!(armor_class: 100)
-    target.current_hit_points = target.max_hit_points
-    service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ target ], seed: 1, max_rounds: 1)
+    caster = Combat::Participant.new(spellcaster_with_known_spells(:eldritch_knight_seven)) # proficiency +2 (no progression), INT 10 (+0)
+    player_characters(:aragorn).combatant.update!(armor_class: 100)
+    target = Combat::Participant.new(player_characters(:aragorn))
+    service = simulator(party_one: [ caster.character ], party_two: [ target.character ], seed: 1, max_rounds: 1)
 
     attack_effect = Combat::EffectInstance.new(kind: :damage, roll_expression: "1d10", target_type: "target", attack: "spell")
     plain_effect = Combat::EffectInstance.new(kind: :damage, roll_expression: "1d10", target_type: "target")
@@ -555,7 +583,10 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     actor = fresh_character(:aragorn)
     ally = fresh_character(:aragorn_copy)
     enemies = [ fresh_character(:merlin), fresh_character(:elora) ]
-    service = CombatSimulatorService.new(party_one: [ actor, ally ], party_two: enemies, seed: 1)
+    service = simulator(party_one: [ actor, ally ], party_two: enemies, seed: 1)
+    service.send(:initialize_state)
+    actor, ally = participant_of(service, actor), participant_of(service, ally)
+    enemies = enemies.map { |enemy| participant_of(service, enemy) }
 
     picks = ->(target) { 50.times.map { service.send(:resolve_feature_target, actor:, payload: { "target" => target }) }.uniq }
 
@@ -568,10 +599,11 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
   test "an enemy-targeted feature has no target once every enemy is down" do
     actor = fresh_character(:aragorn)
     downed = fresh_character(:merlin)
-    downed.current_hit_points = 0
-    service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ downed ], seed: 1)
+    @hit_points[downed.id] = 0
+    service = simulator(party_one: [ actor ], party_two: [ downed ], seed: 1)
+    service.send(:initialize_state)
 
-    assert_nil service.send(:resolve_feature_target, actor:, payload: { "target" => "enemy" })
+    assert_nil service.send(:resolve_feature_target, actor: participant_of(service, actor), payload: { "target" => "enemy" })
   end
 
   test "gambits: with two valid rules the top one wins, and a rule out of uses is skipped" do
@@ -616,12 +648,13 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     enemy = sturdy(fresh_character(:merlin))
     add_gambit(actor, position: 1, condition: :hp_below, condition_value: 10)
 
-    result = gambit_service(actor:, enemy:).call
+    service = gambit_service(actor:, enemy:)
+    result = service.call
     turns = actor_turns(actor:, result:)
 
     assert_equal [ { type: :idle } ], turns.map { |turn| turn[:action] }
     assert_equal [], turns.first[:results]
-    assert_equal 1000, enemy.current_hit_points
+    assert_equal 1000, participant_of(service, enemy).current_hit_points
     assert_nothing_raised { SimulationRun.metrics(result[:round_log]) }
   end
 
@@ -629,9 +662,9 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     run = lambda do |weaken: nil|
       actor = sturdy(fresh_character(:thorin))
       enemies = [ fresh_character(:aragorn), fresh_character(:aragorn_copy) ]
-      enemies.find { |enemy| enemy.id == weaken }&.then { |enemy| enemy.current_hit_points -= 5 }
+      enemies.find { |enemy| enemy.id == weaken }&.then { |enemy| @hit_points[enemy.id] = enemy.max_hit_points - 5 }
       add_gambit(actor, position: 1, condition: :lowest_hp)
-      service = CombatSimulatorService.new(party_one: [ actor ], party_two: enemies, seed: SEED_WITH_REVERSED_INITIATIVE, max_rounds: 1)
+      service = simulator(party_one: [ actor ], party_two: enemies, seed: SEED_WITH_REVERSED_INITIATIVE, max_rounds: 1)
       first_target = actor_turns(actor:, result: service.call).first[:results].first[:target_id]
       [ first_target, service.instance_variable_get(:@initiative_order).map(&:id) - [ actor.id ] ]
     end
@@ -657,7 +690,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
         add_gambit(character, position: 1, condition: :hp_below, condition_value: 99)
         (2..6).each { |position| add_gambit(character, position:, condition: position.even? ? :any : :lowest_hp) }
       end
-      CombatSimulatorService.new(party_one:, party_two:, seed: 77, max_rounds: 3).call
+      simulator(party_one:, party_two:, seed: 77, max_rounds: 3).call
     end
 
     first = run.call
@@ -678,7 +711,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     disabled = Gambit.new(position: 2, target: :enemy, condition: :any, action_kind: :attack, enabled: false)
     copy = { actor.id.to_s => [ disabled.snapshot, second_wind.snapshot.merge("label" => "rótulo da cópia") ] }
 
-    result = CombatSimulatorService.new(party_one: [ actor ], party_two: [ sturdy(fresh_character(:merlin)) ], seed: 5, max_rounds: 1, gambits: copy).call
+    result = simulator(party_one: [ actor ], party_two: [ sturdy(fresh_character(:merlin)) ], seed: 5, max_rounds: 1, gambits: copy).call
 
     turn = actor_turns(actor:, result:).first
     assert_equal [ :class_feature, { position: 1, rule: "rótulo da cópia" } ], [ turn.dig(:action, :type), turn[:gambit] ]
@@ -687,7 +720,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
   test "the result lists every combatant's initiative roll in the order they act" do
     combatants = %i[aragorn thorin aragorn_copy merlin].map { |name| sturdy(fresh_character(name)) }
 
-    result = CombatSimulatorService.new(party_one: combatants.first(2), party_two: combatants.last(2), seed: 1, max_rounds: 1).call
+    result = simulator(party_one: combatants.first(2), party_two: combatants.last(2), seed: 1, max_rounds: 1).call
 
     initiative = result[:initiative]
     assert_equal combatants.map(&:id).sort, initiative.pluck(:actor_id).sort
@@ -704,7 +737,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     eldritch_knight = sturdy(spellcaster_with_known_spells(:eldritch_knight_seven))
     enemies = %i[aragorn aragorn_copy].map { |name| sturdy(fresh_character(name)) }
 
-    entries = CombatSimulatorService.new(party_one: [ eldritch_knight ], party_two: enemies, seed: 6, max_rounds: 3).call[:round_log].flat_map { |round| round[:turns] }
+    entries = simulator(party_one: [ eldritch_knight ], party_two: enemies, seed: 6, max_rounds: 3).call[:round_log].flat_map { |round| round[:turns] }
 
     assert entries.any? { |entry| entry[:bonus] }, "the scenario must include a War Magic bonus"
     assert entries.any? { |entry| entry[:extra] }, "the scenario must include an Action Surge extra action"
@@ -718,7 +751,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
         add_gambit(actor, position: 1, enabled: false)
         add_gambit(actor, position: 2, target: :self, action_kind: :class_feature, class_feature: class_features(:fighter_second_wind), enabled: false)
       end
-      CombatSimulatorService.new(party_one: [ actor ], party_two: [ fresh_character(:aragorn), fresh_character(:aragorn_copy) ], seed: 77, max_rounds: 5).call
+      simulator(party_one: [ actor ], party_two: [ fresh_character(:aragorn), fresh_character(:aragorn_copy) ], seed: 77, max_rounds: 5).call
     end
 
     without, disabled = run.(with_disabled_gambits: false), run.(with_disabled_gambits: true)
@@ -727,18 +760,19 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
   test "gambits: a feature fired by a gambit spends exactly one use" do
     second_wind = class_features(:fighter_second_wind)
+    class_feature_unlocks(:second_wind_level_1).update!(uses: 3)
     actor = sturdy(fresh_character(:aragorn))
     add_gambit(actor, position: 1, target: :self, action_kind: :class_feature, class_feature: second_wind)
     service = gambit_service(actor:)
     service.send(:initialize_state)
-    service.instance_variable_set(:@initiative_order, [ actor, *service.instance_variable_get(:@party_two) ])
-    uses_remaining = service.instance_variable_get(:@uses_remaining)
-    uses_remaining[actor.id][second_wind.id] = 3
+    fighter = participant_of(service, actor)
+    service.instance_variable_set(:@initiative_order, [ fighter, *service.instance_variable_get(:@party_two) ])
+    assert_equal 3, fighter.uses_left(second_wind.id)
 
     turns = service.send(:execute_round, round_number: 1, initiative_order: service.instance_variable_get(:@initiative_order))
 
     assert_equal 1, turns.count { |turn| turn.actor_id == actor.id && turn.action[:feature_slug] == "second-wind" }
-    assert_equal 2, uses_remaining[actor.id][second_wind.id]
+    assert_equal 2, fighter.uses_left(second_wind.id)
   end
 
   test "gambits: a spell or feature fired by a gambit lands on the rule's target, not a random one" do
@@ -757,7 +791,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
         sturdy(enemies.third)
         add_gambit(actor, position: 1, condition: :lowest_hp, **action)
 
-        turn = actor_turns(actor:, result: CombatSimulatorService.new(party_one: [ actor ], party_two: enemies, seed:, max_rounds: 1).call).first
+        turn = actor_turns(actor:, result: simulator(party_one: [ actor ], party_two: enemies, seed:, max_rounds: 1).call).first
 
         assert_equal 1, turn.dig(:gambit, :position)
         assert_operator turn[:results].first[:hp_before], :<=, enemies.second.max_hit_points, "#{actor.name}, seed #{seed}: expected the weakest enemy as target"
@@ -770,14 +804,16 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     actor.define_singleton_method(:attacks_per_action) { 3 }
     enemies = %i[aragorn aragorn_copy elora fighter_archer fighter_defender].map { |name| fresh_character(name) }
     a, b, c, d, e = enemies
-    a.current_hit_points = d.current_hit_points = 5 # below 50%: the rule's only candidates
-    enemies.each { |enemy| enemy.define_singleton_method(:take_damage) { |**| self.current_hit_points = 0 } }
+    @hit_points[a.id] = @hit_points[d.id] = 5 # below 50%: the rule's only candidates
     gambit = add_gambit(actor, position: 1, condition: :hp_below, condition_value: 50)
-    service = CombatSimulatorService.new(party_one: [ actor ], party_two: enemies, seed: 1, max_rounds: 1)
+    service = simulator(party_one: [ actor ], party_two: enemies, seed: 1, max_rounds: 1)
     service.send(:initialize_state)
-    service.instance_variable_set(:@initiative_order, [ e, actor, c, a, d, b ])
+    enemies.each { |enemy| participant_of(service, enemy).define_singleton_method(:take_damage) { |**| @current_hit_points = 0 } }
+    service.instance_variable_set(:@initiative_order, [ e, actor, c, a, d, b ].map { |character| participant_of(service, character) })
 
-    turn = Dice.stub(:hit?, true) { service.send(:execute_attack_action, actor:, round_number: 1, turn_index: 1, gambit:) } # every attack hits and kills
+    turn = Dice.stub(:hit?, true) do # every attack hits and kills
+      service.send(:execute_attack_action, actor: participant_of(service, actor), round_number: 1, turn_index: 1, gambit:)
+    end
 
     # a and d by the rule (in initiative order), then e: the first living enemy in initiative order
     # (not b, the first in party order).
@@ -794,7 +830,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
                                          class_feature: class_features(:fighter_second_wind))
       add_gambit(character, position: 3, condition: :lowest_hp)
     end
-    service = CombatSimulatorService.new(party_one:, party_two:, seed:, max_rounds: 5)
+    service = simulator(party_one:, party_two:, seed:, max_rounds: 5)
 
     result = service.call
 
@@ -808,7 +844,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     party_one = [ sturdy(fresh_character(:aragorn)), sturdy(fresh_character(:fighter_archer)) ]
     party_two = [ sturdy(fresh_character(:aragorn_copy)), sturdy(fresh_character(:fighter_defender)) ]
     (party_one + party_two).each { |character| add_gambit(character, position: 1) }
-    service = CombatSimulatorService.new(party_one:, party_two:, seed:, max_rounds: 2)
+    service = simulator(party_one:, party_two:, seed:, max_rounds: 2)
 
     turns = service.call[:round_log].flat_map { |round| round[:turns] }
 
@@ -828,13 +864,13 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     service = new_service.call
     service.send(:initialize_state)
-    first_spell = service.send(:available_actions_for, actor:).find(&:spell?).spell
+    first_spell = service.send(:available_actions_for, actor: participant_of(service, actor)).find(&:spell?).spell
     assert_not_equal magic_missile, first_spell, "another spell must come first, or matching the rule's own spell is untested"
 
     turn = run.call
     assert_equal [ "magic-missile", 1 ], [ turn.dig(:action, :spell_slug), turn.dig(:gambit, :position) ]
 
-    actor.available_spell_slots = { 1 => 0 }
+    actor.define_singleton_method(:spell_slots) { { 1 => 0 } } # a sheet with no slot left
     turn = run.call
     assert_equal [ :attack, 2 ], [ turn.dig(:action, :type), turn.dig(:gambit, :position) ]
   end
@@ -861,13 +897,15 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
   test "gambits: a spell fired by a gambit spends exactly one slot" do
     actor = sturdy(spellcaster_with_known_spells(:merlin))
-    actor.available_spell_slots = { 1 => 2 }
+    assert_equal 2, actor.spell_slots[1]
     add_gambit(actor, position: 1, action_kind: :spell, spell: spells(:magic_missile))
+    service = gambit_service(actor:, enemy: sturdy(fresh_character(:aragorn)))
 
-    turns = actor_turns(actor:, result: gambit_service(actor:, enemy: sturdy(fresh_character(:aragorn))).call)
+    turns = actor_turns(actor:, result: service.call)
 
     assert_equal [ "magic-missile" ], turns.map { |turn| turn.dig(:action, :spell_slug) }
-    assert_equal({ 1 => 1 }, actor.available_spell_slots)
+    assert_equal 1, participant_of(service, actor).available_spell_slots[1]
+    assert_equal 2, actor.spell_slots[1], "the sheet keeps its slots"
   end
 
   test "gambits: a combat where every gambit turn stands idle never draws from @rng" do
@@ -875,7 +913,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     party_one = [ sturdy(fresh_character(:aragorn)) ]
     party_two = [ sturdy(fresh_character(:aragorn_copy)) ]
     (party_one + party_two).each { |character| add_gambit(character, position: 1, condition: :hp_below, condition_value: 10) }
-    service = CombatSimulatorService.new(party_one:, party_two:, seed:, max_rounds: 3)
+    service = simulator(party_one:, party_two:, seed:, max_rounds: 3)
 
     turns = service.call[:round_log].flat_map { |round| round[:turns] }
 
@@ -888,14 +926,15 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
     target = hittable_target(armor_class: 1)
     service = maneuver_service(battle_master:, target:)
-    service.instance_variable_set(:@initiative_order, [ battle_master, target ])
+    fighter = participant_of(service, battle_master)
+    service.instance_variable_set(:@initiative_order, [ fighter, participant_of(service, target) ])
     gambit = add_gambit(battle_master, position: 1, action_kind: :class_feature,
                                        class_feature: class_features(:fighter_battle_master_maneuver_precision_attack))
-    chosen = service.send(:choose_gambit_action, actor: battle_master, gambits: [ gambit ], available: service.send(:available_actions_for, actor: battle_master))
+    chosen = service.send(:choose_gambit_action, actor: fighter, gambits: [ gambit ], available: service.send(:available_actions_for, actor: fighter))
     assert_equal 4, chosen.uses_remaining
 
     Random.srand(1)
-    turn = service.send(:gambit_turn, actor: battle_master, chosen_action: chosen, round_number: 1, turn_index: 1)
+    turn = service.send(:gambit_turn, actor: fighter, chosen_action: chosen, round_number: 1, turn_index: 1)
 
     assert_equal 1, turn.results.count { |attack| attack[:rider] }
     assert_equal 3, maneuver_action(service:, actor: battle_master, slug: "precision-attack").uses_remaining
@@ -906,7 +945,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     actor.define_singleton_method(:attacks_per_action) { 20 }
     enemies = [ sturdy(fresh_character(:aragorn)), sturdy(fresh_character(:aragorn_copy)) ]
     add_gambit(actor, position: 1)
-    service = CombatSimulatorService.new(party_one: [ actor ], party_two: enemies, seed: SEED_WITH_REVERSED_INITIATIVE, max_rounds: 1)
+    service = simulator(party_one: [ actor ], party_two: enemies, seed: SEED_WITH_REVERSED_INITIATIVE, max_rounds: 1)
 
     turn = actor_turns(actor:, result: service.call).first
 
@@ -924,7 +963,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
       add_gambit(actor, position: 1, condition: :lowest_hp, action_kind: :class_feature,
                         class_feature: class_features(:fighter_battle_master_maneuver_precision_attack))
 
-      turn = actor_turns(actor:, result: CombatSimulatorService.new(party_one: [ actor ], party_two: enemies, seed:, max_rounds: 1).call).first
+      turn = actor_turns(actor:, result: simulator(party_one: [ actor ], party_two: enemies, seed:, max_rounds: 1).call).first
 
       assert_equal "Maneuver: Precision Attack", turn.dig(:action, :maneuver_name)
       assert_equal enemies.second.id, turn[:results].first[:target_id], "seed #{seed}: expected the weakest enemy as target"
@@ -933,18 +972,20 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
   test "gambits: an ally rule includes the actor itself" do
     actor = player_characters(:elora)
-    actor.current_hit_points = 4 # below 50% of 10
+    @hit_points[actor.id] = 4 # below 50% of 10
     mend = Spell.create!(name: "Test Mend", slug: "test-mend", level: 0, school: "evocation", description: "Test-only ally heal.",
                          effect_payload: { kind: "heal", roll: "1d4", target: "ally" })
     PlayerCharacterSpell.create!(player_character: actor, spell: mend)
     ally = sturdy(fresh_character(:aragorn))
     enemy = fresh_character(:merlin)
     add_gambit(actor, position: 1, target: :ally, condition: :hp_below, condition_value: 50, action_kind: :spell, spell: mend)
-    service = CombatSimulatorService.new(party_one: [ ally, actor ], party_two: [ enemy ], seed: 1, max_rounds: 1)
+    service = simulator(party_one: [ ally, actor ], party_two: [ enemy ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
+    gambits = actor.gambits.to_a
+    ally, actor, enemy = [ ally, actor, enemy ].map { |character| participant_of(service, character) }
     service.instance_variable_set(:@initiative_order, [ ally, actor, enemy ])
 
-    chosen = service.send(:choose_gambit_action, actor:, gambits: actor.gambits.to_a, available: service.send(:available_actions_for, actor:))
+    chosen = service.send(:choose_gambit_action, actor:, gambits:, available: service.send(:available_actions_for, actor:))
 
     assert_equal :cast_spell, chosen&.type
     assert_equal actor, chosen.target
@@ -954,19 +995,20 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     actor = fresh_character(:thorin)
     enemy = fresh_character(:aragorn) # max 12
     gambit = add_gambit(actor, position: 1, condition: :hp_below, condition_value: 50)
-    service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ enemy ], seed: 1, max_rounds: 1)
+    @hit_points[enemy.id] = 6 # exactly 50%
+    service = simulator(party_one: [ actor ], party_two: [ enemy ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
+    actor, enemy = participant_of(service, actor), participant_of(service, enemy)
     service.instance_variable_set(:@initiative_order, [ actor, enemy ])
 
-    enemy.current_hit_points = 6 # exactly 50%
     assert_nil service.send(:gambit_target, actor:, gambit:)
 
-    enemy.current_hit_points = 5
+    enemy.take_damage(amount: 1, damage_type: "force")
     assert_equal enemy, service.send(:gambit_target, actor:, gambit:)
 
     # 62/125 = 49.6%: below 50% even though it rounds to 50.
-    enemy.max_hit_points = 125
-    enemy.current_hit_points = 62
+    enemy.character.max_hit_points = 125
+    enemy.heal(57)
     assert_equal enemy, service.send(:gambit_target, actor:, gambit:)
   end
 
@@ -975,7 +1017,6 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     def fresh_character(fixture_name)
       character = player_characters(fixture_name).dup
       character.id = player_characters(fixture_name).id
-      character.current_hit_points = character.max_hit_points
       character
     end
 
@@ -983,18 +1024,14 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     # #known_maneuvers only queries the database for a persisted owner, and .dup always
     # resets new_record? to true even after manually re-assigning the original id.
     def battle_master_with_known_maneuvers(fixture_name)
-      character = player_characters(fixture_name)
-      character.current_hit_points = character.max_hit_points
-      character
+      player_characters(fixture_name)
     end
 
     # Uses the fixture record directly (no #dup), for the same reason as
     # #battle_master_with_known_maneuvers: #spells is a has_many :through
     # association, which only resolves for a persisted owner.
     def spellcaster_with_known_spells(fixture_name)
-      character = player_characters(fixture_name)
-      character.current_hit_points = character.max_hit_points
-      character
+      player_characters(fixture_name)
     end
 
     def precision_attack_action(service:, actor:)
@@ -1002,7 +1039,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     end
 
     def maneuver_action(service:, actor:, slug:)
-      service.send(:available_actions_for, actor:).find do |action|
+      service.send(:available_actions_for, actor: participant_of(service, actor)).find do |action|
         action.type == :class_feature && action.class_feature.slug == "battle-master-maneuver-#{slug}"
       end
     end
@@ -1012,12 +1049,11 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     def hittable_target(armor_class:)
       target = player_characters(:aragorn)
       target.combatant.update!(armor_class:, max_hit_points: 1000)
-      target.current_hit_points = target.max_hit_points
       target
     end
 
     def maneuver_service(battle_master:, target:, allies: [])
-      service = CombatSimulatorService.new(party_one: [ battle_master, *allies ], party_two: [ target ], seed: 1, max_rounds: 1)
+      service = simulator(party_one: [ battle_master, *allies ], party_two: [ target ], seed: 1, max_rounds: 1)
       service.send(:initialize_state)
       service
     end
@@ -1026,14 +1062,23 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
       character.gambits.build(position:, target:, condition:, action_kind:, **attributes)
     end
 
-    # Enough HP that nobody falls over the few rounds a gambit test runs.
+    # Starts with enough HP that nobody falls over the few rounds a gambit test runs.
     def sturdy(character)
-      character.current_hit_points = 1000
+      @hit_points[character.id] = 1000
       character
     end
 
+    # The simulator, with the starting HP the test set.
+    def simulator(**)
+      CombatSimulatorService.new(hit_points: @hit_points, **)
+    end
+
+    def spend_all_uses(participant, feature)
+      participant.uses_left(feature.id).times { participant.spend_use!(feature.id) }
+    end
+
     def gambit_service(actor:, enemy: sturdy(fresh_character(:merlin)), max_rounds: 1)
-      CombatSimulatorService.new(party_one: [ actor ], party_two: [ enemy ], seed: 5, max_rounds:)
+      simulator(party_one: [ actor ], party_two: [ enemy ], seed: 5, max_rounds:)
     end
 
     # The actor's own turn entries (not passives or Action Surge extras).
