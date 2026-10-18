@@ -1,6 +1,7 @@
 # Update Log
 
 ## 2026-10-18
+* **Update**: [models/player-character.md](models/player-character.md): the passive payloads per trigger, each feature's action payload at the level and `combat_superiority` are now cached on the character. Phase 1.2 had made simulations 6–24% slower with the same queries by working every feature's effect out again on each attack (~30,000 `ClassFeature#effect_payload_at` calls in 12 simulations); with the cache they run 2–16% faster than before phase 1.2, golden files unchanged.
 * **Update**: [ubiquitous-language.md](ubiquitous-language.md) defines **Rider**: an effect that rides along on an attack and applies when it hits (today the Battle Master maneuvers). Agreed with the user as attack-only for now; phase 3.3 turns it into `Combat::Rider`, replacing the maneuver-specific `maneuver_name` of the logged action with the riders chosen for it and the single `rider` of each attack with the list of riders that applied.
 
 ## 2026-10-17

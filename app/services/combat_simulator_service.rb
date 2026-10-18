@@ -348,7 +348,7 @@ class CombatSimulatorService
 
       actor.feature_unlocks.each do |unlock|
         feature = unlock.class_feature
-        payload = feature.action_payload_at(actor.level)
+        payload = actor.action_payload(feature)
         next unless payload
         next if feature.maneuver_of?(combat_superiority) && !known_maneuver_ids(actor:).include?(feature.id)
 

@@ -6,7 +6,7 @@ resource: app/models/player_character.rb
 tags: [persistence, combat]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-15T00:00:00Z
+  at: 2026-10-18T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:21:20Z }
 sources:
   - id: player-character-rb
@@ -117,7 +117,10 @@ and `"dc": "spell"` saves — see
 `feature_unlocks` (the highest unlock at or below the level of every
 feature the character can see, one query with each feature's unlocks loaded,
 in a fixed order; behind the simulator's actions and uses and every passive:
-attack and AC modifiers, critical threshold, turn passives), `class_progression` (attacks
+attack and AC modifiers, critical threshold, turn passives), the passive
+payloads per trigger (`passive_effect_payloads`, frozen), each feature's action
+payload at the level (`action_payload(feature)`, what the simulator offers every
+turn), `combat_superiority`, `class_progression` (attacks
 per action, proficiency bonus) and `spellcasting_feature` are cached on the
 instance, keyed by what they depend on (`player_class_id`, `level`,
 `martial_archetype_id`, `fighting_style_id`): changing one of those on the
@@ -125,6 +128,14 @@ same instance recomputes, and `#reload` clears the cache. The combat loop asks
 for them on every attack, and [CombatSimulatorService](/architecture/combat-simulator-service.md)
 builds fresh instances per simulation. Rows edited in the database while an
 instance is alive (unlocks, progressions) are not seen until `reload`.
+
+Every attack reads the passives four times (attack and damage bonus, the
+target's AC, the critical threshold), so caching them matters: phase 1.2 of the
+DDD refactor worked each feature's effect out again on every read (~30,000
+`ClassFeature#effect_payload_at` calls in 12 simulations) and made simulations
+6–24% slower with no extra query; caching the passives, the action payloads and
+`combat_superiority` brought them to 2–16% faster than before phase 1.2. A test
+counts `effect_payload_at` calls across repeated reads.
 
 Passives take one payload per feature, the one in force at the character's
 level (`ClassFeature#effect_payload_at`), so a feature with a payload at two

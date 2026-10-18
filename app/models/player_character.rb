@@ -94,13 +94,16 @@ class PlayerCharacter < ApplicationRecord
   end
 
   # One payload per unlocked feature, the one in force at the character's level (ClassFeature#effect_payload_at).
+  # Cached like #feature_unlocks: every attack asks for them (attack and damage bonuses, AC, critical threshold).
   def passive_effect_payloads(trigger:)
-    feature_unlocks.filter_map do |unlock|
-      feature = unlock.class_feature
-      payload = feature.effect_payload_at(level)
-      next unless payload && payload["trigger"] == trigger
+    cached(:"passive_effect_payloads_#{trigger}", choices_key) do
+      feature_unlocks.filter_map do |unlock|
+        feature = unlock.class_feature
+        payload = feature.effect_payload_at(level)
+        next unless payload && payload["trigger"] == trigger
 
-      payload.merge("feature_slug" => feature.slug, "feature_name" => feature.name)
+        payload.merge("feature_slug" => feature.slug, "feature_name" => feature.name).freeze
+      end.freeze
     end
   end
 
@@ -108,7 +111,7 @@ class PlayerCharacter < ApplicationRecord
   # (ClassFeature.visible_for?), each feature's unlocks loaded. In a fixed order, by the id of the
   # feature's first unlock at or below the level, since the simulator's random picks follow it.
   def feature_unlocks
-    cached(:feature_unlocks, [ player_class_id, level, martial_archetype_id, fighting_style_id ]) do
+    cached(:feature_unlocks, choices_key) do
       ClassFeature.where(player_class_id:).eager_load(:class_feature_unlocks).order("class_feature_unlocks.id")
         .select { |feature| ClassFeature.visible_for?(feature, martial_archetype:, fighting_style:) }
         .filter_map { |feature| feature.class_feature_unlocks.select { |unlock| unlock.level <= level }.presence }
@@ -117,9 +120,18 @@ class PlayerCharacter < ApplicationRecord
     end
   end
 
+  # The feature's action payload at the character's level (ClassFeature#action_payload_at), cached like
+  # #feature_unlocks for the simulator, which asks for every feature on every turn. Nil for a feature the
+  # character has not unlocked.
+  def action_payload(feature)
+    cached(:action_payloads, choices_key) do
+      feature_unlocks.to_h { |unlock| [ unlock.class_feature_id, unlock.class_feature.action_payload_at(level).freeze ] }
+    end[feature.id]
+  end
+
   # The superiority-dice feature (ClassFeature#combat_superiority?) if unlocked: its uses pay for every maneuver.
   def combat_superiority
-    feature_unlocks.map(&:class_feature).find(&:combat_superiority?)
+    cached(:combat_superiority, choices_key) { feature_unlocks.map(&:class_feature).find(&:combat_superiority?) }
   end
 
   def take_damage(amount:, damage_type:)
@@ -242,6 +254,11 @@ class PlayerCharacter < ApplicationRecord
       raise "No level #{spell_level} spell slots remaining for #{name}" if remaining <= 0
 
       available_spell_slots[spell_level] = remaining - 1
+    end
+
+    # What the unlocked features, and so their passives, depend on.
+    def choices_key
+      [ player_class_id, level, martial_archetype_id, fighting_style_id ]
     end
 
     # Per-instance cache for lookups that depend only on the character's class, level and choices. The combat

@@ -47,9 +47,27 @@ class PlayerCharacterTest < ActiveSupport::TestCase
 
     character.level = 1
     assert_equal 1, character.attacks_per_action
+    assert_equal 20, character.critical_hit_threshold, "Improved Critical unlocks at level 3"
     character.level = 5
     character.martial_archetype = nil
     assert_equal 20, character.critical_hit_threshold, "Improved Critical belongs to the Champion archetype"
+  end
+
+  test "each feature's effect is worked out once, however many attacks read the passives and action payloads" do
+    character = player_characters(:thorin)
+    second_wind = class_features(:fighter_second_wind)
+    calls = 0
+    count = Module.new { define_method(:effect_payload_at) { |*args| calls += 1; super(*args) } }
+
+    character.feature_unlocks.each { |unlock| unlock.class_feature.singleton_class.prepend(count) }
+    10.times { character.weapon_attack_bonus + character.armor_class + character.critical_hit_threshold }
+    10.times { character.action_payload(second_wind) }
+    once = calls
+
+    10.times { character.weapon_damage_modifier + character.critical_hit_threshold }
+    10.times { character.action_payload(second_wind) }
+    assert_equal once, calls, "the passives and action payloads are cached on the character"
+    assert_operator once, :<=, 2 * character.feature_unlocks.size, "one pass for the passives, one for the action payloads"
   end
 
   test "reload drops cached class lookups" do
