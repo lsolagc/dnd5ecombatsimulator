@@ -63,8 +63,8 @@
           :total: 15
           :crit: false
           :damage: 9
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -138,8 +138,8 @@
           :total: 20
           :crit: false
           :damage: 10
-      :extra: true
       :gambit: aleatório
+      :extra: true
   :draw: false
   :outcome: :victory
 2:
@@ -205,8 +205,8 @@
           :modifiers:
             actor_level: 3
           :total: 10
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -280,8 +280,8 @@
           :total: 24
           :crit: false
           :damage: 13
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -615,8 +615,8 @@
           :total: 16
           :crit: false
           :damage: 8
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -668,8 +668,8 @@
           :total: 12
           :crit: false
           :damage: 4
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -1319,8 +1319,8 @@
           :total: 14
           :crit: false
           :damage: 11
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -1372,8 +1372,8 @@
           :total: 14
           :crit: false
           :damage: 8
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -1783,8 +1783,8 @@
           :modifiers:
             actor_level: 3
           :total: 4
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -1858,8 +1858,8 @@
           :total: 23
           :crit: false
           :damage: 13
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -2040,8 +2040,8 @@
           :modifiers:
             actor_level: 5
           :total: 6
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -2103,8 +2103,8 @@
           :total: 21
           :crit: false
           :damage: 5
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -2617,8 +2617,8 @@
           :total: 14
           :crit: false
           :damage: 10
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -2669,8 +2669,8 @@
           :modifiers:
             actor_level: 3
           :total: 12
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -2949,8 +2949,8 @@
           :modifiers:
             actor_level: 3
           :total: 12
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -3015,8 +3015,8 @@
           :total: 23
           :crit: false
           :damage: 11
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -3219,8 +3219,8 @@
           :total: 7
           :crit: false
           :damage: 4
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -3285,8 +3285,8 @@
           :modifiers:
             actor_level: 5
           :total: 14
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -3762,8 +3762,8 @@
           :total: 23
           :crit: false
           :damage: 11
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -3814,8 +3814,8 @@
           :total: 14
           :crit: false
           :damage: 13
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -4059,8 +4059,8 @@
           :total: 8
           :crit: false
           :damage: 13
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -4111,8 +4111,8 @@
           :modifiers:
             actor_level: 3
           :total: 4
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -4357,8 +4357,8 @@
           :total: 10
           :crit: false
           :damage: 10
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -4425,8 +4425,8 @@
           :modifiers:
             actor_level: 3
           :total: 8
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2

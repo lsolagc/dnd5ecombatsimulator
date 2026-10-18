@@ -51,7 +51,7 @@ class CombatSimulatorService
 
         round_number += 1
         turns = execute_round(round_number:, initiative_order:)
-        @round_log << { round: round_number, turns: turns }
+        @round_log << { round: round_number, turns: turns.map(&:to_h) }
       end
 
       build_result(round_number:)
@@ -136,7 +136,7 @@ class CombatSimulatorService
           available = available_actions_for(actor:)
           if available.any?
             chosen_action = choose_turn_action(available:, actor:)
-            turns << execute_action(actor:, chosen_action:, round_number:, turn_index: turn_index + 1).merge(gambit: RANDOM_GAMBIT)
+            turns << execute_action(actor:, chosen_action:, round_number:, turn_index: turn_index + 1).with(gambit: RANDOM_GAMBIT)
             bonus_turn = war_magic_turn(actor:, chosen_action:, round_number:, turn_index: turn_index + 1)
             turns << bonus_turn if bonus_turn
           end
@@ -179,17 +179,17 @@ class CombatSimulatorService
       return [] if combat_over?
 
       chosen_action = choose_gambit_action(actor:, gambits:, available: available_actions_for(actor:), surging:)
-      return [ idle_turn(actor:, round_number:, turn_index:).merge(extra ? { extra: true } : {}) ] unless chosen_action
+      return [ idle_turn(actor:, round_number:, turn_index:).with(extra:) ] unless chosen_action
 
-      if chosen_action[:type] == :action_surge
-        consume_feature_use!(actor:, class_feature_id: chosen_action[:class_feature].id)
-        marker = idle_turn(actor:, round_number:, turn_index:).merge(action: { type: :action_surge }, gambit: gambit_log(chosen_action[:gambit]))
+      if chosen_action.action_surge?
+        consume_feature_use!(actor:, class_feature_id: chosen_action.class_feature.id)
+        marker = idle_turn(actor:, round_number:, turn_index:).with(action: { type: :action_surge }, gambit: gambit_log(chosen_action.gambit))
         return [ marker,
                  *gambit_turns(actor:, gambits:, round_number:, turn_index:, surging: true),
                  *gambit_turns(actor:, gambits:, round_number:, turn_index:, surging: true, extra: true) ]
       end
 
-      return [ gambit_turn(actor:, chosen_action:, round_number:, turn_index:).merge(extra: true) ] if extra
+      return [ gambit_turn(actor:, chosen_action:, round_number:, turn_index:).with(extra: true) ] if extra
 
       [ gambit_turn(actor:, chosen_action:, round_number:, turn_index:),
         (war_magic_turn(actor:, chosen_action:, round_number:, turn_index:) unless combat_over?) ].compact
@@ -208,7 +208,7 @@ class CombatSimulatorService
         next if gambit.condition_resource_at_least? && !gambit_resource_at_least?(actor:, action:, minimum: gambit.condition_value)
 
         target = gambit_target(actor:, gambit:)
-        return action.merge(target:, gambit:) if target
+        return action.with(target:, gambit:) if target
       end
 
       nil
@@ -216,9 +216,9 @@ class CombatSimulatorService
 
     def gambit_action?(gambit:, action:)
       case gambit.action_kind
-      when "attack" then action[:type] == :attack
-      when "class_feature" then action[:class_feature]&.id == gambit.class_feature_id
-      when "spell" then action[:type] == :cast_spell && action[:spell].id == gambit.spell_id
+      when "attack" then action.type == :attack
+      when "class_feature" then action.class_feature&.id == gambit.class_feature_id
+      when "spell" then action.spell? && action.spell.id == gambit.spell_id
       end
     end
 
@@ -226,13 +226,13 @@ class CombatSimulatorService
     def action_surge_action(actor:)
       unlock = action_surge_unlock_for(actor:)
       uses = unlock && @uses_remaining.dig(actor.id, unlock.class_feature_id)
-      { type: :action_surge, class_feature: unlock.class_feature, uses_remaining: uses } if uses.is_a?(Integer) && uses.positive?
+      Combat::ActionOption.new(type: :action_surge, class_feature: unlock.class_feature, uses_remaining: uses) if uses.is_a?(Integer) && uses.positive?
     end
 
     # The actor's remaining resource for the rule's own action: spell slots of the spell's level, else the
     # feature's uses (the superiority-dice pool for maneuvers). Unlimited uses always pass.
     def gambit_resource_at_least?(actor:, action:, minimum:)
-      remaining = action[:type] == :cast_spell ? actor.available_spell_slots[action[:spell].level].to_i : action[:uses_remaining]
+      remaining = action.spell? ? actor.available_spell_slots[action.spell.level].to_i : action.uses_remaining
       !remaining.is_a?(Integer) || remaining >= minimum
     end
 
@@ -268,21 +268,17 @@ class CombatSimulatorService
     end
 
     def gambit_turn(actor:, chosen_action:, round_number:, turn_index:)
-      execute_action(actor:, chosen_action:, round_number:, turn_index:).merge(gambit: gambit_log(chosen_action[:gambit]))
+      execute_action(actor:, chosen_action:, round_number:, turn_index:).with(gambit: gambit_log(chosen_action.gambit))
     end
 
     # A gambit-driven actor whose rules all failed stands idle for the turn.
     def idle_turn(actor:, round_number:, turn_index:)
-      {
-        round: round_number,
-        turn: turn_index,
-        actor_id: actor.id,
-        actor_name: actor.name,
-        actor_party: party_for(actor),
-        action: { type: :idle },
-        results: [],
-        gambit: IDLE_GAMBIT
-      }
+      turn_record(actor:, round_number:, turn_index:, action: { type: :idle }, gambit: IDLE_GAMBIT)
+    end
+
+    # The turn's log entry; the header (round, turn, actor) is built in Combat::TurnRecord.for.
+    def turn_record(actor:, round_number:, turn_index:, **entry)
+      Combat::TurnRecord.for(actor:, party: party_for(actor), round: round_number, turn: turn_index, **entry)
     end
 
     # Action Surge for an actor without gambits: if the actor has an unused Action Surge, take one extra
@@ -302,7 +298,7 @@ class CombatSimulatorService
 
       chosen_action = available.sample(random: @rng)
       consume_feature_use!(actor:, class_feature_id: unlock.class_feature_id)
-      execute_action(actor:, chosen_action:, round_number:, turn_index:).merge(extra: true, gambit: RANDOM_GAMBIT)
+      execute_action(actor:, chosen_action:, round_number:, turn_index:).with(extra: true, gambit: RANDOM_GAMBIT)
     end
 
     def action_surge_unlock_for(actor:)
@@ -318,21 +314,21 @@ class CombatSimulatorService
     def war_magic_turn(actor:, chosen_action:, round_number:, turn_index:)
       return nil unless war_magic_available?(actor:, chosen_action:)
 
-      if chosen_action.key?(:gambit)
-        spell_target = chosen_action[:target]
+      if chosen_action.chosen_by_gambit?
+        spell_target = chosen_action.target
         focus = enemy_party_for(actor).include?(spell_target) && !spell_target.dead? ? spell_target : first_living_enemy(actor:)
       end
-      gambit = chosen_action.key?(:gambit) ? gambit_log(chosen_action[:gambit]) : RANDOM_GAMBIT
-      execute_attack_action(actor:, round_number:, turn_index:, focus:).merge(bonus: true, gambit:)
+      gambit = chosen_action.chosen_by_gambit? ? gambit_log(chosen_action.gambit) : RANDOM_GAMBIT
+      execute_attack_action(actor:, round_number:, turn_index:, focus:).with(bonus: true, gambit:)
     end
 
     def war_magic_available?(actor:, chosen_action:)
-      return false unless chosen_action[:type] == :cast_spell
+      return false unless chosen_action.spell?
 
       unlocks = actor.feature_unlocks
       return true if unlocks.any? { |unlock| unlock.class_feature.name == "Improved War Magic" }
 
-      unlocks.any? { |unlock| unlock.class_feature.name == "War Magic" } && chosen_action[:spell].cantrip?
+      unlocks.any? { |unlock| unlock.class_feature.name == "War Magic" } && chosen_action.spell.cantrip?
     end
 
     def eldritch_strike_unlocked?(actor:)
@@ -343,19 +339,11 @@ class CombatSimulatorService
       results = trigger == :turn_start ? actor.apply_start_of_turn_passives! : actor.apply_end_of_turn_passives!
       return nil if results.empty?
 
-      {
-        round: round_number,
-        turn: turn_index,
-        actor_id: actor.id,
-        actor_name: actor.name,
-        actor_party: party_for(actor),
-        action: { type: :turn_passive, trigger: trigger.to_s },
-        results: serialize_effect_results(results:)
-      }
+      turn_record(actor:, round_number:, turn_index:, action: { type: :turn_passive, trigger: trigger.to_s }, results: serialize_effect_results(results:))
     end
 
     def available_actions_for(actor:)
-      actions = [ { type: :attack } ]
+      actions = [ Combat::ActionOption.new(type: :attack) ]
       combat_superiority = actor.combat_superiority
 
       actor.feature_unlocks.each do |unlock|
@@ -367,20 +355,14 @@ class CombatSimulatorService
         uses = @uses_remaining.dig(actor.id, resource_class_feature_id(actor:, feature:))
         next if uses.is_a?(Integer) && uses <= 0
 
-        actions << {
-          type: :class_feature,
-          class_feature: feature,
-          unlock: unlock,
-          payload: payload,
-          uses_remaining: uses
-        }
+        actions << Combat::ActionOption.new(type: :class_feature, class_feature: feature, payload:, uses_remaining: uses)
       end
 
       actor.spells.each do |spell|
         next if spell.effect_payload.blank?
         next unless spell.cantrip? || actor.available_spell_slots[spell.level].to_i.positive?
 
-        actions << { type: :cast_spell, spell: spell, payload: spell.effect_payload.deep_stringify_keys }
+        actions << Combat::ActionOption.new(type: :cast_spell, spell:, payload: spell.effect_payload.deep_stringify_keys)
       end
 
       actions
@@ -393,7 +375,7 @@ class CombatSimulatorService
     # everything — no coin flip — so @rng draws stay unchanged for the vast majority
     # of actors/tests.
     def choose_turn_action(available:, actor:)
-      spell_options = available.select { |a| a[:type] == :cast_spell }
+      spell_options = available.select(&:spell?)
       if actor.spellcasting_feature.present? && spell_options.any?
         other_options = available - spell_options
         (@rng.rand < 0.5 ? other_options : spell_options).sample(random: @rng)
@@ -403,20 +385,19 @@ class CombatSimulatorService
     end
 
     def execute_action(actor:, chosen_action:, round_number:, turn_index:)
-      case chosen_action[:type]
+      case chosen_action.type
       when :attack
-        execute_attack_action(actor:, round_number:, turn_index:, gambit: chosen_action[:gambit])
+        execute_attack_action(actor:, round_number:, turn_index:, gambit: chosen_action.gambit)
       when :class_feature
-        # A maneuver is not an action of its own: it rides on a normal weapon attack.
-        if chosen_action[:payload]["applies_to"] == "weapon_attack"
-          execute_attack_action(actor:, round_number:, turn_index:, maneuver: chosen_action, gambit: chosen_action[:gambit])
+        if chosen_action.maneuver?
+          execute_attack_action(actor:, round_number:, turn_index:, maneuver: chosen_action, gambit: chosen_action.gambit)
         else
           execute_class_feature_action(actor:, chosen_action:, round_number:, turn_index:)
         end
       when :cast_spell
         execute_cast_spell_action(actor:, chosen_action:, round_number:, turn_index:)
       else
-        raise ArgumentError, "Unsupported action type: #{chosen_action[:type]}"
+        raise ArgumentError, "Unsupported action type: #{chosen_action.type}"
       end
     end
 
@@ -469,18 +450,7 @@ class CombatSimulatorService
         }
       end
 
-      {
-        round: round_number,
-        turn: turn_index,
-        actor_id: actor.id,
-        actor_name: actor.name,
-        actor_party: party_for(actor),
-        action: {
-          type: :attack,
-          maneuver_name: maneuver&.dig(:class_feature)&.name
-        }.compact,
-        results: attacks
-      }
+      turn_record(actor:, round_number:, turn_index:, action: { type: :attack, maneuver_name: maneuver&.class_feature&.name }.compact, results: attacks)
     end
 
     # Adds the maneuver's die to a weapon attack that just hit: rolls it through the effect pipeline
@@ -488,14 +458,14 @@ class CombatSimulatorService
     # ponytail: the die lands as its own damage instance (own log line, own resistance rounding), not
     # inside the weapon's single damage roll; merge them if that ever distorts a metric.
     def apply_maneuver_rider(actor:, target:, maneuver:, crit:)
-      feature = maneuver[:class_feature]
+      feature = maneuver.class_feature
       action = Combat::CombatAction.new(source_type: :class_feature, source_id: feature.id, actor:, targets: [ target ])
       results = Combat::ActionRunner.call(action:, crit:)
       consume_feature_use!(actor:, class_feature_id: resource_class_feature_id(actor:, feature:))
 
       # ponytail: `debuff` is one string with one supported value, no duration and one effect per payload;
       # replace it with a list of status applications once a feature or spell applies a status (issue #45).
-      debuff = maneuver[:payload]["debuff"]
+      debuff = maneuver.payload["debuff"]
       case debuff
       when nil then nil
       when "next_attack_advantage" then @advantage_marks[target.id] << actor.id
@@ -516,9 +486,9 @@ class CombatSimulatorService
     end
 
     def execute_class_feature_action(actor:, chosen_action:, round_number:, turn_index:)
-      feature = chosen_action[:class_feature]
-      payload = chosen_action[:payload]
-      target = chosen_action.key?(:gambit) ? chosen_action[:target] : resolve_feature_target(actor:, payload:)
+      feature = chosen_action.class_feature
+      payload = chosen_action.payload
+      target = chosen_action.chosen_by_gambit? ? chosen_action.target : resolve_feature_target(actor:, payload:)
 
       action = Combat::CombatAction.new(
         source_type: :class_feature,
@@ -541,48 +511,32 @@ class CombatSimulatorService
         end
       end
 
-      {
-        round: round_number,
-        turn: turn_index,
-        actor_id: actor.id,
-        actor_name: actor.name,
-        actor_party: party_for(actor),
-        action: {
-          type: :class_feature,
-          feature_id: feature.id,
-          feature_slug: feature.slug,
-          feature_name: feature.name,
-          target_type: payload["target"]
-        },
-        results: serialize_effect_results(results:)
-      }
+      turn_record(actor:, round_number:, turn_index:, results: serialize_effect_results(results:), action: {
+        type: :class_feature,
+        feature_id: feature.id,
+        feature_slug: feature.slug,
+        feature_name: feature.name,
+        target_type: payload["target"]
+      })
     end
 
     def execute_cast_spell_action(actor:, chosen_action:, round_number:, turn_index:)
-      spell = chosen_action[:spell]
-      payload = chosen_action[:payload]
-      target = chosen_action.key?(:gambit) ? chosen_action[:target] : resolve_feature_target(actor:, payload:)
+      spell = chosen_action.spell
+      payload = chosen_action.payload
+      target = chosen_action.chosen_by_gambit? ? chosen_action.target : resolve_feature_target(actor:, payload:)
 
       disadvantage_on_save = target && @eldritch_strike_pending[target.id] == actor.id
       @eldritch_strike_pending.delete(target.id) if disadvantage_on_save
 
       results = actor.cast_spell(slug: spell.slug, targets: [ target ].compact, disadvantage_on_save: !!disadvantage_on_save)
 
-      {
-        round: round_number,
-        turn: turn_index,
-        actor_id: actor.id,
-        actor_name: actor.name,
-        actor_party: party_for(actor),
-        action: {
-          type: :cast_spell,
-          spell_id: spell.id,
-          spell_slug: spell.slug,
-          spell_name: spell.name,
-          target_type: payload["target"]
-        },
-        results: serialize_effect_results(results:)
-      }
+      turn_record(actor:, round_number:, turn_index:, results: serialize_effect_results(results:), action: {
+        type: :cast_spell,
+        spell_id: spell.id,
+        spell_slug: spell.slug,
+        spell_name: spell.name,
+        target_type: payload["target"]
+      })
     end
 
     def serialize_effect_results(results:)

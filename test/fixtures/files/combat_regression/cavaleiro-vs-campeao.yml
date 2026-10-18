@@ -76,8 +76,8 @@
           :total: 12
           :crit: false
           :damage: 13
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -161,8 +161,8 @@
           :total: 13
           :crit: false
           :damage: 4
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 1
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -190,8 +190,8 @@
           :modifiers:
             actor_level: 13
           :total: 16
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -580,8 +580,8 @@
           :modifiers:
             actor_level: 9
           :total: 18
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -665,8 +665,8 @@
           :armor_class: 17
           :hit: true
           :crit: false
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -1109,8 +1109,8 @@
           :total: 16
           :crit: false
           :damage: 5
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 1
       :turn: 1
       :actor_id: Cavaleiro Arcano
@@ -1143,8 +1143,8 @@
           :armor_class: 17
           :hit: false
           :crit: false
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -1218,8 +1218,8 @@
           :total: 9
           :crit: false
           :damage: 8
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -1594,8 +1594,8 @@
           :total: 14
           :crit: false
           :damage: 8
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 1
       :turn: 1
       :actor_id: Cavaleiro Arcano
@@ -1646,8 +1646,8 @@
           :total: 13
           :crit: false
           :damage: 9
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -1712,8 +1712,8 @@
           :total: 16
           :crit: false
           :damage: 12
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -1799,8 +1799,8 @@
           :total: 9
           :crit: false
           :damage: 5
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 2
       :turn: 2
       :actor_id: Campeão
@@ -2080,8 +2080,8 @@
           :total: 10
           :crit: false
           :damage: 9
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 5
       :turn: 2
       :actor_id: Campeão
@@ -2184,8 +2184,8 @@
           :total: 15
           :crit: false
           :damage: 10
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -2264,8 +2264,8 @@
           :total: 19
           :crit: false
           :damage: 10
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -2478,8 +2478,8 @@
           :armor_class: 17
           :hit: true
           :crit: false
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -2544,8 +2544,8 @@
           :modifiers:
             actor_level: 9
           :total: 11
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -2721,8 +2721,8 @@
           :total: 23
           :crit: false
           :damage: 5
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 3
       :turn: 2
       :actor_id: Campeão
@@ -2835,8 +2835,8 @@
           :armor_class: 17
           :hit: false
           :crit: false
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -2901,8 +2901,8 @@
           :total: 15
           :crit: false
           :damage: 7
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -3310,8 +3310,8 @@
           :total: 15
           :crit: false
           :damage: 9
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -3372,8 +3372,8 @@
           :armor_class: 17
           :hit: true
           :crit: false
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -3586,8 +3586,8 @@
           :total: 9
           :crit: false
           :damage: 9
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
   - :round: 4
     :turns:
     - :round: 4
@@ -3701,8 +3701,8 @@
           :total: 21
           :crit: false
           :damage: 9
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -3786,8 +3786,8 @@
           :total: 8
           :crit: false
           :damage: 3
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 1
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -3820,8 +3820,8 @@
           :armor_class: 17
           :hit: false
           :crit: false
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -4338,8 +4338,8 @@
           :total: 15
           :crit: false
           :damage: 4
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -4404,8 +4404,8 @@
           :total: 11
           :crit: false
           :damage: 9
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -4491,8 +4491,8 @@
           :total: 8
           :crit: false
           :damage: 3
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 2
       :turn: 2
       :actor_id: Campeão
@@ -4615,8 +4615,8 @@
           :total: 19
           :crit: false
           :damage: 4
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
   :draw: false
   :outcome: :victory
 11:
@@ -4696,8 +4696,8 @@
           :total: 8
           :crit: false
           :damage: 13
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -4758,8 +4758,8 @@
           :armor_class: 17
           :hit: true
           :crit: false
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -5129,8 +5129,8 @@
           - 31
           :modifiers: {}
           :total: 31
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -5195,8 +5195,8 @@
           :total: 11
           :crit: false
           :damage: 9
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2

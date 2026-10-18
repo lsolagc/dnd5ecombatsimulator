@@ -5,7 +5,7 @@ description: The project's agreed vocabulary in one place (action, Attack action
 tags: [combat, gambits]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-17T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:31:58Z }
 sources:
   - id: issue-43
@@ -32,6 +32,8 @@ decisions behind it are in
 | **Attack action** | `CombatAction(source_type: :attack)` | The action every combatant has, with the equipped weapon or bare fists. It holds `attacks_per_action` attacks (Extra Attack). |
 | **Attack** | one weapon attack inside the Attack action | One attack roll against one target; on a hit it produces a damage effect. |
 | **Effect** | `Combat::EffectInstance` | The atomic outcome of an action: damage or healing, with an optional attack roll or saving throw. |
+| **Action option** | `Combat::ActionOption` | One action the simulator offers an actor this turn (Attack, a feature or maneuver, a spell, Action Surge), before it runs. A gambit's pick is the same option with the rule's target and gambit. Not an Action: running it builds the `CombatAction`. |
+| **Turn record** | `Combat::TurnRecord` | One entry of a round's turns in the `round_log`: who acted, the action, its effects and the gambit behind it. |
 
 # Conditions, status and criteria
 

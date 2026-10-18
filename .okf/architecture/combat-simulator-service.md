@@ -116,6 +116,18 @@ The available actions are collected into a list and one is picked with
 `.sample(random: @rng)` — action choice is random, not strategic — **unless the
 actor has at least one enabled [gambit](/models/gambit.md)** (see below).
 
+**Turn objects.** Each offered action is a `Combat::ActionOption` (an immutable
+`Data`: `type`, `class_feature`, `spell`, `payload`, `uses_remaining`, and
+`target`/`gambit` once a gambit picks it, through `#with`; predicates
+`chosen_by_gambit?`, `spell?`, `maneuver?`, `action_surge?`). It compares by
+value, as the hashes it replaced did, so the list arithmetic and `sample` draw
+the same. Each logged entry is a `Combat::TurnRecord` (`round`, `turn`,
+`actor_id`, `actor_name`, `actor_party`, `action`, `results`, `gambit`, `extra`,
+`bonus`), its header built in `TurnRecord.for`; the loop turns each round's
+records into hashes (`#to_h`) as it appends them to `round_log`, always in that
+key order and without `gambit` when nil and `extra`/`bonus` when false. The `action` inside
+and the effects in `results` are still hashes.
+
 # Gambits (FFXII-style turn AI)
 
 An actor with enabled gambits never samples: its rules are walked by

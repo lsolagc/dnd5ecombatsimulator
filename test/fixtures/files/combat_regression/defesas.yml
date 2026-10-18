@@ -88,8 +88,8 @@
           :total: 7
           :crit: false
           :damage: 3
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -170,8 +170,8 @@
           :total: 12
           :crit: false
           :damage: 13
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 3
       :actor_id: Campeão
@@ -245,8 +245,8 @@
           :total: 17
           :crit: false
           :damage: 10
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -637,8 +637,8 @@
           :total: 26
           :crit: true
           :damage: 6
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 5
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -885,8 +885,8 @@
       :action:
         :type: :attack
       :results: []
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
   :draw: false
   :outcome: :victory
 2:
@@ -969,8 +969,8 @@
           :total: 18
           :crit: false
           :damage: 3
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -1060,8 +1060,8 @@
           :total: 9
           :crit: false
           :damage: 10
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 3
       :actor_id: Campeão
@@ -1126,8 +1126,8 @@
           :total: 26
           :crit: true
           :damage: 21
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -1432,8 +1432,8 @@
           :total: 22
           :crit: false
           :damage: 4
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 4
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -2044,8 +2044,8 @@
           :total: 16
           :crit: false
           :damage: 8
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -2126,8 +2126,8 @@
           :total: 18
           :crit: false
           :damage: 11
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 3
       :actor_id: Cavaleiro Arcano
@@ -2197,8 +2197,8 @@
           :total: 8
           :crit: false
           :damage: 6
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 1
       :turn: 3
       :actor_id: Cavaleiro Arcano
@@ -2231,8 +2231,8 @@
           :armor_class: 19
           :hit: false
           :crit: false
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -2779,8 +2779,8 @@
           :total: 14
           :crit: false
           :damage: 11
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -2850,8 +2850,8 @@
           :total: 13
           :crit: false
           :damage: 9
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 1
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -2888,8 +2888,8 @@
           :total: 10
           :crit: false
           :damage: 3
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -2964,8 +2964,8 @@
           :total: 14
           :crit: false
           :damage: 5
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -3273,8 +3273,8 @@
           :total: 25
           :crit: false
           :damage: 9
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 4
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -3673,8 +3673,8 @@
           :armor_class: 19
           :hit: true
           :crit: false
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -3740,8 +3740,8 @@
           :modifiers:
             actor_level: 10
           :total: 11
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 3
       :actor_id: Campeão
@@ -3815,8 +3815,8 @@
           :total: 19
           :crit: false
           :damage: 11
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -3888,8 +3888,8 @@
           :total: 25
           :crit: false
           :damage: 9
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 2
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -4266,8 +4266,8 @@
           :modifiers:
             actor_level: 5
           :total: 6
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -4337,8 +4337,8 @@
           :armor_class: 19
           :hit: true
           :crit: false
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -4403,8 +4403,8 @@
           :modifiers:
             actor_level: 10
           :total: 13
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -4513,8 +4513,8 @@
           :total: 12
           :crit: false
           :damage: 8
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 2
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -4660,8 +4660,8 @@
           :total: 12
           :crit: false
           :damage: 5
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 3
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -5057,8 +5057,8 @@
           :total: 8
           :crit: false
           :damage: 10
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 6
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -5219,8 +5219,8 @@
           :total: 21
           :crit: false
           :damage: 13
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -5290,8 +5290,8 @@
           :armor_class: 19
           :hit: false
           :crit: false
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -5365,8 +5365,8 @@
           :total: 17
           :crit: false
           :damage: 11
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -5589,8 +5589,8 @@
           :total: 23
           :crit: false
           :damage: 4
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 3
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -5953,8 +5953,8 @@
           :total: 19
           :crit: false
           :damage: 8
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
   :draw: false
   :outcome: :victory
 8:
@@ -6042,8 +6042,8 @@
           :total: 15
           :crit: false
           :damage: 10
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 1
       :turn: 1
       :actor_id: Cavaleiro Arcano
@@ -6071,8 +6071,8 @@
           :modifiers:
             actor_level: 7
           :total: 8
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -6137,8 +6137,8 @@
           :total: 16
           :crit: false
           :damage: 13
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 3
       :actor_id: Campeão
@@ -6203,8 +6203,8 @@
           :modifiers:
             actor_level: 5
           :total: 8
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -6519,8 +6519,8 @@
           :total: 13
           :crit: false
           :damage: 10
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 4
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -6666,8 +6666,8 @@
           :total: 21
           :crit: false
           :damage: 4
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 5
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -7253,8 +7253,8 @@
           :modifiers:
             actor_level: 10
           :total: 19
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -7315,8 +7315,8 @@
           :armor_class: 19
           :hit: true
           :crit: false
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 3
       :actor_id: Campeão
@@ -7381,8 +7381,8 @@
           :total: 10
           :crit: false
           :damage: 9
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -7944,8 +7944,8 @@
           :total: 22
           :crit: false
           :damage: 5
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -8010,8 +8010,8 @@
           :modifiers:
             actor_level: 5
           :total: 14
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 3
       :actor_id: Cavaleiro Arcano
@@ -8081,8 +8081,8 @@
           :total: 22
           :crit: false
           :damage: 6
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 1
       :turn: 3
       :actor_id: Cavaleiro Arcano
@@ -8119,8 +8119,8 @@
           :total: 8
           :crit: false
           :damage: 3
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -8282,8 +8282,8 @@
           :total: 11
           :crit: false
           :damage: 6
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
   - :round: 3
     :turns:
     - :round: 3
@@ -8429,8 +8429,8 @@
           :total: 21
           :crit: false
           :damage: 10
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
   - :round: 4
     :turns:
     - :round: 4
@@ -8627,8 +8627,8 @@
           :armor_class: 19
           :hit: true
           :crit: false
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -8693,8 +8693,8 @@
           :total: 19
           :crit: false
           :damage: 11
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -8759,8 +8759,8 @@
           :total: 16
           :crit: false
           :damage: 9
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -8936,8 +8936,8 @@
           :total: 13
           :crit: false
           :damage: 4
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 3
       :turn: 2
       :actor_id: Campeão
@@ -9212,8 +9212,8 @@
           :total: 7
           :crit: false
           :damage: 9
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 5
       :turn: 2
       :actor_id: Campeão
@@ -9576,8 +9576,8 @@
           :total: 19
           :crit: false
           :damage: 13
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -9651,8 +9651,8 @@
           :total: 20
           :crit: false
           :damage: 8
-      :extra: true
       :gambit: aleatório
+      :extra: true
     - :round: 1
       :turn: 3
       :actor_id: Cavaleiro Arcano
@@ -9722,8 +9722,8 @@
           :total: 7
           :crit: false
           :damage: 5
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
     - :round: 1
       :turn: 3
       :actor_id: Cavaleiro Arcano
@@ -9751,8 +9751,8 @@
           :modifiers:
             actor_level: 7
           :total: 14
-      :extra: true
       :gambit: aleatório
+      :extra: true
   - :round: 2
     :turns:
     - :round: 2
@@ -10136,8 +10136,8 @@
           :total: 9
           :crit: false
           :damage: 7
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
   - :round: 5
     :turns:
     - :round: 5
@@ -10284,8 +10284,8 @@
           :total: 18
           :crit: false
           :damage: 3
-      :bonus: true
       :gambit: aleatório
+      :bonus: true
   - :round: 6
     :turns:
     - :round: 6

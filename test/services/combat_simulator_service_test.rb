@@ -150,8 +150,8 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     service = CombatSimulatorService.new(party_one: [ fighter ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
-    action = service.send(:available_actions_for, actor: fighter).find { |candidate| candidate[:class_feature] == second_wind }
-    assert_equal [ "heal", 2 ], [ action&.dig(:payload, "kind"), action&.dig(:uses_remaining) ]
+    action = service.send(:available_actions_for, actor: fighter).find { |candidate| candidate.class_feature == second_wind }
+    assert_equal [ "heal", 2 ], [ action&.payload&.dig("kind"), action&.uses_remaining ]
 
     effects = Combat::EffectResolver.call(action: Combat::CombatAction.new(source_type: :class_feature, source_id: second_wind.id, actor: fighter))
     assert_equal [ "heal" ], effects.map(&:kind).map(&:to_s)
@@ -198,26 +198,26 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     action = maneuver_action(service:, actor: battle_master, slug: "precision-attack")
     assert action, "expected Precision Attack to be available to a Battle Master who knows it"
-    assert_equal 4, action[:uses_remaining]
+    assert_equal 4, action.uses_remaining
 
     Random.srand(1)
     turn = service.send(:execute_action, actor: battle_master, chosen_action: action, round_number: 1, turn_index: 1)
 
-    assert_equal :attack, turn.dig(:action, :type)
-    assert_equal "Maneuver: Precision Attack", turn.dig(:action, :maneuver_name)
-    attack = turn[:results].first
+    assert_equal :attack, turn.action[:type]
+    assert_equal "Maneuver: Precision Attack", turn.action[:maneuver_name]
+    attack = turn.results.first
     assert attack[:success]
     assert_equal :damage, attack.dig(:rider, :kind)
     assert_includes 1..8, attack.dig(:rider, :amount)
-    assert_equal 3, maneuver_action(service:, actor: battle_master, slug: "precision-attack")[:uses_remaining]
+    assert_equal 3, maneuver_action(service:, actor: battle_master, slug: "precision-attack").uses_remaining
 
     target.combatant.update!(armor_class: 100)
     Random.srand(1)
-    miss = service.send(:execute_action, actor: battle_master, chosen_action: action, round_number: 1, turn_index: 1).dig(:results, 0)
+    miss = service.send(:execute_action, actor: battle_master, chosen_action: action, round_number: 1, turn_index: 1).results.first
 
     assert_not miss[:success]
     assert_nil miss[:rider]
-    assert_equal 3, maneuver_action(service:, actor: battle_master, slug: "precision-attack")[:uses_remaining], "a miss must not spend a die"
+    assert_equal 3, maneuver_action(service:, actor: battle_master, slug: "precision-attack").uses_remaining, "a miss must not spend a die"
 
     combat_superiority_id = class_features(:fighter_battle_master_combat_superiority).id
     service.send(:instance_variable_get, :@uses_remaining)[battle_master.id][combat_superiority_id] = 0
@@ -233,15 +233,15 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     marks = service.send(:instance_variable_get, :@advantage_marks)
     strike = maneuver_action(service:, actor: battle_master, slug: "distracting-strike")
     strike_now = -> { service.send(:execute_action, actor: battle_master, chosen_action: strike, round_number: 1, turn_index: 1) }
-    attack_now = ->(actor) { service.send(:execute_attack_action, actor:, round_number: 1, turn_index: 1).dig(:results, 0) }
+    attack_now = ->(actor) { service.send(:execute_attack_action, actor:, round_number: 1, turn_index: 1).results.first }
 
     Random.srand(1) # AC 100: a miss
-    assert_not strike_now.call.dig(:results, 0, :success)
+    assert_not strike_now.call.results.first[:success]
     assert_empty marks[target.id], "no hit, no mark"
 
     target.combatant.update!(armor_class: 1)
     Random.srand(1)
-    assert strike_now.call.dig(:results, 0, :success)
+    assert strike_now.call.results.first[:success]
     assert_equal [ battle_master.id ], marks[target.id]
 
     assert_not attack_now.(battle_master)[:advantage], "the mark never helps the one who set it"
@@ -293,8 +293,8 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     extra_turn = service.send(:action_surge_turn, actor: actor, round_number: 1, turn_index: 1)
 
     assert extra_turn, "expected Action Surge to grant an extra action"
-    assert_equal true, extra_turn[:extra]
-    assert_equal :attack, extra_turn.dig(:action, :type)
+    assert_equal true, extra_turn.extra
+    assert_equal :attack, extra_turn.action[:type]
     assert_equal 0, uses_remaining[actor.id][action_surge_id]
 
     assert_nil service.send(:action_surge_turn, actor: actor, round_number: 1, turn_index: 2)
@@ -308,7 +308,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     service.send(:initialize_state)
 
     chosen_action = service.send(:available_actions_for, actor: attacker).find do |action|
-      action[:type] == :class_feature && action[:class_feature].slug == "test-save-strike"
+      action.type == :class_feature && action.class_feature.slug == "test-save-strike"
     end
     assert chosen_action, "expected the test save-strike fixture to be available to the attacker"
 
@@ -319,7 +319,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     Random.srand(46) # 1d6 roll = 6; 1st constitution save total 7 (fails dc 8); reroll total 10 (succeeds)
     turn = service.send(:execute_class_feature_action, actor: attacker, chosen_action: chosen_action, round_number: 1, turn_index: 1)
 
-    damage_result = turn[:results].first
+    damage_result = turn.results.first
     assert_equal :damage, damage_result[:kind]
     assert_equal 3, damage_result[:amount] # half of 6, since the reroll succeeded
 
@@ -349,7 +349,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     available = service.send(:available_actions_for, actor: caster)
     chosen = service.send(:choose_turn_action, available:, actor: caster)
 
-    assert_equal :attack, chosen[:type]
+    assert_equal :attack, chosen.type
   end
 
   test "choose_turn_action picks the spell branch when the coin flip favors it" do
@@ -360,8 +360,8 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     available = service.send(:available_actions_for, actor: caster)
     chosen = service.send(:choose_turn_action, available:, actor: caster)
 
-    assert_equal :cast_spell, chosen[:type]
-    assert_equal "magic-missile", chosen[:spell].slug
+    assert_equal :cast_spell, chosen.type
+    assert_equal "magic-missile", chosen.spell.slug
   end
 
   test "choose_turn_action does not consume extra randomness for a non-spellcasting actor" do
@@ -390,16 +390,16 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     service.send(:initialize_state)
 
     cast_slugs = service.send(:available_actions_for, actor: wizard)
-      .select { |action| action[:type] == :cast_spell }
-      .map { |action| action[:spell].slug }
+      .select(&:spell?)
+      .map { |action| action.spell.slug }
     assert_includes cast_slugs, "magic-missile"
     assert_includes cast_slugs, "fire-bolt"
 
     wizard.available_spell_slots[1] = 0
 
     remaining_cast_slugs = service.send(:available_actions_for, actor: wizard)
-      .select { |action| action[:type] == :cast_spell }
-      .map { |action| action[:spell].slug }
+      .select(&:spell?)
+      .map { |action| action.spell.slug }
     assert_not_includes remaining_cast_slugs, "magic-missile"
     assert_includes remaining_cast_slugs, "fire-bolt" # cantrips never consume a slot
   end
@@ -420,7 +420,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     service.send(:initialize_state)
 
     chosen_action = service.send(:available_actions_for, actor: caster).find do |action|
-      action[:type] == :cast_spell && action[:spell].slug == "fire-bolt"
+      action.spell&.slug == "fire-bolt"
     end
     assert chosen_action, "expected fire-bolt (a cantrip) to be an available action"
 
@@ -428,13 +428,13 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     bonus_turn = service.send(:war_magic_turn, actor: caster, chosen_action:, round_number: 1, turn_index: 1)
 
     assert bonus_turn, "expected War Magic to grant a bonus weapon attack"
-    assert_equal true, bonus_turn[:bonus]
-    assert_equal :attack, bonus_turn.dig(:action, :type)
+    assert_equal true, bonus_turn.bonus
+    assert_equal :attack, bonus_turn.action[:type]
   end
 
   test "War Magic does not grant a bonus attack for a non-cantrip spell before Improved War Magic" do
     caster = spellcaster_with_known_spells(:eldritch_knight_seven)
-    chosen_action = { type: :cast_spell, spell: spells(:magic_missile) }
+    chosen_action = Combat::ActionOption.new(type: :cast_spell, spell: spells(:magic_missile))
     service = CombatSimulatorService.new(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
 
@@ -447,7 +447,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     service.send(:initialize_state)
 
     chosen_action = service.send(:available_actions_for, actor: caster).find do |action|
-      action[:type] == :cast_spell && action[:spell].slug == "magic-missile"
+      action.spell&.slug == "magic-missile"
     end
     assert chosen_action, "expected magic-missile to be an available action"
 
@@ -455,8 +455,8 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     bonus_turn = service.send(:war_magic_turn, actor: caster, chosen_action:, round_number: 1, turn_index: 1)
 
     assert bonus_turn, "expected Improved War Magic to grant a bonus weapon attack for a non-cantrip spell"
-    assert_equal true, bonus_turn[:bonus]
-    assert_equal :attack, bonus_turn.dig(:action, :type)
+    assert_equal true, bonus_turn.bonus
+    assert_equal :attack, bonus_turn.action[:type]
   end
 
   test "a successful weapon attack from an Eldritch Knight with Eldritch Strike marks the target as pending" do
@@ -469,7 +469,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     Random.srand(1)
     turn = service.send(:execute_attack_action, actor: caster, round_number: 1, turn_index: 1)
 
-    assert_equal true, turn[:results].first[:success], "expected the attack to hit (attack_bonus is set high for determinism)"
+    assert_equal true, turn.results.first[:success], "expected the attack to hit (attack_bonus is set high for determinism)"
     pending = service.send(:instance_variable_get, :@eldritch_strike_pending)
     assert_equal caster.id, pending[target.id]
   end
@@ -483,7 +483,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     service.send(:instance_variable_get, :@eldritch_strike_pending)[target.id] = caster.id
 
     chosen_action = service.send(:available_actions_for, actor: caster).find do |action|
-      action[:type] == :cast_spell && action[:spell].slug == "test-save-spell"
+      action.spell&.slug == "test-save-spell"
     end
     assert chosen_action, "expected test-save-spell to be an available action"
 
@@ -491,7 +491,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     # (+1 dexterity modifier) = total 7, failing DC 8 -> full damage (3).
     Random.srand(4)
     first_turn = service.send(:execute_cast_spell_action, actor: caster, chosen_action:, round_number: 1, turn_index: 1)
-    assert_equal 3, first_turn[:results].first[:amount], "expected disadvantage to cause the save to fail (full damage)"
+    assert_equal 3, first_turn.results.first[:amount], "expected disadvantage to cause the save to fail (full damage)"
 
     pending = service.send(:instance_variable_get, :@eldritch_strike_pending)
     assert_nil pending[target.id], "expected the Eldritch Strike mark to be consumed by the first save"
@@ -500,7 +500,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     # succeeds against DC 8, halving the damage (3 / 2 = 1).
     Random.srand(4)
     second_turn = service.send(:execute_cast_spell_action, actor: caster, chosen_action:, round_number: 1, turn_index: 2)
-    assert_equal 1, second_turn[:results].first[:amount], "expected the second save, without disadvantage, to succeed and halve damage"
+    assert_equal 1, second_turn.results.first[:amount], "expected the second save, without disadvantage, to succeed and halve damage"
   end
 
   test "Eldritch Strike's disadvantage does not leak to a different attacker or a different target" do
@@ -513,7 +513,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     attacker_leak_service.send(:instance_variable_get, :@eldritch_strike_pending)[marked_target.id] = player_characters(:eldritch_knight_ten).id
 
     other_action = attacker_leak_service.send(:available_actions_for, actor: other_caster).find do |action|
-      action[:type] == :cast_spell && action[:spell].slug == "test-save-spell"
+      action.spell&.slug == "test-save-spell"
     end
     assert other_action, "expected test-save-spell to be available to the other caster"
 
@@ -521,7 +521,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     # save succeeds, halving damage -> a different attacker never gets the disadvantage.
     Random.srand(4)
     leaked_turn = attacker_leak_service.send(:execute_cast_spell_action, actor: other_caster, chosen_action: other_action, round_number: 1, turn_index: 1)
-    assert_equal 1, leaked_turn[:results].first[:amount], "a different attacker must not receive the marked target's disadvantage"
+    assert_equal 1, leaked_turn.results.first[:amount], "a different attacker must not receive the marked target's disadvantage"
 
     # The same attacker must not get disadvantage against a target they haven't marked.
     marker = spellcaster_with_known_spells(:eldritch_knight_ten)
@@ -531,13 +531,13 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     target_leak_service.send(:instance_variable_get, :@eldritch_strike_pending)[marked_target.id] = marker.id # a mark on someone else entirely
 
     marker_action = target_leak_service.send(:available_actions_for, actor: marker).find do |action|
-      action[:type] == :cast_spell && action[:spell].slug == "test-save-spell"
+      action.spell&.slug == "test-save-spell"
     end
     assert marker_action, "expected test-save-spell to be available to the marking attacker"
 
     Random.srand(4)
     unmarked_turn = target_leak_service.send(:execute_cast_spell_action, actor: marker, chosen_action: marker_action, round_number: 1, turn_index: 1)
-    assert_equal 1, unmarked_turn[:results].first[:amount], "the same attacker casting against an unmarked target must not get disadvantage"
+    assert_equal 1, unmarked_turn.results.first[:amount], "the same attacker casting against an unmarked target must not get disadvantage"
   end
 
   test "war_magic_available? and eldritch_strike_unlocked? never consume @rng" do
@@ -549,7 +549,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     rng = service.send(:instance_variable_get, :@rng)
 
     before = Marshal.dump(rng)
-    service.send(:war_magic_available?, actor: actor, chosen_action: { type: :attack })
+    service.send(:war_magic_available?, actor: actor, chosen_action: Combat::ActionOption.new(type: :attack))
     service.send(:eldritch_strike_unlocked?, actor: actor)
     after = Marshal.dump(rng)
 
@@ -761,7 +761,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     turns = service.send(:execute_round, round_number: 1, initiative_order: service.instance_variable_get(:@initiative_order))
 
-    assert_equal 1, turns.count { |turn| turn[:actor_id] == actor.id && turn.dig(:action, :feature_slug) == "second-wind" }
+    assert_equal 1, turns.count { |turn| turn.actor_id == actor.id && turn.action[:feature_slug] == "second-wind" }
     assert_equal 2, uses_remaining[actor.id][second_wind.id]
   end
 
@@ -805,7 +805,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     # a and d by the rule (in initiative order), then e: the first living enemy in initiative order
     # (not b, the first in party order).
-    assert_equal [ a.id, d.id, e.id ], turn[:results].map { |attack| attack[:target_id] }
+    assert_equal [ a.id, d.id, e.id ], turn.results.map { |attack| attack[:target_id] }
   end
 
   test "gambits: choices driven by gambits never draw from @rng" do
@@ -852,7 +852,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     service = new_service.call
     service.send(:initialize_state)
-    first_spell = service.send(:available_actions_for, actor:).find { |action| action[:type] == :cast_spell }[:spell]
+    first_spell = service.send(:available_actions_for, actor:).find(&:spell?).spell
     assert_not_equal magic_missile, first_spell, "another spell must come first, or matching the rule's own spell is untested"
 
     turn = run.call
@@ -916,13 +916,13 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     gambit = add_gambit(battle_master, position: 1, action_kind: :class_feature,
                                        class_feature: class_features(:fighter_battle_master_maneuver_precision_attack))
     chosen = service.send(:choose_gambit_action, actor: battle_master, gambits: [ gambit ], available: service.send(:available_actions_for, actor: battle_master))
-    assert_equal 4, chosen[:uses_remaining]
+    assert_equal 4, chosen.uses_remaining
 
     Random.srand(1)
     turn = service.send(:gambit_turn, actor: battle_master, chosen_action: chosen, round_number: 1, turn_index: 1)
 
-    assert_equal 1, turn[:results].count { |attack| attack[:rider] }
-    assert_equal 3, maneuver_action(service:, actor: battle_master, slug: "precision-attack")[:uses_remaining]
+    assert_equal 1, turn.results.count { |attack| attack[:rider] }
+    assert_equal 3, maneuver_action(service:, actor: battle_master, slug: "precision-attack").uses_remaining
   end
 
   test "gambits: an 'any' rule takes the first living candidate in initiative order, on every attack" do
@@ -970,8 +970,8 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     chosen = service.send(:choose_gambit_action, actor:, gambits: actor.gambits.to_a, available: service.send(:available_actions_for, actor:))
 
-    assert_equal :cast_spell, chosen&.dig(:type)
-    assert_equal actor, chosen[:target]
+    assert_equal :cast_spell, chosen&.type
+    assert_equal actor, chosen.target
   end
 
   test "gambits: hp_below fires only strictly below the threshold" do
@@ -1027,7 +1027,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     def maneuver_action(service:, actor:, slug:)
       service.send(:available_actions_for, actor:).find do |action|
-        action[:type] == :class_feature && action[:class_feature].slug == "battle-master-maneuver-#{slug}"
+        action.type == :class_feature && action.class_feature.slug == "battle-master-maneuver-#{slug}"
       end
     end
 

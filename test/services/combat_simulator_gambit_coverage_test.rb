@@ -119,7 +119,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
       end
 
       assert at_least.(remaining), "#{resource}: #{remaining} left must satisfy ≥ #{remaining}"
-      assert_equal 1, at_least.(remaining)[:gambit].position
+      assert_equal 1, at_least.(remaining).gambit.position
       assert_nil at_least.(remaining + 1), "#{resource}: #{remaining} left must not satisfy ≥ #{remaining + 1}"
     end
   end
@@ -153,7 +153,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     gambit = add_rule(actor, position: 1, target: :enemy, condition: :resource_at_least, condition_value: 20,
                              feature: "battle-master-maneuver-precision-attack")
 
-    assert service.send(:gambit_resource_at_least?, actor:, action: { type: :class_feature, uses_remaining: nil }, minimum: 20)
+    assert service.send(:gambit_resource_at_least?, actor:, action: Combat::ActionOption.new(type: :class_feature), minimum: 20)
     assert_equal second, service.send(:gambit_target, actor:, gambit:)
   end
 
@@ -163,7 +163,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     fires = lambda do |value|
       champion.gambits.reset
       gambits = [ add_rule(champion, position: 1, target: :self, condition: :resource_at_least, condition_value: value, feature: "action-surge") ]
-      service.send(:choose_gambit_action, actor: champion, gambits:, available: service.send(:available_actions_for, actor: champion))&.dig(:type)
+      service.send(:choose_gambit_action, actor: champion, gambits:, available: service.send(:available_actions_for, actor: champion))&.type
     end
 
     assert_equal 1, uses_left(service, champion, "action-surge")
@@ -178,8 +178,8 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     service, turns = one_turn(actor)
 
     assert_equal [ [ :action_surge, 1, false ], [ :attack, 2, false ], [ :attack, 2, true ] ],
-                 turns.map { |turn| [ turn.dig(:action, :type), turn.dig(:gambit, :position), !!turn[:extra] ] }
-    assert_equal [], turns.first[:results]
+                 turns.map { |turn| [ turn.action[:type], turn.gambit[:position], turn.extra ] }
+    assert_equal [], turns.first.results
     assert_equal 0, uses_left(service, actor, "action-surge")
   end
 
@@ -189,7 +189,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     add_rule(actor, position: 2)
     service, turns = one_turn(actor, uses: { "action-surge" => 2 })
 
-    assert_equal [ :action_surge, :attack, :attack ], turns.map { |turn| turn.dig(:action, :type) }
+    assert_equal [ :action_surge, :attack, :attack ], turns.map { |turn| turn.action[:type] }
     assert_equal 1, uses_left(service, actor, "action-surge")
   end
 
@@ -208,7 +208,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     turns = service.send(:execute_round, round_number: 1, initiative_order: service.instance_variable_get(:@initiative_order))
 
     assert enemy.dead?
-    assert_equal [ [ :action_surge, 1 ], [ :cast_spell, 2 ] ], turns.map { |turn| [ turn.dig(:action, :type), turn.dig(:gambit, :position) ] }
+    assert_equal [ [ :action_surge, 1 ], [ :cast_spell, 2 ] ], turns.map { |turn| [ turn.action[:type], turn.gambit[:position] ] }
     assert_equal 1, uses_left(service, knight, "second-wind")
   end
 
@@ -217,9 +217,9 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     add_rule(actor, position: 1, target: :self, feature: "action-surge")
     _, turns = one_turn(actor)
 
-    assert_equal [ [ :action_surge, false ], [ :idle, false ], [ :idle, true ] ], turns.map { |turn| [ turn.dig(:action, :type), !!turn[:extra] ] }
+    assert_equal [ [ :action_surge, false ], [ :idle, false ], [ :idle, true ] ], turns.map { |turn| [ turn.action[:type], turn.extra ] }
     assert_equal [ { position: 1, rule: "Self: qualquer → Action Surge" }, "nenhum aplicável: parado", "nenhum aplicável: parado" ],
-                 turns.pluck(:gambit)
+                 turns.map(&:gambit)
   end
 
   test "every decision entry logs the gambit behind it; the War Magic bonus inherits its spell's, passives log none" do
@@ -265,9 +265,9 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     first, second = seed_character("Campeão"), seed_character("Mestre de Batalha")
     gambit = add_rule(actor, position: 1, spell: "fire-bolt")
     service = prepared_service(party_one: [ actor ], party_two: [ first, second ], initiative_order: [ first, actor, second ])
-    chosen_action = service.send(:available_actions_for, actor:).find { |action| action[:spell]&.slug == "fire-bolt" }
+    chosen_action = service.send(:available_actions_for, actor:).find { |action| action.spell&.slug == "fire-bolt" }
     bonus_targets = lambda do
-      service.send(:war_magic_turn, actor:, chosen_action: chosen_action.merge(target: second, gambit:), round_number: 1, turn_index: 1)[:results]
+      service.send(:war_magic_turn, actor:, chosen_action: chosen_action.with(target: second, gambit:), round_number: 1, turn_index: 1).results
         .map { |attack| attack[:target_id] }
     end
 
@@ -290,16 +290,16 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     gambit = add_rule(knight, position: 1, spell: "fire-bolt")
     service = prepared_service(party_one: [ knight ], party_two: enemies,
                                initiative_order: [ initiative_first, knight, party_last, spell_target, party_first ])
-    chosen_action = service.send(:available_actions_for, actor: knight).find { |action| action[:spell]&.slug == "fire-bolt" }
+    chosen_action = service.send(:available_actions_for, actor: knight).find { |action| action.spell&.slug == "fire-bolt" }
     spell_target.current_hit_points = 0 # the spell killed its own target, leaving three enemies alive
 
     bonus = Dice.stub(:hit?, true) do
-      service.send(:war_magic_turn, actor: knight, chosen_action: chosen_action.merge(target: spell_target, gambit:), round_number: 1, turn_index: 1)
+      service.send(:war_magic_turn, actor: knight, chosen_action: chosen_action.with(target: spell_target, gambit:), round_number: 1, turn_index: 1)
     end
 
     # The first attack goes to the first living enemy in initiative order (not the first or last in party
     # order) and kills it; the second re-runs the fallback on the two still alive.
-    assert_equal [ initiative_first.id, party_last.id ], bonus[:results].map { |attack| attack[:target_id] }
+    assert_equal [ initiative_first.id, party_last.id ], bonus.results.map { |attack| attack[:target_id] }
     assert_not party_first.dead?
     assert_equal Marshal.dump(Random.new(1)), Marshal.dump(service.instance_variable_get(:@rng)),
       "War Magic's fallback must not consume @rng"
@@ -317,14 +317,14 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     gambit = add_rule(knight, position: 1, spell: "fire-bolt")
     service = prepared_service(party_one: [ knight ], party_two: enemies,
                                initiative_order: [ initiative_first, knight, party_last, spell_target, party_first ])
-    chosen_action = service.send(:available_actions_for, actor: knight).find { |action| action[:spell]&.slug == "fire-bolt" }
+    chosen_action = service.send(:available_actions_for, actor: knight).find { |action| action.spell&.slug == "fire-bolt" }
 
     bonus = Dice.stub(:hit?, true) do
-      service.send(:war_magic_turn, actor: knight, chosen_action: chosen_action.merge(target: spell_target, gambit:), round_number: 1, turn_index: 1)
+      service.send(:war_magic_turn, actor: knight, chosen_action: chosen_action.with(target: spell_target, gambit:), round_number: 1, turn_index: 1)
     end
 
     # initiative_first sits in the middle of party order, so neither .first nor .last can pass.
-    assert_equal [ spell_target.id, initiative_first.id ], bonus[:results].map { |attack| attack[:target_id] }
+    assert_equal [ spell_target.id, initiative_first.id ], bonus.results.map { |attack| attack[:target_id] }
     assert_equal Marshal.dump(Random.new(1)), Marshal.dump(service.instance_variable_get(:@rng))
   end
 
@@ -391,7 +391,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
       service = prepared_service(party_one: [ actor ], party_two: [ seed_character("Mestre de Batalha") ])
       uses.each { |slug, count| service.instance_variable_get(:@uses_remaining)[actor.id][seed_feature(slug).id] = count }
       turns = service.send(:execute_round, round_number: 1, initiative_order: service.instance_variable_get(:@initiative_order))
-      [ service, turns.select { |turn| turn[:actor_id] == actor.id } ]
+      [ service, turns.select { |turn| turn.actor_id == actor.id } ]
     end
 
     def uses_left(service, actor, slug)

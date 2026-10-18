@@ -116,10 +116,10 @@
           :total: 22
           :crit: false
           :damage: 3
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 1
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -492,10 +492,10 @@
           :total: 18
           :crit: false
           :damage: 3
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -625,10 +625,10 @@
           :total: 12
           :crit: false
           :damage: 10
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 2
       :turn: 2
       :actor_id: Campeão
@@ -737,10 +737,10 @@
           :total: 17
           :crit: false
           :damage: 4
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 3
       :turn: 2
       :actor_id: Campeão
@@ -849,10 +849,10 @@
           :total: 9
           :crit: false
           :damage: 3
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 4
       :turn: 2
       :actor_id: Campeão
@@ -1162,10 +1162,10 @@
           :total: 13
           :crit: false
           :damage: 3
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   - :round: 2
     :turns:
     - :round: 2
@@ -1387,10 +1387,10 @@
           :total: 14
           :crit: false
           :damage: 3
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   - :round: 4
     :turns:
     - :round: 4
@@ -1642,10 +1642,10 @@
           :total: 14
           :crit: false
           :damage: 8
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 1
       :turn: 3
       :actor_id: Campeão
@@ -1775,10 +1775,10 @@
           :total: 10
           :crit: false
           :damage: 3
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 2
       :turn: 3
       :actor_id: Campeão
@@ -1887,10 +1887,10 @@
           :total: 15
           :crit: false
           :damage: 4
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 3
       :turn: 3
       :actor_id: Campeão
@@ -1999,10 +1999,10 @@
           :total: 20
           :crit: false
           :damage: 4
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 4
       :turn: 3
       :actor_id: Campeão
@@ -2111,10 +2111,10 @@
           :total: 25
           :crit: false
           :damage: 4
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 5
       :turn: 3
       :actor_id: Campeão
@@ -2347,10 +2347,10 @@
           :total: 15
           :crit: false
           :damage: 7
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 1
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -2459,10 +2459,10 @@
           :total: 24
           :crit: false
           :damage: 8
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 2
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -2571,10 +2571,10 @@
           :total: 25
           :crit: false
           :damage: 9
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 3
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -2704,10 +2704,10 @@
           :total: 21
           :crit: false
           :damage: 8
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 4
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -2816,10 +2816,10 @@
           :total: 9
           :crit: false
           :damage: 7
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 5
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -2928,10 +2928,10 @@
           :total: 14
           :crit: false
           :damage: 7
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 6
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -3089,10 +3089,10 @@
           :total: 19
           :crit: false
           :damage: 9
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 1
       :turn: 3
       :actor_id: Campeão
@@ -3222,10 +3222,10 @@
           :total: 9
           :crit: false
           :damage: 8
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 2
       :turn: 3
       :actor_id: Campeão
@@ -3447,10 +3447,10 @@
           :total: 18
           :crit: false
           :damage: 4
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 4
       :turn: 3
       :actor_id: Campeão
@@ -3559,10 +3559,10 @@
           :total: 13
           :crit: false
           :damage: 5
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 5
       :turn: 3
       :actor_id: Campeão
@@ -3884,10 +3884,10 @@
           :total: 7
           :crit: false
           :damage: 6
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 2
       :turn: 3
       :actor_id: Campeão
@@ -3996,10 +3996,10 @@
           :total: 7
           :crit: false
           :damage: 5
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 3
       :turn: 3
       :actor_id: Campeão
@@ -4108,10 +4108,10 @@
           :total: 15
           :crit: false
           :damage: 6
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 4
       :turn: 3
       :actor_id: Campeão
@@ -4312,10 +4312,10 @@
           :total: 7
           :crit: false
           :damage: 8
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 6
       :turn: 3
       :actor_id: Campeão
@@ -4424,10 +4424,10 @@
           :total: 11
           :crit: false
           :damage: 6
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 7
       :turn: 3
       :actor_id: Campeão
@@ -4522,10 +4522,10 @@
           :total: 24
           :crit: false
           :damage: 10
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   :draw: false
   :outcome: :victory
 8:
@@ -4615,10 +4615,10 @@
           :total: 23
           :crit: false
           :damage: 8
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 1
       :turn: 2
       :actor_id: Campeão
@@ -4953,10 +4953,10 @@
           :total: 21
           :crit: false
           :damage: 4
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 4
       :turn: 2
       :actor_id: Campeão
@@ -5127,10 +5127,10 @@
           :total: 17
           :crit: false
           :damage: 3
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 1
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -5239,10 +5239,10 @@
           :total: 10
           :crit: false
           :damage: 6
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 2
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -5351,10 +5351,10 @@
           :total: 24
           :crit: false
           :damage: 10
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 3
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -5463,10 +5463,10 @@
           :total: 11
           :crit: false
           :damage: 8
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 4
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -5596,10 +5596,10 @@
           :total: 22
           :crit: false
           :damage: 8
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 5
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -5787,10 +5787,10 @@
           :total: 7
           :crit: false
           :damage: 5
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   - :round: 2
     :turns:
     - :round: 2
@@ -5899,10 +5899,10 @@
           :total: 22
           :crit: false
           :damage: 6
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   - :round: 3
     :turns:
     - :round: 3
@@ -6342,10 +6342,10 @@
           :total: 20
           :crit: false
           :damage: 7
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 1
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -6567,10 +6567,10 @@
           :total: 24
           :crit: false
           :damage: 6
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 3
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -6700,10 +6700,10 @@
           :total: 18
           :crit: false
           :damage: 5
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 4
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -6904,10 +6904,10 @@
           :total: 8
           :crit: false
           :damage: 3
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 6
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -7016,10 +7016,10 @@
           :total: 7
           :crit: false
           :damage: 9
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 7
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -7207,10 +7207,10 @@
           :total: 12
           :crit: false
           :damage: 8
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   - :round: 2
     :turns:
     - :round: 2
@@ -7319,10 +7319,10 @@
           :total: 20
           :crit: false
           :damage: 5
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   - :round: 3
     :turns:
     - :round: 3
@@ -7431,10 +7431,10 @@
           :total: 25
           :crit: false
           :damage: 3
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   - :round: 4
     :turns:
     - :round: 4
@@ -7543,10 +7543,10 @@
           :total: 22
           :crit: false
           :damage: 4
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   - :round: 5
     :turns:
     - :round: 5
@@ -7655,10 +7655,10 @@
           :total: 18
           :crit: false
           :damage: 7
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   - :round: 6
     :turns:
     - :round: 6
@@ -7767,10 +7767,10 @@
           :total: 18
           :crit: false
           :damage: 10
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   - :round: 7
     :turns:
     - :round: 7
@@ -7900,10 +7900,10 @@
           :total: 17
           :crit: false
           :damage: 5
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   - :round: 8
     :turns:
     - :round: 8
@@ -8012,9 +8012,9 @@
           :total: 26
           :crit: true
           :damage: 14
-      :bonus: true
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   :draw: false
   :outcome: :victory
