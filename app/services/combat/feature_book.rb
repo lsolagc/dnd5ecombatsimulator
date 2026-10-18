@@ -39,8 +39,8 @@ module Combat
     end
 
     # Whether a feature rides +applies+ along every +on+ (Eldritch Strike: disadvantage_on_next_save on weapon_hit).
-    def rider?(on:, applies:)
-      effects.each_value.any? { |payload| payload && payload["kind"] == "rider" && payload["on"] == on && payload["applies"] == applies }
+    def rider?(event:, applies:)
+      effects.each_value.any? { |payload| payload && payload["kind"] == "rider" && payload["event"] == event && payload["applies"] == applies }
     end
 
     # The feature whose uses +feature+ spends: a maneuver (ClassFeature#maneuver_of?) spends the shared

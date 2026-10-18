@@ -34,8 +34,8 @@ features:
         #   { kind: extra_action }                                    # Surto de Ação
         #   { kind: grants_activity, activity: weapon_attack, count: 1, as: bonus_action, after: { cast_with_action: cantrip } }
         #                                                             # Magia de Guerra (any_spell: a Aprimorada)
-        #   { kind: rider, "on": weapon_hit, applies: disadvantage_on_next_save, against: own_spells }
-        #                                                             # Golpe Místico; "on" entre aspas (YAML lê on como true)
+        #   { kind: rider, event: weapon_hit, applies: disadvantage_on_next_save, against: own_spells }
+        #                                                             # Golpe Místico
         #   { kind: reroll_save, when: failed }                       # Indomável
         #   { kind: resource_pool }                                   # Superioridade em Combate: features com o mesmo
         #                                                             # resource_name (as manobras) gastam estes usos

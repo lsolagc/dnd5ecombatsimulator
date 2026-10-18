@@ -189,7 +189,7 @@ feature names.[^feature-book-rb] It is read-only and holds no counters:
 | `action_payload(feature)` | the feature's action effect (`PlayerCharacter#action_payload`), nil when not unlocked, not an action at the level, or a maneuver the character has not learned |
 | `unlock_with(kind)` | the unlock in force of the feature whose effect is `extra_action` (Action Surge) or `reroll_save` (Indomitable), or nil |
 | `weapon_attacks_after(spell)` | how many bonus weapon attacks (a `grants_activity`'s `count`, one) follow this spell: `after.cast_with_action` `cantrip` (War Magic) only after a cantrip, `any_spell` (Improved War Magic) after any; nil for none |
-| `rider?(on:, applies:)` | a hit leaves the Eldritch Strike mark (`rider`, `on: weapon_hit`, `applies: disadvantage_on_next_save`) |
+| `rider?(event:, applies:)` | a hit leaves the Eldritch Strike mark (`rider`, `event: weapon_hit`, `applies: disadvantage_on_next_save`) |
 | `resource_feature_id(feature)` | whose uses the feature spends: the `resource_pool`'s (Combat Superiority) for a maneuver, else its own |
 | `initial_uses` | `{ class_feature_id => uses }` at the start of combat (see Resource tracking) |
 

@@ -31,7 +31,7 @@ class ClassFeatureUnlock < ApplicationRecord
                   "after" => { "cast_with_action" => %w[cantrip any_spell] } }
     },
     # Rides along a hit (Eldritch Strike): the target's next save against the attacker's own spells has disadvantage.
-    "rider" => { required: { "on" => %w[weapon_hit], "applies" => %w[disadvantage_on_next_save], "against" => %w[own_spells] } },
+    "rider" => { required: { "event" => %w[weapon_hit], "applies" => %w[disadvantage_on_next_save], "against" => %w[own_spells] } },
     # Reroll a failed saving throw (Indomitable); its uses are the unlock's.
     "reroll_save" => { required: { "when" => %w[failed] } },
     # The pool whose uses every feature with the same resource_name spends (Combat Superiority's superiority dice).

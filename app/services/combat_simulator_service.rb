@@ -393,7 +393,7 @@ class CombatSimulatorService
         hit = result.attack_roll.hit
         damage = result.roll_outcome.total
 
-        @eldritch_strike_pending[target.id] = actor.id if hit && feature_book(actor).rider?(on: "weapon_hit", applies: "disadvantage_on_next_save")
+        @eldritch_strike_pending[target.id] = actor.id if hit && feature_book(actor).rider?(event: "weapon_hit", applies: "disadvantage_on_next_save")
 
         rider = apply_maneuver_rider(actor:, target:, maneuver: pending_maneuver, crit: result.attack_roll.crit) if pending_maneuver && hit
         pending_maneuver = nil if rider

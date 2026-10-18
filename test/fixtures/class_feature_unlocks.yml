@@ -182,7 +182,7 @@ eldritch_knight_eldritch_strike_level_10:
   class_feature: fighter_eldritch_knight_eldritch_strike
   level: 10
   description: A weapon attack imposes disadvantage on the target's next save against your spells.
-  effect_payload: { kind: rider, "on": weapon_hit, applies: disadvantage_on_next_save, against: own_spells }
+  effect_payload: { kind: rider, event: weapon_hit, applies: disadvantage_on_next_save, against: own_spells }
 
 eldritch_knight_improved_war_magic_level_18:
   class_feature: fighter_eldritch_knight_improved_war_magic

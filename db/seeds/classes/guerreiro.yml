@@ -457,7 +457,7 @@ features:
         unlocks:
           - level: 10
             description: Um ataque com arma impõe desvantagem no próximo teste de resistência contra suas magias.
-            effect_payload: { kind: rider, "on": weapon_hit, applies: disadvantage_on_next_save, against: own_spells }
+            effect_payload: { kind: rider, event: weapon_hit, applies: disadvantage_on_next_save, against: own_spells }
       - name: Arcane Charge
         slug: eldritch-knight-arcane-charge
         description: "Ao usar Surto de Ação, pode se teletransportar até 9 metros para um espaço desocupado que possa ver."
