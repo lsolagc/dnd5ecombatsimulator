@@ -84,6 +84,19 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     ], choices
   end
 
+  test "participants are built in party order, so uses rolled with dice replay the same for a seed" do
+    rolled = class_features(:fighter_second_wind).dup.tap { |feature| feature.update!(name: "Test Dice Uses", slug: "test-dice-uses") }
+    rolled.class_feature_unlocks.create!(level: 1, description: "Test: uses rolled with a die.", uses_formula: "1d20")
+    first, second = fresh_character(:thorin), fresh_character(:aragorn)
+    service = simulator(party_one: [ first ], party_two: [ second ], seed: 9, max_rounds: 1)
+    service.call
+
+    Random.srand(9)
+    expected = Array.new(2) { Dice.roll(dice: "1d20").total }
+    assert_not_equal expected.first, expected.last, "the seed must tell the two rolls apart"
+    assert_equal expected, [ first, second ].map { |sheet| participant_of(service, sheet).uses_left(rolled.id) }
+  end
+
   test "a simulation only reads the sheets: a batch's come out unchanged and cannot be saved" do
     merlin, aragorn = player_characters(:merlin), player_characters(:aragorn)
     batch = SimulationBatch.create!(party_one_ids: [ merlin.id ], party_two_ids: [ aragorn.id ], seed: 1)
