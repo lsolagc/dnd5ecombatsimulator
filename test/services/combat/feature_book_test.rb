@@ -57,8 +57,9 @@ class Combat::FeatureBookTest < ActiveSupport::TestCase
   end
 
   test "the disadvantage_on_next_save rider from level 10 of the Eldritch Knight" do
-    assert_not Combat::FeatureBook.new(player_characters(:eldritch_knight_seven)).rider?(event: "weapon_hit", applies: "disadvantage_on_next_save")
-    assert Combat::FeatureBook.new(player_characters(:eldritch_knight_ten)).rider?(event: "weapon_hit", applies: "disadvantage_on_next_save")
+    assert_nil Combat::FeatureBook.new(player_characters(:eldritch_knight_seven)).rider(event: "weapon_hit", applies: "disadvantage_on_next_save")
+    assert_equal class_features(:fighter_eldritch_knight_eldritch_strike),
+      Combat::FeatureBook.new(player_characters(:eldritch_knight_ten)).rider(event: "weapon_hit", applies: "disadvantage_on_next_save")
   end
 
   test "initial_uses: the unlock's fixed uses, else its uses_formula; features without either are left out" do
@@ -83,7 +84,7 @@ class Combat::FeatureBookTest < ActiveSupport::TestCase
     book.unlock_with("extra_action")
     book.unlock_with("reroll_save")
     book.weapon_attacks_after(spells(:fire_bolt))
-    book.rider?(event: "weapon_hit", applies: "disadvantage_on_next_save")
+    book.rider(event: "weapon_hit", applies: "disadvantage_on_next_save")
     book.resource_feature_id(class_features(:fighter_second_wind))
     book.initial_uses
     drawn = rand

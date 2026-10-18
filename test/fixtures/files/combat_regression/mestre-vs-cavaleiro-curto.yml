@@ -25,7 +25,7 @@
         :target_name: Mestre de Batalha
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 3
         :hp_before: 36
         :hp_after: 33
@@ -48,7 +48,7 @@
         :target_name: Mestre de Batalha
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 33
         :hp_after: 33
@@ -94,14 +94,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
           :kind: :damage
           :applied: true
           :amount: 1
@@ -116,7 +120,6 @@
             - 1
             :modifiers: {}
             :total: 1
-          :feature_name: 'Maneuver: Precision Attack'
         :damage: 4
         :hp_before: 36
         :hp_after: 32
@@ -175,7 +178,7 @@
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 10
         :hp_before: 31
         :hp_after: 21
@@ -241,7 +244,7 @@
         :target_name: Mestre de Batalha
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -259,14 +262,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
           :kind: :damage
           :applied: true
           :amount: 8
@@ -281,7 +288,6 @@
             - 8
             :modifiers: {}
             :total: 8
-          :feature_name: 'Maneuver: Precision Attack'
         :damage: 12
         :hp_before: 36
         :hp_after: 24
@@ -298,14 +304,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 16
         :hp_after: 16
@@ -331,7 +339,7 @@
         :target_name: Mestre de Batalha
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -348,14 +356,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
           :kind: :damage
           :applied: true
           :amount: 5
@@ -370,7 +382,6 @@
             - 5
             :modifiers: {}
             :total: 5
-          :feature_name: 'Maneuver: Precision Attack'
         :damage: 8
         :hp_before: 16
         :hp_after: 8
@@ -402,14 +413,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -432,7 +445,7 @@
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 23
         :hp_before: 36
         :hp_after: 13
@@ -489,7 +502,7 @@
         :target_name: Mestre de Batalha
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -515,7 +528,7 @@
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 11
         :hp_before: 13
         :hp_after: 2
@@ -580,14 +593,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -604,14 +619,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -668,7 +685,7 @@
         :target_name: Mestre de Batalha
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -694,7 +711,7 @@
         :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -821,14 +838,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -845,14 +864,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -911,7 +932,7 @@
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 5
         :hp_before: 36
         :hp_after: 31
@@ -943,14 +964,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -1002,7 +1025,7 @@
         :target_name: Mestre de Batalha
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -1061,7 +1084,7 @@
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 5
         :hp_before: 36
         :hp_after: 31
@@ -1132,7 +1155,7 @@
         :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -1242,14 +1265,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
           :kind: :damage
           :applied: true
           :amount: 8
@@ -1264,7 +1291,6 @@
             - 8
             :modifiers: {}
             :total: 8
-          :feature_name: 'Maneuver: Precision Attack'
         :damage: 12
         :hp_before: 36
         :hp_after: 24
@@ -1425,7 +1451,7 @@
         :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -1478,14 +1504,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
           :kind: :damage
           :applied: true
           :amount: 3
@@ -1500,7 +1530,6 @@
             - 3
             :modifiers: {}
             :total: 3
-          :feature_name: 'Maneuver: Precision Attack'
         :damage: 7
         :hp_before: 36
         :hp_after: 29
@@ -1538,7 +1567,7 @@
         :target_name: Mestre de Batalha
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 3
         :hp_before: 36
         :hp_after: 33
@@ -1561,7 +1590,7 @@
         :target_name: Mestre de Batalha
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 33
         :hp_after: 33
@@ -1579,14 +1608,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -1640,7 +1671,7 @@
         :target_name: Mestre de Batalha
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 36
         :hp_after: 36
@@ -1657,14 +1688,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
           :kind: :damage
           :applied: true
           :amount: 7
@@ -1679,7 +1714,6 @@
             - 7
             :modifiers: {}
             :total: 7
-          :feature_name: 'Maneuver: Precision Attack'
         :damage: 6
         :hp_before: 36
         :hp_after: 30
@@ -1739,14 +1773,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
           :kind: :damage
           :applied: true
           :amount: 6
@@ -1761,7 +1799,6 @@
             - 6
             :modifiers: {}
             :total: 6
-          :feature_name: 'Maneuver: Precision Attack'
         :damage: 13
         :hp_before: 36
         :hp_after: 23
@@ -1785,7 +1822,7 @@
         :target_name: Mestre de Batalha
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 36
         :hp_after: 28
@@ -1833,14 +1870,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 22
         :hp_after: 22
@@ -1911,7 +1950,7 @@
         :target_name: Mestre de Batalha
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 7
         :hp_before: 36
         :hp_after: 29
@@ -1990,14 +2029,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
           :kind: :damage
           :applied: true
           :amount: 6
@@ -2012,7 +2055,6 @@
             - 6
             :modifiers: {}
             :total: 6
-          :feature_name: 'Maneuver: Precision Attack'
         :damage: 4
         :hp_before: 36
         :hp_after: 32
@@ -2065,14 +2107,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
           :kind: :damage
           :applied: true
           :amount: 3
@@ -2087,7 +2133,6 @@
             - 3
             :modifiers: {}
             :total: 3
-          :feature_name: 'Maneuver: Precision Attack'
         :damage: 8
         :hp_before: 26
         :hp_after: 18
@@ -2119,14 +2164,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Precision Attack'
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
       :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
           :kind: :damage
           :applied: true
           :amount: 4
@@ -2141,7 +2190,6 @@
             - 4
             :modifiers: {}
             :total: 4
-          :feature_name: 'Maneuver: Precision Attack'
         :damage: 6
         :hp_before: 36
         :hp_after: 30
@@ -2257,7 +2305,7 @@
         :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 30
         :hp_after: 30
@@ -2280,7 +2328,7 @@
         :target_name: Mestre de Batalha
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 19
         :hp_after: 19

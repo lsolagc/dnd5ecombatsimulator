@@ -93,7 +93,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 60
         :hp_after: 52
@@ -113,14 +113,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 1
@@ -135,8 +139,8 @@
             - 1
             :modifiers: {}
             :total: 1
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 4
         :hp_before: 52
         :hp_after: 48
@@ -172,7 +176,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 10
         :hp_before: 47
         :hp_after: 37
@@ -186,7 +190,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 7
         :hp_before: 37
         :hp_after: 30
@@ -205,14 +209,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 30
         :hp_after: 30
@@ -283,7 +289,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 25
         :hp_after: 25
@@ -303,14 +309,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 5
@@ -325,8 +335,8 @@
             - 5
             :modifiers: {}
             :total: 5
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 6
         :hp_before: 25
         :hp_after: 19
@@ -383,7 +393,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 10
         :hp_before: 32
         :hp_after: 22
@@ -397,7 +407,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 22
         :hp_after: 22
@@ -416,14 +426,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 2
@@ -438,8 +452,8 @@
             - 2
             :modifiers: {}
             :total: 2
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 13
         :hp_before: 22
         :hp_after: 9
@@ -475,7 +489,7 @@
         :target_name: Campeão
         :success: false
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 7
         :hp_after: 7
@@ -489,7 +503,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 3
         :hp_before: 7
         :hp_after: 4
@@ -508,14 +522,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 8
@@ -530,8 +548,8 @@
             - 8
             :modifiers: {}
             :total: 8
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 7
         :hp_before: 4
         :hp_after: 0
@@ -609,7 +627,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 5
         :hp_before: 60
         :hp_after: 55
@@ -659,14 +677,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 8
@@ -681,8 +703,8 @@
             - 8
             :modifiers: {}
             :total: 8
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 12
         :hp_before: 55
         :hp_after: 43
@@ -709,7 +731,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 10
         :hp_before: 35
         :hp_after: 25
@@ -723,7 +745,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 25
         :hp_after: 17
@@ -772,14 +794,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 32
         :hp_after: 32
@@ -841,7 +865,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 32
         :hp_after: 32
@@ -870,14 +894,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 8
@@ -892,8 +920,8 @@
             - 8
             :modifiers: {}
             :total: 8
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 7
         :hp_before: 32
         :hp_after: 25
@@ -920,7 +948,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 4
         :hp_before: 17
         :hp_after: 13
@@ -934,7 +962,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 13
         :hp_after: 13
@@ -962,14 +990,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 13
         :hp_after: 13
@@ -1043,14 +1073,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 60
         :hp_after: 60
@@ -1140,7 +1172,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 40
         :hp_after: 40
@@ -1162,14 +1194,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 40
         :hp_after: 40
@@ -1238,7 +1272,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 3
         :hp_before: 32
         :hp_after: 29
@@ -1260,14 +1294,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 3
@@ -1282,8 +1320,8 @@
             - 3
             :modifiers: {}
             :total: 3
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 10
         :hp_before: 29
         :hp_after: 19
@@ -1338,7 +1376,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 29
         :hp_after: 21
@@ -1352,7 +1390,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 21
         :hp_after: 21
@@ -1373,14 +1411,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 6
@@ -1395,8 +1437,8 @@
             - 6
             :modifiers: {}
             :total: 6
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 5
         :hp_before: 21
         :hp_after: 16
@@ -1430,7 +1472,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 3
         :hp_before: 10
         :hp_after: 7
@@ -1444,7 +1486,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 4
         :hp_before: 7
         :hp_after: 3
@@ -1465,14 +1507,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 6
@@ -1487,8 +1533,8 @@
             - 6
             :modifiers: {}
             :total: 6
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 4
         :hp_before: 3
         :hp_after: 0
@@ -1525,14 +1571,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 60
         :hp_after: 60
@@ -1592,7 +1640,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 60
         :hp_after: 60
@@ -1644,14 +1692,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 60
         :hp_after: 60
@@ -1711,7 +1761,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 7
         :hp_before: 60
         :hp_after: 53
@@ -1742,14 +1792,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 53
         :hp_after: 53
@@ -1809,7 +1861,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 53
         :hp_after: 53
@@ -1840,14 +1892,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 53
         :hp_after: 53
@@ -1907,7 +1961,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 53
         :hp_after: 53
@@ -1938,14 +1992,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 53
         :hp_after: 53
@@ -2005,7 +2061,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 53
         :hp_after: 45
@@ -2036,14 +2092,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 1
@@ -2058,8 +2118,8 @@
             - 1
             :modifiers: {}
             :total: 1
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 5
         :hp_before: 45
         :hp_after: 40
@@ -2084,7 +2144,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 5
         :hp_before: 39
         :hp_after: 34
@@ -2098,7 +2158,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 18
         :hp_before: 34
         :hp_after: 16
@@ -2149,14 +2209,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 1
@@ -2171,8 +2235,8 @@
             - 1
             :modifiers: {}
             :total: 1
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 5
         :hp_before: 29
         :hp_after: 24
@@ -2197,7 +2261,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 6
         :hp_before: 23
         :hp_after: 17
@@ -2211,7 +2275,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 7
         :hp_before: 17
         :hp_after: 10
@@ -2241,14 +2305,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 4
@@ -2263,8 +2331,8 @@
             - 4
             :modifiers: {}
             :total: 4
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 10
         :hp_before: 10
         :hp_after: 0
@@ -2372,7 +2440,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 4
         :hp_before: 60
         :hp_after: 56
@@ -2392,14 +2460,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 56
         :hp_after: 56
@@ -2470,7 +2540,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 10
         :hp_before: 56
         :hp_after: 46
@@ -2490,14 +2560,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 6
@@ -2512,8 +2586,8 @@
             - 6
             :modifiers: {}
             :total: 6
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 5
         :hp_before: 46
         :hp_after: 41
@@ -2549,7 +2623,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 6
         :hp_before: 35
         :hp_after: 29
@@ -2563,7 +2637,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 29
         :hp_after: 21
@@ -2582,14 +2656,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 8
@@ -2604,8 +2682,8 @@
             - 8
             :modifiers: {}
             :total: 8
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 5
         :hp_before: 21
         :hp_after: 16
@@ -2662,7 +2740,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 5
         :hp_before: 23
         :hp_after: 18
@@ -2676,7 +2754,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 18
         :hp_after: 18
@@ -2695,14 +2773,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 18
         :hp_after: 18
@@ -2773,7 +2853,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 18
         :hp_after: 10
@@ -2793,14 +2873,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 10
         :hp_after: 10
@@ -2871,7 +2953,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 10
         :hp_after: 10
@@ -2891,14 +2973,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 10
         :hp_after: 10
@@ -2969,7 +3053,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 10
         :hp_before: 10
         :hp_after: 0
@@ -3007,14 +3091,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 60
         :hp_after: 60
@@ -3074,7 +3160,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 4
         :hp_before: 60
         :hp_after: 56
@@ -3126,14 +3212,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 2
@@ -3148,8 +3238,8 @@
             - 2
             :modifiers: {}
             :total: 2
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 8
         :hp_before: 56
         :hp_after: 48
@@ -3174,7 +3264,7 @@
         :target_name: Campeão
         :success: false
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 46
         :hp_after: 46
@@ -3188,7 +3278,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 46
         :hp_after: 46
@@ -3218,14 +3308,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 7
@@ -3240,8 +3334,8 @@
             - 7
             :modifiers: {}
             :total: 7
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 13
         :hp_before: 46
         :hp_after: 33
@@ -3266,7 +3360,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 26
         :hp_after: 18
@@ -3280,7 +3374,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 18
         :hp_after: 18
@@ -3331,14 +3425,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 33
         :hp_after: 33
@@ -3398,7 +3494,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 14
         :hp_before: 33
         :hp_after: 19
@@ -3429,14 +3525,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 6
@@ -3451,8 +3551,8 @@
             - 6
             :modifiers: {}
             :total: 6
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 13
         :hp_before: 19
         :hp_after: 6
@@ -3489,14 +3589,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 16
@@ -3511,8 +3615,8 @@
             - 16
             :modifiers: {}
             :total: 16
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 19
         :hp_before: 60
         :hp_after: 41
@@ -3537,7 +3641,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 4
         :hp_before: 25
         :hp_after: 21
@@ -3551,7 +3655,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 5
         :hp_before: 21
         :hp_after: 16
@@ -3623,14 +3727,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 35
         :hp_after: 35
@@ -3690,7 +3796,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 35
         :hp_after: 35
@@ -3721,14 +3827,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 35
         :hp_after: 35
@@ -3788,7 +3896,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 10
         :hp_before: 35
         :hp_after: 25
@@ -3819,14 +3927,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 25
         :hp_after: 25
@@ -3886,7 +3996,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 24
         :hp_after: 24
@@ -3917,14 +4027,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 24
         :hp_after: 24
@@ -3984,7 +4096,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 24
         :hp_after: 24
@@ -4015,14 +4127,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 24
         :hp_after: 24
@@ -4082,7 +4196,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 22
         :hp_after: 22
@@ -4113,14 +4227,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 8
@@ -4135,8 +4253,8 @@
             - 8
             :modifiers: {}
             :total: 8
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 11
         :hp_before: 22
         :hp_after: 11
@@ -4161,7 +4279,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 6
         :hp_before: 3
         :hp_after: 0
@@ -4239,7 +4357,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 4
         :hp_before: 60
         :hp_after: 56
@@ -4289,14 +4407,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 5
@@ -4311,8 +4433,8 @@
             - 5
             :modifiers: {}
             :total: 5
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 9
         :hp_before: 56
         :hp_after: 47
@@ -4339,7 +4461,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 42
         :hp_after: 34
@@ -4353,7 +4475,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 34
         :hp_after: 26
@@ -4402,14 +4524,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 4
@@ -4424,8 +4550,8 @@
             - 4
             :modifiers: {}
             :total: 4
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 6
         :hp_before: 46
         :hp_after: 40
@@ -4452,7 +4578,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 9
         :hp_before: 36
         :hp_after: 27
@@ -4466,7 +4592,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 27
         :hp_after: 27
@@ -4494,14 +4620,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 27
         :hp_after: 27
@@ -4563,7 +4691,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 27
         :hp_after: 27
@@ -4592,14 +4720,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 27
         :hp_after: 27
@@ -4661,7 +4791,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 10
         :hp_before: 25
         :hp_after: 15
@@ -4690,14 +4820,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 8
@@ -4712,8 +4846,8 @@
             - 8
             :modifiers: {}
             :total: 8
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 10
         :hp_before: 15
         :hp_after: 5
@@ -4821,7 +4955,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 6
         :hp_before: 60
         :hp_after: 54
@@ -4841,14 +4975,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 54
         :hp_after: 54
@@ -4919,7 +5055,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 5
         :hp_before: 45
         :hp_after: 40
@@ -4939,14 +5075,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 40
         :hp_after: 40
@@ -5017,7 +5155,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 16
         :hp_before: 40
         :hp_after: 24
@@ -5037,14 +5175,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 24
         :hp_after: 24
@@ -5136,7 +5276,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 6
         :hp_before: 34
         :hp_after: 28
@@ -5156,14 +5296,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 28
         :hp_after: 28
@@ -5234,7 +5376,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 19
         :hp_after: 19
@@ -5254,14 +5396,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 19
         :hp_after: 19
@@ -5332,7 +5476,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 7
         :hp_before: 19
         :hp_after: 12
@@ -5352,14 +5496,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 5
@@ -5374,8 +5522,8 @@
             - 5
             :modifiers: {}
             :total: 5
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 9
         :hp_before: 12
         :hp_after: 3
@@ -5442,14 +5590,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 60
         :hp_after: 60
@@ -5509,7 +5659,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 58
         :hp_after: 58
@@ -5540,14 +5690,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 58
         :hp_after: 58
@@ -5607,7 +5759,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 7
         :hp_before: 58
         :hp_after: 51
@@ -5638,14 +5790,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 1
@@ -5660,8 +5816,8 @@
             - 1
             :modifiers: {}
             :total: 1
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 10
         :hp_before: 51
         :hp_after: 41
@@ -5686,7 +5842,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 3
         :hp_before: 40
         :hp_after: 37
@@ -5700,7 +5856,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 37
         :hp_after: 37
@@ -5730,14 +5886,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 7
@@ -5752,8 +5912,8 @@
             - 7
             :modifiers: {}
             :total: 7
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 7
         :hp_before: 37
         :hp_after: 30
@@ -5778,7 +5938,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 23
         :hp_after: 15
@@ -5792,7 +5952,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 6
         :hp_before: 15
         :hp_after: 9
@@ -5843,14 +6003,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 8
@@ -5865,8 +6029,8 @@
             - 8
             :modifiers: {}
             :total: 8
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 5
         :hp_before: 26
         :hp_after: 21
@@ -5891,7 +6055,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 13
         :hp_after: 5
@@ -5905,7 +6069,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 9
         :hp_before: 5
         :hp_after: 0
@@ -5983,7 +6147,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 58
         :hp_after: 58
@@ -6003,14 +6167,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 6
@@ -6025,8 +6193,8 @@
             - 6
             :modifiers: {}
             :total: 6
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 4
         :hp_before: 58
         :hp_after: 54
@@ -6083,7 +6251,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 7
         :hp_before: 48
         :hp_after: 41
@@ -6097,7 +6265,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 41
         :hp_after: 41
@@ -6116,14 +6284,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 3
@@ -6138,8 +6310,8 @@
             - 3
             :modifiers: {}
             :total: 3
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 5
         :hp_before: 41
         :hp_after: 36
@@ -6175,7 +6347,7 @@
         :target_name: Campeão
         :success: false
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 33
         :hp_after: 33
@@ -6189,7 +6361,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 6
         :hp_before: 33
         :hp_after: 27
@@ -6208,14 +6380,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 7
@@ -6230,8 +6406,8 @@
             - 7
             :modifiers: {}
             :total: 7
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 7
         :hp_before: 27
         :hp_after: 20
@@ -6288,7 +6464,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 26
         :hp_after: 18
@@ -6302,7 +6478,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 3
         :hp_before: 18
         :hp_after: 15
@@ -6321,14 +6497,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 15
         :hp_after: 15
@@ -6399,7 +6577,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 5
         :hp_after: 0
@@ -6467,14 +6645,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 60
         :hp_after: 60
@@ -6534,7 +6714,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 7
         :hp_before: 60
         :hp_after: 53
@@ -6565,14 +6745,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 53
         :hp_after: 53
@@ -6632,7 +6814,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 3
         :hp_before: 53
         :hp_after: 50
@@ -6663,14 +6845,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 50
         :hp_after: 50
@@ -6730,7 +6914,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 50
         :hp_after: 50
@@ -6761,14 +6945,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 50
         :hp_after: 50
@@ -6828,7 +7014,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 49
         :hp_after: 49
@@ -6859,14 +7045,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 6
@@ -6881,8 +7071,8 @@
             - 6
             :modifiers: {}
             :total: 6
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 13
         :hp_before: 49
         :hp_after: 36
@@ -6907,7 +7097,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 9
         :hp_before: 30
         :hp_after: 21
@@ -6921,7 +7111,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 4
         :hp_before: 21
         :hp_after: 17
@@ -6972,14 +7162,16 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 34
         :hp_after: 34
@@ -7039,7 +7231,7 @@
         :target_name: Campeão
         :success: false
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 0
         :hp_before: 34
         :hp_after: 34
@@ -7070,14 +7262,18 @@
       :actor_party: :party_one
       :action:
         :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders:
+        - :feature_slug: battle-master-maneuver-distracting-strike
+          :feature_name: 'Maneuver: Distracting Strike'
           :kind: :damage
           :applied: true
           :amount: 4
@@ -7092,8 +7288,8 @@
             - 4
             :modifiers: {}
             :total: 4
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
+          :statuses:
+          - next_attack_advantage
         :damage: 9
         :hp_before: 34
         :hp_after: 25
@@ -7118,7 +7314,7 @@
         :target_name: Campeão
         :success: true
         :advantage: true
-        :rider:
+        :riders: []
         :damage: 14
         :hp_before: 21
         :hp_after: 7
@@ -7132,7 +7328,7 @@
         :target_name: Campeão
         :success: true
         :advantage: false
-        :rider:
+        :riders: []
         :damage: 8
         :hp_before: 7
         :hp_after: 0

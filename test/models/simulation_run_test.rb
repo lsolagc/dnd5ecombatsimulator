@@ -9,8 +9,12 @@ class SimulationRunTest < ActiveSupport::TestCase
         { results: [ { kind: :heal, amount: 10, hp_before: 15, hp_after: 18 } ] }
       ] },
       { round: 2, turns: [
-        # A maneuver rider rides on the attack entry and counts as damage in the same round.
-        { results: [ { kind: :attack, hp_before: 18, hp_after: 10, rider: { kind: :damage, amount: 5, hp_before: 10, hp_after: 5 } } ] },
+        # A maneuver rider rides on the attack entry and counts as damage in the same round; a rider without
+        # an effect (Eldritch Strike) counts nothing.
+        { results: [ { kind: :attack, hp_before: 18, hp_after: 10, riders: [
+          { feature_slug: "eldritch-knight-eldritch-strike", statuses: [ "disadvantage_on_next_save" ] },
+          { feature_slug: "battle-master-maneuver-precision-attack", kind: :damage, amount: 5, hp_before: 10, hp_after: 5 }
+        ] } ] },
         { results: [ { kind: :damage, amount: 9, hp_before: 4, hp_after: 0 } ] },
         { results: [ { kind: :heal, amount: 4, hp_before: 1, hp_after: 5 } ] }
       ] }

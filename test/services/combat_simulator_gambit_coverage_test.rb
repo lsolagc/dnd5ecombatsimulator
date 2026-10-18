@@ -17,7 +17,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     *{ "Precision Attack" => "precision-attack", "Disarming Attack" => "disarming-attack", "Lunging Attack" => "lunging-attack",
        "Sweeping Attack" => "sweeping-attack", "Distracting Strike" => "distracting-strike" }.map do |name, slug|
       { item: name, actor: "Mestre de Batalha", maneuver: "battle-master-maneuver-#{slug}",
-        rule: { feature: "battle-master-maneuver-#{slug}" }, action: { type: :attack, maneuver_name: "Maneuver: #{name}" } }
+        rule: { feature: "battle-master-maneuver-#{slug}" }, action: { type: :attack, riders: [ { feature_slug: "battle-master-maneuver-#{slug}", feature_name: "Maneuver: #{name}" } ] } }
     end,
     *%w[fire-bolt ray-of-frost chromatic-orb].map do |slug|
       { item: slug, actor: "Cavaleiro Arcano", rule: { spell: slug }, action: { type: :cast_spell, spell_slug: slug } }
@@ -44,7 +44,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
 
       turn = actor_turns(character, simulator(party_one: [ character ], party_two: [ enemy ], seed: 1, max_rounds: 1).call).first
 
-      assert_equal action, turn[:action].slice(:type, :maneuver_name, :feature_slug, :spell_slug), "#{item}: wrong action"
+      assert_equal action, turn[:action].slice(:type, :riders, :feature_slug, :spell_slug), "#{item}: wrong action"
       assert_equal 1, turn.dig(:gambit, :position), "#{item}: not fired by the rule"
       assert_equal [ enemy.id ], turn[:results].map { |result| result[:target_id] }.uniq if action[:type] == :attack
     end

@@ -107,6 +107,17 @@ recording them draws nothing extra. Turn results carry no human-readable
    rolls with advantage and uses the mark up, and the mark expires at the start
    of the marker's next turn (`@advantage_marks`). Weapon attacks only; spell
    attacks ignore marks.
+   Both are **riders** ([glossary](/ubiquitous-language.md)), logged as
+   `Combat::Rider#to_h`:[^rider-rb] the attack action lists the riders chosen
+   for it (`action: { type: :attack, riders: [ { feature_slug, feature_name } ] }`,
+   no `riders` key when none was chosen), kept even when every attack misses; each
+   attack lists the riders it applied in `riders`, always present and empty on a
+   miss. An applied rider is `{ feature_slug, feature_name }`, then its effect's
+   keys when it has one (`kind`, `applied`, `amount`, `hp_before`, `hp_after`,
+   `roll_outcome`: the maneuver's die), then `statuses` when it applied any (the
+   maneuver's `debuff`, Eldritch Strike's `disadvantage_on_next_save`). The order
+   of several riders on one attack is not settled yet: no combatant has both. The marks themselves are still
+   `@eldritch_strike_pending` and `@advantage_marks` until phase 3.4 (Status).
    The target is picked at random from the payload's `"target"` kind
    (`self`, `enemy` = opposing party, `ally` = own party): a damage feature or
    spell never lands on the actor or their party, and a heal never on an enemy.
@@ -227,7 +238,7 @@ walks unlocks or compares feature names.[^feature-book-rb] It is read-only and h
 | `action_payload(feature)` | the feature's action effect (`PlayerCharacter#action_payload`), nil when not unlocked, not an action at the level, or a maneuver the character has not learned |
 | `unlock_with(kind)` | the unlock in force of the feature whose effect is `extra_action` (Action Surge) or `reroll_save` (Indomitable), or nil |
 | `weapon_attacks_after(spell)` | how many bonus weapon attacks (a `grants_activity`'s `count`, one) follow this spell: `after.cast_with_action` `cantrip` (War Magic) only after a cantrip, `any_spell` (Improved War Magic) after any; nil for none |
-| `rider?(event:, applies:)` | a hit leaves the Eldritch Strike mark (`rider`, `event: weapon_hit`, `applies: disadvantage_on_next_save`) |
+| `rider(event:, applies:)` | the feature whose hit leaves the Eldritch Strike mark (`rider`, `event: weapon_hit`, `applies: disadvantage_on_next_save`), or nil; its slug and name go in the attack's `riders` |
 | `resource_feature_id(feature)` | whose uses the feature spends: the `resource_pool`'s (Combat Superiority) for a maneuver, else its own |
 | `initial_uses` | `{ class_feature_id => uses }` at the start of combat (see Resource tracking) |
 
@@ -279,3 +290,5 @@ floored at 0 (`spend_use!`); once exhausted, that action stops being offered.
 [^feature-book-rb]: Source: `app/services/combat/feature_book.rb`
 
 [^participant-rb]: Source: `app/services/combat/participant.rb`
+
+[^rider-rb]: Source: `app/services/combat/rider.rb`

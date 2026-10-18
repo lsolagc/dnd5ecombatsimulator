@@ -387,10 +387,18 @@ class CombatSimulatorService
         hit = result.attack_roll.hit
         damage = result.roll_outcome.total
 
-        @eldritch_strike_pending[target.id] = actor.id if hit && actor.feature_book.rider?(event: "weapon_hit", applies: "disadvantage_on_next_save")
-
-        rider = apply_maneuver_rider(actor:, target:, maneuver: pending_maneuver, crit: result.attack_roll.crit) if pending_maneuver && hit
-        pending_maneuver = nil if rider
+        riders = []
+        if hit
+          eldritch_strike = actor.feature_book.rider(event: "weapon_hit", applies: "disadvantage_on_next_save")
+          if eldritch_strike
+            @eldritch_strike_pending[target.id] = actor.id
+            riders << Combat::Rider.for(feature: eldritch_strike, statuses: [ "disadvantage_on_next_save" ])
+          end
+          if pending_maneuver
+            riders << apply_maneuver_rider(actor:, target:, maneuver: pending_maneuver, crit: result.attack_roll.crit)
+            pending_maneuver = nil
+          end
+        end
 
         entries << {
           kind: :attack,
@@ -398,7 +406,7 @@ class CombatSimulatorService
           target_name: target.name,
           success: hit,
           advantage: advantage,
-          rider: rider,
+          riders: riders.map(&:to_h),
           damage: hit ? damage : 0,
           hp_before: result.hp_before,
           hp_after: result.hp_after,
@@ -411,11 +419,12 @@ class CombatSimulatorService
         }
       end
 
-      turn_record(actor:, round_number:, turn_index:, action: { type: :attack, maneuver_name: maneuver&.class_feature&.name }.compact, results: entries)
+      turn_record(actor:, round_number:, turn_index:, action: { type: :attack, riders: maneuver && [ Combat::Rider.for(feature: maneuver.class_feature).to_h ] }.compact, results: entries)
     end
 
     # Adds the maneuver's die to a weapon attack that just hit: rolls it through the effect pipeline
     # (doubled on a critical hit), spends a superiority die and applies the payload's debuff, if any.
+    # Returns the applied Combat::Rider, the debuff as its status.
     # ponytail: the die lands as its own damage instance (own log line, own resistance rounding), not
     # inside the weapon's single damage roll; merge them if that ever distorts a metric.
     def apply_maneuver_rider(actor:, target:, maneuver:, crit:)
@@ -433,7 +442,7 @@ class CombatSimulatorService
       else raise ArgumentError, "Unsupported debuff: #{debuff.inspect}"
       end
 
-      serialize_effect_results(results:).first.merge(feature_name: feature.name, debuff:).compact
+      Combat::Rider.for(feature:, effect: serialize_effect_results(results:).first.compact, statuses: Array(debuff))
     end
 
     # The first attacker other than a mark's owner uses that mark up and rolls with advantage.

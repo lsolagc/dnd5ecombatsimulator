@@ -78,7 +78,7 @@ never by its name (phase 5.2 of the DDD refactor).[^unlock-rb]
 | `modifier` | `modifier` (`attack_bonus`\|`armor_class`\|`damage_bonus`\|`critical_hit_threshold`), `value` (integer) | `trigger` (`always`), `target` | the passives |
 | `extra_action` | — | — | Action Surge: `FeatureBook#unlock_with`, `Gambit#action_surge?`; uses in `uses` |
 | `grants_activity` | `activity` (`weapon_attack`), `count` (integer ≥ 1), `as` (an [action cost](/ubiquitous-language.md): `action`\|`bonus_action`\|`reaction`), `after.cast_with_action` (`cantrip`\|`any_spell`) | — | War Magic / Improved War Magic: `FeatureBook#weapon_attacks_after`; `as` is declared, not charged (issue #39) |
-| `rider` | `event` (`weapon_hit`), `applies` (`disadvantage_on_next_save`), `against` (`own_spells`) | — | Eldritch Strike: `FeatureBook#rider?` |
+| `rider` | `event` (`weapon_hit`), `applies` (`disadvantage_on_next_save`), `against` (`own_spells`) | — | Eldritch Strike: `FeatureBook#rider` |
 | `reroll_save` | `when` (`failed`) | — | Indomitable: `FeatureBook#unlock_with`; uses in `uses` |
 | `resource_pool` | — | — | Combat Superiority: `PlayerCharacter#combat_superiority`, `PlayerCharacterManeuver`; maneuvers with its `resource_name` spend its uses |
 

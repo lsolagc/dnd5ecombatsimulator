@@ -125,7 +125,8 @@ sends the page's CSRF token as a header. A slow `poll` (10 s,
   `heal` result, passives included). **Wasted healing**: the rest of each
   heal's `amount`, i.e. what rolled past the target's max HP.
 - **Biggest damage in a round**: per round, the sum of HP removed by weapon
-  attacks (their `hp_before`/`hp_after`), maneuver riders and `damage`
+  attacks (their `hp_before`/`hp_after`), the riders each attack applied
+  (its `riders`; Eldritch Strike's, without an effect, adds nothing) and `damage`
   effects — after resistances, without overkill below 0 HP; the batch keeps
   the max.
 
