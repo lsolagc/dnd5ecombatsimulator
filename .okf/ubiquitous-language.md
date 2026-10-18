@@ -5,7 +5,7 @@ description: The project's agreed vocabulary in one place (action, Attack action
 tags: [combat, gambits]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-17T00:00:00Z
+  at: 2026-10-18T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:31:58Z }
 sources:
   - id: issue-43
@@ -33,6 +33,7 @@ decisions behind it are in
 | **Attack** | one weapon attack inside the Attack action | One attack roll against one target; on a hit it produces a damage effect. |
 | **Effect** | `Combat::EffectInstance` | The atomic outcome of an action: damage or healing, with an optional attack roll or saving throw. |
 | **Action option** | `Combat::ActionOption` | One action the simulator offers an actor this turn (Attack, a feature or maneuver, a spell, Action Surge), before it runs. A gambit's pick is the same option with the rule's target and gambit. Not an Action: running it builds the `CombatAction`. |
+| **Rider** | today the `rider` key of an attack, maneuvers only; `Combat::Rider` in phase 3.3 | An effect that rides along on an **attack**: chosen with the action or triggered by it, applied when the attack hits, on top of the attack's own damage. Today the Battle Master maneuvers (their die and, for Distracting Strike, the advantage mark); later Divine Smite, Sneak Attack, Hunter's Mark. An attack can carry several. Agreed on 2026-10-18 as attack-only: whether something can ride on a spell or a feature is decided when the first such case arrives. |
 | **Turn record** | `Combat::TurnRecord` | One entry of a round's turns in the `round_log`: who acted, the action, its effects and the gambit behind it. |
 
 # Conditions, status and criteria
