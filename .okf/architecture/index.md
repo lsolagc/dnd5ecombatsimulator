@@ -9,3 +9,4 @@
 * [Passive effect triggers (always / turn_start / turn_end)](passive-effect-triggers.md) - The trigger + conditions extension to effect_payload behind passives like Champion's improved critical.
 * [Gambits — design decisions](gambits-decisions.md) - The design decisions behind the FFXII-style gambits, grouped by subject, each with its reason; reviewed by the user.
 * [Gambits — mechanics impact](gambits-impact.md) - What the gambits changed in combat, how it was validated, and the measured effect on Brenna x Corwin.
+* [War Magic — mechanics impact](war-magic-impact.md) - War Magic's bonus cut from a whole Attack action to one weapon attack: the proof on the golden files and the measured effect on the Eldritch Knight.

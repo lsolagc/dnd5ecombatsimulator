@@ -78,7 +78,7 @@ recording them draws nothing extra. Turn results carry no human-readable
 
 1. **Attack** is always available: a `Combat::CombatAction(source_type:
    :attack)` run by `Combat::ActionRunner.attack`, which makes
-   `attacks_per_action` weapon attacks and asks `execute_attack_action` for
+   `attacks_per_action` weapon attacks (War Magic's bonus: exactly one) and asks `execute_attack_action` for
    each attack's target (a random living enemy, the gambit's target, or War
    Magic's focus), so an attack after a kill goes to someone else. See
    [combat-action-language.md](/architecture/combat-action-language.md).
@@ -170,7 +170,9 @@ rule wins, one use is spent, a marker turn `action: { type: :action_surge }` is
 logged, and the list is evaluated twice more (the second `extra: true`), skipping
 surge rules; either may stand idle, and both stop once the fight is over. A
 gambit-driven actor never gets the automatic random surge. **War Magic** stays
-automatic after the first of those actions; its bonus attack aims at the spell's
+automatic after the first of those actions; its bonus is exactly one weapon attack (not the
+Attack action, so no Extra Attack; since 2026-10-18, see the
+[impact report](/architecture/war-magic-impact.md)) and aims at the spell's
 target if it is a living enemy, else the first living enemy in initiative order. Decisions:
 [gambits-decisions.md](/architecture/gambits-decisions.md).
 
@@ -186,7 +188,7 @@ feature names.[^feature-book-rb] It is read-only and holds no counters:
 | `unlocks` | the unlocks in force (`PlayerCharacter#feature_unlocks`) |
 | `action_payload(feature)` | the feature's action effect (`PlayerCharacter#action_payload`), nil when not unlocked, not an action at the level, or a maneuver the character has not learned |
 | `action_surge` / `indomitable` | the unlock in force, or nil |
-| `war_magic_for?(spell)` | War Magic's bonus attack follows this spell: a cantrip with War Magic, any spell with Improved War Magic |
+| `war_magic_for?(spell)` | War Magic's bonus (one weapon attack) follows this spell: a cantrip with War Magic, any spell with Improved War Magic |
 | `eldritch_strike?` | a hit leaves the Eldritch Strike mark |
 | `resource_feature_id(feature)` | whose uses the feature spends: Combat Superiority's for a maneuver, else its own |
 | `initial_uses` | `{ class_feature_id => uses }` at the start of combat (see Resource tracking) |

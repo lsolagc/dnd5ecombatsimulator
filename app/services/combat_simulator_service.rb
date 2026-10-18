@@ -284,8 +284,8 @@ class CombatSimulatorService
     end
 
     # War Magic / Improved War Magic: casting a spell as the turn's normal action grants
-    # a bonus weapon attack right after it. Not recursive (a plain attack, via
-    # execute_attack_action, never triggers another one) and never fired from the
+    # ONE bonus weapon attack right after it (not the Attack action, so no Extra Attack). Not recursive
+    # (a plain attack, via execute_attack_action, never triggers another one) and never fired from the
     # Action Surge extra action — only from the turn's normal chosen_action.
     # A gambit-driven actor aims it without @rng: the spell's target if it is a living enemy, else the
     # first living enemy in initiative order. The bonus entry carries the gambit of the spell's entry.
@@ -297,7 +297,7 @@ class CombatSimulatorService
         focus = enemy_party_for(actor).include?(spell_target) && !spell_target.dead? ? spell_target : first_living_enemy(actor:)
       end
       gambit = chosen_action.chosen_by_gambit? ? gambit_log(chosen_action.gambit) : RANDOM_GAMBIT
-      execute_attack_action(actor:, round_number:, turn_index:, focus:).with(bonus: true, gambit:)
+      execute_attack_action(actor:, round_number:, turn_index:, focus:, attacks: 1).with(bonus: true, gambit:)
     end
 
     def turn_passive_log(actor:, trigger:, round_number:, turn_index:)
@@ -370,9 +370,10 @@ class CombatSimulatorService
     # gambit: the rule that chose this action. Every attack re-runs its target pick (the first one lands
     # on the target the rule just chose), falling back to the first living enemy in initiative order.
     # focus: a fixed target (War Magic for a gambit-driven actor), with the same fallback once it is down.
-    def execute_attack_action(actor:, round_number:, turn_index:, maneuver: nil, gambit: nil, focus: nil)
+    # attacks: how many attacks to make; the Attack action's attacks_per_action (Extra Attack) by default.
+    def execute_attack_action(actor:, round_number:, turn_index:, maneuver: nil, gambit: nil, focus: nil, attacks: actor.attacks_per_action)
       enemy_party = enemy_party_for(actor)
-      attacks = []
+      entries = []
       pending_maneuver = maneuver
 
       next_target = lambda do
@@ -386,7 +387,7 @@ class CombatSimulatorService
       end
       action = Combat::CombatAction.new(source_type: :attack, source_id: nil, actor:)
 
-      Combat::ActionRunner.attack(action:, next_target:, advantage_against: ->(target) { consume_advantage_mark(target:, attacker: actor) }) do |target, result, advantage|
+      Combat::ActionRunner.attack(action:, next_target:, attacks:, advantage_against: ->(target) { consume_advantage_mark(target:, attacker: actor) }) do |target, result, advantage|
         hit = result.attack_roll.hit
         damage = result.roll_outcome.total
 
@@ -395,7 +396,7 @@ class CombatSimulatorService
         rider = apply_maneuver_rider(actor:, target:, maneuver: pending_maneuver, crit: result.attack_roll.crit) if pending_maneuver && hit
         pending_maneuver = nil if rider
 
-        attacks << {
+        entries << {
           kind: :attack,
           target_id: target.id,
           target_name: target.name,
@@ -414,7 +415,7 @@ class CombatSimulatorService
         }
       end
 
-      turn_record(actor:, round_number:, turn_index:, action: { type: :attack, maneuver_name: maneuver&.class_feature&.name }.compact, results: attacks)
+      turn_record(actor:, round_number:, turn_index:, action: { type: :attack, maneuver_name: maneuver&.class_feature&.name }.compact, results: entries)
     end
 
     # Adds the maneuver's die to a weapon attack that just hit: rolls it through the effect pipeline

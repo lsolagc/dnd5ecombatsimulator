@@ -1,7 +1,7 @@
 ---
 1:
   :winning_party: :party_one
-  :total_rounds: 4
+  :total_rounds: 5
   :initiative:
   - :actor_id: Campeão
     :natural: 13
@@ -102,20 +102,6 @@
           :total: 18
           :crit: false
           :damage: 8
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 3
-        :hp_before: 52
-        :hp_after: 49
-        :attack_roll:
-          :natural: 16
-          :total: 22
-          :crit: false
-          :damage: 3
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -137,28 +123,28 @@
         :rider:
           :kind: :damage
           :applied: true
-          :amount: 5
-          :hp_before: 44
-          :hp_after: 39
+          :amount: 1
+          :hp_before: 48
+          :hp_after: 47
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
             :dice:
             - 1d8
             :rolls:
-            - 5
+            - 1
             :modifiers: {}
-            :total: 5
+            :total: 1
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
-        :damage: 5
-        :hp_before: 49
-        :hp_after: 44
+        :damage: 4
+        :hp_before: 52
+        :hp_after: 48
         :attack_roll:
-          :natural: 17
-          :total: 22
+          :natural: 16
+          :total: 21
           :crit: false
-          :damage: 5
+          :damage: 4
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -187,28 +173,28 @@
         :success: true
         :advantage: true
         :rider:
+        :damage: 10
+        :hp_before: 47
+        :hp_after: 37
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 10
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
         :damage: 7
-        :hp_before: 39
-        :hp_after: 32
+        :hp_before: 37
+        :hp_after: 30
         :attack_roll:
           :natural: 14
           :total: 20
           :crit: false
           :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 32
-        :hp_after: 32
-        :attack_roll:
-          :natural: 7
-          :total: 13
-          :crit: false
-          :damage: 4
       :gambit:
         :position: 1
         :rule: 'Inimigo: marcado → Ataque'
@@ -224,33 +210,17 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-          :kind: :damage
-          :applied: true
-          :amount: 7
-          :hp_before: 24
-          :hp_after: 17
-          :roll_outcome:
-            :expression: 1d8
-            :resolved_expression: 1d8
-            :dice:
-            - 1d8
-            :rolls:
-            - 7
-            :modifiers: {}
-            :total: 7
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
-        :damage: 8
-        :hp_before: 32
-        :hp_after: 24
+        :damage: 0
+        :hp_before: 30
+        :hp_after: 30
         :attack_roll:
-          :natural: 19
-          :total: 24
+          :natural: 7
+          :total: 12
           :crit: false
-          :damage: 8
+          :damage: 13
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -262,30 +232,44 @@
       :actor_name: Campeão
       :actor_party: :party_two
       :action:
-        :type: :class_feature
-        :feature_id: second-wind
-        :feature_slug: second-wind
-        :feature_name: Second Wind
-        :target_type: self
+        :type: :idle
+      :results: []
+      :gambit: 'nenhum aplicável: parado'
+    - :round: 3
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
       :results:
-      - :kind: :heal
+      - :kind: :damage
         :applied: true
-        :amount: 16
-        :hp_before: 17
-        :hp_after: 33
+        :amount: 5
+        :hp_before: 30
+        :hp_after: 25
         :roll_outcome:
-          :expression: 1d10 + actor_level
-          :resolved_expression: 1d10+10
+          :expression: 1d10
+          :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 6
-          :modifiers:
-            actor_level: 10
-          :total: 16
+          - 5
+          :modifiers: {}
+          :total: 5
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :armor_class: 17
+          :hit: true
+          :crit: false
       :gambit:
         :position: 2
-        :rule: 'Self: HP < 50% → Second Wind'
+        :rule: 'Inimigo: qualquer → Fire Bolt'
     - :round: 3
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -297,34 +281,21 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
-        :advantage: true
-        :rider:
-        :damage: 7
-        :hp_before: 33
-        :hp_after: 26
-        :attack_roll:
-          :natural: 19
-          :total: 25
-          :crit: false
-          :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-        :damage: 7
-        :hp_before: 26
-        :hp_after: 19
+        :damage: 0
+        :hp_before: 25
+        :hp_after: 25
         :attack_roll:
-          :natural: 11
-          :total: 17
+          :natural: 6
+          :total: 12
           :crit: false
-          :damage: 7
+          :damage: 5
       :gambit:
-        :position: 1
-        :rule: 'Inimigo: marcado → Ataque'
+        :position: 2
+        :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 3
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -343,8 +314,8 @@
           :kind: :damage
           :applied: true
           :amount: 5
-          :hp_before: 13
-          :hp_after: 8
+          :hp_before: 19
+          :hp_after: 14
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -357,11 +328,11 @@
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
         :damage: 6
-        :hp_before: 19
-        :hp_after: 13
+        :hp_before: 25
+        :hp_after: 19
         :attack_roll:
-          :natural: 15
-          :total: 20
+          :natural: 12
+          :total: 17
           :crit: false
           :damage: 6
       :gambit:
@@ -375,9 +346,30 @@
       :actor_name: Campeão
       :actor_party: :party_two
       :action:
-        :type: :idle
-      :results: []
-      :gambit: 'nenhum aplicável: parado'
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 18
+        :hp_before: 14
+        :hp_after: 32
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+10
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers:
+            actor_level: 10
+          :total: 18
+      :gambit:
+        :position: 2
+        :rule: 'Self: HP < 50% → Second Wind'
     - :round: 4
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -393,16 +385,164 @@
         :advantage: true
         :rider:
         :damage: 10
-        :hp_before: 8
-        :hp_after: 0
+        :hp_before: 32
+        :hp_after: 22
         :attack_roll:
           :natural: 18
           :total: 24
           :crit: false
           :damage: 10
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 22
+        :hp_after: 22
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 9
       :gambit:
         :position: 1
         :rule: 'Inimigo: marcado → Ataque'
+    - :round: 4
+      :turn: 3
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Distracting Strike'
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 2
+          :hp_before: 9
+          :hp_after: 7
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 2
+            :modifiers: {}
+            :total: 2
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 13
+        :hp_before: 22
+        :hp_after: 9
+        :attack_roll:
+          :natural: 14
+          :total: 19
+          :crit: false
+          :damage: 13
+      :gambit:
+        :position: 1
+        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
+  - :round: 5
+    :turns:
+    - :round: 5
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :idle
+      :results: []
+      :gambit: 'nenhum aplicável: parado'
+    - :round: 5
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: true
+        :rider:
+        :damage: 0
+        :hp_before: 7
+        :hp_after: 7
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 3
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 3
+        :hp_before: 7
+        :hp_after: 4
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 3
+      :gambit:
+        :position: 1
+        :rule: 'Inimigo: marcado → Ataque'
+    - :round: 5
+      :turn: 3
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Distracting Strike'
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 8
+          :hp_before: 0
+          :hp_after: 0
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 8
+            :modifiers: {}
+            :total: 8
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 7
+        :hp_before: 4
+        :hp_after: 0
+        :attack_roll:
+          :natural: 14
+          :total: 19
+          :crit: false
+          :damage: 7
+      :gambit:
+        :position: 1
+        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
   :draw: false
   :outcome: :victory
 2:
@@ -478,20 +618,6 @@
           :total: 18
           :crit: false
           :damage: 5
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 3
-        :hp_before: 55
-        :hp_after: 52
-        :attack_roll:
-          :natural: 12
-          :total: 18
-          :crit: false
-          :damage: 3
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -538,17 +664,33 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 52
-        :hp_after: 52
+          :kind: :damage
+          :applied: true
+          :amount: 8
+          :hp_before: 43
+          :hp_after: 35
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 8
+            :modifiers: {}
+            :total: 8
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 12
+        :hp_before: 55
+        :hp_after: 43
         :attack_roll:
-          :natural: 8
-          :total: 13
+          :natural: 12
+          :total: 17
           :crit: false
-          :damage: 6
+          :damage: 12
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -560,197 +702,70 @@
       :actor_name: Cavaleiro Arcano
       :actor_party: :party_one
       :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
+        :type: :attack
       :results:
-      - :kind: :damage
-        :applied: true
-        :amount: 6
-        :hp_before: 52
-        :hp_after: 46
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 6
-          :modifiers: {}
-          :total: 6
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: true
+        :rider:
+        :damage: 10
+        :hp_before: 35
+        :hp_after: 25
         :attack_roll:
           :natural: 18
           :total: 24
-          :armor_class: 17
-          :hit: true
           :crit: false
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 2
-      :turn: 1
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-      :results:
+          :damage: 10
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
         :rider:
-        :damage: 10
-        :hp_before: 46
-        :hp_after: 36
+        :damage: 8
+        :hp_before: 25
+        :hp_after: 17
         :attack_roll:
-          :natural: 16
-          :total: 22
+          :natural: 12
+          :total: 18
           :crit: false
-          :damage: 10
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 36
-        :hp_after: 36
-        :attack_roll:
-          :natural: 6
-          :total: 12
-          :crit: false
-          :damage: 10
+          :damage: 8
       :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
+        :position: 1
+        :rule: 'Inimigo: marcado → Ataque'
     - :round: 2
       :turn: 2
       :actor_id: Campeão
       :actor_name: Campeão
       :actor_party: :party_two
       :action:
-        :type: :idle
-      :results: []
-      :gambit: 'nenhum aplicável: parado'
-    - :round: 2
-      :turn: 3
-      :actor_id: Mestre de Batalha
-      :actor_name: Mestre de Batalha
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
       :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 36
-        :hp_after: 36
-        :attack_roll:
-          :natural: 4
-          :total: 9
-          :crit: false
-          :damage: 10
-      :gambit:
-        :position: 1
-        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-  - :round: 3
-    :turns:
-    - :round: 3
-      :turn: 1
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 36
-        :hp_after: 36
+      - :kind: :heal
+        :applied: true
+        :amount: 15
+        :hp_before: 17
+        :hp_after: 32
         :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+10
           :dice:
           - 1d10
           :rolls:
-          - 4
-          :modifiers: {}
-          :total: 4
-        :attack_roll:
-          :natural: 5
-          :total: 11
-          :armor_class: 17
-          :hit: false
-          :crit: false
+          - 5
+          :modifiers:
+            actor_level: 10
+          :total: 15
       :gambit:
         :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 3
-      :turn: 1
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 36
-        :hp_after: 36
-        :attack_roll:
-          :natural: 8
-          :total: 14
-          :crit: false
-          :damage: 9
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 4
-        :hp_before: 36
-        :hp_after: 32
-        :attack_roll:
-          :natural: 11
-          :total: 17
-          :crit: false
-          :damage: 4
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
-    - :round: 3
-      :turn: 2
-      :actor_id: Campeão
-      :actor_name: Campeão
-      :actor_party: :party_two
-      :action:
-        :type: :idle
-      :results: []
-      :gambit: 'nenhum aplicável: parado'
-    - :round: 3
+        :rule: 'Self: HP < 50% → Second Wind'
+    - :round: 2
       :turn: 3
       :actor_id: Mestre de Batalha
       :actor_name: Mestre de Batalha
@@ -769,16 +784,16 @@
         :hp_before: 32
         :hp_after: 32
         :attack_roll:
-          :natural: 4
-          :total: 9
+          :natural: 6
+          :total: 11
           :crit: false
-          :damage: 9
+          :damage: 11
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-  - :round: 4
+  - :round: 3
     :turns:
-    - :round: 4
+    - :round: 3
       :turn: 1
       :actor_id: Cavaleiro Arcano
       :actor_name: Cavaleiro Arcano
@@ -805,15 +820,15 @@
           :modifiers: {}
           :total: 7
         :attack_roll:
-          :natural: 5
-          :total: 11
+          :natural: 4
+          :total: 10
           :armor_class: 17
           :hit: false
           :crit: false
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 4
+    - :round: 3
       :turn: 1
       :actor_id: Cavaleiro Arcano
       :actor_name: Cavaleiro Arcano
@@ -824,66 +839,31 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 6
-        :hp_before: 32
-        :hp_after: 26
-        :attack_roll:
-          :natural: 20
-          :total: 26
-          :crit: true
-          :damage: 6
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
         :success: false
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 26
-        :hp_after: 26
+        :hp_before: 32
+        :hp_after: 32
         :attack_roll:
-          :natural: 3
-          :total: 9
+          :natural: 5
+          :total: 11
           :crit: false
-          :damage: 3
+          :damage: 5
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
       :bonus: true
-    - :round: 4
+    - :round: 3
       :turn: 2
       :actor_id: Campeão
       :actor_name: Campeão
       :actor_party: :party_two
       :action:
-        :type: :class_feature
-        :feature_id: second-wind
-        :feature_slug: second-wind
-        :feature_name: Second Wind
-        :target_type: self
-      :results:
-      - :kind: :heal
-        :applied: true
-        :amount: 15
-        :hp_before: 26
-        :hp_after: 41
-        :roll_outcome:
-          :expression: 1d10 + actor_level
-          :resolved_expression: 1d10+10
-          :dice:
-          - 1d10
-          :rolls:
-          - 5
-          :modifiers:
-            actor_level: 10
-          :total: 15
-      :gambit:
-        :position: 2
-        :rule: 'Self: HP < 50% → Second Wind'
-    - :round: 4
+        :type: :idle
+      :results: []
+      :gambit: 'nenhum aplicável: parado'
+    - :round: 3
       :turn: 3
       :actor_id: Mestre de Batalha
       :actor_name: Mestre de Batalha
@@ -900,34 +880,34 @@
         :rider:
           :kind: :damage
           :applied: true
-          :amount: 5
-          :hp_before: 35
-          :hp_after: 30
+          :amount: 8
+          :hp_before: 25
+          :hp_after: 17
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
             :dice:
             - 1d8
             :rolls:
-            - 5
+            - 8
             :modifiers: {}
-            :total: 5
+            :total: 8
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
-        :damage: 6
-        :hp_before: 41
-        :hp_after: 35
+        :damage: 7
+        :hp_before: 32
+        :hp_after: 25
         :attack_roll:
-          :natural: 15
-          :total: 20
+          :natural: 12
+          :total: 17
           :crit: false
-          :damage: 6
+          :damage: 7
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-  - :round: 5
+  - :round: 4
     :turns:
-    - :round: 5
+    - :round: 4
       :turn: 1
       :actor_id: Cavaleiro Arcano
       :actor_name: Cavaleiro Arcano
@@ -941,32 +921,32 @@
         :success: true
         :advantage: true
         :rider:
-        :damage: 10
-        :hp_before: 30
-        :hp_after: 20
+        :damage: 4
+        :hp_before: 17
+        :hp_after: 13
         :attack_roll:
-          :natural: 18
-          :total: 24
+          :natural: 11
+          :total: 17
           :crit: false
-          :damage: 10
+          :damage: 4
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-        :damage: 3
-        :hp_before: 20
-        :hp_after: 17
+        :damage: 0
+        :hp_before: 13
+        :hp_after: 13
         :attack_roll:
-          :natural: 15
-          :total: 21
+          :natural: 4
+          :total: 10
           :crit: false
-          :damage: 3
+          :damage: 8
       :gambit:
         :position: 1
         :rule: 'Inimigo: marcado → Ataque'
-    - :round: 5
+    - :round: 4
       :turn: 2
       :actor_id: Campeão
       :actor_name: Campeão
@@ -975,7 +955,7 @@
         :type: :idle
       :results: []
       :gambit: 'nenhum aplicável: parado'
-    - :round: 5
+    - :round: 4
       :turn: 3
       :actor_id: Mestre de Batalha
       :actor_name: Mestre de Batalha
@@ -987,36 +967,57 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-          :kind: :damage
-          :applied: true
-          :amount: 6
-          :hp_before: 4
-          :hp_after: 0
-          :roll_outcome:
-            :expression: 1d8
-            :resolved_expression: 1d8
-            :dice:
-            - 1d8
-            :rolls:
-            - 6
-            :modifiers: {}
-            :total: 6
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
-        :damage: 13
-        :hp_before: 17
-        :hp_after: 4
+        :damage: 0
+        :hp_before: 13
+        :hp_after: 13
         :attack_roll:
-          :natural: 19
-          :total: 24
+          :natural: 5
+          :total: 10
           :crit: false
-          :damage: 13
+          :damage: 10
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
+  - :round: 5
+    :turns:
+    - :round: 5
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 20
+        :hp_before: 13
+        :hp_after: 0
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 20
+          :modifiers: {}
+          :total: 20
+        :attack_roll:
+          :natural: 20
+          :total: 26
+          :armor_class: 17
+          :hit: true
+          :crit: true
+      :gambit:
+        :position: 2
+        :rule: 'Inimigo: qualquer → Fire Bolt'
   :draw: false
   :outcome: :victory
 3:
@@ -1148,20 +1149,6 @@
           :total: 16
           :crit: false
           :damage: 5
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 40
-        :hp_after: 40
-        :attack_roll:
-          :natural: 7
-          :total: 13
-          :crit: false
-          :damage: 3
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -1180,134 +1167,21 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-          :kind: :damage
-          :applied: true
-          :amount: 7
-          :hp_before: 29
-          :hp_after: 22
-          :roll_outcome:
-            :expression: 1d8
-            :resolved_expression: 1d8
-            :dice:
-            - 1d8
-            :rolls:
-            - 7
-            :modifiers: {}
-            :total: 7
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
-        :damage: 11
+        :damage: 0
         :hp_before: 40
-        :hp_after: 29
+        :hp_after: 40
         :attack_roll:
-          :natural: 13
-          :total: 18
+          :natural: 7
+          :total: 12
           :crit: false
-          :damage: 11
+          :damage: 4
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
     - :round: 2
-      :turn: 2
-      :actor_id: Campeão
-      :actor_name: Campeão
-      :actor_party: :party_two
-      :action:
-        :type: :class_feature
-        :feature_id: second-wind
-        :feature_slug: second-wind
-        :feature_name: Second Wind
-        :target_type: self
-      :results:
-      - :kind: :heal
-        :applied: true
-        :amount: 19
-        :hp_before: 22
-        :hp_after: 41
-        :roll_outcome:
-          :expression: 1d10 + actor_level
-          :resolved_expression: 1d10+10
-          :dice:
-          - 1d10
-          :rolls:
-          - 9
-          :modifiers:
-            actor_level: 10
-          :total: 19
-      :gambit:
-        :position: 2
-        :rule: 'Self: HP < 50% → Second Wind'
-    - :round: 2
-      :turn: 3
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: true
-        :rider:
-        :damage: 5
-        :hp_before: 41
-        :hp_after: 36
-        :attack_roll:
-          :natural: 18
-          :total: 24
-          :crit: false
-          :damage: 5
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 36
-        :hp_after: 36
-        :attack_roll:
-          :natural: 2
-          :total: 8
-          :crit: false
-          :damage: 6
-      :gambit:
-        :position: 1
-        :rule: 'Inimigo: marcado → Ataque'
-  - :round: 3
-    :turns:
-    - :round: 3
-      :turn: 1
-      :actor_id: Mestre de Batalha
-      :actor_name: Mestre de Batalha
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 36
-        :hp_after: 36
-        :attack_roll:
-          :natural: 6
-          :total: 11
-          :crit: false
-          :damage: 12
-      :gambit:
-        :position: 1
-        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-    - :round: 3
       :turn: 2
       :actor_id: Campeão
       :actor_name: Campeão
@@ -1316,7 +1190,7 @@
         :type: :idle
       :results: []
       :gambit: 'nenhum aplicável: parado'
-    - :round: 3
+    - :round: 2
       :turn: 3
       :actor_id: Cavaleiro Arcano
       :actor_name: Cavaleiro Arcano
@@ -1330,28 +1204,28 @@
       :results:
       - :kind: :damage
         :applied: true
-        :amount: 2
-        :hp_before: 36
-        :hp_after: 34
+        :amount: 8
+        :hp_before: 40
+        :hp_after: 32
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 2
+          - 8
           :modifiers: {}
-          :total: 2
+          :total: 8
         :attack_roll:
-          :natural: 15
-          :total: 21
+          :natural: 13
+          :total: 19
           :armor_class: 17
           :hit: true
           :crit: false
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 3
+    - :round: 2
       :turn: 3
       :actor_id: Cavaleiro Arcano
       :actor_name: Cavaleiro Arcano
@@ -1366,13 +1240,113 @@
         :advantage: false
         :rider:
         :damage: 3
-        :hp_before: 34
-        :hp_after: 31
+        :hp_before: 32
+        :hp_after: 29
         :attack_roll:
-          :natural: 11
-          :total: 17
+          :natural: 15
+          :total: 21
           :crit: false
           :damage: 3
+      :gambit:
+        :position: 2
+        :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Distracting Strike'
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 3
+          :hp_before: 19
+          :hp_after: 16
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 3
+            :modifiers: {}
+            :total: 3
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 10
+        :hp_before: 29
+        :hp_after: 19
+        :attack_roll:
+          :natural: 18
+          :total: 23
+          :crit: false
+          :damage: 10
+      :gambit:
+        :position: 1
+        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
+    - :round: 3
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 13
+        :hp_before: 16
+        :hp_after: 29
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+10
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers:
+            actor_level: 10
+          :total: 13
+      :gambit:
+        :position: 2
+        :rule: 'Self: HP < 50% → Second Wind'
+    - :round: 3
+      :turn: 3
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: true
+        :rider:
+        :damage: 8
+        :hp_before: 29
+        :hp_after: 21
+        :attack_roll:
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -1380,17 +1354,16 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 31
-        :hp_after: 31
+        :hp_before: 21
+        :hp_after: 21
         :attack_roll:
-          :natural: 8
-          :total: 14
+          :natural: 6
+          :total: 12
           :crit: false
           :damage: 3
       :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
+        :position: 1
+        :rule: 'Inimigo: marcado → Ataque'
   - :round: 4
     :turns:
     - :round: 4
@@ -1410,26 +1383,26 @@
         :rider:
           :kind: :damage
           :applied: true
-          :amount: 4
-          :hp_before: 26
-          :hp_after: 22
+          :amount: 6
+          :hp_before: 16
+          :hp_after: 10
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
             :dice:
             - 1d8
             :rolls:
-            - 4
+            - 6
             :modifiers: {}
-            :total: 4
+            :total: 6
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
         :damage: 5
-        :hp_before: 31
-        :hp_after: 26
+        :hp_before: 21
+        :hp_after: 16
         :attack_roll:
-          :natural: 12
-          :total: 17
+          :natural: 15
+          :total: 20
           :crit: false
           :damage: 5
       :gambit:
@@ -1458,28 +1431,28 @@
         :success: true
         :advantage: true
         :rider:
-        :damage: 8
-        :hp_before: 22
-        :hp_after: 14
+        :damage: 3
+        :hp_before: 10
+        :hp_after: 7
         :attack_roll:
-          :natural: 17
-          :total: 23
+          :natural: 11
+          :total: 17
           :crit: false
-          :damage: 8
+          :damage: 3
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
         :rider:
-        :damage: 8
-        :hp_before: 14
-        :hp_after: 6
+        :damage: 4
+        :hp_before: 7
+        :hp_after: 3
         :attack_roll:
-          :natural: 18
-          :total: 24
+          :natural: 12
+          :total: 18
           :crit: false
-          :damage: 8
+          :damage: 4
       :gambit:
         :position: 1
         :rule: 'Inimigo: marcado → Ataque'
@@ -1502,7 +1475,7 @@
         :rider:
           :kind: :damage
           :applied: true
-          :amount: 5
+          :amount: 6
           :hp_before: 0
           :hp_after: 0
           :roll_outcome:
@@ -1511,19 +1484,19 @@
             :dice:
             - 1d8
             :rolls:
-            - 5
+            - 6
             :modifiers: {}
-            :total: 5
+            :total: 6
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
-        :damage: 8
-        :hp_before: 6
+        :damage: 4
+        :hp_before: 3
         :hp_after: 0
         :attack_roll:
-          :natural: 15
-          :total: 20
+          :natural: 16
+          :total: 21
           :crit: false
-          :damage: 8
+          :damage: 4
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -1531,7 +1504,7 @@
   :outcome: :victory
 4:
   :winning_party: :party_one
-  :total_rounds: 6
+  :total_rounds: 8
   :initiative:
   - :actor_id: Mestre de Batalha
     :natural: 15
@@ -1628,20 +1601,6 @@
           :total: 16
           :crit: false
           :damage: 5
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 60
-        :hp_after: 60
-        :attack_roll:
-          :natural: 8
-          :total: 14
-          :crit: false
-          :damage: 8
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -1697,10 +1656,10 @@
         :hp_before: 60
         :hp_after: 60
         :attack_roll:
-          :natural: 9
-          :total: 14
+          :natural: 8
+          :total: 13
           :crit: false
-          :damage: 8
+          :damage: 11
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -1717,24 +1676,24 @@
         :target_type: enemy
       :results:
       - :kind: :damage
-        :applied: true
-        :amount: 7
+        :applied: false
+        :amount: 0
         :hp_before: 60
-        :hp_after: 53
+        :hp_after: 60
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 7
+          - 5
           :modifiers: {}
-          :total: 7
+          :total: 5
         :attack_roll:
-          :natural: 19
-          :total: 25
+          :natural: 9
+          :total: 15
           :armor_class: 17
-          :hit: true
+          :hit: false
           :crit: false
       :gambit:
         :position: 2
@@ -1754,27 +1713,13 @@
         :advantage: false
         :rider:
         :damage: 7
-        :hp_before: 53
-        :hp_after: 46
+        :hp_before: 60
+        :hp_after: 53
         :attack_roll:
-          :natural: 11
-          :total: 17
+          :natural: 19
+          :total: 25
           :crit: false
           :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 46
-        :hp_after: 46
-        :attack_roll:
-          :natural: 4
-          :total: 10
-          :crit: false
-          :damage: 3
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -1806,13 +1751,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 46
-        :hp_after: 46
+        :hp_before: 53
+        :hp_after: 53
         :attack_roll:
-          :natural: 10
-          :total: 15
+          :natural: 7
+          :total: 12
           :crit: false
-          :damage: 10
+          :damage: 8
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -1831,20 +1776,20 @@
       - :kind: :damage
         :applied: false
         :amount: 0
-        :hp_before: 46
-        :hp_after: 46
+        :hp_before: 53
+        :hp_after: 53
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 9
+          - 1
           :modifiers: {}
-          :total: 9
+          :total: 1
         :attack_roll:
-          :natural: 7
-          :total: 13
+          :natural: 4
+          :total: 10
           :armor_class: 17
           :hit: false
           :crit: false
@@ -1866,27 +1811,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 46
-        :hp_after: 46
+        :hp_before: 53
+        :hp_after: 53
         :attack_roll:
-          :natural: 3
-          :total: 9
+          :natural: 10
+          :total: 16
           :crit: false
           :damage: 9
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 46
-        :hp_after: 46
-        :attack_roll:
-          :natural: 9
-          :total: 15
-          :crit: false
-          :damage: 4
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -1918,13 +1849,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 46
-        :hp_after: 46
+        :hp_before: 53
+        :hp_after: 53
         :attack_roll:
-          :natural: 3
-          :total: 8
+          :natural: 7
+          :total: 12
           :crit: false
-          :damage: 11
+          :damage: 12
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -1943,20 +1874,20 @@
       - :kind: :damage
         :applied: false
         :amount: 0
-        :hp_before: 46
-        :hp_after: 46
+        :hp_before: 53
+        :hp_after: 53
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 9
+          - 6
           :modifiers: {}
-          :total: 9
+          :total: 6
         :attack_roll:
-          :natural: 1
-          :total: 7
+          :natural: 3
+          :total: 9
           :armor_class: 17
           :hit: false
           :crit: false
@@ -1974,29 +1905,15 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-        :damage: 8
-        :hp_before: 46
-        :hp_after: 38
+        :damage: 0
+        :hp_before: 53
+        :hp_after: 53
         :attack_roll:
-          :natural: 20
-          :total: 26
-          :crit: true
-          :damage: 8
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 4
-        :hp_before: 38
-        :hp_after: 34
-        :attack_roll:
-          :natural: 14
-          :total: 20
+          :natural: 9
+          :total: 15
           :crit: false
           :damage: 4
       :gambit:
@@ -2030,13 +1947,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 34
-        :hp_after: 34
+        :hp_before: 53
+        :hp_after: 53
         :attack_roll:
-          :natural: 1
-          :total: 6
+          :natural: 3
+          :total: 8
           :crit: false
-          :damage: 7
+          :damage: 11
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -2053,24 +1970,24 @@
         :target_type: enemy
       :results:
       - :kind: :damage
-        :applied: true
-        :amount: 4
-        :hp_before: 34
-        :hp_after: 30
+        :applied: false
+        :amount: 0
+        :hp_before: 53
+        :hp_after: 53
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 4
+          - 9
           :modifiers: {}
-          :total: 4
+          :total: 9
         :attack_roll:
-          :natural: 19
-          :total: 25
+          :natural: 1
+          :total: 7
           :armor_class: 17
-          :hit: true
+          :hit: false
           :crit: false
       :gambit:
         :position: 2
@@ -2089,28 +2006,14 @@
         :success: true
         :advantage: false
         :rider:
-        :damage: 5
-        :hp_before: 30
-        :hp_after: 25
+        :damage: 8
+        :hp_before: 53
+        :hp_after: 45
         :attack_roll:
-          :natural: 16
-          :total: 22
-          :crit: false
-          :damage: 5
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 4
-        :hp_before: 25
-        :hp_after: 21
-        :attack_roll:
-          :natural: 19
-          :total: 25
-          :crit: false
-          :damage: 4
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 8
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -2121,30 +2024,9 @@
       :actor_name: Campeão
       :actor_party: :party_two
       :action:
-        :type: :class_feature
-        :feature_id: second-wind
-        :feature_slug: second-wind
-        :feature_name: Second Wind
-        :target_type: self
-      :results:
-      - :kind: :heal
-        :applied: true
-        :amount: 11
-        :hp_before: 21
-        :hp_after: 32
-        :roll_outcome:
-          :expression: 1d10 + actor_level
-          :resolved_expression: 1d10+10
-          :dice:
-          - 1d10
-          :rolls:
-          - 1
-          :modifiers:
-            actor_level: 10
-          :total: 11
-      :gambit:
-        :position: 2
-        :rule: 'Self: HP < 50% → Second Wind'
+        :type: :idle
+      :results: []
+      :gambit: 'nenhum aplicável: parado'
   - :round: 6
     :turns:
     - :round: 6
@@ -2164,28 +2046,28 @@
         :rider:
           :kind: :damage
           :applied: true
-          :amount: 2
-          :hp_before: 19
-          :hp_after: 17
+          :amount: 1
+          :hp_before: 40
+          :hp_after: 39
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
             :dice:
             - 1d8
             :rolls:
-            - 2
+            - 1
             :modifiers: {}
-            :total: 2
+            :total: 1
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
-        :damage: 13
-        :hp_before: 32
-        :hp_after: 19
+        :damage: 5
+        :hp_before: 45
+        :hp_after: 40
         :attack_roll:
-          :natural: 18
-          :total: 23
+          :natural: 14
+          :total: 19
           :crit: false
-          :damage: 13
+          :damage: 5
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -2203,36 +2085,202 @@
         :success: true
         :advantage: true
         :rider:
-        :damage: 10
-        :hp_before: 17
-        :hp_after: 7
+        :damage: 5
+        :hp_before: 39
+        :hp_after: 34
         :attack_roll:
-          :natural: 17
-          :total: 23
+          :natural: 14
+          :total: 20
           :crit: false
-          :damage: 10
+          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
         :rider:
-        :damage: 9
-        :hp_before: 7
-        :hp_after: 0
+        :damage: 18
+        :hp_before: 34
+        :hp_after: 16
         :attack_roll:
-          :natural: 19
-          :total: 25
-          :crit: false
-          :damage: 9
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 18
       :gambit:
         :position: 1
         :rule: 'Inimigo: marcado → Ataque'
+    - :round: 6
+      :turn: 3
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 13
+        :hp_before: 16
+        :hp_after: 29
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+10
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers:
+            actor_level: 10
+          :total: 13
+      :gambit:
+        :position: 2
+        :rule: 'Self: HP < 50% → Second Wind'
+  - :round: 7
+    :turns:
+    - :round: 7
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Distracting Strike'
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 1
+          :hp_before: 24
+          :hp_after: 23
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 1
+            :modifiers: {}
+            :total: 1
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 5
+        :hp_before: 29
+        :hp_after: 24
+        :attack_roll:
+          :natural: 19
+          :total: 24
+          :crit: false
+          :damage: 5
+      :gambit:
+        :position: 1
+        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
+    - :round: 7
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: true
+        :rider:
+        :damage: 6
+        :hp_before: 23
+        :hp_after: 17
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 6
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 17
+        :hp_after: 10
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 7
+      :gambit:
+        :position: 1
+        :rule: 'Inimigo: marcado → Ataque'
+    - :round: 7
+      :turn: 3
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :idle
+      :results: []
+      :gambit: 'nenhum aplicável: parado'
+  - :round: 8
+    :turns:
+    - :round: 8
+      :turn: 1
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Distracting Strike'
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 4
+          :hp_before: 0
+          :hp_after: 0
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 4
+            :modifiers: {}
+            :total: 4
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 10
+        :hp_before: 10
+        :hp_after: 0
+        :attack_roll:
+          :natural: 19
+          :total: 24
+          :crit: false
+          :damage: 10
+      :gambit:
+        :position: 1
+        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
   :draw: false
   :outcome: :victory
 5:
   :winning_party: :party_one
-  :total_rounds: 6
+  :total_rounds: 7
   :initiative:
   - :actor_id: Campeão
     :natural: 16
@@ -2333,20 +2381,6 @@
           :total: 23
           :crit: false
           :damage: 4
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 56
-        :hp_after: 56
-        :attack_roll:
-          :natural: 9
-          :total: 15
-          :crit: false
-          :damage: 7
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -2370,10 +2404,10 @@
         :hp_before: 56
         :hp_after: 56
         :attack_roll:
-          :natural: 8
-          :total: 13
+          :natural: 9
+          :total: 14
           :crit: false
-          :damage: 4
+          :damage: 8
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -2401,24 +2435,24 @@
         :target_type: enemy
       :results:
       - :kind: :damage
-        :applied: true
-        :amount: 8
+        :applied: false
+        :amount: 0
         :hp_before: 56
-        :hp_after: 48
+        :hp_after: 56
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 8
+          - 1
           :modifiers: {}
-          :total: 8
+          :total: 1
         :attack_roll:
-          :natural: 17
-          :total: 23
+          :natural: 8
+          :total: 14
           :armor_class: 17
-          :hit: true
+          :hit: false
           :crit: false
       :gambit:
         :position: 2
@@ -2438,27 +2472,13 @@
         :advantage: false
         :rider:
         :damage: 10
-        :hp_before: 48
-        :hp_after: 38
+        :hp_before: 56
+        :hp_after: 46
         :attack_roll:
-          :natural: 13
-          :total: 19
+          :natural: 17
+          :total: 23
           :crit: false
           :damage: 10
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 8
-        :hp_before: 38
-        :hp_after: 30
-        :attack_roll:
-          :natural: 18
-          :total: 24
-          :crit: false
-          :damage: 8
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -2475,17 +2495,33 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 30
-        :hp_after: 30
+          :kind: :damage
+          :applied: true
+          :amount: 6
+          :hp_before: 41
+          :hp_after: 35
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 6
+            :modifiers: {}
+            :total: 6
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 5
+        :hp_before: 46
+        :hp_after: 41
         :attack_roll:
-          :natural: 8
-          :total: 13
+          :natural: 13
+          :total: 18
           :crit: false
-          :damage: 4
+          :damage: 5
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -2506,75 +2542,39 @@
       :actor_name: Cavaleiro Arcano
       :actor_party: :party_one
       :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: true
-        :amount: 2
-        :hp_before: 30
-        :hp_after: 28
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 2
-          :modifiers: {}
-          :total: 2
-        :attack_roll:
-          :natural: 13
-          :total: 19
-          :armor_class: 17
-          :hit: true
-          :crit: false
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 3
-      :turn: 2
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
         :type: :attack
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
-        :advantage: false
+        :advantage: true
         :rider:
-        :damage: 9
-        :hp_before: 28
-        :hp_after: 19
+        :damage: 6
+        :hp_before: 35
+        :hp_after: 29
         :attack_roll:
-          :natural: 16
-          :total: 22
+          :natural: 17
+          :total: 23
           :crit: false
-          :damage: 9
+          :damage: 6
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
         :rider:
-        :damage: 9
-        :hp_before: 19
-        :hp_after: 10
+        :damage: 8
+        :hp_before: 29
+        :hp_after: 21
         :attack_roll:
-          :natural: 19
-          :total: 25
+          :natural: 13
+          :total: 19
           :crit: false
-          :damage: 9
+          :damage: 8
       :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
+        :position: 1
+        :rule: 'Inimigo: marcado → Ataque'
     - :round: 3
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -2587,17 +2587,33 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 10
-        :hp_after: 10
+          :kind: :damage
+          :applied: true
+          :amount: 8
+          :hp_before: 16
+          :hp_after: 8
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 8
+            :modifiers: {}
+            :total: 8
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 5
+        :hp_before: 21
+        :hp_after: 16
         :attack_roll:
-          :natural: 10
-          :total: 15
+          :natural: 12
+          :total: 17
           :crit: false
-          :damage: 13
+          :damage: 5
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -2617,57 +2633,22 @@
       :results:
       - :kind: :heal
         :applied: true
-        :amount: 20
-        :hp_before: 10
-        :hp_after: 30
+        :amount: 15
+        :hp_before: 8
+        :hp_after: 23
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+10
           :dice:
           - 1d10
           :rolls:
-          - 10
+          - 5
           :modifiers:
             actor_level: 10
-          :total: 20
+          :total: 15
       :gambit:
         :position: 2
         :rule: 'Self: HP < 50% → Second Wind'
-    - :round: 4
-      :turn: 2
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 30
-        :hp_after: 30
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 3
-          :modifiers: {}
-          :total: 3
-        :attack_roll:
-          :natural: 2
-          :total: 8
-          :armor_class: 17
-          :hit: false
-          :crit: false
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
     - :round: 4
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -2679,35 +2660,34 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
+        :success: true
+        :advantage: true
+        :rider:
+        :damage: 5
+        :hp_before: 23
+        :hp_after: 18
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: false
+          :damage: 5
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
         :success: false
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 30
-        :hp_after: 30
+        :hp_before: 18
+        :hp_after: 18
         :attack_roll:
-          :natural: 8
-          :total: 14
+          :natural: 10
+          :total: 16
           :crit: false
-          :damage: 3
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 8
-        :hp_before: 30
-        :hp_after: 22
-        :attack_roll:
-          :natural: 15
-          :total: 21
-          :crit: false
-          :damage: 8
+          :damage: 4
       :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
+        :position: 1
+        :rule: 'Inimigo: marcado → Ataque'
     - :round: 4
       :turn: 3
       :actor_id: Mestre de Batalha
@@ -2724,13 +2704,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 22
-        :hp_after: 22
+        :hp_before: 18
+        :hp_after: 18
         :attack_roll:
-          :natural: 1
-          :total: 6
+          :natural: 2
+          :total: 7
           :crit: false
-          :damage: 4
+          :damage: 6
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -2760,20 +2740,20 @@
       - :kind: :damage
         :applied: false
         :amount: 0
-        :hp_before: 22
-        :hp_after: 22
+        :hp_before: 18
+        :hp_after: 18
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 5
+          - 1
           :modifiers: {}
-          :total: 5
+          :total: 1
         :attack_roll:
-          :natural: 5
-          :total: 11
+          :natural: 8
+          :total: 14
           :armor_class: 17
           :hit: false
           :crit: false
@@ -2791,31 +2771,17 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 22
-        :hp_after: 22
+        :damage: 8
+        :hp_before: 18
+        :hp_after: 10
         :attack_roll:
-          :natural: 10
-          :total: 16
+          :natural: 15
+          :total: 21
           :crit: false
-          :damage: 6
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 22
-        :hp_after: 22
-        :attack_roll:
-          :natural: 3
-          :total: 9
-          :crit: false
-          :damage: 7
+          :damage: 8
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -2836,13 +2802,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 22
-        :hp_after: 22
+        :hp_before: 10
+        :hp_after: 10
         :attack_roll:
-          :natural: 7
-          :total: 12
+          :natural: 1
+          :total: 6
           :crit: false
-          :damage: 13
+          :damage: 4
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -2870,25 +2836,25 @@
         :target_type: enemy
       :results:
       - :kind: :damage
-        :applied: true
-        :amount: 8
-        :hp_before: 22
-        :hp_after: 14
+        :applied: false
+        :amount: 0
+        :hp_before: 10
+        :hp_after: 10
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 8
+          - 5
           :modifiers: {}
-          :total: 8
+          :total: 5
         :attack_roll:
-          :natural: 20
-          :total: 26
+          :natural: 5
+          :total: 11
           :armor_class: 17
-          :hit: true
-          :crit: true
+          :hit: false
+          :crit: false
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -2903,20 +2869,6 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 4
-        :hp_before: 14
-        :hp_after: 10
-        :attack_roll:
-          :natural: 19
-          :total: 25
-          :crit: false
-          :damage: 4
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
         :success: false
         :advantage: false
         :rider:
@@ -2924,10 +2876,10 @@
         :hp_before: 10
         :hp_after: 10
         :attack_roll:
-          :natural: 8
-          :total: 14
+          :natural: 10
+          :total: 16
           :crit: false
-          :damage: 7
+          :damage: 6
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -2944,41 +2896,97 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-          :kind: :damage
-          :applied: true
-          :amount: 5
-          :hp_before: 3
-          :hp_after: 0
-          :roll_outcome:
-            :expression: 1d8
-            :resolved_expression: 1d8
-            :dice:
-            - 1d8
-            :rolls:
-            - 5
-            :modifiers: {}
-            :total: 5
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
-        :damage: 7
+        :damage: 0
         :hp_before: 10
-        :hp_after: 3
+        :hp_after: 10
         :attack_roll:
-          :natural: 13
-          :total: 18
+          :natural: 3
+          :total: 8
           :crit: false
-          :damage: 7
+          :damage: 8
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
+  - :round: 7
+    :turns:
+    - :round: 7
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :idle
+      :results: []
+      :gambit: 'nenhum aplicável: parado'
+    - :round: 7
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 10
+        :hp_after: 10
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 10
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :armor_class: 17
+          :hit: false
+          :crit: false
+      :gambit:
+        :position: 2
+        :rule: 'Inimigo: qualquer → Fire Bolt'
+    - :round: 7
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 10
+        :hp_after: 0
+        :attack_roll:
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 10
+      :gambit:
+        :position: 2
+        :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
   :draw: false
   :outcome: :victory
 6:
   :winning_party: :party_one
-  :total_rounds: 6
+  :total_rounds: 5
   :initiative:
   - :actor_id: Mestre de Batalha
     :natural: 11
@@ -3075,20 +3083,6 @@
           :total: 22
           :crit: false
           :damage: 4
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 9
-        :hp_before: 56
-        :hp_after: 47
-        :attack_roll:
-          :natural: 13
-          :total: 19
-          :crit: false
-          :damage: 9
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -3137,55 +3131,36 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 47
-        :hp_after: 47
+          :kind: :damage
+          :applied: true
+          :amount: 2
+          :hp_before: 48
+          :hp_after: 46
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 2
+            :modifiers: {}
+            :total: 2
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 8
+        :hp_before: 56
+        :hp_after: 48
         :attack_roll:
-          :natural: 5
-          :total: 10
+          :natural: 13
+          :total: 18
           :crit: false
-          :damage: 5
+          :damage: 8
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-    - :round: 2
-      :turn: 2
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 47
-        :hp_after: 47
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 3
-          :modifiers: {}
-          :total: 3
-        :attack_roll:
-          :natural: 9
-          :total: 15
-          :armor_class: 17
-          :hit: false
-          :crit: false
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
     - :round: 2
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -3197,15 +3172,15 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
-        :advantage: false
+        :success: false
+        :advantage: true
         :rider:
-        :damage: 7
-        :hp_before: 47
-        :hp_after: 40
+        :damage: 0
+        :hp_before: 46
+        :hp_after: 46
         :attack_roll:
-          :natural: 13
-          :total: 19
+          :natural: 9
+          :total: 15
           :crit: false
           :damage: 7
       - :kind: :attack
@@ -3215,17 +3190,16 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 40
-        :hp_after: 40
+        :hp_before: 46
+        :hp_after: 46
         :attack_roll:
           :natural: 3
           :total: 9
           :crit: false
           :damage: 8
       :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
+        :position: 1
+        :rule: 'Inimigo: marcado → Ataque'
     - :round: 2
       :turn: 3
       :actor_id: Campeão
@@ -3255,8 +3229,8 @@
           :kind: :damage
           :applied: true
           :amount: 7
-          :hp_before: 27
-          :hp_after: 20
+          :hp_before: 33
+          :hp_after: 26
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -3269,8 +3243,8 @@
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
         :damage: 13
-        :hp_before: 40
-        :hp_after: 27
+        :hp_before: 46
+        :hp_after: 33
         :attack_roll:
           :natural: 16
           :total: 21
@@ -3294,8 +3268,8 @@
         :advantage: true
         :rider:
         :damage: 8
-        :hp_before: 20
-        :hp_after: 12
+        :hp_before: 26
+        :hp_after: 18
         :attack_roll:
           :natural: 19
           :total: 25
@@ -3308,8 +3282,8 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 12
-        :hp_after: 12
+        :hp_before: 18
+        :hp_after: 18
         :attack_roll:
           :natural: 6
           :total: 12
@@ -3333,8 +3307,8 @@
       - :kind: :heal
         :applied: true
         :amount: 15
-        :hp_before: 12
-        :hp_after: 27
+        :hp_before: 18
+        :hp_after: 33
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+10
@@ -3366,8 +3340,8 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 27
-        :hp_after: 27
+        :hp_before: 33
+        :hp_after: 33
         :attack_roll:
           :natural: 6
           :total: 11
@@ -3391,8 +3365,8 @@
       - :kind: :damage
         :applied: false
         :amount: 0
-        :hp_before: 27
-        :hp_after: 27
+        :hp_before: 33
+        :hp_after: 33
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -3426,27 +3400,13 @@
         :advantage: false
         :rider:
         :damage: 14
-        :hp_before: 27
-        :hp_after: 13
+        :hp_before: 33
+        :hp_after: 19
         :attack_roll:
           :natural: 20
           :total: 26
           :crit: true
           :damage: 14
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 4
-        :hp_before: 13
-        :hp_after: 9
-        :attack_roll:
-          :natural: 12
-          :total: 18
-          :crit: false
-          :damage: 4
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -3474,172 +3434,41 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 9
-        :hp_after: 9
-        :attack_roll:
-          :natural: 6
-          :total: 11
-          :crit: false
-          :damage: 6
-      :gambit:
-        :position: 1
-        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-    - :round: 5
-      :turn: 2
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: true
-        :amount: 8
-        :hp_before: 9
-        :hp_after: 1
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 8
-          :modifiers: {}
-          :total: 8
-        :attack_roll:
-          :natural: 15
-          :total: 21
-          :armor_class: 17
-          :hit: true
-          :crit: false
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 5
-      :turn: 2
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 1
-        :hp_after: 1
-        :attack_roll:
-          :natural: 9
-          :total: 15
-          :crit: false
-          :damage: 8
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 1
-        :hp_after: 1
-        :attack_roll:
-          :natural: 7
-          :total: 13
-          :crit: false
-          :damage: 5
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
-    - :round: 5
-      :turn: 3
-      :actor_id: Campeão
-      :actor_name: Campeão
-      :actor_party: :party_two
-      :action:
-        :type: :idle
-      :results: []
-      :gambit: 'nenhum aplicável: parado'
-  - :round: 6
-    :turns:
-    - :round: 6
-      :turn: 1
-      :actor_id: Mestre de Batalha
-      :actor_name: Mestre de Batalha
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 1
-        :hp_after: 1
-        :attack_roll:
-          :natural: 11
-          :total: 16
-          :crit: false
-          :damage: 7
-      :gambit:
-        :position: 1
-        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-    - :round: 6
-      :turn: 2
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: true
-        :amount: 2
-        :hp_before: 1
-        :hp_after: 0
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 2
-          :modifiers: {}
-          :total: 2
+          :kind: :damage
+          :applied: true
+          :amount: 6
+          :hp_before: 6
+          :hp_after: 0
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 6
+            :modifiers: {}
+            :total: 6
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 13
+        :hp_before: 19
+        :hp_after: 6
         :attack_roll:
           :natural: 12
-          :total: 18
-          :armor_class: 17
-          :hit: true
+          :total: 17
           :crit: false
+          :damage: 13
       :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
+        :position: 1
+        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
   :draw: false
   :outcome: :victory
 7:
   :winning_party: :party_one
-  :total_rounds: 8
+  :total_rounds: 7
   :initiative:
   - :actor_id: Mestre de Batalha
     :natural: 16
@@ -3870,20 +3699,6 @@
           :total: 14
           :crit: false
           :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 35
-        :hp_after: 35
-        :attack_roll:
-          :natural: 1
-          :total: 7
-          :crit: false
-          :damage: 6
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -3918,10 +3733,10 @@
         :hp_before: 35
         :hp_after: 35
         :attack_roll:
-          :natural: 7
-          :total: 12
+          :natural: 1
+          :total: 6
           :crit: false
-          :damage: 7
+          :damage: 11
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -3938,24 +3753,24 @@
         :target_type: enemy
       :results:
       - :kind: :damage
-        :applied: true
-        :amount: 6
+        :applied: false
+        :amount: 0
         :hp_before: 35
-        :hp_after: 29
+        :hp_after: 35
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 6
+          - 4
           :modifiers: {}
-          :total: 6
+          :total: 4
         :attack_roll:
-          :natural: 13
-          :total: 19
+          :natural: 7
+          :total: 13
           :armor_class: 17
-          :hit: true
+          :hit: false
           :crit: false
       :gambit:
         :position: 2
@@ -3974,28 +3789,14 @@
         :success: true
         :advantage: false
         :rider:
-        :damage: 6
-        :hp_before: 29
-        :hp_after: 23
+        :damage: 10
+        :hp_before: 35
+        :hp_after: 25
         :attack_roll:
-          :natural: 17
-          :total: 23
+          :natural: 13
+          :total: 19
           :crit: false
-          :damage: 6
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 23
-        :hp_after: 23
-        :attack_roll:
-          :natural: 1
-          :total: 7
-          :crit: false
-          :damage: 5
+          :damage: 10
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -4027,13 +3828,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 23
-        :hp_after: 23
+        :hp_before: 25
+        :hp_after: 25
         :attack_roll:
-          :natural: 10
-          :total: 15
+          :natural: 6
+          :total: 11
           :crit: false
-          :damage: 10
+          :damage: 12
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -4050,24 +3851,24 @@
         :target_type: enemy
       :results:
       - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 23
-        :hp_after: 23
+        :applied: true
+        :amount: 1
+        :hp_before: 25
+        :hp_after: 24
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 10
+          - 1
           :modifiers: {}
-          :total: 10
+          :total: 1
         :attack_roll:
-          :natural: 5
-          :total: 11
+          :natural: 17
+          :total: 23
           :armor_class: 17
-          :hit: false
+          :hit: true
           :crit: false
       :gambit:
         :position: 2
@@ -4087,27 +3888,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 23
-        :hp_after: 23
+        :hp_before: 24
+        :hp_after: 24
         :attack_roll:
-          :natural: 4
-          :total: 10
+          :natural: 3
+          :total: 9
           :crit: false
-          :damage: 6
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 23
-        :hp_after: 23
-        :attack_roll:
-          :natural: 9
-          :total: 15
-          :crit: false
-          :damage: 6
+          :damage: 3
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -4135,36 +3922,55 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-          :kind: :damage
-          :applied: true
-          :amount: 1
-          :hp_before: 18
-          :hp_after: 17
-          :roll_outcome:
-            :expression: 1d8
-            :resolved_expression: 1d8
-            :dice:
-            - 1d8
-            :rolls:
-            - 1
-            :modifiers: {}
-            :total: 1
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
-        :damage: 5
-        :hp_before: 23
-        :hp_after: 18
+        :damage: 0
+        :hp_before: 24
+        :hp_after: 24
         :attack_roll:
-          :natural: 17
-          :total: 22
+          :natural: 10
+          :total: 15
           :crit: false
-          :damage: 5
+          :damage: 10
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
+    - :round: 5
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 24
+        :hp_after: 24
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 10
+        :attack_roll:
+          :natural: 5
+          :total: 11
+          :armor_class: 17
+          :hit: false
+          :crit: false
+      :gambit:
+        :position: 2
+        :rule: 'Inimigo: qualquer → Fire Bolt'
     - :round: 5
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -4176,34 +3982,21 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
-        :advantage: true
-        :rider:
-        :damage: 7
-        :hp_before: 17
-        :hp_after: 10
-        :attack_roll:
-          :natural: 17
-          :total: 23
-          :crit: false
-          :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
         :success: false
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 10
-        :hp_after: 10
+        :hp_before: 24
+        :hp_after: 24
         :attack_roll:
-          :natural: 8
-          :total: 14
+          :natural: 4
+          :total: 10
           :crit: false
-          :damage: 10
+          :damage: 6
       :gambit:
-        :position: 1
-        :rule: 'Inimigo: marcado → Ataque'
+        :position: 2
+        :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
     - :round: 5
       :turn: 3
       :actor_id: Campeão
@@ -4231,13 +4024,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 10
-        :hp_after: 10
+        :hp_before: 24
+        :hp_after: 24
         :attack_roll:
-          :natural: 11
-          :total: 16
+          :natural: 9
+          :total: 14
           :crit: false
-          :damage: 13
+          :damage: 7
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -4254,24 +4047,24 @@
         :target_type: enemy
       :results:
       - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 10
-        :hp_after: 10
+        :applied: true
+        :amount: 2
+        :hp_before: 24
+        :hp_after: 22
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 1
+          - 2
           :modifiers: {}
-          :total: 1
+          :total: 2
         :attack_roll:
-          :natural: 4
-          :total: 10
+          :natural: 17
+          :total: 23
           :armor_class: 17
-          :hit: false
+          :hit: true
           :crit: false
       :gambit:
         :position: 2
@@ -4291,27 +4084,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 10
-        :hp_after: 10
-        :attack_roll:
-          :natural: 8
-          :total: 14
-          :crit: false
-          :damage: 10
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 10
-        :hp_after: 10
+        :hp_before: 22
+        :hp_after: 22
         :attack_roll:
           :natural: 1
           :total: 7
           :crit: false
-          :damage: 8
+          :damage: 3
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -4339,168 +4118,37 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 10
-        :hp_after: 10
+          :kind: :damage
+          :applied: true
+          :amount: 8
+          :hp_before: 11
+          :hp_after: 3
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 8
+            :modifiers: {}
+            :total: 8
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 11
+        :hp_before: 22
+        :hp_after: 11
         :attack_roll:
-          :natural: 5
-          :total: 10
+          :natural: 13
+          :total: 18
           :crit: false
-          :damage: 7
+          :damage: 11
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
     - :round: 7
-      :turn: 2
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 10
-        :hp_after: 10
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 4
-          :modifiers: {}
-          :total: 4
-        :attack_roll:
-          :natural: 2
-          :total: 8
-          :armor_class: 17
-          :hit: false
-          :crit: false
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 7
-      :turn: 2
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 10
-        :hp_after: 10
-        :attack_roll:
-          :natural: 2
-          :total: 8
-          :crit: false
-          :damage: 6
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 10
-        :hp_after: 10
-        :attack_roll:
-          :natural: 5
-          :total: 11
-          :crit: false
-          :damage: 6
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
-    - :round: 7
-      :turn: 3
-      :actor_id: Campeão
-      :actor_name: Campeão
-      :actor_party: :party_two
-      :action:
-        :type: :idle
-      :results: []
-      :gambit: 'nenhum aplicável: parado'
-  - :round: 8
-    :turns:
-    - :round: 8
-      :turn: 1
-      :actor_id: Mestre de Batalha
-      :actor_name: Mestre de Batalha
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 10
-        :hp_after: 10
-        :attack_roll:
-          :natural: 2
-          :total: 7
-          :crit: false
-          :damage: 13
-      :gambit:
-        :position: 1
-        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-    - :round: 8
-      :turn: 2
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 10
-        :hp_after: 10
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 10
-          :modifiers: {}
-          :total: 10
-        :attack_roll:
-          :natural: 6
-          :total: 12
-          :armor_class: 17
-          :hit: false
-          :crit: false
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 8
       :turn: 2
       :actor_id: Cavaleiro Arcano
       :actor_name: Cavaleiro Arcano
@@ -4512,25 +4160,24 @@
         :target_id: Campeão
         :target_name: Campeão
         :success: true
-        :advantage: false
+        :advantage: true
         :rider:
-        :damage: 10
-        :hp_before: 10
+        :damage: 6
+        :hp_before: 3
         :hp_after: 0
         :attack_roll:
-          :natural: 18
-          :total: 24
+          :natural: 11
+          :total: 17
           :crit: false
-          :damage: 10
+          :damage: 6
       :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
+        :position: 1
+        :rule: 'Inimigo: marcado → Ataque'
   :draw: false
   :outcome: :victory
 8:
   :winning_party: :party_one
-  :total_rounds: 4
+  :total_rounds: 5
   :initiative:
   - :actor_id: Cavaleiro Arcano
     :natural: 18
@@ -4601,20 +4248,6 @@
           :total: 26
           :crit: true
           :damage: 4
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 8
-        :hp_before: 56
-        :hp_after: 48
-        :attack_roll:
-          :natural: 17
-          :total: 23
-          :crit: false
-          :damage: 8
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -4666,28 +4299,28 @@
         :rider:
           :kind: :damage
           :applied: true
-          :amount: 3
-          :hp_before: 41
-          :hp_after: 38
+          :amount: 5
+          :hp_before: 47
+          :hp_after: 42
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
             :dice:
             - 1d8
             :rolls:
-            - 3
+            - 5
             :modifiers: {}
-            :total: 3
+            :total: 5
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
-        :damage: 7
-        :hp_before: 48
-        :hp_after: 41
+        :damage: 9
+        :hp_before: 56
+        :hp_after: 47
         :attack_roll:
-          :natural: 18
-          :total: 23
+          :natural: 17
+          :total: 22
           :crit: false
-          :damage: 7
+          :damage: 9
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -4707,14 +4340,14 @@
         :success: true
         :advantage: true
         :rider:
-        :damage: 4
-        :hp_before: 38
+        :damage: 8
+        :hp_before: 42
         :hp_after: 34
         :attack_roll:
-          :natural: 14
-          :total: 20
-          :crit: false
-          :damage: 4
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -4725,8 +4358,8 @@
         :hp_before: 34
         :hp_after: 26
         :attack_roll:
-          :natural: 16
-          :total: 22
+          :natural: 13
+          :total: 19
           :crit: false
           :damage: 8
       :gambit:
@@ -4746,19 +4379,19 @@
       :results:
       - :kind: :heal
         :applied: true
-        :amount: 13
+        :amount: 20
         :hp_before: 26
-        :hp_after: 39
+        :hp_after: 46
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+10
           :dice:
           - 1d10
           :rolls:
-          - 3
+          - 10
           :modifiers:
             actor_level: 10
-          :total: 13
+          :total: 20
       :gambit:
         :position: 2
         :rule: 'Self: HP < 50% → Second Wind'
@@ -4779,28 +4412,28 @@
         :rider:
           :kind: :damage
           :applied: true
-          :amount: 6
-          :hp_before: 29
-          :hp_after: 23
+          :amount: 4
+          :hp_before: 40
+          :hp_after: 36
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
             :dice:
             - 1d8
             :rolls:
-            - 6
+            - 4
             :modifiers: {}
-            :total: 6
+            :total: 4
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
-        :damage: 10
-        :hp_before: 39
-        :hp_after: 29
+        :damage: 6
+        :hp_before: 46
+        :hp_after: 40
         :attack_roll:
-          :natural: 19
-          :total: 24
+          :natural: 16
+          :total: 21
           :crit: false
-          :damage: 10
+          :damage: 6
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -4820,14 +4453,14 @@
         :success: true
         :advantage: true
         :rider:
-        :damage: 12
-        :hp_before: 23
-        :hp_after: 11
+        :damage: 9
+        :hp_before: 36
+        :hp_after: 27
         :attack_roll:
-          :natural: 20
-          :total: 26
-          :crit: true
-          :damage: 12
+          :natural: 19
+          :total: 25
+          :crit: false
+          :damage: 9
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -4835,11 +4468,11 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 11
-        :hp_after: 11
+        :hp_before: 27
+        :hp_after: 27
         :attack_roll:
-          :natural: 8
-          :total: 14
+          :natural: 10
+          :total: 16
           :crit: false
           :damage: 6
       :gambit:
@@ -4870,13 +4503,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 11
-        :hp_after: 11
+        :hp_before: 27
+        :hp_after: 27
         :attack_roll:
-          :natural: 11
-          :total: 16
+          :natural: 5
+          :total: 10
           :crit: false
-          :damage: 13
+          :damage: 9
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -4897,20 +4530,20 @@
       - :kind: :damage
         :applied: false
         :amount: 0
-        :hp_before: 11
-        :hp_after: 11
+        :hp_before: 27
+        :hp_after: 27
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 7
+          - 10
           :modifiers: {}
-          :total: 7
+          :total: 10
         :attack_roll:
-          :natural: 3
-          :total: 9
+          :natural: 8
+          :total: 14
           :armor_class: 17
           :hit: false
           :crit: false
@@ -4932,27 +4565,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 11
-        :hp_after: 11
+        :hp_before: 27
+        :hp_after: 27
         :attack_roll:
-          :natural: 10
-          :total: 16
+          :natural: 3
+          :total: 9
           :crit: false
-          :damage: 8
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 4
-        :hp_before: 11
-        :hp_after: 7
-        :attack_roll:
-          :natural: 15
-          :total: 21
-          :crit: false
-          :damage: 4
+          :damage: 9
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -4978,13 +4597,111 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 27
+        :hp_after: 27
+        :attack_roll:
+          :natural: 10
+          :total: 15
+          :crit: false
+          :damage: 9
+      :gambit:
+        :position: 1
+        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
+  - :round: 5
+    :turns:
+    - :round: 5
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 2
+        :hp_before: 27
+        :hp_after: 25
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 2
+        :attack_roll:
+          :natural: 15
+          :total: 21
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :gambit:
+        :position: 2
+        :rule: 'Inimigo: qualquer → Fire Bolt'
+    - :round: 5
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 25
+        :hp_after: 15
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 10
+      :gambit:
+        :position: 2
+        :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
+    - :round: 5
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :idle
+      :results: []
+      :gambit: 'nenhum aplicável: parado'
+    - :round: 5
+      :turn: 3
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Distracting Strike'
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
         :success: true
         :advantage: false
         :rider:
           :kind: :damage
           :applied: true
           :amount: 8
-          :hp_before: 0
+          :hp_before: 5
           :hp_after: 0
           :roll_outcome:
             :expression: 1d8
@@ -4998,8 +4715,8 @@
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
         :damage: 10
-        :hp_before: 7
-        :hp_after: 0
+        :hp_before: 15
+        :hp_after: 5
         :attack_roll:
           :natural: 12
           :total: 17
@@ -5012,7 +4729,7 @@
   :outcome: :victory
 9:
   :winning_party: :party_one
-  :total_rounds: 5
+  :total_rounds: 6
   :initiative:
   - :actor_id: Campeão
     :natural: 18
@@ -5113,20 +4830,6 @@
           :total: 21
           :crit: false
           :damage: 6
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 3
-        :hp_before: 54
-        :hp_after: 51
-        :attack_roll:
-          :natural: 11
-          :total: 17
-          :crit: false
-          :damage: 3
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -5147,8 +4850,8 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 51
-        :hp_after: 51
+        :hp_before: 54
+        :hp_after: 54
         :attack_roll:
           :natural: 11
           :total: 16
@@ -5182,21 +4885,21 @@
       :results:
       - :kind: :damage
         :applied: true
-        :amount: 3
-        :hp_before: 51
-        :hp_after: 48
+        :amount: 9
+        :hp_before: 54
+        :hp_after: 45
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 3
+          - 9
           :modifiers: {}
-          :total: 3
+          :total: 9
         :attack_roll:
-          :natural: 13
-          :total: 19
+          :natural: 11
+          :total: 17
           :armor_class: 17
           :hit: true
           :crit: false
@@ -5214,31 +4917,17 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 48
-        :hp_after: 48
+        :damage: 5
+        :hp_before: 45
+        :hp_after: 40
         :attack_roll:
-          :natural: 2
-          :total: 8
+          :natural: 13
+          :total: 19
           :crit: false
-          :damage: 3
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 48
-        :hp_after: 48
-        :attack_roll:
-          :natural: 4
-          :total: 10
-          :crit: false
-          :damage: 6
+          :damage: 5
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -5259,13 +4948,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 48
-        :hp_after: 48
+        :hp_before: 40
+        :hp_after: 40
         :attack_roll:
-          :natural: 6
-          :total: 11
+          :natural: 2
+          :total: 7
           :crit: false
-          :damage: 7
+          :damage: 12
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -5295,20 +4984,20 @@
       - :kind: :damage
         :applied: false
         :amount: 0
-        :hp_before: 48
-        :hp_after: 48
+        :hp_before: 40
+        :hp_after: 40
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 8
+          - 6
           :modifiers: {}
-          :total: 8
+          :total: 6
         :attack_roll:
-          :natural: 7
-          :total: 13
+          :natural: 4
+          :total: 10
           :armor_class: 17
           :hit: false
           :crit: false
@@ -5326,31 +5015,17 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 48
-        :hp_after: 48
-        :attack_roll:
-          :natural: 10
-          :total: 16
-          :crit: false
-          :damage: 3
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
         :success: true
         :advantage: false
         :rider:
-        :damage: 10
-        :hp_before: 48
-        :hp_after: 38
+        :damage: 16
+        :hp_before: 40
+        :hp_after: 24
         :attack_roll:
-          :natural: 18
-          :total: 24
-          :crit: false
-          :damage: 10
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 16
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -5371,13 +5046,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 38
-        :hp_after: 38
+        :hp_before: 24
+        :hp_after: 24
         :attack_roll:
-          :natural: 9
-          :total: 14
+          :natural: 10
+          :total: 15
           :crit: false
-          :damage: 5
+          :damage: 4
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -5389,9 +5064,30 @@
       :actor_name: Campeão
       :actor_party: :party_two
       :action:
-        :type: :idle
-      :results: []
-      :gambit: 'nenhum aplicável: parado'
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 19
+        :hp_before: 24
+        :hp_after: 43
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+10
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers:
+            actor_level: 10
+          :total: 19
+      :gambit:
+        :position: 2
+        :rule: 'Self: HP < 50% → Second Wind'
     - :round: 4
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -5406,21 +5102,21 @@
       :results:
       - :kind: :damage
         :applied: true
-        :amount: 7
-        :hp_before: 38
-        :hp_after: 31
+        :amount: 9
+        :hp_before: 43
+        :hp_after: 34
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 7
+          - 9
           :modifiers: {}
-          :total: 7
+          :total: 9
         :attack_roll:
-          :natural: 14
-          :total: 20
+          :natural: 18
+          :total: 24
           :armor_class: 17
           :hit: true
           :crit: false
@@ -5441,28 +5137,14 @@
         :success: true
         :advantage: false
         :rider:
-        :damage: 3
-        :hp_before: 31
+        :damage: 6
+        :hp_before: 34
         :hp_after: 28
         :attack_roll:
-          :natural: 19
-          :total: 25
+          :natural: 14
+          :total: 20
           :crit: false
-          :damage: 3
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 28
-        :hp_after: 28
-        :attack_roll:
-          :natural: 5
-          :total: 11
-          :crit: false
-          :damage: 8
+          :damage: 6
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -5486,10 +5168,10 @@
         :hp_before: 28
         :hp_after: 28
         :attack_roll:
-          :natural: 4
-          :total: 9
+          :natural: 2
+          :total: 7
           :crit: false
-          :damage: 8
+          :damage: 10
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -5501,30 +5183,9 @@
       :actor_name: Campeão
       :actor_party: :party_two
       :action:
-        :type: :class_feature
-        :feature_id: second-wind
-        :feature_slug: second-wind
-        :feature_name: Second Wind
-        :target_type: self
-      :results:
-      - :kind: :heal
-        :applied: true
-        :amount: 11
-        :hp_before: 28
-        :hp_after: 39
-        :roll_outcome:
-          :expression: 1d10 + actor_level
-          :resolved_expression: 1d10+10
-          :dice:
-          - 1d10
-          :rolls:
-          - 1
-          :modifiers:
-            actor_level: 10
-          :total: 11
-      :gambit:
-        :position: 2
-        :rule: 'Self: HP < 50% → Second Wind'
+        :type: :idle
+      :results: []
+      :gambit: 'nenhum aplicável: parado'
     - :round: 5
       :turn: 2
       :actor_id: Cavaleiro Arcano
@@ -5540,8 +5201,8 @@
       - :kind: :damage
         :applied: true
         :amount: 9
-        :hp_before: 39
-        :hp_after: 30
+        :hp_before: 28
+        :hp_after: 19
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -5552,8 +5213,8 @@
           :modifiers: {}
           :total: 9
         :attack_roll:
-          :natural: 11
-          :total: 17
+          :natural: 19
+          :total: 25
           :armor_class: 17
           :hit: true
           :crit: false
@@ -5571,29 +5232,15 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-        :damage: 7
-        :hp_before: 30
-        :hp_after: 23
+        :damage: 0
+        :hp_before: 19
+        :hp_after: 19
         :attack_roll:
-          :natural: 17
-          :total: 23
-          :crit: false
-          :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 8
-        :hp_before: 23
-        :hp_after: 15
-        :attack_roll:
-          :natural: 16
-          :total: 22
+          :natural: 5
+          :total: 11
           :crit: false
           :damage: 8
       :gambit:
@@ -5601,6 +5248,104 @@
         :rule: 'Inimigo: qualquer → Fire Bolt'
       :bonus: true
     - :round: 5
+      :turn: 3
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Distracting Strike'
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 19
+        :hp_after: 19
+        :attack_roll:
+          :natural: 4
+          :total: 9
+          :crit: false
+          :damage: 8
+      :gambit:
+        :position: 1
+        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
+  - :round: 6
+    :turns:
+    - :round: 6
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :idle
+      :results: []
+      :gambit: 'nenhum aplicável: parado'
+    - :round: 6
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: fire-bolt
+        :spell_slug: fire-bolt
+        :spell_name: Fire Bolt
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 19
+        :hp_after: 19
+        :roll_outcome:
+          :expression: 1d10
+          :resolved_expression: 1d10
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 9
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :armor_class: 17
+          :hit: false
+          :crit: false
+      :gambit:
+        :position: 2
+        :rule: 'Inimigo: qualquer → Fire Bolt'
+    - :round: 6
+      :turn: 2
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 19
+        :hp_after: 12
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 7
+      :gambit:
+        :position: 2
+        :rule: 'Inimigo: qualquer → Fire Bolt'
+      :bonus: true
+    - :round: 6
       :turn: 3
       :actor_id: Mestre de Batalha
       :actor_name: Mestre de Batalha
@@ -5617,8 +5362,8 @@
         :rider:
           :kind: :damage
           :applied: true
-          :amount: 10
-          :hp_before: 0
+          :amount: 5
+          :hp_before: 3
           :hp_after: 0
           :roll_outcome:
             :expression: 1d8
@@ -5626,19 +5371,19 @@
             :dice:
             - 1d8
             :rolls:
-            - 10
+            - 5
             :modifiers: {}
-            :total: 10
+            :total: 5
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
-        :damage: 21
-        :hp_before: 15
-        :hp_after: 0
+        :damage: 9
+        :hp_before: 12
+        :hp_after: 3
         :attack_roll:
-          :natural: 20
-          :total: 25
-          :crit: true
-          :damage: 21
+          :natural: 16
+          :total: 21
+          :crit: false
+          :damage: 9
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -5646,7 +5391,7 @@
   :outcome: :victory
 10:
   :winning_party: :party_one
-  :total_rounds: 6
+  :total_rounds: 5
   :initiative:
   - :actor_id: Campeão
     :natural: 16
@@ -5773,20 +5518,6 @@
           :total: 15
           :crit: false
           :damage: 4
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 58
-        :hp_after: 58
-        :attack_roll:
-          :natural: 1
-          :total: 7
-          :crit: false
-          :damage: 5
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -5821,10 +5552,10 @@
         :hp_before: 58
         :hp_after: 58
         :attack_roll:
-          :natural: 9
-          :total: 14
+          :natural: 1
+          :total: 6
           :crit: false
-          :damage: 10
+          :damage: 12
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -5885,20 +5616,6 @@
           :total: 23
           :crit: false
           :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 6
-        :hp_before: 51
-        :hp_after: 45
-        :attack_roll:
-          :natural: 16
-          :total: 22
-          :crit: false
-          :damage: 6
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -5932,8 +5649,8 @@
           :kind: :damage
           :applied: true
           :amount: 1
-          :hp_before: 40
-          :hp_after: 39
+          :hp_before: 41
+          :hp_after: 40
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -5945,14 +5662,14 @@
             :total: 1
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
-        :damage: 5
-        :hp_before: 45
-        :hp_after: 40
+        :damage: 10
+        :hp_before: 51
+        :hp_after: 41
         :attack_roll:
-          :natural: 12
-          :total: 17
+          :natural: 16
+          :total: 21
           :crit: false
-          :damage: 5
+          :damage: 10
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -5970,28 +5687,28 @@
         :success: true
         :advantage: true
         :rider:
-        :damage: 4
-        :hp_before: 39
-        :hp_after: 35
+        :damage: 3
+        :hp_before: 40
+        :hp_after: 37
         :attack_roll:
-          :natural: 15
-          :total: 21
+          :natural: 12
+          :total: 18
           :crit: false
-          :damage: 4
+          :damage: 3
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-        :damage: 16
-        :hp_before: 35
-        :hp_after: 19
+        :damage: 0
+        :hp_before: 37
+        :hp_after: 37
         :attack_roll:
-          :natural: 20
-          :total: 26
-          :crit: true
-          :damage: 16
+          :natural: 5
+          :total: 11
+          :crit: false
+          :damage: 9
       :gambit:
         :position: 1
         :rule: 'Inimigo: marcado → Ataque'
@@ -6003,30 +5720,9 @@
       :actor_name: Campeão
       :actor_party: :party_two
       :action:
-        :type: :class_feature
-        :feature_id: second-wind
-        :feature_slug: second-wind
-        :feature_name: Second Wind
-        :target_type: self
-      :results:
-      - :kind: :heal
-        :applied: true
-        :amount: 16
-        :hp_before: 19
-        :hp_after: 35
-        :roll_outcome:
-          :expression: 1d10 + actor_level
-          :resolved_expression: 1d10+10
-          :dice:
-          - 1d10
-          :rolls:
-          - 6
-          :modifiers:
-            actor_level: 10
-          :total: 16
-      :gambit:
-        :position: 2
-        :rule: 'Self: HP < 50% → Second Wind'
+        :type: :idle
+      :results: []
+      :gambit: 'nenhum aplicável: parado'
     - :round: 4
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -6044,26 +5740,26 @@
         :rider:
           :kind: :damage
           :applied: true
-          :amount: 2
-          :hp_before: 28
-          :hp_after: 26
+          :amount: 7
+          :hp_before: 30
+          :hp_after: 23
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
             :dice:
             - 1d8
             :rolls:
-            - 2
+            - 7
             :modifiers: {}
-            :total: 2
+            :total: 7
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
         :damage: 7
-        :hp_before: 35
-        :hp_after: 28
+        :hp_before: 37
+        :hp_after: 30
         :attack_roll:
-          :natural: 14
-          :total: 19
+          :natural: 18
+          :total: 23
           :crit: false
           :damage: 7
       :gambit:
@@ -6083,27 +5779,27 @@
         :success: true
         :advantage: true
         :rider:
-        :damage: 4
-        :hp_before: 26
-        :hp_after: 22
+        :damage: 8
+        :hp_before: 23
+        :hp_after: 15
         :attack_roll:
           :natural: 14
           :total: 20
           :crit: false
-          :damage: 4
+          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 22
-        :hp_after: 22
+        :damage: 6
+        :hp_before: 15
+        :hp_after: 9
         :attack_roll:
-          :natural: 5
-          :total: 11
-          :crit: false
+          :natural: 20
+          :total: 26
+          :crit: true
           :damage: 6
       :gambit:
         :position: 1
@@ -6116,9 +5812,30 @@
       :actor_name: Campeão
       :actor_party: :party_two
       :action:
-        :type: :idle
-      :results: []
-      :gambit: 'nenhum aplicável: parado'
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 17
+        :hp_before: 9
+        :hp_after: 26
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+10
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers:
+            actor_level: 10
+          :total: 17
+      :gambit:
+        :position: 2
+        :rule: 'Self: HP < 50% → Second Wind'
     - :round: 5
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -6137,8 +5854,8 @@
           :kind: :damage
           :applied: true
           :amount: 8
-          :hp_before: 12
-          :hp_after: 4
+          :hp_before: 21
+          :hp_after: 13
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -6150,14 +5867,14 @@
             :total: 8
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
-        :damage: 10
-        :hp_before: 22
-        :hp_after: 12
+        :damage: 5
+        :hp_before: 26
+        :hp_after: 21
         :attack_roll:
-          :natural: 19
-          :total: 24
+          :natural: 13
+          :total: 18
           :crit: false
-          :damage: 10
+          :damage: 5
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -6175,89 +5892,36 @@
         :success: true
         :advantage: true
         :rider:
-        :damage: 3
-        :hp_before: 4
-        :hp_after: 1
+        :damage: 8
+        :hp_before: 13
+        :hp_after: 5
         :attack_roll:
-          :natural: 12
-          :total: 18
+          :natural: 19
+          :total: 25
           :crit: false
-          :damage: 3
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 1
-        :hp_after: 1
-        :attack_roll:
-          :natural: 10
-          :total: 16
-          :crit: false
-          :damage: 10
-      :gambit:
-        :position: 1
-        :rule: 'Inimigo: marcado → Ataque'
-  - :round: 6
-    :turns:
-    - :round: 6
-      :turn: 1
-      :actor_id: Campeão
-      :actor_name: Campeão
-      :actor_party: :party_two
-      :action:
-        :type: :idle
-      :results: []
-      :gambit: 'nenhum aplicável: parado'
-    - :round: 6
-      :turn: 2
-      :actor_id: Mestre de Batalha
-      :actor_name: Mestre de Batalha
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
-      :results:
+          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
         :rider:
-          :kind: :damage
-          :applied: true
-          :amount: 7
-          :hp_before: 0
-          :hp_after: 0
-          :roll_outcome:
-            :expression: 1d8
-            :resolved_expression: 1d8
-            :dice:
-            - 1d8
-            :rolls:
-            - 7
-            :modifiers: {}
-            :total: 7
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
-        :damage: 4
-        :hp_before: 1
+        :damage: 9
+        :hp_before: 5
         :hp_after: 0
         :attack_roll:
-          :natural: 19
-          :total: 24
+          :natural: 14
+          :total: 20
           :crit: false
-          :damage: 4
+          :damage: 9
       :gambit:
         :position: 1
-        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
+        :rule: 'Inimigo: marcado → Ataque'
   :draw: false
   :outcome: :victory
 11:
   :winning_party: :party_one
-  :total_rounds: 7
+  :total_rounds: 5
   :initiative:
   - :actor_id: Cavaleiro Arcano
     :natural: 18
@@ -6328,20 +5992,6 @@
           :total: 14
           :crit: false
           :damage: 5
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 7
-        :hp_before: 58
-        :hp_after: 51
-        :attack_roll:
-          :natural: 14
-          :total: 20
-          :crit: false
-          :damage: 7
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -6364,8 +6014,8 @@
           :kind: :damage
           :applied: true
           :amount: 6
-          :hp_before: 47
-          :hp_after: 41
+          :hp_before: 54
+          :hp_after: 48
           :roll_outcome:
             :expression: 1d8
             :resolved_expression: 1d8
@@ -6378,11 +6028,11 @@
           :feature_name: 'Maneuver: Distracting Strike'
           :debuff: next_attack_advantage
         :damage: 4
-        :hp_before: 51
-        :hp_after: 47
+        :hp_before: 58
+        :hp_after: 54
         :attack_roll:
-          :natural: 17
-          :total: 22
+          :natural: 14
+          :total: 19
           :crit: false
           :damage: 4
       :gambit:
@@ -6434,28 +6084,28 @@
         :success: true
         :advantage: true
         :rider:
-        :damage: 5
-        :hp_before: 41
-        :hp_after: 36
+        :damage: 7
+        :hp_before: 48
+        :hp_after: 41
         :attack_roll:
-          :natural: 13
-          :total: 19
+          :natural: 14
+          :total: 20
           :crit: false
-          :damage: 5
+          :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-        :damage: 4
-        :hp_before: 36
-        :hp_after: 32
+        :damage: 0
+        :hp_before: 41
+        :hp_after: 41
         :attack_roll:
-          :natural: 13
-          :total: 19
+          :natural: 5
+          :total: 11
           :crit: false
-          :damage: 4
+          :damage: 5
       :gambit:
         :position: 1
         :rule: 'Inimigo: marcado → Ataque'
@@ -6471,17 +6121,33 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 32
-        :hp_after: 32
+          :kind: :damage
+          :applied: true
+          :amount: 3
+          :hp_before: 36
+          :hp_after: 33
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 3
+            :modifiers: {}
+            :total: 3
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 5
+        :hp_before: 41
+        :hp_after: 36
         :attack_roll:
-          :natural: 11
-          :total: 16
+          :natural: 13
+          :total: 18
           :crit: false
-          :damage: 9
+          :damage: 5
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -6502,57 +6168,22 @@
       :actor_name: Cavaleiro Arcano
       :actor_party: :party_one
       :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 32
-        :hp_after: 32
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 5
-          :modifiers: {}
-          :total: 5
-        :attack_roll:
-          :natural: 8
-          :total: 14
-          :armor_class: 17
-          :hit: false
-          :crit: false
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 3
-      :turn: 1
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
         :type: :attack
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
-        :advantage: false
+        :success: false
+        :advantage: true
         :rider:
-        :damage: 6
-        :hp_before: 32
-        :hp_after: 26
+        :damage: 0
+        :hp_before: 33
+        :hp_after: 33
         :attack_roll:
-          :natural: 18
-          :total: 24
+          :natural: 8
+          :total: 14
           :crit: false
-          :damage: 6
+          :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -6560,17 +6191,16 @@
         :advantage: false
         :rider:
         :damage: 6
-        :hp_before: 26
-        :hp_after: 20
+        :hp_before: 33
+        :hp_after: 27
         :attack_roll:
           :natural: 18
           :total: 24
           :crit: false
           :damage: 6
       :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
+        :position: 1
+        :rule: 'Inimigo: marcado → Ataque'
     - :round: 3
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -6583,17 +6213,33 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 20
+          :kind: :damage
+          :applied: true
+          :amount: 7
+          :hp_before: 20
+          :hp_after: 13
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 7
+            :modifiers: {}
+            :total: 7
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 7
+        :hp_before: 27
         :hp_after: 20
         :attack_roll:
-          :natural: 7
-          :total: 12
+          :natural: 18
+          :total: 23
           :crit: false
-          :damage: 6
+          :damage: 7
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -6612,8 +6258,8 @@
       - :kind: :heal
         :applied: true
         :amount: 13
-        :hp_before: 20
-        :hp_after: 33
+        :hp_before: 13
+        :hp_after: 26
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+10
@@ -6635,75 +6281,39 @@
       :actor_name: Cavaleiro Arcano
       :actor_party: :party_one
       :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 33
-        :hp_after: 33
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 1
-          :modifiers: {}
-          :total: 1
-        :attack_roll:
-          :natural: 1
-          :total: 7
-          :armor_class: 17
-          :hit: false
-          :crit: false
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 4
-      :turn: 1
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
         :type: :attack
       :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
-        :advantage: false
+        :success: true
+        :advantage: true
         :rider:
-        :damage: 0
-        :hp_before: 33
-        :hp_after: 33
+        :damage: 8
+        :hp_before: 26
+        :hp_after: 18
         :attack_roll:
-          :natural: 7
-          :total: 13
+          :natural: 19
+          :total: 25
           :crit: false
-          :damage: 4
+          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
         :rider:
-        :damage: 5
-        :hp_before: 33
-        :hp_after: 28
+        :damage: 3
+        :hp_before: 18
+        :hp_after: 15
         :attack_roll:
-          :natural: 12
-          :total: 18
+          :natural: 16
+          :total: 22
           :crit: false
-          :damage: 5
+          :damage: 3
       :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
+        :position: 1
+        :rule: 'Inimigo: marcado → Ataque'
     - :round: 4
       :turn: 2
       :actor_id: Mestre de Batalha
@@ -6716,33 +6326,17 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-          :kind: :damage
-          :applied: true
-          :amount: 7
-          :hp_before: 19
-          :hp_after: 12
-          :roll_outcome:
-            :expression: 1d8
-            :resolved_expression: 1d8
-            :dice:
-            - 1d8
-            :rolls:
-            - 7
-            :modifiers: {}
-            :total: 7
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
-        :damage: 9
-        :hp_before: 28
-        :hp_after: 19
+        :damage: 0
+        :hp_before: 15
+        :hp_after: 15
         :attack_roll:
-          :natural: 13
-          :total: 18
+          :natural: 7
+          :total: 12
           :crit: false
-          :damage: 9
+          :damage: 13
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -6763,194 +6357,6 @@
       :actor_name: Cavaleiro Arcano
       :actor_party: :party_one
       :action:
-        :type: :attack
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: true
-        :rider:
-        :damage: 3
-        :hp_before: 12
-        :hp_after: 9
-        :attack_roll:
-          :natural: 16
-          :total: 22
-          :crit: false
-          :damage: 3
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 9
-        :hp_after: 9
-        :attack_roll:
-          :natural: 9
-          :total: 15
-          :crit: false
-          :damage: 3
-      :gambit:
-        :position: 1
-        :rule: 'Inimigo: marcado → Ataque'
-    - :round: 5
-      :turn: 2
-      :actor_id: Mestre de Batalha
-      :actor_name: Mestre de Batalha
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 9
-        :hp_after: 9
-        :attack_roll:
-          :natural: 6
-          :total: 11
-          :crit: false
-          :damage: 9
-      :gambit:
-        :position: 1
-        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-    - :round: 5
-      :turn: 3
-      :actor_id: Campeão
-      :actor_name: Campeão
-      :actor_party: :party_two
-      :action:
-        :type: :idle
-      :results: []
-      :gambit: 'nenhum aplicável: parado'
-  - :round: 6
-    :turns:
-    - :round: 6
-      :turn: 1
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 9
-        :hp_after: 9
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 3
-          :modifiers: {}
-          :total: 3
-        :attack_roll:
-          :natural: 8
-          :total: 14
-          :armor_class: 17
-          :hit: false
-          :crit: false
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 6
-      :turn: 1
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 9
-        :hp_after: 9
-        :attack_roll:
-          :natural: 4
-          :total: 10
-          :crit: false
-          :damage: 6
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 9
-        :hp_after: 9
-        :attack_roll:
-          :natural: 2
-          :total: 8
-          :crit: false
-          :damage: 3
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
-    - :round: 6
-      :turn: 2
-      :actor_id: Mestre de Batalha
-      :actor_name: Mestre de Batalha
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 9
-        :hp_after: 9
-        :attack_roll:
-          :natural: 4
-          :total: 9
-          :crit: false
-          :damage: 12
-      :gambit:
-        :position: 1
-        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-    - :round: 6
-      :turn: 3
-      :actor_id: Campeão
-      :actor_name: Campeão
-      :actor_party: :party_two
-      :action:
-        :type: :idle
-      :results: []
-      :gambit: 'nenhum aplicável: parado'
-  - :round: 7
-    :turns:
-    - :round: 7
-      :turn: 1
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
         :type: :cast_spell
         :spell_id: fire-bolt
         :spell_slug: fire-bolt
@@ -6959,28 +6365,28 @@
       :results:
       - :kind: :damage
         :applied: true
-        :amount: 5
-        :hp_before: 9
-        :hp_after: 4
+        :amount: 10
+        :hp_before: 15
+        :hp_after: 5
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 5
+          - 10
           :modifiers: {}
-          :total: 5
+          :total: 10
         :attack_roll:
-          :natural: 18
-          :total: 24
+          :natural: 12
+          :total: 18
           :armor_class: 17
           :hit: true
           :crit: false
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 7
+    - :round: 5
       :turn: 1
       :actor_id: Cavaleiro Arcano
       :actor_name: Cavaleiro Arcano
@@ -6991,82 +6397,26 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 4
-        :hp_after: 4
+        :damage: 8
+        :hp_before: 5
+        :hp_after: 0
         :attack_roll:
-          :natural: 9
-          :total: 15
+          :natural: 13
+          :total: 19
           :crit: false
-          :damage: 5
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 4
-        :hp_after: 4
-        :attack_roll:
-          :natural: 1
-          :total: 7
-          :crit: false
-          :damage: 9
+          :damage: 8
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
       :bonus: true
-    - :round: 7
-      :turn: 2
-      :actor_id: Mestre de Batalha
-      :actor_name: Mestre de Batalha
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-          :kind: :damage
-          :applied: true
-          :amount: 12
-          :hp_before: 0
-          :hp_after: 0
-          :roll_outcome:
-            :expression: 1d8
-            :resolved_expression: 1d8
-            :dice:
-            - 1d8
-            :rolls:
-            - 12
-            :modifiers: {}
-            :total: 12
-          :feature_name: 'Maneuver: Distracting Strike'
-          :debuff: next_attack_advantage
-        :damage: 23
-        :hp_before: 4
-        :hp_after: 0
-        :attack_roll:
-          :natural: 20
-          :total: 25
-          :crit: true
-          :damage: 23
-      :gambit:
-        :position: 1
-        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
   :draw: false
   :outcome: :victory
 12:
   :winning_party: :party_one
-  :total_rounds: 8
+  :total_rounds: 7
   :initiative:
   - :actor_id: Campeão
     :natural: 18
@@ -7193,20 +6543,6 @@
           :total: 24
           :crit: false
           :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 53
-        :hp_after: 53
-        :attack_roll:
-          :natural: 6
-          :total: 12
-          :crit: false
-          :damage: 8
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -7241,10 +6577,10 @@
         :hp_before: 53
         :hp_after: 53
         :attack_roll:
-          :natural: 3
-          :total: 8
+          :natural: 6
+          :total: 11
           :crit: false
-          :damage: 10
+          :damage: 13
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -7261,24 +6597,24 @@
         :target_type: enemy
       :results:
       - :kind: :damage
-        :applied: true
-        :amount: 1
+        :applied: false
+        :amount: 0
         :hp_before: 53
-        :hp_after: 52
+        :hp_after: 53
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 1
+          - 7
           :modifiers: {}
-          :total: 1
+          :total: 7
         :attack_roll:
-          :natural: 11
-          :total: 17
+          :natural: 3
+          :total: 9
           :armor_class: 17
-          :hit: true
+          :hit: false
           :crit: false
       :gambit:
         :position: 2
@@ -7294,31 +6630,17 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 52
-        :hp_after: 52
-        :attack_roll:
-          :natural: 9
-          :total: 15
-          :crit: false
-          :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
         :success: true
         :advantage: false
         :rider:
-        :damage: 5
-        :hp_before: 52
-        :hp_after: 47
+        :damage: 3
+        :hp_before: 53
+        :hp_after: 50
         :attack_roll:
-          :natural: 14
-          :total: 20
+          :natural: 11
+          :total: 17
           :crit: false
-          :damage: 5
+          :damage: 3
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -7350,13 +6672,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 47
-        :hp_after: 47
+        :hp_before: 50
+        :hp_after: 50
         :attack_roll:
-          :natural: 4
-          :total: 9
+          :natural: 9
+          :total: 14
           :crit: false
-          :damage: 8
+          :damage: 6
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -7375,17 +6697,17 @@
       - :kind: :damage
         :applied: false
         :amount: 0
-        :hp_before: 47
-        :hp_after: 47
+        :hp_before: 50
+        :hp_after: 50
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 2
+          - 5
           :modifiers: {}
-          :total: 2
+          :total: 5
         :attack_roll:
           :natural: 4
           :total: 10
@@ -7410,27 +6732,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 47
-        :hp_after: 47
+        :hp_before: 50
+        :hp_after: 50
         :attack_roll:
-          :natural: 1
-          :total: 7
+          :natural: 4
+          :total: 10
           :crit: false
-          :damage: 5
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 3
-        :hp_before: 47
-        :hp_after: 44
-        :attack_roll:
-          :natural: 19
-          :total: 25
-          :crit: false
-          :damage: 3
+          :damage: 4
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -7462,13 +6770,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 44
-        :hp_after: 44
+        :hp_before: 50
+        :hp_after: 50
         :attack_roll:
-          :natural: 7
-          :total: 12
+          :natural: 1
+          :total: 6
           :crit: false
-          :damage: 13
+          :damage: 6
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
@@ -7487,8 +6795,8 @@
       - :kind: :damage
         :applied: true
         :amount: 1
-        :hp_before: 44
-        :hp_after: 43
+        :hp_before: 50
+        :hp_after: 49
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -7499,8 +6807,8 @@
           :modifiers: {}
           :total: 1
         :attack_roll:
-          :natural: 14
-          :total: 20
+          :natural: 19
+          :total: 25
           :armor_class: 17
           :hit: true
           :crit: false
@@ -7522,27 +6830,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 43
-        :hp_after: 43
+        :hp_before: 49
+        :hp_after: 49
         :attack_roll:
-          :natural: 1
-          :total: 7
+          :natural: 7
+          :total: 13
           :crit: false
-          :damage: 9
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 4
-        :hp_before: 43
-        :hp_after: 39
-        :attack_roll:
-          :natural: 16
-          :total: 22
-          :crit: false
-          :damage: 4
+          :damage: 6
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -7570,12 +6864,125 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+          :kind: :damage
+          :applied: true
+          :amount: 6
+          :hp_before: 36
+          :hp_after: 30
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 6
+            :modifiers: {}
+            :total: 6
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 13
+        :hp_before: 49
+        :hp_after: 36
+        :attack_roll:
+          :natural: 14
+          :total: 19
+          :crit: false
+          :damage: 13
+      :gambit:
+        :position: 1
+        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
+    - :round: 5
+      :turn: 3
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: true
+        :rider:
+        :damage: 9
+        :hp_before: 30
+        :hp_after: 21
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 9
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 4
+        :hp_before: 21
+        :hp_after: 17
+        :attack_roll:
+          :natural: 16
+          :total: 22
+          :crit: false
+          :damage: 4
+      :gambit:
+        :position: 1
+        :rule: 'Inimigo: marcado → Ataque'
+  - :round: 6
+    :turns:
+    - :round: 6
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 17
+        :hp_before: 17
+        :hp_after: 34
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+10
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers:
+            actor_level: 10
+          :total: 17
+      :gambit:
+        :position: 2
+        :rule: 'Self: HP < 50% → Second Wind'
+    - :round: 6
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+        :maneuver_name: 'Maneuver: Distracting Strike'
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
         :success: false
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 39
-        :hp_after: 39
+        :hp_before: 34
+        :hp_after: 34
         :attack_roll:
           :natural: 2
           :total: 7
@@ -7584,7 +6991,7 @@
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-    - :round: 5
+    - :round: 6
       :turn: 3
       :actor_id: Cavaleiro Arcano
       :actor_name: Cavaleiro Arcano
@@ -7599,8 +7006,8 @@
       - :kind: :damage
         :applied: false
         :amount: 0
-        :hp_before: 39
-        :hp_after: 39
+        :hp_before: 34
+        :hp_after: 34
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -7619,7 +7026,7 @@
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 5
+    - :round: 6
       :turn: 3
       :actor_id: Cavaleiro Arcano
       :actor_name: Cavaleiro Arcano
@@ -7634,139 +7041,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 39
-        :hp_after: 39
+        :hp_before: 34
+        :hp_after: 34
         :attack_roll:
           :natural: 5
           :total: 11
           :crit: false
           :damage: 4
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 7
-        :hp_before: 39
-        :hp_after: 32
-        :attack_roll:
-          :natural: 12
-          :total: 18
-          :crit: false
-          :damage: 7
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
-  - :round: 6
-    :turns:
-    - :round: 6
-      :turn: 1
-      :actor_id: Campeão
-      :actor_name: Campeão
-      :actor_party: :party_two
-      :action:
-        :type: :idle
-      :results: []
-      :gambit: 'nenhum aplicável: parado'
-    - :round: 6
-      :turn: 2
-      :actor_id: Mestre de Batalha
-      :actor_name: Mestre de Batalha
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 32
-        :hp_after: 32
-        :attack_roll:
-          :natural: 6
-          :total: 11
-          :crit: false
-          :damage: 9
-      :gambit:
-        :position: 1
-        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-    - :round: 6
-      :turn: 3
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: true
-        :amount: 10
-        :hp_before: 32
-        :hp_after: 22
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 10
-          :modifiers: {}
-          :total: 10
-        :attack_roll:
-          :natural: 20
-          :total: 26
-          :armor_class: 17
-          :hit: true
-          :crit: true
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 6
-      :turn: 3
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 8
-        :hp_before: 22
-        :hp_after: 14
-        :attack_roll:
-          :natural: 12
-          :total: 18
-          :crit: false
-          :damage: 8
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 10
-        :hp_before: 14
-        :hp_after: 4
-        :attack_roll:
-          :natural: 12
-          :total: 18
-          :crit: false
-          :damage: 10
       :gambit:
         :position: 2
         :rule: 'Inimigo: qualquer → Fire Bolt'
@@ -7779,143 +7060,10 @@
       :actor_name: Campeão
       :actor_party: :party_two
       :action:
-        :type: :class_feature
-        :feature_id: second-wind
-        :feature_slug: second-wind
-        :feature_name: Second Wind
-        :target_type: self
-      :results:
-      - :kind: :heal
-        :applied: true
-        :amount: 11
-        :hp_before: 4
-        :hp_after: 15
-        :roll_outcome:
-          :expression: 1d10 + actor_level
-          :resolved_expression: 1d10+10
-          :dice:
-          - 1d10
-          :rolls:
-          - 1
-          :modifiers:
-            actor_level: 10
-          :total: 11
-      :gambit:
-        :position: 2
-        :rule: 'Self: HP < 50% → Second Wind'
-    - :round: 7
-      :turn: 2
-      :actor_id: Mestre de Batalha
-      :actor_name: Mestre de Batalha
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-        :maneuver_name: 'Maneuver: Distracting Strike'
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 15
-        :hp_after: 15
-        :attack_roll:
-          :natural: 11
-          :total: 16
-          :crit: false
-          :damage: 10
-      :gambit:
-        :position: 1
-        :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-    - :round: 7
-      :turn: 3
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 15
-        :hp_after: 15
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 4
-          :modifiers: {}
-          :total: 4
-        :attack_roll:
-          :natural: 7
-          :total: 13
-          :armor_class: 17
-          :hit: false
-          :crit: false
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 7
-      :turn: 3
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 15
-        :hp_after: 15
-        :attack_roll:
-          :natural: 3
-          :total: 9
-          :crit: false
-          :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 5
-        :hp_before: 15
-        :hp_after: 10
-        :attack_roll:
-          :natural: 11
-          :total: 17
-          :crit: false
-          :damage: 5
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
-  - :round: 8
-    :turns:
-    - :round: 8
-      :turn: 1
-      :actor_id: Campeão
-      :actor_name: Campeão
-      :actor_party: :party_two
-      :action:
         :type: :idle
       :results: []
       :gambit: 'nenhum aplicável: parado'
-    - :round: 8
+    - :round: 7
       :turn: 2
       :actor_id: Mestre de Batalha
       :actor_name: Mestre de Batalha
@@ -7927,56 +7075,37 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 10
-        :hp_after: 10
+          :kind: :damage
+          :applied: true
+          :amount: 4
+          :hp_before: 25
+          :hp_after: 21
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 4
+            :modifiers: {}
+            :total: 4
+          :feature_name: 'Maneuver: Distracting Strike'
+          :debuff: next_attack_advantage
+        :damage: 9
+        :hp_before: 34
+        :hp_after: 25
         :attack_roll:
-          :natural: 4
-          :total: 9
+          :natural: 12
+          :total: 17
           :crit: false
-          :damage: 13
+          :damage: 9
       :gambit:
         :position: 1
         :rule: 'Inimigo: qualquer → Maneuver: Distracting Strike'
-    - :round: 8
-      :turn: 3
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :cast_spell
-        :spell_id: fire-bolt
-        :spell_slug: fire-bolt
-        :spell_name: Fire Bolt
-        :target_type: enemy
-      :results:
-      - :kind: :damage
-        :applied: true
-        :amount: 2
-        :hp_before: 10
-        :hp_after: 8
-        :roll_outcome:
-          :expression: 1d10
-          :resolved_expression: 1d10
-          :dice:
-          - 1d10
-          :rolls:
-          - 2
-          :modifiers: {}
-          :total: 2
-        :attack_roll:
-          :natural: 12
-          :total: 18
-          :armor_class: 17
-          :hit: true
-          :crit: false
-      :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-    - :round: 8
+    - :round: 7
       :turn: 3
       :actor_id: Cavaleiro Arcano
       :actor_name: Cavaleiro Arcano
@@ -7987,34 +7116,33 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 8
-        :hp_after: 8
-        :attack_roll:
-          :natural: 10
-          :total: 16
-          :crit: false
-          :damage: 8
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
         :success: true
-        :advantage: false
+        :advantage: true
         :rider:
         :damage: 14
-        :hp_before: 8
-        :hp_after: 0
+        :hp_before: 21
+        :hp_after: 7
         :attack_roll:
           :natural: 20
           :total: 26
           :crit: true
           :damage: 14
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 7
+        :hp_after: 0
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 8
       :gambit:
-        :position: 2
-        :rule: 'Inimigo: qualquer → Fire Bolt'
-      :bonus: true
+        :position: 1
+        :rule: 'Inimigo: marcado → Ataque'
   :draw: false
   :outcome: :victory

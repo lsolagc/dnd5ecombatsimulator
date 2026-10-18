@@ -271,15 +271,15 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
         .map { |attack| attack[:target_id] }
     end
 
-    assert_equal [ second.id ] * 2, bonus_targets.call, "Extra Attack at level 7: both on the spell's target"
+    assert_equal [ second.id ], bonus_targets.call, "one attack, on the spell's target"
 
     second.current_hit_points = 0
-    assert_equal [ first.id ] * 2, bonus_targets.call
+    assert_equal [ first.id ], bonus_targets.call
     assert_equal Marshal.dump(Random.new(1)), Marshal.dump(service.instance_variable_get(:@rng))
   end
 
-  test "War Magic's fallback with several enemies left: the first living one in initiative order, also once the focus falls" do
-    knight = seed_character("Cavaleiro Arcano", level: 7) # Extra Attack: the bonus action makes 2 attacks
+  test "War Magic's fallback with several enemies left: the first living one in initiative order" do
+    knight = seed_character("Cavaleiro Arcano", level: 7)
     spell_target, party_first, initiative_first, party_last =
       seed_character("Campeão"), seed_character("Mestre de Batalha"), player_characters(:aragorn), player_characters(:aragorn_copy)
     enemies = [ spell_target, party_first, initiative_first, party_last ]
@@ -297,35 +297,31 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
       service.send(:war_magic_turn, actor: knight, chosen_action: chosen_action.with(target: spell_target, gambit:), round_number: 1, turn_index: 1)
     end
 
-    # The first attack goes to the first living enemy in initiative order (not the first or last in party
-    # order) and kills it; the second re-runs the fallback on the two still alive.
-    assert_equal [ initiative_first.id, party_last.id ], bonus.results.map { |attack| attack[:target_id] }
-    assert_not party_first.dead?
+    # The attack goes to the first living enemy in initiative order, not the first or last in party order.
+    assert_equal [ initiative_first.id ], bonus.results.map { |attack| attack[:target_id] }
     assert_equal Marshal.dump(Random.new(1)), Marshal.dump(service.instance_variable_get(:@rng)),
       "War Magic's fallback must not consume @rng"
   end
 
-  test "War Magic's focus falls on the first attack: the second picks the first living enemy in initiative order among three" do
-    knight = seed_character("Cavaleiro Arcano", level: 7)
-    spell_target, party_first, initiative_first, party_last =
-      seed_character("Campeão"), seed_character("Mestre de Batalha"), player_characters(:aragorn), player_characters(:aragorn_copy)
-    enemies = [ spell_target, party_first, initiative_first, party_last ]
-    enemies.each do |enemy|
-      enemy.current_hit_points = 1000
-      enemy.define_singleton_method(:take_damage) { |**| self.current_hit_points = 0 } # with Dice.hit? stubbed below, every attack hits and kills
-    end
+  test "War Magic's bonus is one weapon attack despite Extra Attack, with the marks of any attack; the Attack action keeps Extra Attack" do
+    knight = seed_character("Cavaleiro Arcano", level: 10) # Extra Attack (2 attacks) and Eldritch Strike
+    spell_target, other = seed_character("Campeão"), seed_character("Mestre de Batalha")
     gambit = add_rule(knight, position: 1, spell: "fire-bolt")
-    service = prepared_service(party_one: [ knight ], party_two: enemies,
-                               initiative_order: [ initiative_first, knight, party_last, spell_target, party_first ])
+    service = prepared_service(party_one: [ knight ], party_two: [ spell_target, other ])
     chosen_action = service.send(:available_actions_for, actor: knight).find { |action| action.spell&.slug == "fire-bolt" }
+    service.instance_variable_get(:@advantage_marks)[spell_target.id] << other.id # a Distracting Strike mark from someone else
 
     bonus = Dice.stub(:hit?, true) do
       service.send(:war_magic_turn, actor: knight, chosen_action: chosen_action.with(target: spell_target, gambit:), round_number: 1, turn_index: 1)
     end
 
-    # initiative_first sits in the middle of party order, so neither .first nor .last can pass.
-    assert_equal [ spell_target.id, initiative_first.id ], bonus.results.map { |attack| attack[:target_id] }
-    assert_equal Marshal.dump(Random.new(1)), Marshal.dump(service.instance_variable_get(:@rng))
+    assert_equal 2, knight.attacks_per_action
+    assert_equal [ [ spell_target.id, true ] ], bonus.results.map { |entry| entry.values_at(:target_id, :advantage) }, "one attack, with the mark's advantage"
+    assert_empty service.instance_variable_get(:@advantage_marks)[spell_target.id], "the bonus spends the mark"
+    assert_equal knight.id, service.instance_variable_get(:@eldritch_strike_pending)[spell_target.id], "the bonus leaves the Eldritch Strike mark"
+
+    attack = Dice.stub(:hit?, true) { service.send(:execute_attack_action, actor: knight, round_number: 1, turn_index: 1, focus: spell_target) }
+    assert_equal [ spell_target.id ] * 2, attack.results.map { |entry| entry[:target_id] }, "the Attack action still makes attacks_per_action attacks"
   end
 
   test "a gambit-driven combat with Action Surge and War Magic never draws from @rng" do

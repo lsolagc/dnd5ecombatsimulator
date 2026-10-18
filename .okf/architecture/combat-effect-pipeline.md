@@ -72,8 +72,8 @@ action = Combat::CombatAction.new(
 `damage_type`, `target: enemy`, `attack: weapon` — and raises `ArgumentError`
 on a malformed die instead of letting `RollExpression` read it as a variable
 worth 0. `Combat::ActionRunner.attack(action:, next_target:,
-advantage_against:)` makes up to `attacks_per_action` weapon attacks (Extra
-Attack). Before each one it calls `next_target`, so an attack that follows a
+advantage_against:, attacks:)` makes up to `attacks` weapon attacks, by default
+`attacks_per_action` (Extra Attack; War Magic's bonus asks for 1). Before each one it calls `next_target`, so an attack that follows a
 kill goes to another target and `nil` ends the action; the caller's block sees
 each `(target, result, advantage)` before the next target is picked. Target
 choice stays with the caller (the simulator's gambits, War Magic focus or

@@ -1,7 +1,7 @@
 ---
 1:
   :winning_party: :party_two
-  :total_rounds: 5
+  :total_rounds: 4
   :initiative:
   - :actor_id: Campeão
     :natural: 12
@@ -133,34 +133,6 @@
           :total: 8
           :crit: false
           :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 60
-        :hp_after: 60
-        :attack_roll:
-          :natural: 8
-          :total: 14
-          :crit: false
-          :damage: 8
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 60
-        :hp_after: 60
-        :attack_roll:
-          :natural: 7
-          :total: 13
-          :crit: false
-          :damage: 4
       :gambit: aleatório
       :bonus: true
     - :round: 1
@@ -177,7 +149,7 @@
       :results:
       - :kind: :heal
         :applied: true
-        :amount: 16
+        :amount: 21
         :hp_before: 27
         :hp_after: 36
         :roll_outcome:
@@ -186,10 +158,10 @@
           :dice:
           - 1d10
           :rolls:
-          - 3
+          - 8
           :modifiers:
             actor_level: 13
-          :total: 16
+          :total: 21
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -205,20 +177,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 36
-        :hp_after: 36
-        :attack_roll:
-          :natural: 6
-          :total: 12
-          :crit: false
-          :damage: 8
-      - :kind: :attack
-        :target_id: Cavaleiro Arcano
-        :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
         :rider:
@@ -226,10 +184,24 @@
         :hp_before: 36
         :hp_after: 26
         :attack_roll:
-          :natural: 12
-          :total: 18
+          :natural: 14
+          :total: 20
           :crit: false
           :damage: 10
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 26
+        :hp_after: 26
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :crit: false
+          :damage: 7
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -249,24 +221,10 @@
         :hp_before: 60
         :hp_after: 53
         :attack_roll:
-          :natural: 11
-          :total: 17
+          :natural: 19
+          :total: 25
           :crit: false
           :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 5
-        :hp_before: 53
-        :hp_after: 48
-        :attack_roll:
-          :natural: 15
-          :total: 21
-          :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -274,13 +232,27 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 48
-        :hp_after: 48
+        :hp_before: 53
+        :hp_after: 53
         :attack_roll:
-          :natural: 5
-          :total: 11
+          :natural: 6
+          :total: 12
           :crit: false
-          :damage: 10
+          :damage: 5
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 53
+        :hp_after: 46
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 7
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -298,28 +270,28 @@
         :success: true
         :advantage: false
         :rider:
-        :damage: 7
+        :damage: 10
         :hp_before: 26
-        :hp_after: 19
+        :hp_after: 16
         :attack_roll:
-          :natural: 10
-          :total: 16
+          :natural: 11
+          :total: 17
           :crit: false
-          :damage: 7
+          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 19
-        :hp_after: 19
+        :damage: 8
+        :hp_before: 16
+        :hp_after: 8
         :attack_roll:
-          :natural: 1
-          :total: 7
+          :natural: 15
+          :total: 21
           :crit: false
-          :damage: 12
+          :damage: 8
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -332,29 +304,15 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 4
-        :hp_before: 48
-        :hp_after: 44
-        :attack_roll:
-          :natural: 14
-          :total: 20
-          :crit: false
-          :damage: 4
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
         :success: false
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 44
-        :hp_after: 44
+        :hp_before: 46
+        :hp_after: 46
         :attack_roll:
-          :natural: 10
-          :total: 16
+          :natural: 5
+          :total: 11
           :crit: false
           :damage: 10
       - :kind: :attack
@@ -364,13 +322,27 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 44
-        :hp_after: 44
+        :hp_before: 46
+        :hp_after: 46
         :attack_roll:
-          :natural: 2
-          :total: 8
+          :natural: 10
+          :total: 16
           :crit: false
-          :damage: 3
+          :damage: 4
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 46
+        :hp_after: 46
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 9
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -388,118 +360,28 @@
         :success: true
         :advantage: false
         :rider:
-        :damage: 6
-        :hp_before: 19
-        :hp_after: 13
-        :attack_roll:
-          :natural: 18
-          :total: 24
-          :crit: false
-          :damage: 6
-      - :kind: :attack
-        :target_id: Cavaleiro Arcano
-        :target_name: Cavaleiro Arcano
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 9
-        :hp_before: 13
-        :hp_after: 4
+        :damage: 7
+        :hp_before: 8
+        :hp_after: 1
         :attack_roll:
           :natural: 14
           :total: 20
           :crit: false
-          :damage: 9
-      :gambit: aleatório
-    - :round: 4
-      :turn: 2
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 5
-        :hp_before: 44
-        :hp_after: 39
-        :attack_roll:
-          :natural: 16
-          :total: 22
-          :crit: false
-          :damage: 5
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 39
-        :hp_after: 39
-        :attack_roll:
-          :natural: 9
-          :total: 15
-          :crit: false
-          :damage: 9
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 39
-        :hp_after: 39
-        :attack_roll:
-          :natural: 8
-          :total: 14
-          :crit: false
-          :damage: 6
-      :gambit: aleatório
-  - :round: 5
-    :turns:
-    - :round: 5
-      :turn: 1
-      :actor_id: Campeão
-      :actor_name: Campeão
-      :actor_party: :party_two
-      :action:
-        :type: :attack
-      :results:
-      - :kind: :attack
-        :target_id: Cavaleiro Arcano
-        :target_name: Cavaleiro Arcano
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 4
-        :hp_after: 4
-        :attack_roll:
-          :natural: 7
-          :total: 13
-          :crit: false
-          :damage: 11
+          :damage: 7
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
         :rider:
-        :damage: 7
-        :hp_before: 4
+        :damage: 13
+        :hp_before: 1
         :hp_after: 0
         :attack_roll:
-          :natural: 18
-          :total: 24
+          :natural: 10
+          :total: 16
           :crit: false
-          :damage: 7
+          :damage: 13
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -1014,8 +896,8 @@
   :draw: false
   :outcome: :victory
 3:
-  :winning_party: :party_one
-  :total_rounds: 5
+  :winning_party: :party_two
+  :total_rounds: 6
   :initiative:
   - :actor_id: Cavaleiro Arcano
     :natural: 11
@@ -1081,34 +963,6 @@
           :total: 26
           :crit: true
           :damage: 8
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 4
-        :hp_before: 51
-        :hp_after: 47
-        :attack_roll:
-          :natural: 12
-          :total: 18
-          :crit: false
-          :damage: 4
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 47
-        :hp_after: 47
-        :attack_roll:
-          :natural: 10
-          :total: 16
-          :crit: false
-          :damage: 5
       :gambit: aleatório
       :bonus: true
     - :round: 1
@@ -1124,24 +978,24 @@
         :target_type: enemy
       :results:
       - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 47
-        :hp_after: 47
+        :applied: true
+        :amount: 2
+        :hp_before: 51
+        :hp_after: 49
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
           :dice:
           - 1d8
           :rolls:
-          - 1
+          - 2
           :modifiers: {}
-          :total: 1
+          :total: 2
         :attack_roll:
-          :natural: 7
-          :total: 15
+          :natural: 12
+          :total: 20
           :armor_class: 17
-          :hit: false
+          :hit: true
           :crit: false
       :gambit: aleatório
       :extra: true
@@ -1159,14 +1013,14 @@
         :success: true
         :advantage: false
         :rider:
-        :damage: 11
+        :damage: 8
         :hp_before: 36
-        :hp_after: 25
+        :hp_after: 28
         :attack_roll:
-          :natural: 13
-          :total: 19
+          :natural: 10
+          :total: 16
           :crit: false
-          :damage: 11
+          :damage: 8
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -1174,13 +1028,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 25
-        :hp_after: 25
+        :hp_before: 28
+        :hp_after: 28
         :attack_roll:
-          :natural: 8
-          :total: 14
+          :natural: 7
+          :total: 13
           :crit: false
-          :damage: 12
+          :damage: 6
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -1196,14 +1050,14 @@
         :success: true
         :advantage: false
         :rider:
-        :damage: 8
-        :hp_before: 25
+        :damage: 11
+        :hp_before: 28
         :hp_after: 17
         :attack_roll:
-          :natural: 18
-          :total: 24
+          :natural: 13
+          :total: 19
           :crit: false
-          :damage: 8
+          :damage: 11
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -1214,10 +1068,10 @@
         :hp_before: 17
         :hp_after: 17
         :attack_roll:
-          :natural: 3
-          :total: 9
+          :natural: 8
+          :total: 14
           :crit: false
-          :damage: 8
+          :damage: 12
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -1236,18 +1090,18 @@
       :results:
       - :kind: :damage
         :applied: true
-        :amount: 29
-        :hp_before: 47
-        :hp_after: 18
+        :amount: 11
+        :hp_before: 49
+        :hp_after: 38
         :roll_outcome:
           :expression: 8d6
           :resolved_expression: 8d6
           :dice:
           - 8d6
           :rolls:
-          - 29
+          - 22
           :modifiers: {}
-          :total: 29
+          :total: 22
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -1267,8 +1121,8 @@
         :hp_before: 17
         :hp_after: 17
         :attack_roll:
-          :natural: 8
-          :total: 14
+          :natural: 6
+          :total: 12
           :crit: false
           :damage: 6
       - :kind: :attack
@@ -1281,8 +1135,8 @@
         :hp_before: 17
         :hp_after: 10
         :attack_roll:
-          :natural: 12
-          :total: 18
+          :natural: 15
+          :total: 21
           :crit: false
           :damage: 7
       :gambit: aleatório
@@ -1302,19 +1156,19 @@
       :results:
       - :kind: :heal
         :applied: true
-        :amount: 14
+        :amount: 22
         :hp_before: 10
-        :hp_after: 24
+        :hp_after: 32
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+13
           :dice:
           - 1d10
           :rolls:
-          - 1
+          - 9
           :modifiers:
             actor_level: 13
-          :total: 14
+          :total: 22
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -1331,27 +1185,27 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 24
-        :hp_after: 24
+        :hp_before: 32
+        :hp_after: 32
         :attack_roll:
-          :natural: 6
-          :total: 12
+          :natural: 8
+          :total: 14
           :crit: false
-          :damage: 10
+          :damage: 6
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
         :rider:
-        :damage: 11
-        :hp_before: 24
-        :hp_after: 13
+        :damage: 7
+        :hp_before: 32
+        :hp_after: 25
         :attack_roll:
-          :natural: 18
-          :total: 24
+          :natural: 12
+          :total: 18
           :crit: false
-          :damage: 11
+          :damage: 7
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -1369,26 +1223,12 @@
         :success: true
         :advantage: false
         :rider:
-        :damage: 7
-        :hp_before: 18
-        :hp_after: 11
+        :damage: 3
+        :hp_before: 38
+        :hp_after: 35
         :attack_roll:
-          :natural: 15
-          :total: 21
-          :crit: false
-          :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 11
-        :hp_after: 11
-        :attack_roll:
-          :natural: 1
-          :total: 7
+          :natural: 16
+          :total: 22
           :crit: false
           :damage: 3
       - :kind: :attack
@@ -1398,13 +1238,27 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 11
-        :hp_after: 11
+        :hp_before: 35
+        :hp_after: 35
         :attack_roll:
-          :natural: 10
-          :total: 16
+          :natural: 6
+          :total: 12
           :crit: false
-          :damage: 5
+          :damage: 7
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 35
+        :hp_after: 27
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 8
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -1417,17 +1271,17 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 13
-        :hp_after: 13
+        :damage: 10
+        :hp_before: 25
+        :hp_after: 15
         :attack_roll:
-          :natural: 6
-          :total: 12
+          :natural: 15
+          :total: 21
           :crit: false
-          :damage: 6
+          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -1435,13 +1289,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 13
-        :hp_after: 13
+        :hp_before: 15
+        :hp_after: 15
         :attack_roll:
-          :natural: 8
-          :total: 14
+          :natural: 1
+          :total: 7
           :crit: false
-          :damage: 11
+          :damage: 6
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -1456,31 +1310,93 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 27
+        :hp_after: 27
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 5
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 27
+        :hp_after: 27
+        :attack_roll:
+          :natural: 6
+          :total: 12
+          :crit: false
+          :damage: 3
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 27
+        :hp_after: 27
+        :attack_roll:
+          :natural: 8
+          :total: 14
+          :crit: false
+          :damage: 8
+      :gambit: aleatório
+    - :round: 5
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
         :rider:
-        :damage: 4
-        :hp_before: 11
-        :hp_after: 7
+        :damage: 7
+        :hp_before: 15
+        :hp_after: 8
         :attack_roll:
           :natural: 15
           :total: 21
           :crit: false
-          :damage: 4
+          :damage: 7
       - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
         :rider:
-        :damage: 4
-        :hp_before: 7
-        :hp_after: 3
+        :damage: 7
+        :hp_before: 8
+        :hp_after: 1
         :attack_roll:
           :natural: 18
           :total: 24
           :crit: false
-          :damage: 4
+          :damage: 7
+      :gambit: aleatório
+  - :round: 6
+    :turns:
+    - :round: 6
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -1488,11 +1404,62 @@
         :advantage: false
         :rider:
         :damage: 6
-        :hp_before: 3
-        :hp_after: 0
+        :hp_before: 27
+        :hp_after: 21
         :attack_roll:
           :natural: 11
           :total: 17
+          :crit: false
+          :damage: 6
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 21
+        :hp_after: 21
+        :attack_roll:
+          :natural: 5
+          :total: 11
+          :crit: false
+          :damage: 6
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 21
+        :hp_after: 11
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 10
+      :gambit: aleatório
+    - :round: 6
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 6
+        :hp_before: 1
+        :hp_after: 0
+        :attack_roll:
+          :natural: 17
+          :total: 23
           :crit: false
           :damage: 6
       :gambit: aleatório
@@ -1500,7 +1467,7 @@
   :outcome: :victory
 4:
   :winning_party: :party_two
-  :total_rounds: 5
+  :total_rounds: 6
   :initiative:
   - :actor_id: Cavaleiro Arcano
     :natural: 15
@@ -1566,6 +1533,16 @@
           :total: 15
           :crit: false
           :damage: 5
+      :gambit: aleatório
+      :bonus: true
+    - :round: 1
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -1594,16 +1571,6 @@
           :total: 14
           :crit: false
           :damage: 8
-      :gambit: aleatório
-      :bonus: true
-    - :round: 1
-      :turn: 1
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-      :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -1618,34 +1585,6 @@
           :total: 15
           :crit: false
           :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 7
-        :hp_before: 60
-        :hp_after: 53
-        :attack_roll:
-          :natural: 19
-          :total: 25
-          :crit: false
-          :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 53
-        :hp_after: 53
-        :attack_roll:
-          :natural: 7
-          :total: 13
-          :crit: false
-          :damage: 9
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -1662,8 +1601,8 @@
       :results:
       - :kind: :heal
         :applied: true
-        :amount: 14
-        :hp_before: 53
+        :amount: 12
+        :hp_before: 60
         :hp_after: 60
         :roll_outcome:
           :expression: 1d10 + actor_level
@@ -1671,10 +1610,10 @@
           :dice:
           - 1d10
           :rolls:
-          - 5
+          - 3
           :modifiers:
             actor_level: 9
-          :total: 14
+          :total: 12
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -1687,20 +1626,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 36
-        :hp_after: 36
-        :attack_roll:
-          :natural: 4
-          :total: 10
-          :crit: false
-          :damage: 6
-      - :kind: :attack
-        :target_id: Cavaleiro Arcano
-        :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
         :rider:
@@ -1708,10 +1633,24 @@
         :hp_before: 36
         :hp_after: 24
         :attack_roll:
-          :natural: 10
-          :total: 16
+          :natural: 13
+          :total: 19
           :crit: false
           :damage: 12
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 10
+        :hp_before: 24
+        :hp_after: 14
+        :attack_roll:
+          :natural: 11
+          :total: 17
+          :crit: false
+          :damage: 10
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -1743,8 +1682,8 @@
           :modifiers: {}
           :total: 1
         :attack_roll:
-          :natural: 7
-          :total: 15
+          :natural: 4
+          :total: 12
           :armor_class: 17
           :hit: false
           :crit: false
@@ -1767,38 +1706,10 @@
         :hp_before: 60
         :hp_after: 60
         :attack_roll:
-          :natural: 3
-          :total: 9
+          :natural: 10
+          :total: 16
           :crit: false
           :damage: 9
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 60
-        :hp_after: 60
-        :attack_roll:
-          :natural: 9
-          :total: 15
-          :crit: false
-          :damage: 4
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 60
-        :hp_after: 60
-        :attack_roll:
-          :natural: 3
-          :total: 9
-          :crit: false
-          :damage: 5
       :gambit: aleatório
       :bonus: true
     - :round: 2
@@ -1816,27 +1727,27 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 24
-        :hp_after: 24
+        :hp_before: 14
+        :hp_after: 14
         :attack_roll:
-          :natural: 1
-          :total: 7
+          :natural: 7
+          :total: 13
           :crit: false
           :damage: 6
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-        :damage: 11
-        :hp_before: 24
-        :hp_after: 13
+        :damage: 0
+        :hp_before: 14
+        :hp_after: 14
         :attack_roll:
-          :natural: 20
-          :total: 26
-          :crit: true
-          :damage: 11
+          :natural: 3
+          :total: 9
+          :crit: false
+          :damage: 12
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -1854,19 +1765,19 @@
       :results:
       - :kind: :heal
         :applied: true
-        :amount: 15
-        :hp_before: 13
-        :hp_after: 28
+        :amount: 19
+        :hp_before: 14
+        :hp_after: 33
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+13
           :dice:
           - 1d10
           :rolls:
-          - 2
+          - 6
           :modifiers:
             actor_level: 13
-          :total: 15
+          :total: 19
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -1883,27 +1794,27 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 28
-        :hp_after: 28
+        :hp_before: 33
+        :hp_after: 33
         :attack_roll:
-          :natural: 1
-          :total: 7
+          :natural: 9
+          :total: 15
           :crit: false
-          :damage: 12
+          :damage: 7
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-        :damage: 10
-        :hp_before: 28
-        :hp_after: 18
+        :damage: 0
+        :hp_before: 33
+        :hp_after: 33
         :attack_roll:
-          :natural: 14
-          :total: 20
+          :natural: 3
+          :total: 9
           :crit: false
-          :damage: 10
+          :damage: 8
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -1925,38 +1836,38 @@
         :hp_before: 60
         :hp_after: 60
         :attack_roll:
-          :natural: 4
-          :total: 10
+          :natural: 1
+          :total: 7
           :crit: false
-          :damage: 5
+          :damage: 3
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
         :success: true
         :advantage: false
         :rider:
-        :damage: 18
+        :damage: 8
         :hp_before: 60
-        :hp_after: 42
+        :hp_after: 52
         :attack_roll:
           :natural: 20
           :total: 26
           :crit: true
-          :damage: 18
+          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 42
-        :hp_after: 42
+        :damage: 4
+        :hp_before: 52
+        :hp_after: 48
         :attack_roll:
-          :natural: 3
-          :total: 9
+          :natural: 14
+          :total: 20
           :crit: false
-          :damage: 10
+          :damage: 4
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -1969,31 +1880,31 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-        :damage: 9
-        :hp_before: 18
-        :hp_after: 9
+        :damage: 0
+        :hp_before: 33
+        :hp_after: 33
         :attack_roll:
-          :natural: 19
-          :total: 25
-          :crit: true
-          :damage: 9
+          :natural: 1
+          :total: 7
+          :crit: false
+          :damage: 12
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
         :rider:
-        :damage: 7
-        :hp_before: 9
-        :hp_after: 2
+        :damage: 10
+        :hp_before: 33
+        :hp_after: 23
         :attack_roll:
-          :natural: 17
-          :total: 23
+          :natural: 14
+          :total: 20
           :crit: false
-          :damage: 7
+          :damage: 10
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -2010,24 +1921,24 @@
         :target_type: enemy
       :results:
       - :kind: :damage
-        :applied: true
-        :amount: 4
-        :hp_before: 42
-        :hp_after: 38
+        :applied: false
+        :amount: 0
+        :hp_before: 48
+        :hp_after: 48
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
           :dice:
           - 1d8
           :rolls:
-          - 4
+          - 3
           :modifiers: {}
-          :total: 4
+          :total: 3
         :attack_roll:
-          :natural: 10
-          :total: 18
+          :natural: 4
+          :total: 12
           :armor_class: 17
-          :hit: true
+          :hit: false
           :crit: false
       :gambit: aleatório
     - :round: 5
@@ -2044,42 +1955,14 @@
         :success: true
         :advantage: false
         :rider:
-        :damage: 7
-        :hp_before: 38
-        :hp_after: 31
+        :damage: 18
+        :hp_before: 48
+        :hp_after: 30
         :attack_roll:
-          :natural: 17
-          :total: 23
-          :crit: false
-          :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 9
-        :hp_before: 31
-        :hp_after: 22
-        :attack_roll:
-          :natural: 19
-          :total: 25
-          :crit: false
-          :damage: 9
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 22
-        :hp_after: 22
-        :attack_roll:
-          :natural: 4
-          :total: 10
-          :crit: false
-          :damage: 9
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 18
       :gambit: aleatório
       :bonus: true
     - :round: 5
@@ -2093,17 +1976,107 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 23
+        :hp_after: 23
+        :attack_roll:
+          :natural: 3
+          :total: 9
+          :crit: false
+          :damage: 13
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
         :rider:
-        :damage: 13
-        :hp_before: 2
+        :damage: 9
+        :hp_before: 23
+        :hp_after: 14
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: true
+          :damage: 9
+      :gambit: aleatório
+  - :round: 6
+    :turns:
+    - :round: 6
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 4
+        :hp_before: 30
+        :hp_after: 26
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 4
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 26
+        :hp_after: 26
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :crit: false
+          :damage: 6
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 7
+        :hp_before: 26
+        :hp_after: 19
+        :attack_roll:
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 7
+      :gambit: aleatório
+    - :round: 6
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 19
+        :hp_before: 14
         :hp_after: 0
         :attack_roll:
-          :natural: 12
-          :total: 18
-          :crit: false
-          :damage: 13
+          :natural: 19
+          :total: 25
+          :crit: true
+          :damage: 19
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -2693,34 +2666,6 @@
           :total: 24
           :crit: false
           :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 18
-        :hp_after: 18
-        :attack_roll:
-          :natural: 6
-          :total: 12
-          :crit: false
-          :damage: 9
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 5
-        :hp_before: 18
-        :hp_after: 13
-        :attack_roll:
-          :natural: 17
-          :total: 23
-          :crit: false
-          :damage: 5
       :gambit: aleatório
       :bonus: true
     - :round: 3
@@ -2741,24 +2686,24 @@
         :hp_before: 6
         :hp_after: 6
         :attack_roll:
-          :natural: 3
-          :total: 9
+          :natural: 6
+          :total: 12
           :crit: false
-          :damage: 13
+          :damage: 12
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
         :rider:
-        :damage: 17
+        :damage: 8
         :hp_before: 6
         :hp_after: 0
         :attack_roll:
-          :natural: 20
-          :total: 26
-          :crit: true
-          :damage: 17
+          :natural: 17
+          :total: 23
+          :crit: false
+          :damage: 8
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -3558,34 +3503,6 @@
           :total: 14
           :crit: false
           :damage: 6
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 4
-        :hp_before: 17
-        :hp_after: 13
-        :attack_roll:
-          :natural: 11
-          :total: 17
-          :crit: false
-          :damage: 4
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 13
-        :hp_after: 13
-        :attack_roll:
-          :natural: 3
-          :total: 9
-          :crit: false
-          :damage: 9
       :gambit: aleatório
       :bonus: true
   - :round: 4
@@ -3604,20 +3521,20 @@
         :success: true
         :advantage: false
         :rider:
-        :damage: 11
+        :damage: 7
         :hp_before: 5
         :hp_after: 0
         :attack_roll:
-          :natural: 10
-          :total: 16
+          :natural: 11
+          :total: 17
           :crit: false
-          :damage: 11
+          :damage: 7
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 9:
-  :winning_party: :party_one
-  :total_rounds: 6
+  :winning_party: :party_two
+  :total_rounds: 7
   :initiative:
   - :actor_id: Campeão
     :natural: 9
@@ -3758,34 +3675,6 @@
           :total: 17
           :crit: false
           :damage: 7
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 5
-        :hp_before: 44
-        :hp_after: 39
-        :attack_roll:
-          :natural: 13
-          :total: 19
-          :crit: false
-          :damage: 5
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 39
-        :hp_after: 39
-        :attack_roll:
-          :natural: 2
-          :total: 8
-          :crit: false
-          :damage: 3
       :gambit: aleatório
       :bonus: true
     - :round: 1
@@ -3801,24 +3690,24 @@
         :target_type: enemy
       :results:
       - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 39
-        :hp_after: 39
+        :applied: true
+        :amount: 3
+        :hp_before: 44
+        :hp_after: 41
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
           :dice:
           - 1d8
           :rolls:
-          - 4
+          - 3
           :modifiers: {}
-          :total: 4
+          :total: 3
         :attack_roll:
-          :natural: 4
-          :total: 12
+          :natural: 13
+          :total: 21
           :armor_class: 17
-          :hit: false
+          :hit: true
           :crit: false
       :gambit: aleatório
       :extra: true
@@ -3842,10 +3731,10 @@
         :hp_before: 21
         :hp_after: 21
         :attack_roll:
-          :natural: 6
-          :total: 12
+          :natural: 2
+          :total: 8
           :crit: false
-          :damage: 9
+          :damage: 6
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
@@ -3856,10 +3745,10 @@
         :hp_before: 21
         :hp_after: 21
         :attack_roll:
-          :natural: 7
-          :total: 13
+          :natural: 4
+          :total: 10
           :crit: false
-          :damage: 13
+          :damage: 9
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -3876,25 +3765,25 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 39
-        :hp_after: 39
+        :hp_before: 41
+        :hp_after: 41
         :attack_roll:
-          :natural: 10
-          :total: 16
+          :natural: 6
+          :total: 12
           :crit: false
-          :damage: 3
+          :damage: 6
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-        :damage: 10
-        :hp_before: 39
-        :hp_after: 29
+        :damage: 0
+        :hp_before: 41
+        :hp_after: 41
         :attack_roll:
-          :natural: 18
-          :total: 24
+          :natural: 7
+          :total: 13
           :crit: false
           :damage: 10
       - :kind: :attack
@@ -3904,13 +3793,13 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 29
-        :hp_after: 29
+        :hp_before: 41
+        :hp_after: 41
         :attack_roll:
-          :natural: 9
-          :total: 15
+          :natural: 10
+          :total: 16
           :crit: false
-          :damage: 8
+          :damage: 3
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -3925,31 +3814,31 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 13
+        :hp_before: 21
+        :hp_after: 8
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 13
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 21
-        :hp_after: 21
+        :hp_before: 8
+        :hp_after: 8
         :attack_roll:
-          :natural: 2
-          :total: 8
+          :natural: 9
+          :total: 15
           :crit: false
           :damage: 11
-      - :kind: :attack
-        :target_id: Cavaleiro Arcano
-        :target_name: Cavaleiro Arcano
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 8
-        :hp_before: 21
-        :hp_after: 13
-        :attack_roll:
-          :natural: 13
-          :total: 19
-          :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -3962,45 +3851,45 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 3
-        :hp_before: 29
-        :hp_after: 26
-        :attack_roll:
-          :natural: 19
-          :total: 25
-          :crit: false
-          :damage: 3
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
         :success: false
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 26
-        :hp_after: 26
+        :hp_before: 41
+        :hp_after: 41
         :attack_roll:
-          :natural: 5
-          :total: 11
+          :natural: 2
+          :total: 8
           :crit: false
           :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 26
-        :hp_after: 26
+        :damage: 5
+        :hp_before: 41
+        :hp_after: 36
         :attack_roll:
-          :natural: 4
-          :total: 10
+          :natural: 13
+          :total: 19
           :crit: false
-          :damage: 7
+          :damage: 5
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 3
+        :hp_before: 36
+        :hp_after: 33
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: false
+          :damage: 3
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -4018,19 +3907,19 @@
       :results:
       - :kind: :heal
         :applied: true
-        :amount: 10
-        :hp_before: 26
-        :hp_after: 36
+        :amount: 14
+        :hp_before: 33
+        :hp_after: 47
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+9
           :dice:
           - 1d10
           :rolls:
-          - 1
+          - 5
           :modifiers:
             actor_level: 9
-          :total: 10
+          :total: 14
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -4046,19 +3935,19 @@
       :results:
       - :kind: :heal
         :applied: true
-        :amount: 22
-        :hp_before: 13
-        :hp_after: 35
+        :amount: 19
+        :hp_before: 8
+        :hp_after: 27
         :roll_outcome:
           :expression: 1d10 + actor_level
           :resolved_expression: 1d10+13
           :dice:
           - 1d10
           :rolls:
-          - 9
+          - 6
           :modifiers:
             actor_level: 13
-          :total: 22
+          :total: 19
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -4073,31 +3962,31 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-        :damage: 10
-        :hp_before: 35
-        :hp_after: 25
+        :damage: 0
+        :hp_before: 27
+        :hp_after: 27
         :attack_roll:
-          :natural: 17
-          :total: 23
+          :natural: 4
+          :total: 10
           :crit: false
           :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-        :damage: 11
-        :hp_before: 25
-        :hp_after: 14
+        :damage: 0
+        :hp_before: 27
+        :hp_after: 27
         :attack_roll:
-          :natural: 16
-          :total: 22
+          :natural: 1
+          :total: 7
           :crit: false
-          :damage: 11
+          :damage: 8
       :gambit: aleatório
     - :round: 5
       :turn: 2
@@ -4113,42 +4002,42 @@
         :success: true
         :advantage: false
         :rider:
-        :damage: 16
-        :hp_before: 36
-        :hp_after: 20
+        :damage: 7
+        :hp_before: 47
+        :hp_after: 40
         :attack_roll:
-          :natural: 20
-          :total: 26
-          :crit: true
-          :damage: 16
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 20
-        :hp_after: 20
-        :attack_roll:
-          :natural: 9
-          :total: 15
+          :natural: 17
+          :total: 23
           :crit: false
           :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :success: true
         :advantage: false
         :rider:
-        :damage: 0
-        :hp_before: 20
-        :hp_after: 20
+        :damage: 8
+        :hp_before: 40
+        :hp_after: 32
         :attack_roll:
-          :natural: 9
-          :total: 15
+          :natural: 16
+          :total: 22
           :crit: false
-          :damage: 3
+          :damage: 8
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 16
+        :hp_before: 32
+        :hp_after: 16
+        :attack_roll:
+          :natural: 20
+          :total: 26
+          :crit: true
+          :damage: 16
       :gambit: aleatório
   - :round: 6
     :turns:
@@ -4167,27 +4056,27 @@
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 14
-        :hp_after: 14
+        :hp_before: 27
+        :hp_after: 27
         :attack_roll:
-          :natural: 2
-          :total: 8
+          :natural: 9
+          :total: 15
           :crit: false
-          :damage: 8
+          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
+        :success: false
         :advantage: false
         :rider:
-        :damage: 9
-        :hp_before: 14
-        :hp_after: 5
+        :damage: 0
+        :hp_before: 27
+        :hp_after: 27
         :attack_roll:
-          :natural: 14
-          :total: 20
+          :natural: 9
+          :total: 15
           :crit: false
-          :damage: 9
+          :damage: 6
       :gambit: aleatório
     - :round: 6
       :turn: 2
@@ -4200,15 +4089,29 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 16
+        :hp_after: 16
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :crit: false
+          :damage: 5
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
         :success: true
         :advantage: false
         :rider:
         :damage: 6
-        :hp_before: 20
-        :hp_after: 14
+        :hp_before: 16
+        :hp_after: 10
         :attack_roll:
-          :natural: 13
-          :total: 19
+          :natural: 14
+          :total: 20
           :crit: false
           :damage: 6
       - :kind: :attack
@@ -4217,34 +4120,59 @@
         :success: true
         :advantage: false
         :rider:
-        :damage: 10
-        :hp_before: 14
+        :damage: 6
+        :hp_before: 10
         :hp_after: 4
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :crit: false
+          :damage: 6
+      :gambit: aleatório
+  - :round: 7
+    :turns:
+    - :round: 7
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 13
+        :hp_before: 27
+        :hp_after: 14
         :attack_roll:
           :natural: 14
           :total: 20
           :crit: false
-          :damage: 10
+          :damage: 13
       - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
         :rider:
-        :damage: 10
-        :hp_before: 4
+        :damage: 21
+        :hp_before: 14
         :hp_after: 0
         :attack_roll:
           :natural: 19
           :total: 25
-          :crit: false
-          :damage: 10
+          :crit: true
+          :damage: 21
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 10:
-  :winning_party: :party_one
-  :total_rounds: 3
+  :winning_party: :party_two
+  :total_rounds: 4
   :initiative:
   - :actor_id: Cavaleiro Arcano
     :natural: 10
@@ -4463,34 +4391,6 @@
           :total: 22
           :crit: false
           :damage: 6
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 5
-        :hp_before: 26
-        :hp_after: 21
-        :attack_roll:
-          :natural: 12
-          :total: 18
-          :crit: false
-          :damage: 5
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :rider:
-        :damage: 0
-        :hp_before: 21
-        :hp_after: 21
-        :attack_roll:
-          :natural: 2
-          :total: 8
-          :crit: false
-          :damage: 3
       :gambit: aleatório
       :bonus: true
     - :round: 2
@@ -4504,31 +4404,31 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 8
+        :hp_before: 30
+        :hp_after: 22
+        :attack_roll:
+          :natural: 12
+          :total: 18
+          :crit: false
+          :damage: 8
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
         :success: false
         :advantage: false
         :rider:
         :damage: 0
-        :hp_before: 30
-        :hp_after: 30
+        :hp_before: 22
+        :hp_after: 22
         :attack_roll:
-          :natural: 5
-          :total: 11
+          :natural: 2
+          :total: 8
           :crit: false
-          :damage: 12
-      - :kind: :attack
-        :target_id: Cavaleiro Arcano
-        :target_name: Cavaleiro Arcano
-        :success: true
-        :advantage: false
-        :rider:
-        :damage: 9
-        :hp_before: 30
-        :hp_after: 21
-        :attack_roll:
-          :natural: 18
-          :total: 24
-          :crit: false
-          :damage: 9
+          :damage: 6
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -4545,24 +4445,24 @@
         :target_type: enemy
       :results:
       - :kind: :damage
-        :applied: true
-        :amount: 6
-        :hp_before: 21
-        :hp_after: 15
+        :applied: false
+        :amount: 0
+        :hp_before: 26
+        :hp_after: 26
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
           :dice:
           - 1d8
           :rolls:
-          - 6
+          - 7
           :modifiers: {}
-          :total: 6
+          :total: 7
         :attack_roll:
-          :natural: 14
-          :total: 22
+          :natural: 5
+          :total: 13
           :armor_class: 17
-          :hit: true
+          :hit: false
           :crit: false
       :gambit: aleatório
     - :round: 3
@@ -4580,27 +4480,95 @@
         :advantage: false
         :rider:
         :damage: 6
-        :hp_before: 15
-        :hp_after: 9
+        :hp_before: 26
+        :hp_after: 20
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :crit: false
+          :damage: 6
+      :gambit: aleatório
+      :bonus: true
+    - :round: 3
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 11
+        :hp_before: 22
+        :hp_after: 11
         :attack_roll:
           :natural: 14
           :total: 20
           :crit: false
-          :damage: 6
+          :damage: 11
       - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
         :success: true
         :advantage: false
         :rider:
-        :damage: 7
-        :hp_before: 9
+        :damage: 9
+        :hp_before: 11
         :hp_after: 2
         :attack_roll:
           :natural: 14
           :total: 20
           :crit: false
-          :damage: 7
+          :damage: 9
+      :gambit: aleatório
+  - :round: 4
+    :turns:
+    - :round: 4
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 5
+        :hp_before: 20
+        :hp_after: 15
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 5
+        :attack_roll:
+          :natural: 14
+          :total: 22
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 4
+      :turn: 1
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
@@ -4608,8 +4576,8 @@
         :advantage: false
         :rider:
         :damage: 4
-        :hp_before: 2
-        :hp_after: 0
+        :hp_before: 15
+        :hp_after: 11
         :attack_roll:
           :natural: 13
           :total: 19
@@ -4617,6 +4585,43 @@
           :damage: 4
       :gambit: aleatório
       :bonus: true
+    - :round: 4
+      :turn: 2
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: false
+        :advantage: false
+        :rider:
+        :damage: 0
+        :hp_before: 2
+        :hp_after: 2
+        :attack_roll:
+          :natural: 5
+          :total: 11
+          :crit: false
+          :damage: 9
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :success: true
+        :advantage: false
+        :rider:
+        :damage: 17
+        :hp_before: 2
+        :hp_after: 0
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :crit: true
+          :damage: 17
+      :gambit: aleatório
   :draw: false
   :outcome: :victory
 11:

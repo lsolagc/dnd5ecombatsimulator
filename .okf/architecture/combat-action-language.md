@@ -42,8 +42,9 @@ weapon path apply resistances with the wrong damage type (see below).
   pipeline only asks for "the next target". So do the hooks around each
   attack: Distracting Strike advantage marks, the maneuver die on the first
   hit, and the Eldritch Strike mark.
-- **War Magic's bonus attack uses the same Attack action**, although in 5e
-  it is a bonus action. It is the known gap in the next section.
+- **War Magic's bonus attack is one weapon attack** (`attacks: 1`, no Extra
+  Attack; since 2026-10-18), although in 5e it is a bonus action that costs
+  nothing here. It is the known gap in the next section.
 - **The legacy pair is gone.** `PlayerCharacter`'s pre-pipeline attack-roll
   and attack-receiving methods were removed in phase 1.1 of the DDD refactor; the rules
   only their tests guarded (Archery, Dueling, a 0-damage hit, the `1d4`
@@ -58,7 +59,7 @@ is a project milestone. Today every turn spends exactly one "action", and
 several things are modelled wrongly because of it:
 
 - **Bonus actions:** Second Wind spends the whole turn, and War Magic's
-  attack reuses the Attack action.
+  single attack spends no bonus action.
 - **Riders:** Battle Master maneuvers (and later a Paladin's Smite) are
   choices added to an attack after Attack was chosen, consuming no action.
   Today they are offered as alternatives to Attack.
