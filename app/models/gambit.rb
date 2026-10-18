@@ -123,9 +123,9 @@ class Gambit < ApplicationRecord
   end
 
   # Action Surge has no effect payload: the simulator runs it as a gambit action of its own (identified
-  # by name, like CombatSimulatorService#action_surge_unlock_for).
+  # by ClassFeature#action_surge?, like Combat::FeatureBook#action_surge).
   def action_surge?
-    action_class_feature? && class_feature&.name == "Action Surge"
+    action_class_feature? && !!class_feature&.action_surge?
   end
 
   # The feature's effect if the simulator can choose it as an action (ClassFeature#action_payload_at), at

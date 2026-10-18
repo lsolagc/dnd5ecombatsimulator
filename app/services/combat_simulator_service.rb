@@ -76,33 +76,15 @@ class CombatSimulatorService
         combatant.current_hit_points = combatant.max_hit_points if combatant.current_hit_points.nil?
       end
 
+      @feature_books = all_combatants.to_h { |combatant| [ combatant.id, Combat::FeatureBook.new(combatant) ] }
       all_combatants.each do |combatant|
-        @uses_remaining[combatant.id] = resolve_initial_uses_for(combatant:)
+        @uses_remaining[combatant.id] = feature_book(combatant).initial_uses
       end
     end
 
-    def resolve_initial_uses_for(combatant:)
-      feature_uses = {}
-
-      combatant.feature_unlocks.each do |unlock|
-        uses = resolve_uses_for_unlock(combatant:, unlock:)
-        feature_uses[unlock.class_feature_id] = uses unless uses.nil?
-      end
-
-      feature_uses
-    end
-
-    def resolve_uses_for_unlock(combatant:, unlock:)
-      return unlock.uses if unlock.uses.present?
-      return nil if unlock.uses_formula.blank?
-
-      context = Combat::RollContext.new(actor: combatant)
-      outcome = Combat::RollExpression.new(expression: unlock.uses_formula).resolve(context:)
-      normalize_uses_value(outcome.total)
-    end
-
-    def normalize_uses_value(value)
-      value.to_f.floor
+    # What the combatant knows how to do this simulation (built in initialize_state).
+    def feature_book(combatant)
+      @feature_books.fetch(combatant.id)
     end
 
     # One d20 per combatant, in party order (the RNG sequence), sorted by total with ties kept in that
@@ -224,7 +206,7 @@ class CombatSimulatorService
 
     # Action Surge as a gambit action: unlocked and with a use left.
     def action_surge_action(actor:)
-      unlock = action_surge_unlock_for(actor:)
+      unlock = feature_book(actor).action_surge
       uses = unlock && @uses_remaining.dig(actor.id, unlock.class_feature_id)
       Combat::ActionOption.new(type: :action_surge, class_feature: unlock.class_feature, uses_remaining: uses) if uses.is_a?(Integer) && uses.positive?
     end
@@ -287,7 +269,7 @@ class CombatSimulatorService
     def action_surge_turn(actor:, round_number:, turn_index:)
       return nil if combat_over?
 
-      unlock = action_surge_unlock_for(actor:)
+      unlock = feature_book(actor).action_surge
       return nil unless unlock
 
       uses = @uses_remaining.dig(actor.id, unlock.class_feature_id)
@@ -301,10 +283,6 @@ class CombatSimulatorService
       execute_action(actor:, chosen_action:, round_number:, turn_index:).with(extra: true, gambit: RANDOM_GAMBIT)
     end
 
-    def action_surge_unlock_for(actor:)
-      actor.feature_unlocks.find { |unlock| unlock.class_feature.name == "Action Surge" }
-    end
-
     # War Magic / Improved War Magic: casting a spell as the turn's normal action grants
     # a bonus weapon attack right after it. Not recursive (a plain attack, via
     # execute_attack_action, never triggers another one) and never fired from the
@@ -312,7 +290,7 @@ class CombatSimulatorService
     # A gambit-driven actor aims it without @rng: the spell's target if it is a living enemy, else the
     # first living enemy in initiative order. The bonus entry carries the gambit of the spell's entry.
     def war_magic_turn(actor:, chosen_action:, round_number:, turn_index:)
-      return nil unless war_magic_available?(actor:, chosen_action:)
+      return nil unless chosen_action.spell? && feature_book(actor).war_magic_for?(chosen_action.spell)
 
       if chosen_action.chosen_by_gambit?
         spell_target = chosen_action.target
@@ -320,19 +298,6 @@ class CombatSimulatorService
       end
       gambit = chosen_action.chosen_by_gambit? ? gambit_log(chosen_action.gambit) : RANDOM_GAMBIT
       execute_attack_action(actor:, round_number:, turn_index:, focus:).with(bonus: true, gambit:)
-    end
-
-    def war_magic_available?(actor:, chosen_action:)
-      return false unless chosen_action.spell?
-
-      unlocks = actor.feature_unlocks
-      return true if unlocks.any? { |unlock| unlock.class_feature.name == "Improved War Magic" }
-
-      unlocks.any? { |unlock| unlock.class_feature.name == "War Magic" } && chosen_action.spell.cantrip?
-    end
-
-    def eldritch_strike_unlocked?(actor:)
-      actor.feature_unlocks.any? { |unlock| unlock.class_feature.name == "Eldritch Strike" }
     end
 
     def turn_passive_log(actor:, trigger:, round_number:, turn_index:)
@@ -344,15 +309,14 @@ class CombatSimulatorService
 
     def available_actions_for(actor:)
       actions = [ Combat::ActionOption.new(type: :attack) ]
-      combat_superiority = actor.combat_superiority
+      book = feature_book(actor)
 
-      actor.feature_unlocks.each do |unlock|
+      book.unlocks.each do |unlock|
         feature = unlock.class_feature
-        payload = actor.action_payload(feature)
+        payload = book.action_payload(feature)
         next unless payload
-        next if feature.maneuver_of?(combat_superiority) && !known_maneuver_ids(actor:).include?(feature.id)
 
-        uses = @uses_remaining.dig(actor.id, resource_class_feature_id(actor:, feature:))
+        uses = @uses_remaining.dig(actor.id, book.resource_feature_id(feature))
         next if uses.is_a?(Integer) && uses <= 0
 
         actions << Combat::ActionOption.new(type: :class_feature, class_feature: feature, payload:, uses_remaining: uses)
@@ -426,7 +390,7 @@ class CombatSimulatorService
         hit = result.attack_roll.hit
         damage = result.roll_outcome.total
 
-        @eldritch_strike_pending[target.id] = actor.id if hit && eldritch_strike_unlocked?(actor:)
+        @eldritch_strike_pending[target.id] = actor.id if hit && feature_book(actor).eldritch_strike?
 
         rider = apply_maneuver_rider(actor:, target:, maneuver: pending_maneuver, crit: result.attack_roll.crit) if pending_maneuver && hit
         pending_maneuver = nil if rider
@@ -461,7 +425,7 @@ class CombatSimulatorService
       feature = maneuver.class_feature
       action = Combat::CombatAction.new(source_type: :class_feature, source_id: feature.id, actor:, targets: [ target ])
       results = Combat::ActionRunner.call(action:, crit:)
-      consume_feature_use!(actor:, class_feature_id: resource_class_feature_id(actor:, feature:))
+      consume_feature_use!(actor:, class_feature_id: feature_book(actor).resource_feature_id(feature))
 
       # ponytail: `debuff` is one string with one supported value, no duration and one effect per payload;
       # replace it with a list of status applications once a feature or spell applies a status (issue #45).
@@ -497,11 +461,11 @@ class CombatSimulatorService
         targets: target.nil? ? [] : [ target ]
       )
 
-      indomitable_unlock = target && indomitable_unlock_for(combatant: target)
+      indomitable_unlock = target && feature_book(target).indomitable
       reroll_saving_throw = indomitable_unlock && indomitable_available?(combatant: target, unlock: indomitable_unlock)
 
       results = Combat::ActionRunner.call(action:, reroll_saving_throw: !!reroll_saving_throw)
-      consume_feature_use!(actor:, class_feature_id: resource_class_feature_id(actor:, feature:))
+      consume_feature_use!(actor:, class_feature_id: feature_book(actor).resource_feature_id(feature))
 
       if reroll_saving_throw
         results.each do |result|
@@ -581,25 +545,9 @@ class CombatSimulatorService
       @uses_remaining[actor.id][class_feature_id] = [ uses - 1, 0 ].max
     end
 
-    # The feature whose uses +feature+ spends: a maneuver (ClassFeature#maneuver_of?) spends the shared
-    # superiority-dice pool, since maneuvers never carry uses of their own; anything else its own.
-    def resource_class_feature_id(actor:, feature:)
-      combat_superiority = actor.combat_superiority
-      feature.maneuver_of?(combat_superiority) ? combat_superiority.id : feature.id
-    end
-
-    def indomitable_unlock_for(combatant:)
-      combatant.feature_unlocks.find { |unlock| unlock.class_feature.name == "Indomitable" }
-    end
-
     def indomitable_available?(combatant:, unlock:)
       uses = @uses_remaining.dig(combatant.id, unlock.class_feature_id)
       uses.is_a?(Integer) && uses.positive?
-    end
-
-    # Cached per combatant for this simulation: a character's class, level and choices don't change mid-combat.
-    def known_maneuver_ids(actor:)
-      (@known_maneuver_ids ||= {})[actor.id] ||= actor.known_maneuvers.pluck(:id).to_set
     end
 
     def build_result(round_number:)

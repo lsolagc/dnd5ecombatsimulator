@@ -24,12 +24,22 @@ class ClassFeature < ApplicationRecord
   validate :subclass_marker_belongs_to_the_same_subclass_tree
   validate :spellcasting_ability_is_known, if: :grants_spellcasting
 
-  # The feature whose superiority dice every Battle Master maneuver spends. Found by name until phase 5.2.
+  # Features the simulator runs by rules of their own (Combat::FeatureBook), not by an effect payload.
+  # Found by name until phase 5.2: these constants are the only place the names live.
+  # The feature whose superiority dice every Battle Master maneuver spends.
   COMBAT_SUPERIORITY = "Combat Superiority".freeze
+  ACTION_SURGE = "Action Surge".freeze
+  WAR_MAGIC = "War Magic".freeze
+  IMPROVED_WAR_MAGIC = "Improved War Magic".freeze
+  ELDRITCH_STRIKE = "Eldritch Strike".freeze
+  INDOMITABLE = "Indomitable".freeze
 
-  def combat_superiority?
-    name == COMBAT_SUPERIORITY
-  end
+  def combat_superiority? = name == COMBAT_SUPERIORITY
+  def action_surge? = name == ACTION_SURGE
+  def war_magic? = name == WAR_MAGIC
+  def improved_war_magic? = name == IMPROVED_WAR_MAGIC
+  def eldritch_strike? = name == ELDRITCH_STRIKE
+  def indomitable? = name == INDOMITABLE
 
   # A maneuver: a feature paid from +combat_superiority+'s resource (its superiority dice) rather than uses
   # of its own. +combat_superiority+ is that feature, or nil where there is none.

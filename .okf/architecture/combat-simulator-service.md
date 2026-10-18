@@ -6,7 +6,7 @@ resource: app/services/combat_simulator_service.rb
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-17T00:00:00Z
+  at: 2026-10-18T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T19:06:20Z }
 sources:
   - id: combat-simulator-rb
@@ -15,6 +15,9 @@ sources:
   - id: combat-simulator-test
     title: test/services/combat_simulator_service_test.rb
     resource: ../../test/services/combat_simulator_service_test.rb
+  - id: feature-book-rb
+    title: app/services/combat/feature_book.rb
+    resource: ../../app/services/combat/feature_book.rb
 status: stable
 ---
 
@@ -171,12 +174,36 @@ automatic after the first of those actions; its bonus attack aims at the spell's
 target if it is a living enemy, else the first living enemy in initiative order. Decisions:
 [gambits-decisions.md](/architecture/gambits-decisions.md).
 
+# Feature book
+
+What a combatant knows how to do is read from one `Combat::FeatureBook` per
+combatant, built in `initialize_state` and kept by combatant id
+(`feature_book(combatant)`); the simulator no longer walks unlocks or compares
+feature names.[^feature-book-rb] It is read-only and holds no counters:
+
+| Query | Answers |
+|---|---|
+| `unlocks` | the unlocks in force (`PlayerCharacter#feature_unlocks`) |
+| `action_payload(feature)` | the feature's action effect (`PlayerCharacter#action_payload`), nil when not unlocked, not an action at the level, or a maneuver the character has not learned |
+| `action_surge` / `indomitable` | the unlock in force, or nil |
+| `war_magic_for?(spell)` | War Magic's bonus attack follows this spell: a cantrip with War Magic, any spell with Improved War Magic |
+| `eldritch_strike?` | a hit leaves the Eldritch Strike mark |
+| `resource_feature_id(feature)` | whose uses the feature spends: Combat Superiority's for a maneuver, else its own |
+| `initial_uses` | `{ class_feature_id => uses }` at the start of combat (see Resource tracking) |
+
+The features it recognises by name are [ClassFeature](/models/class-feature.md)'s
+constants and predicates. The book delegates to the character's cached lookups;
+its only state is the known-maneuver ids, read on the first maneuver it is asked
+about. No queries or RNG draws were added (golden files and query ceiling
+unchanged). It takes a `PlayerCharacter`; another kind of combatant gets its
+own way of building one when it arrives.
+
 # Lookup caching
 
 A character's class, level and choices cannot change mid-combat, so the
 lookups the turn loop repeats are loaded once per simulation:
-the known-maneuver ids are memoized per combatant on the service instance
-(one instance per simulation), and `PlayerCharacter` caches its feature
+the known-maneuver ids are memoized in each combatant's feature book
+(one per simulation), and `PlayerCharacter` caches its feature
 unlocks (`#feature_unlocks`, the simulator's only unlock lookup), class
 progression and spellcasting feature (see [player-character.md](/models/player-character.md)).
 This cut a typical simulation from ~259 queries / ~590 ms to ~39 / ~97 ms;
@@ -187,10 +214,11 @@ cache.
 # Resource tracking
 
 At encounter start, each combatant's usable features get an initial use
-count: a fixed `unlock.uses` if present, otherwise `unlock.uses_formula`
-resolved through `Combat::RollExpression`/`Combat::RollContext` and floored
-(`normalize_uses_value`) — e.g. a formula of `proficiency_bonus` becomes an
-integer use count. Each class-feature action decrements the actor's
+count (`FeatureBook#initial_uses`): a fixed `unlock.uses` if present, otherwise
+`unlock.uses_formula` resolved through `Combat::RollExpression`/`Combat::RollContext`
+and floored — e.g. a formula of `proficiency_bonus` becomes an
+integer use count. The simulator keeps the counts left in `@uses_remaining`
+(they move to `Combat::Participant` in phase 3.3). Each class-feature action decrements the actor's
 remaining uses for that feature by 1, floored at 0
 (`consume_feature_use!`); once exhausted, that action stops being offered.
 
@@ -206,3 +234,5 @@ remaining uses for that feature by 1, floored at 0
 [^combat-simulator-rb]: Source: `app/services/combat_simulator_service.rb`
 
 [^combat-simulator-test]: Source: `test/services/combat_simulator_service_test.rb`
+
+[^feature-book-rb]: Source: `app/services/combat/feature_book.rb`

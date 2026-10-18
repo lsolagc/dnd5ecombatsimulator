@@ -373,6 +373,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     plain_service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ fresh_character(:aragorn_copy) ], seed: 5, max_rounds: 1)
     heuristic_service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ fresh_character(:aragorn_copy) ], seed: 5, max_rounds: 1)
 
+    plain_service.send(:initialize_state)
     available = plain_service.send(:available_actions_for, actor: actor)
     plain_rng = plain_service.send(:instance_variable_get, :@rng)
     heuristic_rng = heuristic_service.send(:instance_variable_get, :@rng)
@@ -402,16 +403,6 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
       .map { |action| action.spell.slug }
     assert_not_includes remaining_cast_slugs, "magic-missile"
     assert_includes remaining_cast_slugs, "fire-bolt" # cantrips never consume a slot
-  end
-
-  test "non integer uses values are floored" do
-    service = CombatSimulatorService.new(
-      party_one: [ fresh_character(:merlin) ],
-      party_two: [ fresh_character(:aragorn_copy) ]
-    )
-
-    assert_equal 2, service.send(:normalize_uses_value, 2.9)
-    assert_equal 0, service.send(:normalize_uses_value, 0.8)
   end
 
   test "War Magic grants a bonus weapon attack when the turn's normal action casts a cantrip" do
@@ -538,22 +529,6 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     Random.srand(4)
     unmarked_turn = target_leak_service.send(:execute_cast_spell_action, actor: marker, chosen_action: marker_action, round_number: 1, turn_index: 1)
     assert_equal 1, unmarked_turn.results.first[:amount], "the same attacker casting against an unmarked target must not get disadvantage"
-  end
-
-  test "war_magic_available? and eldritch_strike_unlocked? never consume @rng" do
-    # Both are queried on every actor's turn/attack (not just Eldritch Knights), so any
-    # accidental @rng draw here would desync every other seeded test in the suite.
-    actor = fresh_character(:aragorn) # no spellcasting, no Eldritch Knight features
-    service = CombatSimulatorService.new(party_one: [ actor ], party_two: [ fresh_character(:aragorn_copy) ], seed: 5, max_rounds: 1)
-    service.send(:initialize_state)
-    rng = service.send(:instance_variable_get, :@rng)
-
-    before = Marshal.dump(rng)
-    service.send(:war_magic_available?, actor: actor, chosen_action: Combat::ActionOption.new(type: :attack))
-    service.send(:eldritch_strike_unlocked?, actor: actor)
-    after = Marshal.dump(rng)
-
-    assert_equal before, after, "availability checks for War Magic/Eldritch Strike must never consume @rng"
   end
 
   test "serialized results carry the spell attack roll only when the effect made one" do

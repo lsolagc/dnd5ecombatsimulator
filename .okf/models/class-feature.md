@@ -6,7 +6,7 @@ resource: app/models/class_feature.rb
 tags: [class, feature, persistence]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-11T00:00:00Z
+  at: 2026-10-18T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:00:19Z }
 sources:
   - id: class-feature-rb
@@ -39,6 +39,20 @@ resolved value.
 
 `slug` is the stable key code and seeds use to reference a feature — unique
 per class (`index_class_features_on_player_class_id_and_slug`).
+
+# Features the simulator knows by name
+
+A few features have no effect payload the simulator could run: it applies
+their rules itself, through [Combat::FeatureBook](/architecture/combat-simulator-service.md).
+They are recognised by name, and the names live only here, as constants with
+one predicate each: `COMBAT_SUPERIORITY` (`combat_superiority?`, the
+superiority-dice pool), `ACTION_SURGE` (`action_surge?`), `WAR_MAGIC`
+(`war_magic?`), `IMPROVED_WAR_MAGIC` (`improved_war_magic?`),
+`ELDRITCH_STRIKE` (`eldritch_strike?`) and `INDOMITABLE` (`indomitable?`).
+`Gambit#action_surge?` uses the same predicate. Phase 5.2 of the DDD refactor
+replaces the names with a slug or capability, in this one place.
+`maneuver_of?(combat_superiority)` tells a maneuver: a feature paid from that
+feature's resource.[^class-feature-rb]
 
 # Schema
 
