@@ -142,8 +142,10 @@ level (`ClassFeature#effect_payload_at`), so a feature with a payload at two
 levels applies once. `spells` loads in the order the spells were learned and
 `feature_unlocks` by unlock id: the simulator's random picks follow those
 lists, so a seed replays the same whatever the tables' physical order.
-`combat_superiority` is the unlocked superiority-dice feature, whose pool every
-maneuver (`ClassFeature#maneuver_of?`) spends.
+`effect_payloads` is each unlocked feature's effect at the level, cached too;
+`combat_superiority` is the unlocked feature whose effect is a `resource_pool`
+(the superiority dice), whose pool every maneuver (`ClassFeature#maneuver_of?`)
+spends.
 
 # Schema
 

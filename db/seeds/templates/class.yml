@@ -29,6 +29,17 @@ features:
         # ele que tem um; ClassFeature#effect_payload_at). Repita-o só quando o efeito muda no nível.
         # Manobras (kind: damage) acrescentam applies_to: weapon_attack (o dado é somado ao dano de um ataque com
         # arma que acertou, em vez de ser uma ação própria) e, opcionalmente, debuff: next_attack_advantage.
+        # O kind vem de um vocabulário fechado (ClassFeatureUnlock::EFFECT_KINDS; campo desconhecido é recusado):
+        # heal | damage | modifier e, rodados pelo motor por regra própria (sem trigger):
+        #   { kind: extra_action }                                    # Surto de Ação
+        #   { kind: grants_activity, activity: weapon_attack, count: 1, as: bonus_action, after: { cast_with_action: cantrip } }
+        #                                                             # Magia de Guerra (any_spell: a Aprimorada)
+        #   { kind: rider, "on": weapon_hit, applies: disadvantage_on_next_save, against: own_spells }
+        #                                                             # Golpe Místico; "on" entre aspas (YAML lê on como true)
+        #   { kind: reroll_save, when: failed }                       # Indomável
+        #   { kind: resource_pool }                                   # Superioridade em Combate: features com o mesmo
+        #                                                             # resource_name (as manobras) gastam estes usos
+        # O motor nunca lê o nome da feature: renomeada, ela funciona igual.
         notes: Simplificações do motor, se houver.
 
   # Subclasse: a habilidade `subclass` é o marcador; as `subclass_features` aninhadas pertencem a ela

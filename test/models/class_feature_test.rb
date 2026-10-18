@@ -38,6 +38,17 @@ class ClassFeatureTest < ActiveSupport::TestCase
     assert_nil second_wind.action_payload_at, "nor at the highest level"
   end
 
+  test "a kind the simulator runs by rules of its own is neither a turn action nor a passive" do
+    character = player_characters(:fighter_indomitable_nine)
+    surge = class_features(:fighter_action_surge)
+
+    assert_equal "extra_action", surge.effect_payload_at(9)["kind"]
+    assert_nil surge.action_payload_at(9)
+    assert_nil character.action_payload(surge)
+    passive_kinds = %w[always turn_start turn_end].flat_map { |trigger| character.passive_effect_payloads(trigger:).map { it["kind"] } }
+    assert_empty passive_kinds & %w[extra_action reroll_save], "no trigger, no passive"
+  end
+
   test "a spellcasting feature needs a spellcasting ability of its own when the class has none" do
     attrs = { name: "Subclass Casting", slug: "subclass-casting", description: "Casts.", feature_type: :core,
               action_type: :passive, recharge_type: :none, grants_spellcasting: true, source_book: "PHB 2014" }

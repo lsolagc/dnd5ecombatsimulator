@@ -54,6 +54,7 @@ features:
       - level: 2
         uses: 1
         description: Realiza uma ação adicional junto com sua ação e possível ação bônus.
+        effect_payload: { kind: extra_action }
       - level: 17
         uses: 2
         description: "Pode usar Surto de Ação duas vezes entre descansos, mas somente uma vez no mesmo turno."
@@ -69,6 +70,7 @@ features:
       - level: 9
         uses: 1
         description: "Ao falhar um teste de resistência, pode rolar novamente e deve usar o novo resultado. Só pode usar antes de terminar um descanso longo."
+        effect_payload: { kind: reroll_save, when: failed }
       - level: 13
         uses: 2
         description: Pode usar Indomável duas vezes entre descansos longos.
@@ -198,6 +200,7 @@ features:
           - level: 3
             uses: 4
             description: "Aprende três manobras, à sua escolha. Tem quatro dados de superioridade (d8)."
+            effect_payload: { kind: resource_pool }
           - level: 7
             uses: 5
             description: "Aprende duas manobras adicionais (cinco no total). Ganha mais um dado de superioridade (cinco no total)."
@@ -445,6 +448,7 @@ features:
         unlocks:
           - level: 7
             description: Conjurar um truque como ação permite um ataque com arma como ação bônus.
+            effect_payload: { kind: grants_activity, activity: weapon_attack, count: 1, as: bonus_action, after: { cast_with_action: cantrip } }
       - name: Eldritch Strike
         slug: eldritch-knight-eldritch-strike
         description: "Ao atingir uma criatura com um ataque com arma, ela fica com desvantagem no próximo teste de resistência contra uma magia sua até o final do seu próximo turno."
@@ -453,6 +457,7 @@ features:
         unlocks:
           - level: 10
             description: Um ataque com arma impõe desvantagem no próximo teste de resistência contra suas magias.
+            effect_payload: { kind: rider, "on": weapon_hit, applies: disadvantage_on_next_save, against: own_spells }
       - name: Arcane Charge
         slug: eldritch-knight-arcane-charge
         description: "Ao usar Surto de Ação, pode se teletransportar até 9 metros para um espaço desocupado que possa ver."
@@ -468,3 +473,4 @@ features:
         unlocks:
           - level: 18
             description: Conjurar qualquer magia como ação permite um ataque com arma como ação bônus.
+            effect_payload: { kind: grants_activity, activity: weapon_attack, count: 1, as: bonus_action, after: { cast_with_action: any_spell } }

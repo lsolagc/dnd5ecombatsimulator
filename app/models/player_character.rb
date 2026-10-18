@@ -129,9 +129,21 @@ class PlayerCharacter < ApplicationRecord
     end[feature.id]
   end
 
-  # The superiority-dice feature (ClassFeature#combat_superiority?) if unlocked: its uses pay for every maneuver.
+  # { class_feature_id => effect in force at the character's level (ClassFeature#effect_payload_at), or nil }
+  # for every unlocked feature, cached like #feature_unlocks: Combat::FeatureBook reads the kinds it runs by
+  # rules of their own (extra_action, grants_activity, rider, reroll_save) on every turn.
+  def effect_payloads
+    cached(:effect_payloads, choices_key) do
+      feature_unlocks.to_h { |unlock| [ unlock.class_feature_id, unlock.class_feature.effect_payload_at(level).freeze ] }.freeze
+    end
+  end
+
+  # The unlocked resource_pool feature (Combat Superiority's superiority dice), or nil: its uses pay for every
+  # maneuver (ClassFeature#maneuver_of?).
   def combat_superiority
-    cached(:combat_superiority, choices_key) { feature_unlocks.map(&:class_feature).find(&:combat_superiority?) }
+    cached(:combat_superiority, choices_key) do
+      feature_unlocks.map(&:class_feature).find { |feature| effect_payloads[feature.id]&.dig("kind") == "resource_pool" }
+    end
   end
 
   def take_damage(amount:, damage_type:)
@@ -220,7 +232,7 @@ class PlayerCharacter < ApplicationRecord
 
   # The turn actions a gambit of this character can choose, as [label, value] select options (value as in
   # Gambit#action_choice): Ataque, unlocked features the simulator runs as an action at the character's level
-  # (ClassFeature#action_payload_at, Action Surge included) by first unlock level, maneuvers only when known,
+  # (ClassFeature#action_payload_at, plus an extra_action such as Action Surge) by first unlock level, maneuvers only when known,
   # and known spells with an effect by level.
   def gambit_action_options
     known_maneuver_ids = known_maneuvers.ids

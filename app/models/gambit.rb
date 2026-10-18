@@ -122,25 +122,27 @@ class Gambit < ApplicationRecord
     end
   end
 
-  # Action Surge has no effect payload: the simulator runs it as a gambit action of its own (identified
-  # by ClassFeature#action_surge?, like Combat::FeatureBook#action_surge).
+  # An extra_action feature (Action Surge) is not a turn action of its own kind: the simulator runs it as a
+  # gambit action of its own (found by kind, like Combat::FeatureBook#unlock_with).
   def action_surge?
-    action_class_feature? && !!class_feature&.action_surge?
+    action_class_feature? && class_feature&.effect_payload_at(feature_level)&.dig("kind") == "extra_action"
   end
 
   # The feature's effect if the simulator can choose it as an action (ClassFeature#action_payload_at), at
-  # the owner's level; a preset has none, so its rules read the feature's highest unlock. A feature with no
-  # effect yet at the owner's level is an action the owner lacks: read like a preset's, so the rule stays
-  # valid and is skipped at runtime, as a feature from another subclass is.
+  # #feature_level.
   def active_feature_payload
-    return if class_feature.nil?
-
-    level = owner.try(:level)
-    level = nil if level && class_feature.effect_payload_at(level).nil?
-    class_feature.action_payload_at(level)
+    class_feature&.action_payload_at(feature_level)
   end
 
   private
+
+    # The owner's level; a preset has none, so its rules read the feature's highest unlock. A feature with no
+    # effect yet at the owner's level is an action the owner lacks: read like a preset's, so the rule stays
+    # valid and is skipped at runtime, as a feature from another subclass is.
+    def feature_level
+      level = owner.try(:level)
+      level if level && class_feature.effect_payload_at(level)
+    end
 
     def action_matches_its_kind
       case action_kind

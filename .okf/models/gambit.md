@@ -47,7 +47,7 @@ it, not planned soon.[^issue-46]
   `self`/`enemy` → same; `ally` → ally or self), read from the feature's effect at the
   owner's level (`ClassFeature#action_payload_at`, the same function the simulator uses): a
   character's rule at the character's level, a preset's (no level) at the feature's highest
-  unlock with a payload; passive (`trigger`) and non heal/damage payloads are rejected. Action Surge (no payload) is accepted with target Self. A rule naming an action its owner lacks is valid and skipped at runtime: a feature from another subclass, or one with no effect yet at the owner's level (checked like a preset's, at the feature's highest unlock). Only a feature the owner has, whose effect at its level does not fit the target, makes the rule invalid.
+  unlock with a payload; passive (`trigger`) and non heal/damage payloads are rejected. An `extra_action` feature (Action Surge, found by that kind, `Gambit#action_surge?`) is accepted with target Self only. A rule naming an action its owner lacks is valid and skipped at runtime: a feature from another subclass, or one with no effect yet at the owner's level (checked like a preset's, at the feature's highest unlock). Only a feature the owner has, whose effect at its level does not fit the target, makes the rule invalid.
 - `position` 1..6 (check constraint), at most 6 per owner, and a unique
   `(owner_type, owner_id, position)` constraint **deferrable initially deferred**, so a
   reorder can permute positions inside one transaction.[^gambit-test]

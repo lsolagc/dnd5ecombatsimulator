@@ -28,12 +28,12 @@ class Combat::FeatureBookTest < ActiveSupport::TestCase
     assert_equal class_features(:fighter_second_wind).id, book.resource_feature_id(class_features(:fighter_second_wind))
   end
 
-  test "action_surge and indomitable return the unlock in force, or nil" do
-    assert_nil Combat::FeatureBook.new(player_characters(:aragorn)).action_surge
-    assert_nil Combat::FeatureBook.new(player_characters(:aragorn)).indomitable
-    assert_equal class_feature_unlocks(:action_surge_level_2), Combat::FeatureBook.new(player_characters(:fighter_no_archetype_seven)).action_surge
-    assert_nil Combat::FeatureBook.new(player_characters(:fighter_no_archetype_seven)).indomitable
-    assert_equal class_feature_unlocks(:indomitable_level_9), Combat::FeatureBook.new(player_characters(:fighter_indomitable_nine)).indomitable
+  test "unlock_with returns the unlock in force of the extra_action and the reroll_save, or nil" do
+    assert_nil Combat::FeatureBook.new(player_characters(:aragorn)).unlock_with("extra_action")
+    assert_nil Combat::FeatureBook.new(player_characters(:aragorn)).unlock_with("reroll_save")
+    assert_equal class_feature_unlocks(:action_surge_level_2), Combat::FeatureBook.new(player_characters(:fighter_no_archetype_seven)).unlock_with("extra_action")
+    assert_nil Combat::FeatureBook.new(player_characters(:fighter_no_archetype_seven)).unlock_with("reroll_save")
+    assert_equal class_feature_unlocks(:indomitable_level_9), Combat::FeatureBook.new(player_characters(:fighter_indomitable_nine)).unlock_with("reroll_save")
   end
 
   test "War Magic follows a cantrip only; Improved War Magic any spell" do
@@ -43,14 +43,22 @@ class Combat::FeatureBookTest < ActiveSupport::TestCase
     improved = Combat::FeatureBook.new(player_characters(:eldritch_knight_eighteen))
     none = Combat::FeatureBook.new(player_characters(:aragorn))
 
-    assert_equal [ true, false ], [ war_magic.war_magic_for?(cantrip), war_magic.war_magic_for?(leveled) ]
-    assert_equal [ true, true ], [ improved.war_magic_for?(cantrip), improved.war_magic_for?(leveled) ]
-    assert_equal [ false, false ], [ none.war_magic_for?(cantrip), none.war_magic_for?(leveled) ]
+    assert_equal [ 1, nil ], [ war_magic.weapon_attacks_after(cantrip), war_magic.weapon_attacks_after(leveled) ]
+    assert_equal [ 1, 1 ], [ improved.weapon_attacks_after(cantrip), improved.weapon_attacks_after(leveled) ]
+    assert_equal [ nil, nil ], [ none.weapon_attacks_after(cantrip), none.weapon_attacks_after(leveled) ]
   end
 
-  test "eldritch_strike? from level 10 of the Eldritch Knight" do
-    assert_not Combat::FeatureBook.new(player_characters(:eldritch_knight_seven)).eldritch_strike?
-    assert Combat::FeatureBook.new(player_characters(:eldritch_knight_ten)).eldritch_strike?
+  test "a grants_activity is read from its after: only a cantrip with cast_with_action cantrip" do
+    unlock = class_feature_unlocks(:eldritch_knight_war_magic_level_7)
+    unlock.update!(effect_payload: unlock.effect_payload.merge("count" => 2, "after" => { "cast_with_action" => "any_spell" }))
+    book = Combat::FeatureBook.new(player_characters(:eldritch_knight_seven))
+
+    assert_equal [ 2, 2 ], [ book.weapon_attacks_after(spells(:fire_bolt)), book.weapon_attacks_after(spells(:magic_missile)) ]
+  end
+
+  test "the disadvantage_on_next_save rider from level 10 of the Eldritch Knight" do
+    assert_not Combat::FeatureBook.new(player_characters(:eldritch_knight_seven)).rider?(on: "weapon_hit", applies: "disadvantage_on_next_save")
+    assert Combat::FeatureBook.new(player_characters(:eldritch_knight_ten)).rider?(on: "weapon_hit", applies: "disadvantage_on_next_save")
   end
 
   test "initial_uses: the unlock's fixed uses, else its uses_formula; features without either are left out" do
@@ -72,10 +80,10 @@ class Combat::FeatureBookTest < ActiveSupport::TestCase
     book = Combat::FeatureBook.new(player_characters(:eldritch_knight_ten))
     srand(5)
     book.action_payload(class_features(:fighter_second_wind))
-    book.action_surge
-    book.indomitable
-    book.war_magic_for?(spells(:fire_bolt))
-    book.eldritch_strike?
+    book.unlock_with("extra_action")
+    book.unlock_with("reroll_save")
+    book.weapon_attacks_after(spells(:fire_bolt))
+    book.rider?(on: "weapon_hit", applies: "disadvantage_on_next_save")
     book.resource_feature_id(class_features(:fighter_second_wind))
     book.initial_uses
     drawn = rand

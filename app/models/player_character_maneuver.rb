@@ -20,8 +20,9 @@ class PlayerCharacterManeuver < ApplicationRecord
     def maneuver_is_a_battle_master_maneuver
       return if maneuver.nil? || player_character.nil?
 
-      combat_superiority = ClassFeature.find_by(player_class_id: player_character.player_class_id, name: ClassFeature::COMBAT_SUPERIORITY)
-      unless maneuver.feature_type_subclass_progression? && maneuver.maneuver_of?(combat_superiority)
+      pools = ClassFeature.where(player_class_id: player_character.player_class_id).joins(:class_feature_unlocks)
+                          .where("class_feature_unlocks.effect_payload ->> 'kind' = 'resource_pool'")
+      unless maneuver.feature_type_subclass_progression? && pools.any? { maneuver.maneuver_of?(it) }
         errors.add(:maneuver, "must be a Battle Master maneuver")
       end
     end

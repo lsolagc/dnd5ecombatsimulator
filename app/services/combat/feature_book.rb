@@ -1,10 +1,10 @@
 module Combat
   # What a combatant knows how to do in a simulation, read from its sheet: the features it has unlocked,
-  # which of them it can choose as a turn action, the ones the simulator runs by rules of their own
-  # (Action Surge, War Magic, Eldritch Strike, Indomitable; ClassFeature's predicates) and each feature's
-  # uses at the start of combat. Read-only: the uses left are counted by CombatSimulatorService.
+  # which of them it can choose as a turn action, the ones the simulator runs by rules of their own (read by
+  # the kind of their effect, ClassFeatureUnlock::EFFECT_KINDS, never by name) and each feature's uses at the
+  # start of combat. Read-only: the uses left are counted by CombatSimulatorService.
   # Delegates to the character's cached lookups (PlayerCharacter#feature_unlocks, #action_payload,
-  # #combat_superiority); its only state is the known maneuvers, read once per book.
+  # #effect_payloads, #combat_superiority); its only state is the known maneuvers, read once per book.
   class FeatureBook
     def initialize(character)
       @character = character
@@ -22,27 +22,25 @@ module Combat
       payload if payload && (!maneuver?(feature) || known_maneuver_ids.include?(feature.id))
     end
 
-    # The Action Surge unlock, or nil.
-    def action_surge
-      unlocks.find { |unlock| unlock.class_feature.action_surge? }
+    # The unlock of the feature whose effect at the character's level is of +kind+, or nil: the simulator runs
+    # "extra_action" (Action Surge) and "reroll_save" (Indomitable) by rules of their own, spending the unlock's uses.
+    def unlock_with(kind)
+      unlocks.find { |unlock| effects[unlock.class_feature_id]&.dig("kind") == kind }
     end
 
-    # The Indomitable unlock, or nil.
-    def indomitable
-      unlocks.find { |unlock| unlock.class_feature.indomitable? }
+    # How many weapon attacks casting +spell+ as the turn's action grants (a grants_activity, War Magic), or nil:
+    # after cast_with_action any_spell, any spell; after cantrip, only a cantrip. The most, if several apply.
+    def weapon_attacks_after(spell)
+      effects.each_value.filter_map do |payload|
+        next unless payload && payload["kind"] == "grants_activity" && payload["activity"] == "weapon_attack"
+
+        payload["count"] if payload.dig("after", "cast_with_action") == "any_spell" || (spell.cantrip? && payload.dig("after", "cast_with_action") == "cantrip")
+      end.max
     end
 
-    # Whether casting +spell+ grants War Magic's bonus weapon attack: any spell with Improved War Magic,
-    # only a cantrip with War Magic.
-    def war_magic_for?(spell)
-      features = unlocks.map(&:class_feature)
-      return true if features.any?(&:improved_war_magic?)
-
-      spell.cantrip? && features.any?(&:war_magic?)
-    end
-
-    def eldritch_strike?
-      unlocks.any? { |unlock| unlock.class_feature.eldritch_strike? }
+    # Whether a feature rides +applies+ along every +on+ (Eldritch Strike: disadvantage_on_next_save on weapon_hit).
+    def rider?(on:, applies:)
+      effects.each_value.any? { |payload| payload && payload["kind"] == "rider" && payload["on"] == on && payload["applies"] == applies }
     end
 
     # The feature whose uses +feature+ spends: a maneuver (ClassFeature#maneuver_of?) spends the shared
@@ -67,6 +65,10 @@ module Combat
         return if unlock.uses_formula.blank?
 
         Combat::RollExpression.new(expression: unlock.uses_formula).resolve(context: Combat::RollContext.new(actor: @character)).total.to_f.floor
+      end
+
+      def effects
+        @character.effect_payloads
       end
 
       def maneuver?(feature)

@@ -16,6 +16,8 @@ action_surge_level_2:
   action_type: no_action
   recharge_type: short_or_long_rest
   description: Gain one additional action on your turn.
+  effect_payload:
+    kind: extra_action
 
 action_surge_level_17:
   class_feature: fighter_action_surge
@@ -30,6 +32,9 @@ indomitable_level_9:
   level: 9
   uses: 1
   description: Reroll a failed save; must use the new result.
+  effect_payload:
+    kind: reroll_save
+    when: failed
 
 indomitable_level_13:
   class_feature: fighter_indomitable
@@ -131,6 +136,8 @@ battle_master_combat_superiority_level_3:
   level: 3
   uses: 4
   description: Gain superiority dice and learn three maneuvers.
+  effect_payload:
+    kind: resource_pool
 
 battle_master_maneuver_precision_attack_level_3:
   class_feature: fighter_battle_master_maneuver_precision_attack
@@ -169,16 +176,19 @@ eldritch_knight_war_magic_level_7:
   class_feature: fighter_eldritch_knight_war_magic
   level: 7
   description: Casting a cantrip as your action lets you make a weapon attack as a bonus action.
+  effect_payload: { kind: grants_activity, activity: weapon_attack, count: 1, as: bonus_action, after: { cast_with_action: cantrip } }
 
 eldritch_knight_eldritch_strike_level_10:
   class_feature: fighter_eldritch_knight_eldritch_strike
   level: 10
   description: A weapon attack imposes disadvantage on the target's next save against your spells.
+  effect_payload: { kind: rider, "on": weapon_hit, applies: disadvantage_on_next_save, against: own_spells }
 
 eldritch_knight_improved_war_magic_level_18:
   class_feature: fighter_eldritch_knight_improved_war_magic
   level: 18
   description: Casting any spell as your action lets you make a weapon attack as a bonus action.
+  effect_payload: { kind: grants_activity, activity: weapon_attack, count: 1, as: bonus_action, after: { cast_with_action: any_spell } }
 
 # Test-only: see barbarian_test_save_strike in class_features.yml.
 test_save_strike_level_1:

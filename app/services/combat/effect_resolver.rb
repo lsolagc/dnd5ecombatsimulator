@@ -68,6 +68,7 @@ module Combat
         payload = feature.effect_payload_at(level)
 
         raise "No effect_payload defined for '#{feature.name}' at level #{level}" if payload.nil?
+        raise "'#{feature.name}' has no heal or damage effect at level #{level}" unless payload["kind"].in?(%w[heal damage])
 
         [ EffectInstance.from_payload(payload) ]
       end

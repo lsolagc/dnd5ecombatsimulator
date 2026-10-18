@@ -1,7 +1,7 @@
 ---
 type: Glossary
 title: Ubiquitous language
-description: The project's agreed vocabulary in one place (action, Attack action, attack, effect, feature book; condition, status, criterion), with each term's name in code and its meaning, so code, UI and docs use the same words.
+description: The project's agreed vocabulary in one place (action, Attack action, attack, effect, rider, action cost, feature book; effect kinds; condition, status, criterion), with each term's name in code and its meaning, so code, UI and docs use the same words.
 tags: [combat, gambits]
 generated:
   by: claude-code/claude-opus-5-5
@@ -33,8 +33,25 @@ decisions behind it are in
 | **Attack** | one weapon attack inside the Attack action | One attack roll against one target; on a hit it produces a damage effect. |
 | **Effect** | `Combat::EffectInstance` | The atomic outcome of an action: damage or healing, with an optional attack roll or saving throw. |
 | **Action option** | `Combat::ActionOption` | One action the simulator offers an actor this turn (Attack, a feature or maneuver, a spell, Action Surge), before it runs. A gambit's pick is the same option with the rule's target and gambit. Not an Action: running it builds the `CombatAction`. |
-| **Rider** | today the `rider` key of an attack, maneuvers only; `Combat::Rider` in phase 3.3 | An effect that rides along on an **attack**: chosen with the action or triggered by it, applied when the attack hits, on top of the attack's own damage. Today the Battle Master maneuvers (their die and, for Distracting Strike, the advantage mark); later Divine Smite, Sneak Attack, Hunter's Mark. An attack can carry several. Agreed on 2026-10-18 as attack-only: whether something can ride on a spell or a feature is decided when the first such case arrives. |
-| **Feature book** | `Combat::FeatureBook` | What a combatant knows how to do in a simulation: its unlocked features, which of them are actions, the ones the simulator runs by rules of its own (Action Surge, War Magic, Eldritch Strike, Indomitable), whose uses each spends and the uses it starts with. Read-only: the uses left are combat state, not part of the book. |
+| **Rider** | today the `rider` key of an attack, maneuvers only, and the `rider` effect kind (Eldritch Strike); `Combat::Rider` in phase 3.3 | An effect that rides along on an **attack**: chosen with the action or triggered by it, applied when the attack hits, on top of the attack's own damage. Today the Battle Master maneuvers (their die and, for Distracting Strike, the advantage mark) and Eldritch Strike (`kind: rider`, `on: weapon_hit`: the hit leaves disadvantage on the target's next save against the attacker's spells); later Divine Smite, Sneak Attack, Hunter's Mark. An attack can carry several. Agreed on 2026-10-18 as attack-only: whether something can ride on a spell or a feature is decided when the first such case arrives. |
+| **Action cost** | the `as` of a `grants_activity` (`action` \| `bonus_action` \| `reaction`, PHB terms) | What doing something takes from the turn's economy. Distinct from **Action** (the activity itself). Declared, not charged yet (issue #39). |
+| **Feature book** | `Combat::FeatureBook` | What a combatant knows how to do in a simulation: its unlocked features, which of them are actions, the ones the simulator runs by rules of its own (read by effect kind: Action Surge, War Magic, Eldritch Strike, Indomitable), whose uses each spends and the uses it starts with. Read-only: the uses left are combat state, not part of the book. |
+
+# Effect kinds
+
+Agreed on 2026-10-18 (phase 5.2 of the DDD refactor). A feature's mechanics
+are declared in its `effect_payload` by `kind`, from one finite vocabulary
+(`ClassFeatureUnlock::EFFECT_KINDS`, see
+[ClassFeatureUnlock](/models/class-feature-unlock.md)); the engine never reads a
+feature's name. Besides `heal`, `damage` and `modifier`:
+
+| Term | In code | Meaning |
+|---|---|---|
+| **Extra action** | `kind: extra_action` | One more action on the turn (Action Surge). |
+| **Grants activity** | `kind: grants_activity` | `count` activities (`activity: weapon_attack`) at an **action cost** (`as`) once the turn's action did something (`after: { cast_with_action: cantrip \| any_spell }`): War Magic, Improved War Magic. |
+| **Rider** (effect kind) | `kind: rider` | See **Rider** above: declared with `on`, `applies` and `against`. |
+| **Reroll save** | `kind: reroll_save` | Reroll a saving throw `when: failed` (Indomitable). |
+| **Resource pool** | `kind: resource_pool` | A shared pool of uses: every feature with the same `resource_name` spends it (Combat Superiority's superiority dice, paid by the maneuvers). |
 | **Turn record** | `Combat::TurnRecord` | One entry of a round's turns in the `round_log`: who acted, the action, its effects and the gambit behind it. |
 
 # Conditions, status and criteria

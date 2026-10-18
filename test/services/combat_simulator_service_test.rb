@@ -300,7 +300,8 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_nil service.send(:action_surge_turn, actor: actor, round_number: 1, turn_index: 2)
   end
 
-  test "Indomitable rerolls a failed saving throw against the fighter and consumes a use" do
+  test "Indomitable rerolls a failed saving throw against the fighter and consumes a use, whatever its name" do
+    class_features(:fighter_indomitable).update_columns(name: "Indomável") # found by its reroll_save kind
     fighter = player_characters(:fighter_indomitable_nine) # constitution: 12 (mod +1)
     attacker = player_characters(:barbarian_test_striker)
 

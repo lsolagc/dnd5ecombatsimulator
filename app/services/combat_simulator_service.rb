@@ -28,7 +28,7 @@ class CombatSimulatorService
     @rng = @seed.nil? ? Random.new : Random.new(@seed)
     @round_log = []
     @uses_remaining = {}
-    # Eldritch Strike pending marks: target.id => attacker.id, consumed by the first
+    # Eldritch Strike pending marks (a disadvantage_on_next_save rider): target.id => attacker.id, consumed by the first
     # saving throw the target rolls against a spell from that same attacker. No
     # turn/round tracking — see notes on the Eldritch Strike class feature (db/seeds.rb).
     @eldritch_strike_pending = {}
@@ -206,7 +206,7 @@ class CombatSimulatorService
 
     # Action Surge as a gambit action: unlocked and with a use left.
     def action_surge_action(actor:)
-      unlock = feature_book(actor).action_surge
+      unlock = feature_book(actor).unlock_with("extra_action")
       uses = unlock && @uses_remaining.dig(actor.id, unlock.class_feature_id)
       Combat::ActionOption.new(type: :action_surge, class_feature: unlock.class_feature, uses_remaining: uses) if uses.is_a?(Integer) && uses.positive?
     end
@@ -269,7 +269,7 @@ class CombatSimulatorService
     def action_surge_turn(actor:, round_number:, turn_index:)
       return nil if combat_over?
 
-      unlock = feature_book(actor).action_surge
+      unlock = feature_book(actor).unlock_with("extra_action")
       return nil unless unlock
 
       uses = @uses_remaining.dig(actor.id, unlock.class_feature_id)
@@ -283,21 +283,23 @@ class CombatSimulatorService
       execute_action(actor:, chosen_action:, round_number:, turn_index:).with(extra: true, gambit: RANDOM_GAMBIT)
     end
 
-    # War Magic / Improved War Magic: casting a spell as the turn's normal action grants
-    # ONE bonus weapon attack right after it (not the Attack action, so no Extra Attack). Not recursive
+    # War Magic / Improved War Magic (a grants_activity, Combat::FeatureBook#weapon_attacks_after): casting a
+    # spell as the turn's normal action grants its count (one) of bonus weapon attacks right after it (not the
+    # Attack action, so no Extra Attack). Not recursive
     # (a plain attack, via execute_attack_action, never triggers another one) and never fired from the
     # Action Surge extra action — only from the turn's normal chosen_action.
     # A gambit-driven actor aims it without @rng: the spell's target if it is a living enemy, else the
     # first living enemy in initiative order. The bonus entry carries the gambit of the spell's entry.
     def war_magic_turn(actor:, chosen_action:, round_number:, turn_index:)
-      return nil unless chosen_action.spell? && feature_book(actor).war_magic_for?(chosen_action.spell)
+      attacks = feature_book(actor).weapon_attacks_after(chosen_action.spell) if chosen_action.spell?
+      return nil unless attacks
 
       if chosen_action.chosen_by_gambit?
         spell_target = chosen_action.target
         focus = enemy_party_for(actor).include?(spell_target) && !spell_target.dead? ? spell_target : first_living_enemy(actor:)
       end
       gambit = chosen_action.chosen_by_gambit? ? gambit_log(chosen_action.gambit) : RANDOM_GAMBIT
-      execute_attack_action(actor:, round_number:, turn_index:, focus:, attacks: 1).with(bonus: true, gambit:)
+      execute_attack_action(actor:, round_number:, turn_index:, focus:, attacks:).with(bonus: true, gambit:)
     end
 
     def turn_passive_log(actor:, trigger:, round_number:, turn_index:)
@@ -391,7 +393,7 @@ class CombatSimulatorService
         hit = result.attack_roll.hit
         damage = result.roll_outcome.total
 
-        @eldritch_strike_pending[target.id] = actor.id if hit && feature_book(actor).eldritch_strike?
+        @eldritch_strike_pending[target.id] = actor.id if hit && feature_book(actor).rider?(on: "weapon_hit", applies: "disadvantage_on_next_save")
 
         rider = apply_maneuver_rider(actor:, target:, maneuver: pending_maneuver, crit: result.attack_roll.crit) if pending_maneuver && hit
         pending_maneuver = nil if rider
@@ -462,7 +464,7 @@ class CombatSimulatorService
         targets: target.nil? ? [] : [ target ]
       )
 
-      indomitable_unlock = target && feature_book(target).indomitable
+      indomitable_unlock = target && feature_book(target).unlock_with("reroll_save")
       reroll_saving_throw = indomitable_unlock && indomitable_available?(combatant: target, unlock: indomitable_unlock)
 
       results = Combat::ActionRunner.call(action:, reroll_saving_throw: !!reroll_saving_throw)

@@ -44,6 +44,30 @@ class CombatRegressionTest < ActiveSupport::TestCase
     end
   end
 
+  # The simulator runs these by the kind of their effect (ClassFeatureUnlock::EFFECT_KINDS), never by name:
+  # renamed, every seed replays its golden file once the new names are read back as the old ones.
+  RENAMED = {
+    "action-surge" => [ "Action Surge", "Surto de Ação" ],
+    "battle-master-combat-superiority" => [ "Combat Superiority", "Superioridade em Combate" ],
+    "eldritch-knight-war-magic" => [ "War Magic", "Magia de Guerra" ],
+    "eldritch-knight-improved-war-magic" => [ "Improved War Magic", "Magia de Guerra Aprimorada" ],
+    "eldritch-knight-eldritch-strike" => [ "Eldritch Strike", "Golpe Místico" ],
+    "indomitable" => [ "Indomitable", "Indomável" ]
+  }.freeze
+
+  test "a seed replays the same with the features the simulator runs by kind renamed" do
+    skip "write mode" if WRITE
+
+    RENAMED.each { |slug, (_, renamed)| assert_operator ClassFeature.where(slug:).update_all(name: renamed), :>=, 1, slug }
+
+    CombatRegression::COMPOSITIONS.each do |name, composition|
+      each_composition_seed(name, composition) do |seeded|
+        yaml = RENAMED.values.sort_by { |_, renamed| -renamed.size }.reduce(YAML.dump(seeded)) { |dump, (original, renamed)| dump.gsub(renamed, original) }
+        assert_equal File.read(CombatRegression.golden_path(name)), yaml, "#{name}: the simulation changed with the features renamed"
+      end
+    end
+  end
+
   test "no composition goes over its query ceiling per simulation" do
     counts = CombatRegression::COMPOSITIONS.to_h do |name, composition|
       [ name, CombatRegression.within(composition) { CombatRegression.queries_per_sim(composition) } ]

@@ -187,14 +187,16 @@ feature names.[^feature-book-rb] It is read-only and holds no counters:
 |---|---|
 | `unlocks` | the unlocks in force (`PlayerCharacter#feature_unlocks`) |
 | `action_payload(feature)` | the feature's action effect (`PlayerCharacter#action_payload`), nil when not unlocked, not an action at the level, or a maneuver the character has not learned |
-| `action_surge` / `indomitable` | the unlock in force, or nil |
-| `war_magic_for?(spell)` | War Magic's bonus (one weapon attack) follows this spell: a cantrip with War Magic, any spell with Improved War Magic |
-| `eldritch_strike?` | a hit leaves the Eldritch Strike mark |
-| `resource_feature_id(feature)` | whose uses the feature spends: Combat Superiority's for a maneuver, else its own |
+| `unlock_with(kind)` | the unlock in force of the feature whose effect is `extra_action` (Action Surge) or `reroll_save` (Indomitable), or nil |
+| `weapon_attacks_after(spell)` | how many bonus weapon attacks (a `grants_activity`'s `count`, one) follow this spell: `after.cast_with_action` `cantrip` (War Magic) only after a cantrip, `any_spell` (Improved War Magic) after any; nil for none |
+| `rider?(on:, applies:)` | a hit leaves the Eldritch Strike mark (`rider`, `on: weapon_hit`, `applies: disadvantage_on_next_save`) |
+| `resource_feature_id(feature)` | whose uses the feature spends: the `resource_pool`'s (Combat Superiority) for a maneuver, else its own |
 | `initial_uses` | `{ class_feature_id => uses }` at the start of combat (see Resource tracking) |
 
-The features it recognises by name are [ClassFeature](/models/class-feature.md)'s
-constants and predicates. The book delegates to the character's cached lookups;
+It recognises these features by the `kind` of their effect at the character's
+level (`PlayerCharacter#effect_payloads`; the vocabulary is
+[ClassFeatureUnlock](/models/class-feature-unlock.md)'s `EFFECT_KINDS`), never by
+name: renamed, every seed replays its golden file (phase 5.2). The book delegates to the character's cached lookups;
 its only state is the known-maneuver ids, read on the first maneuver it is asked
 about. No queries or RNG draws were added (golden files and query ceiling
 unchanged). It takes a `PlayerCharacter`; another kind of combatant gets its
