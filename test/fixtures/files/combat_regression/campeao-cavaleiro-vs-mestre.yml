@@ -26,45 +26,72 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 6
           :total: 12
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 10
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -77,45 +104,72 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 3
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -160,7 +214,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -179,42 +232,70 @@
             - 7
             :modifiers: {}
             :total: 7
-        :damage: 8
+        :amount: 8
         :hp_before: 36
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 19
           :total: 24
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 21
         :hp_after: 21
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 6
           :total: 11
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 6
+        :amount: 6
         :hp_before: 60
         :hp_after: 54
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 12
           :total: 17
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 6
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -228,31 +309,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 13
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 7
       :gambit: aleatório
     - :round: 1
       :turn: 3
@@ -336,7 +435,14 @@
           :dice:
           - 8d6
           :rolls:
-          - 26
+          - 6
+          - 2
+          - 2
+          - 6
+          - 2
+          - 2
+          - 1
+          - 5
           :modifiers: {}
           :total: 26
       :gambit: aleatório
@@ -352,45 +458,72 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 9
           :total: 14
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 12
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 60
         :hp_after: 53
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 14
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 13
+        :amount: 13
         :hp_before: 53
         :hp_after: 40
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 16
           :total: 21
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 13
       :gambit: aleatório
     - :round: 2
       :turn: 3
@@ -403,31 +536,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 23
         :hp_after: 23
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 12
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 23
         :hp_after: 23
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -442,49 +593,76 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 23
         :hp_after: 23
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 4
+        :amount: 4
         :hp_before: 23
         :hp_after: 19
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 19
         :hp_after: 19
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 4
           :total: 10
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 7
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -497,45 +675,72 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 8
+        :amount: 8
         :hp_before: 40
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 18
           :total: 23
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 36
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 17
           :total: 22
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 32
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 10
           :total: 15
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 6
       :gambit: aleatório
     - :round: 3
       :turn: 3
@@ -548,31 +753,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 6
+        :amount: 6
         :hp_before: 19
         :hp_after: 13
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 16
           :total: 22
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 13
         :hp_after: 13
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 7
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -620,17 +843,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 10
         :hp_after: 10
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 5
       :gambit: aleatório
       :bonus: true
     - :round: 4
@@ -644,45 +876,72 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 32
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 9
           :total: 14
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 32
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 10
           :total: 15
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 29
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 8
           :total: 13
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 11
       :gambit: aleatório
     - :round: 4
       :turn: 3
@@ -695,31 +954,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 10
         :hp_after: 10
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 10
         :hp_after: 10
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 6
           :total: 12
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 7
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -734,21 +1011,31 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 16
+        :amount: 10
         :hp_before: 10
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 2d8
+          :rolls:
+          - 7
+          - 1
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 20
           :total: 26
+          :armor_class: 19
+          :hit: true
           :crit: true
-          :damage: 16
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -807,45 +1094,72 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 3
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 5
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -862,7 +1176,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -881,42 +1194,70 @@
             - 8
             :modifiers: {}
             :total: 8
-        :damage: 9
+        :amount: 9
         :hp_before: 36
         :hp_after: 27
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 18
           :total: 23
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 6
           :total: 11
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 19
         :hp_after: 19
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 4
           :total: 9
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 10
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -929,45 +1270,72 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 19
         :hp_after: 19
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 5
           :total: 10
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 8
           :total: 13
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 5
+        :amount: 5
         :hp_before: 19
         :hp_after: 14
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 11
           :total: 16
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 5
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -1009,31 +1377,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 6
           :total: 12
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 12
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -1061,7 +1447,14 @@
           :dice:
           - 8d6
           :rolls:
-          - 28
+          - 4
+          - 2
+          - 3
+          - 1
+          - 5
+          - 5
+          - 3
+          - 5
           :modifiers: {}
           :total: 28
       :gambit: aleatório
@@ -1076,21 +1469,30 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 10
+        :amount: 10
         :hp_before: 22
         :hp_after: 12
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 10
       :gambit: aleatório
       :bonus: true
     - :round: 2
@@ -1138,45 +1540,72 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 13
+        :amount: 13
         :hp_before: 60
         :hp_after: 47
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 19
           :total: 24
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 13
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 12
+        :amount: 12
         :hp_before: 47
         :hp_after: 35
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 14
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 12
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 10
+        :amount: 10
         :hp_before: 14
         :hp_after: 4
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 18
           :total: 23
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 10
       :gambit: aleatório
     - :round: 2
       :turn: 3
@@ -1189,31 +1618,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 11
         :hp_after: 11
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 11
         :hp_after: 11
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 12
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -1231,18 +1678,23 @@
       :results:
       - :kind: :damage
         :applied: true
-        :amount: 12
+        :amount: 13
         :hp_before: 11
         :hp_after: 0
         :roll_outcome:
           :expression: 3d8
           :resolved_expression: 3d8
           :dice:
-          - 3d8
+          - 6d8
           :rolls:
-          - 12
+          - 1
+          - 4
+          - 1
+          - 3
+          - 3
+          - 1
           :modifiers: {}
-          :total: 12
+          :total: 13
         :attack_roll:
           :natural: 20
           :total: 29
@@ -1264,7 +1716,7 @@
   :outcome: :victory
 3:
   :winning_party: :party_one
-  :total_rounds: 1
+  :total_rounds: 3
   :initiative:
   - :actor_id: Campeão
     :natural: 11
@@ -1289,31 +1741,50 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
+        :amount: 12
         :hp_before: 36
-        :hp_after: 25
+        :hp_after: 24
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 3
+          - 4
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 20
           :total: 26
+          :armor_class: 19
+          :hit: true
           :crit: true
-          :damage: 11
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -1326,31 +1797,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 25
-        :hp_after: 25
-        :attack_roll:
-          :natural: 12
-          :total: 18
-          :crit: false
-          :damage: 7
-      - :kind: :attack
-        :target_id: Mestre de Batalha
-        :target_name: Mestre de Batalha
-        :success: false
-        :advantage: false
-        :riders: []
-        :damage: 0
-        :hp_before: 25
-        :hp_after: 25
+        :amount: 0
+        :hp_before: 24
+        :hp_after: 24
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 24
+        :hp_after: 24
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :armor_class: 19
+          :hit: false
+          :crit: false
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -1367,8 +1856,8 @@
       :results:
       - :kind: :heal
         :applied: true
-        :amount: 21
-        :hp_before: 25
+        :amount: 20
+        :hp_before: 24
         :hp_after: 36
         :roll_outcome:
           :expression: 1d10 + actor_level
@@ -1376,10 +1865,10 @@
           :dice:
           - 1d10
           :rolls:
-          - 6
+          - 5
           :modifiers:
             actor_level: 15
-          :total: 21
+          :total: 20
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -1395,21 +1884,6 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
-        :advantage: false
-        :riders: []
-        :damage: 0
-        :hp_before: 60
-        :hp_after: 60
-        :attack_roll:
-          :natural: 7
-          :total: 12
-          :crit: false
-          :damage: 4
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -1428,28 +1902,70 @@
             - 7
             :modifiers: {}
             :total: 7
-        :damage: 11
+        :amount: 11
         :hp_before: 60
         :hp_after: 49
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 13
           :total: 18
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 10
+        :amount: 10
         :hp_before: 42
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 18
           :total: 23
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 10
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 32
+        :hp_after: 32
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 6
+        :attack_roll:
+          :natural: 3
+          :total: 8
+          :armor_class: 17
+          :hit: false
+          :crit: false
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -1466,18 +1982,25 @@
       :results:
       - :kind: :damage
         :applied: true
-        :amount: 27
+        :amount: 29
         :hp_before: 36
-        :hp_after: 9
+        :hp_after: 7
         :roll_outcome:
           :expression: 8d6
           :resolved_expression: 8d6
           :dice:
           - 8d6
           :rolls:
-          - 27
+          - 5
+          - 2
+          - 4
+          - 3
+          - 6
+          - 1
+          - 2
+          - 6
           :modifiers: {}
-          :total: 27
+          :total: 29
       :gambit: aleatório
     - :round: 1
       :turn: 3
@@ -1490,17 +2013,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 9
-        :hp_after: 9
+        :amount: 0
+        :hp_before: 7
+        :hp_after: 7
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
-          :natural: 2
-          :total: 8
+          :natural: 8
+          :total: 14
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
       :bonus: true
     - :round: 1
@@ -1517,26 +2049,472 @@
       :results:
       - :kind: :damage
         :applied: true
-        :amount: 9
-        :hp_before: 9
-        :hp_after: 0
+        :amount: 2
+        :hp_before: 7
+        :hp_after: 5
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
           :dice:
           - 1d10
           :rolls:
-          - 9
+          - 2
           :modifiers: {}
-          :total: 9
+          :total: 2
         :attack_roll:
-          :natural: 11
-          :total: 20
+          :natural: 12
+          :total: 21
           :armor_class: 19
           :hit: true
           :crit: false
       :gambit: aleatório
       :extra: true
+  - :round: 2
+    :turns:
+    - :round: 2
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_one
+      :action:
+        :type: :class_feature
+        :feature_id: second-wind
+        :feature_slug: second-wind
+        :feature_name: Second Wind
+        :target_type: self
+      :results:
+      - :kind: :heal
+        :applied: true
+        :amount: 6
+        :hp_before: 32
+        :hp_after: 38
+        :roll_outcome:
+          :expression: 1d10 + actor_level
+          :resolved_expression: 1d10+5
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers:
+            actor_level: 5
+          :total: 6
+      :gambit: aleatório
+    - :round: 2
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 36
+        :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
+        :attack_roll:
+          :natural: 6
+          :total: 11
+          :armor_class: 16
+          :hit: false
+          :crit: false
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :advantage: false
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
+          :kind: :damage
+          :applied: true
+          :amount: 8
+          :hp_before: 29
+          :hp_after: 21
+          :roll_outcome:
+            :expression: 1d8
+            :resolved_expression: 1d8
+            :dice:
+            - 1d8
+            :rolls:
+            - 8
+            :modifiers: {}
+            :total: 8
+        :amount: 9
+        :hp_before: 38
+        :hp_after: 29
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 9
+        :attack_roll:
+          :natural: 18
+          :total: 23
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :advantage: false
+        :riders: []
+        :amount: 8
+        :hp_before: 36
+        :hp_after: 28
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
+        :attack_roll:
+          :natural: 15
+          :total: 20
+          :armor_class: 16
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 2
+      :turn: 3
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 5
+        :hp_after: 5
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 5
+        :hp_after: 5
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 5
+        :hp_after: 5
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
+        :attack_roll:
+          :natural: 6
+          :total: 12
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+    - :round: 2
+      :turn: 3
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: chromatic-orb
+        :spell_slug: chromatic-orb
+        :spell_name: Chromatic Orb
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: false
+        :amount: 0
+        :hp_before: 5
+        :hp_after: 5
+        :roll_outcome:
+          :expression: 3d8
+          :resolved_expression: 3d8
+          :dice:
+          - 3d8
+          :rolls:
+          - 6
+          - 6
+          - 7
+          :modifiers: {}
+          :total: 19
+        :attack_roll:
+          :natural: 8
+          :total: 17
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+      :extra: true
+  - :round: 3
+    :turns:
+    - :round: 3
+      :turn: 1
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 5
+        :hp_after: 5
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 5
+        :hp_after: 5
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
+        :attack_roll:
+          :natural: 2
+          :total: 8
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+    - :round: 3
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :advantage: false
+        :riders: []
+        :amount: 8
+        :hp_before: 28
+        :hp_after: 20
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
+        :attack_roll:
+          :natural: 11
+          :total: 16
+          :armor_class: 16
+          :hit: true
+          :crit: false
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 20
+        :hp_after: 20
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
+        :attack_roll:
+          :natural: 4
+          :total: 9
+          :armor_class: 16
+          :hit: false
+          :crit: false
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :advantage: false
+        :riders: []
+        :amount: 4
+        :hp_before: 21
+        :hp_after: 17
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
+        :attack_roll:
+          :natural: 17
+          :total: 22
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 3
+      :turn: 3
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :cast_spell
+        :spell_id: ray-of-frost
+        :spell_slug: ray-of-frost
+        :spell_name: Ray of Frost
+        :target_type: enemy
+      :results:
+      - :kind: :damage
+        :applied: true
+        :amount: 3
+        :hp_before: 5
+        :hp_after: 2
+        :roll_outcome:
+          :expression: 1d8
+          :resolved_expression: 1d8
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 3
+        :attack_roll:
+          :natural: 17
+          :total: 26
+          :armor_class: 19
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+    - :round: 3
+      :turn: 3
+      :actor_id: Cavaleiro Arcano
+      :actor_name: Cavaleiro Arcano
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :advantage: false
+        :riders:
+        - :feature_slug: eldritch-knight-eldritch-strike
+          :feature_name: Eldritch Strike
+          :statuses:
+          - disadvantage_on_next_save
+        :amount: 6
+        :hp_before: 2
+        :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :armor_class: 19
+          :hit: true
+          :crit: false
+      :gambit: aleatório
+      :bonus: true
   :draw: false
   :outcome: :victory
 4:
@@ -1566,31 +2544,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 13
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -1603,31 +2599,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 11
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -1674,21 +2688,30 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 7
+        :amount: 7
         :hp_before: 36
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
       :bonus: true
     - :round: 1
@@ -1702,45 +2725,72 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 29
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 29
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 29
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 4
           :total: 10
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 3
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -1754,45 +2804,72 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 10
           :total: 15
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 7
           :total: 12
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 12
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 3
           :total: 8
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
     - :round: 1
       :turn: 3
@@ -1805,45 +2882,72 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 9
           :total: 14
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 3
           :total: 8
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 1
           :total: 6
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 12
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -1887,49 +2991,76 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 29
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 29
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 3
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 7
+        :amount: 7
         :hp_before: 29
         :hp_after: 22
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -1954,7 +3085,9 @@
           :dice:
           - 3d8
           :rolls:
-          - 15
+          - 3
+          - 4
+          - 8
           :modifiers: {}
           :total: 15
         :attack_roll:
@@ -1979,21 +3112,29 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 3
           :total: 8
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 13
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -2012,28 +3153,47 @@
             - 1
             :modifiers: {}
             :total: 1
-        :damage: 5
+        :amount: 5
         :hp_before: 60
         :hp_after: 55
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 19
           :total: 24
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 13
+        :amount: 13
         :hp_before: 54
         :hp_after: 41
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 18
           :total: 23
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 13
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -2048,31 +3208,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 22
         :hp_after: 22
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 10
+        :amount: 10
         :hp_before: 22
         :hp_after: 12
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 10
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -2097,7 +3275,14 @@
           :dice:
           - 8d6
           :rolls:
-          - 26
+          - 3
+          - 4
+          - 4
+          - 1
+          - 3
+          - 6
+          - 3
+          - 2
           :modifiers: {}
           :total: 26
       :gambit: aleatório
@@ -2168,49 +3353,76 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 4
+        :amount: 4
         :hp_before: 36
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 32
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 32
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -2252,45 +3464,72 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
+        :amount: 11
         :hp_before: 60
         :hp_after: 49
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 17
           :total: 22
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 5
+        :amount: 5
         :hp_before: 36
         :hp_after: 31
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 13
           :total: 18
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 49
         :hp_after: 49
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 8
           :total: 13
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 4
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -2332,31 +3571,50 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 12
+        :amount: 12
         :hp_before: 36
         :hp_after: 24
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 16
           :total: 22
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 12
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 19
+        :amount: 14
         :hp_before: 24
-        :hp_after: 5
+        :hp_after: 10
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 7
+          - 2
+          :modifiers: {}
+          :total: 14
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 19
+          :hit: true
           :crit: true
-          :damage: 19
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -2372,45 +3630,72 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 5
-        :hp_after: 5
+        :amount: 0
+        :hp_before: 10
+        :hp_after: 10
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 5
-        :hp_after: 5
+        :amount: 0
+        :hp_before: 10
+        :hp_after: 10
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 5
-        :hp_after: 5
+        :amount: 0
+        :hp_before: 10
+        :hp_after: 10
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 5
       :gambit: aleatório
     - :round: 2
       :turn: 1
@@ -2423,37 +3708,215 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 5
-        :hp_after: 5
+        :amount: 0
+        :hp_before: 10
+        :hp_after: 10
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 3
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 8
-        :hp_before: 5
-        :hp_after: 0
+        :amount: 8
+        :hp_before: 10
+        :hp_after: 2
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 15
           :total: 21
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 8
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 2
+        :hp_after: 2
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
+        :attack_roll:
+          :natural: 1
+          :total: 7
+          :armor_class: 19
+          :hit: false
+          :crit: false
       :gambit: aleatório
       :extra: true
+    - :round: 2
+      :turn: 2
+      :actor_id: Mestre de Batalha
+      :actor_name: Mestre de Batalha
+      :actor_party: :party_two
+      :action:
+        :type: :attack
+        :riders:
+        - :feature_slug: battle-master-maneuver-precision-attack
+          :feature_name: 'Maneuver: Precision Attack'
+      :results:
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 56
+        :hp_after: 56
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
+        :attack_roll:
+          :natural: 5
+          :total: 10
+          :armor_class: 17
+          :hit: false
+          :crit: false
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 31
+        :hp_after: 31
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 7
+        :attack_roll:
+          :natural: 10
+          :total: 15
+          :armor_class: 16
+          :hit: false
+          :crit: false
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 31
+        :hp_after: 31
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
+        :attack_roll:
+          :natural: 3
+          :total: 8
+          :armor_class: 16
+          :hit: false
+          :crit: false
+      :gambit: aleatório
+    - :round: 2
+      :turn: 3
+      :actor_id: Campeão
+      :actor_name: Campeão
+      :actor_party: :party_one
+      :action:
+        :type: :attack
+      :results:
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 2
+        :hp_after: 2
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
+        :attack_roll:
+          :natural: 7
+          :total: 13
+          :armor_class: 19
+          :hit: false
+          :crit: false
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :advantage: false
+        :riders: []
+        :amount: 12
+        :hp_before: 2
+        :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 4
+          - 3
+          :modifiers: {}
+          :total: 12
+        :attack_roll:
+          :natural: 20
+          :total: 26
+          :armor_class: 19
+          :hit: true
+          :crit: true
+      :gambit: aleatório
   :draw: false
   :outcome: :victory
 6:
@@ -2483,31 +3946,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 8
+        :amount: 8
         :hp_before: 36
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 16
           :total: 22
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -2549,53 +4030,80 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 28
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 4
+        :amount: 4
         :hp_before: 28
         :hp_after: 24
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 4
+        :amount: 4
         :hp_before: 24
         :hp_after: 20
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 16
           :total: 22
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 4
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -2620,7 +4128,14 @@
           :dice:
           - 8d6
           :rolls:
-          - 30
+          - 5
+          - 5
+          - 2
+          - 1
+          - 3
+          - 5
+          - 5
+          - 4
           :modifiers: {}
           :total: 30
       :gambit: aleatório
@@ -2682,31 +4197,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 13
+        :amount: 13
         :hp_before: 36
         :hp_after: 23
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 15
           :total: 21
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 13
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -2720,49 +4253,76 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 23
         :hp_after: 23
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 5
+        :amount: 5
         :hp_before: 23
         :hp_after: 18
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 15
           :total: 21
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 18
         :hp_after: 18
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 10
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -2809,45 +4369,72 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
+        :amount: 11
         :hp_before: 36
         :hp_after: 25
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 17
           :total: 22
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 4
+        :amount: 4
         :hp_before: 60
         :hp_after: 56
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 13
           :total: 18
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
+        :amount: 11
         :hp_before: 25
         :hp_after: 14
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 12
           :total: 17
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 11
       :gambit: aleatório
     - :round: 1
       :turn: 3
@@ -2860,45 +4447,72 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 14
         :hp_after: 14
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 7
           :total: 12
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 9
+        :amount: 9
         :hp_before: 56
         :hp_after: 47
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 13
           :total: 18
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 4
+        :amount: 4
         :hp_before: 47
         :hp_after: 43
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 17
           :total: 22
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 4
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -2914,31 +4528,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 18
         :hp_after: 18
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 3
           :total: 9
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 18
         :hp_after: 18
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 12
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -2991,7 +4623,14 @@
           :dice:
           - 8d6
           :rolls:
-          - 23
+          - 5
+          - 2
+          - 4
+          - 4
+          - 1
+          - 4
+          - 1
+          - 2
           :modifiers: {}
           :total: 23
       :gambit: aleatório
@@ -3058,17 +4697,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
       :gambit: aleatório
       :bonus: true
     - :round: 1
@@ -3139,45 +4787,72 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 9
+        :amount: 9
         :hp_before: 60
         :hp_after: 51
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 14
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 36
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 18
           :total: 23
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 51
         :hp_after: 51
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 11
           :total: 16
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 13
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -3219,31 +4894,50 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 19
+        :amount: 19
         :hp_before: 36
         :hp_after: 17
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 7
+          - 7
+          :modifiers: {}
+          :total: 19
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 19
+          :hit: true
           :crit: true
-          :damage: 19
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 17
         :hp_after: 17
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
-          :natural: 7
-          :total: 13
+          :natural: 10
+          :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 11
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -3259,45 +4953,72 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 17
         :hp_after: 17
-        :attack_roll:
-          :natural: 10
-          :total: 16
-          :crit: false
-          :damage: 6
-      - :kind: :attack
-        :target_id: Mestre de Batalha
-        :target_name: Mestre de Batalha
-        :success: false
-        :advantage: false
-        :riders: []
-        :damage: 0
-        :hp_before: 17
-        :hp_after: 17
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 17
         :hp_after: 17
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
+      - :kind: :attack
+        :target_id: Mestre de Batalha
+        :target_name: Mestre de Batalha
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 17
+        :hp_after: 17
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
+        :attack_roll:
+          :natural: 11
+          :total: 17
+          :armor_class: 19
+          :hit: false
+          :crit: false
       :gambit: aleatório
     - :round: 2
       :turn: 1
@@ -3313,7 +5034,7 @@
       :results:
       - :kind: :damage
         :applied: true
-        :amount: 27
+        :amount: 31
         :hp_before: 17
         :hp_after: 0
         :roll_outcome:
@@ -3322,9 +5043,16 @@
           :dice:
           - 8d6
           :rolls:
-          - 27
+          - 3
+          - 3
+          - 2
+          - 6
+          - 6
+          - 2
+          - 4
+          - 5
           :modifiers: {}
-          :total: 27
+          :total: 31
       :gambit: aleatório
       :extra: true
   :draw: false
@@ -3359,21 +5087,29 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 2
           :total: 7
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -3392,28 +5128,47 @@
             - 3
             :modifiers: {}
             :total: 3
-        :damage: 12
+        :amount: 12
         :hp_before: 60
         :hp_after: 48
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 15
           :total: 20
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 12
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 12
+        :amount: 12
         :hp_before: 36
         :hp_after: 24
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 11
           :total: 16
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 12
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -3429,7 +5184,6 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -3448,42 +5202,70 @@
             - 7
             :modifiers: {}
             :total: 7
-        :damage: 6
+        :amount: 6
         :hp_before: 45
         :hp_after: 39
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 13
           :total: 18
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 24
         :hp_after: 24
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 2
           :total: 7
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 12
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 32
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 4
           :total: 9
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -3497,53 +5279,81 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 16
+        :amount: 17
         :hp_before: 36
-        :hp_after: 20
+        :hp_after: 19
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 2d8
+          :rolls:
+          - 7
+          - 8
+          :modifiers: {}
+          :total: 17
         :attack_roll:
           :natural: 20
           :total: 26
+          :armor_class: 19
+          :hit: true
           :crit: true
-          :damage: 16
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 20
-        :hp_after: 20
+        :amount: 0
+        :hp_before: 19
+        :hp_after: 19
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 3
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 10
-        :hp_before: 20
-        :hp_after: 10
+        :amount: 10
+        :hp_before: 19
+        :hp_after: 9
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 10
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -3560,15 +5370,17 @@
       - :kind: :damage
         :applied: false
         :amount: 0
-        :hp_before: 10
-        :hp_after: 10
+        :hp_before: 9
+        :hp_after: 9
         :roll_outcome:
           :expression: 3d8
           :resolved_expression: 3d8
           :dice:
           - 3d8
           :rolls:
-          - 13
+          - 6
+          - 4
+          - 3
           :modifiers: {}
           :total: 13
         :attack_roll:
@@ -3618,17 +5430,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
-        :hp_before: 10
+        :amount: 11
+        :hp_before: 9
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 11
       :gambit: aleatório
       :extra: true
   :draw: false
@@ -3691,7 +5512,6 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -3710,42 +5530,70 @@
             - 6
             :modifiers: {}
             :total: 6
-        :damage: 13
+        :amount: 13
         :hp_before: 60
         :hp_after: 47
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 18
           :total: 23
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 13
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 5
+        :amount: 5
         :hp_before: 36
         :hp_after: 31
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 17
           :total: 22
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 41
         :hp_after: 41
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 9
           :total: 14
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 13
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -3787,31 +5635,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -3858,21 +5724,30 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 6
+        :amount: 6
         :hp_before: 31
         :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 16
           :total: 22
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 6
       :gambit: aleatório
       :bonus: true
     - :round: 1
@@ -3898,7 +5773,14 @@
           :dice:
           - 8d6
           :rolls:
-          - 22
+          - 1
+          - 4
+          - 3
+          - 2
+          - 1
+          - 5
+          - 2
+          - 4
           :modifiers: {}
           :total: 22
       :gambit: aleatório
@@ -3916,45 +5798,72 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 31
         :hp_after: 24
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 14
           :total: 19
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 10
+        :amount: 10
         :hp_before: 24
         :hp_after: 14
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 14
           :total: 19
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 5
+        :amount: 5
         :hp_before: 47
         :hp_after: 42
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 13
           :total: 18
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 5
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -3967,31 +5876,50 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 3
         :hp_after: 3
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 17
+        :amount: 17
         :hp_before: 3
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 6
+          - 6
+          :modifiers: {}
+          :total: 17
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 19
+          :hit: true
           :crit: true
-          :damage: 17
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -4022,53 +5950,80 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 4
+        :amount: 4
         :hp_before: 36
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 32
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 7
+        :amount: 7
         :hp_before: 32
         :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -4143,31 +6098,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 10
+        :amount: 10
         :hp_before: 19
         :hp_after: 9
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 9
         :hp_after: 9
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -4209,45 +6182,72 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 9
+        :amount: 9
         :hp_before: 36
         :hp_after: 27
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 11
           :total: 16
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 27
         :hp_after: 27
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 8
           :total: 13
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 12
+        :amount: 12
         :hp_before: 60
         :hp_after: 48
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 18
           :total: 23
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 12
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -4263,53 +6263,80 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 6
+        :amount: 6
         :hp_before: 26
         :hp_after: 20
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 20
         :hp_after: 20
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 5
+        :amount: 5
         :hp_before: 20
         :hp_after: 15
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 5
       :gambit: aleatório
     - :round: 2
       :turn: 1
@@ -4322,49 +6349,76 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 15
         :hp_after: 15
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 3
+        :amount: 3
         :hp_before: 15
         :hp_after: 12
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 16
           :total: 22
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 3
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 12
         :hp_after: 12
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 4
       :gambit: aleatório
       :extra: true
     - :round: 2
@@ -4378,31 +6432,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 12
         :hp_after: 12
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
+        :amount: 11
         :hp_before: 12
         :hp_after: 1
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 11
       :gambit: aleatório
     - :round: 2
       :turn: 3
@@ -4418,7 +6490,6 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -4437,42 +6508,70 @@
             - 8
             :modifiers: {}
             :total: 8
-        :damage: 11
+        :amount: 11
         :hp_before: 48
         :hp_after: 37
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 15
           :total: 20
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 4
+        :amount: 4
         :hp_before: 27
         :hp_after: 23
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 16
           :total: 21
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 29
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 9
           :total: 14
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 4
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -4499,7 +6598,9 @@
           :dice:
           - 3d8
           :rolls:
-          - 17
+          - 6
+          - 8
+          - 3
           :modifiers: {}
           :total: 17
         :attack_roll:
@@ -4520,17 +6621,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 1
         :hp_after: 1
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 4
           :total: 10
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
       :gambit: aleatório
       :bonus: true
     - :round: 3
@@ -4544,31 +6654,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 1
         :hp_after: 1
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 1
         :hp_after: 1
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 4
           :total: 10
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
       :gambit: aleatório
     - :round: 3
       :turn: 3
@@ -4581,45 +6709,72 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 8
+        :amount: 8
         :hp_before: 23
         :hp_after: 15
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 18
           :total: 23
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 29
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 9
           :total: 14
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 15
         :hp_after: 15
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 1
           :total: 6
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 7
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -4667,17 +6822,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 1
         :hp_after: 1
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 5
       :gambit: aleatório
       :bonus: true
     - :round: 4
@@ -4691,17 +6855,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 8
+        :amount: 8
         :hp_before: 1
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 8
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -4735,35 +6908,52 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 3
           :total: 8
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 4
           :total: 9
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -4782,14 +6972,24 @@
             - 6
             :modifiers: {}
             :total: 6
-        :damage: 8
+        :amount: 8
         :hp_before: 60
         :hp_after: 52
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 18
           :total: 23
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -4802,45 +7002,72 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 13
+        :amount: 13
         :hp_before: 46
         :hp_after: 33
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 14
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 13
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 33
         :hp_after: 33
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 3
           :total: 8
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 4
+        :amount: 4
         :hp_before: 36
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 11
           :total: 16
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 4
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -4854,31 +7081,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 8
+        :amount: 8
         :hp_before: 36
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -4920,45 +7165,72 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 28
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 4
           :total: 10
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 28
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 28
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
     - :round: 1
       :turn: 3
@@ -5010,7 +7282,6 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -5029,42 +7300,70 @@
             - 5
             :modifiers: {}
             :total: 5
-        :damage: 4
+        :amount: 4
         :hp_before: 48
         :hp_after: 44
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 19
           :total: 24
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 39
         :hp_after: 39
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 7
           :total: 12
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 13
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 4
+        :amount: 4
         :hp_before: 32
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 14
           :total: 19
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 4
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -5077,31 +7376,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 28
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 12
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 28
         :hp_after: 21
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 16
           :total: 22
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
     - :round: 2
       :turn: 3
@@ -5147,17 +7464,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 21
         :hp_after: 21
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 3
       :gambit: aleatório
       :bonus: true
     - :round: 2
@@ -5235,31 +7561,50 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 15
+        :amount: 16
         :hp_before: 36
-        :hp_after: 21
+        :hp_after: 20
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 5
+          - 6
+          :modifiers: {}
+          :total: 16
         :attack_roll:
           :natural: 20
           :total: 26
+          :armor_class: 19
+          :hit: true
           :crit: true
-          :damage: 15
       :gambit: aleatório
     - :round: 3
       :turn: 3
@@ -5276,8 +7621,8 @@
       - :kind: :damage
         :applied: true
         :amount: 6
-        :hp_before: 21
-        :hp_after: 15
+        :hp_before: 20
+        :hp_after: 14
         :roll_outcome:
           :expression: 1d10
           :resolved_expression: 1d10
@@ -5305,17 +7650,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 15
-        :hp_after: 15
+        :amount: 0
+        :hp_before: 14
+        :hp_after: 14
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 10
       :gambit: aleatório
       :bonus: true
   - :round: 4
@@ -5334,45 +7688,72 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 28
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 1
           :total: 6
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 39
         :hp_after: 39
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 7
           :total: 12
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 28
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 3
           :total: 8
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -5385,31 +7766,49 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 15
-        :hp_after: 15
+        :amount: 0
+        :hp_before: 14
+        :hp_after: 14
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 4
           :total: 10
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 15
-        :hp_after: 15
+        :amount: 0
+        :hp_before: 14
+        :hp_after: 14
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 11
       :gambit: aleatório
     - :round: 4
       :turn: 3
@@ -5422,49 +7821,77 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 15
-        :hp_after: 15
+        :amount: 0
+        :hp_before: 14
+        :hp_after: 14
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 15
-        :hp_after: 15
+        :amount: 0
+        :hp_before: 14
+        :hp_after: 14
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 14
-        :hp_before: 15
-        :hp_after: 1
+        :amount: 12
+        :hp_before: 14
+        :hp_after: 2
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 2d8
+          :rolls:
+          - 6
+          - 4
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 20
           :total: 26
+          :armor_class: 19
+          :hit: true
           :crit: true
-          :damage: 14
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -5479,45 +7906,72 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 4
+        :amount: 0
         :hp_before: 39
-        :hp_after: 35
+        :hp_after: 39
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 6
         :attack_roll:
-          :natural: 12
-          :total: 17
+          :natural: 1
+          :total: 6
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 6
-        :hp_before: 35
+        :amount: 10
+        :hp_before: 39
         :hp_after: 29
-        :attack_roll:
-          :natural: 12
-          :total: 17
-          :crit: false
-          :damage: 6
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :riders: []
-        :damage: 10
-        :hp_before: 29
-        :hp_after: 19
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 14
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 10
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 29
+        :hp_after: 29
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 6
+        :attack_roll:
+          :natural: 7
+          :total: 12
+          :armor_class: 17
+          :hit: false
+          :crit: false
       :gambit: aleatório
     - :round: 5
       :turn: 2
@@ -5530,31 +7984,27 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 1
-        :hp_after: 1
-        :attack_roll:
-          :natural: 7
-          :total: 13
-          :crit: false
-          :damage: 8
-      - :kind: :attack
-        :target_id: Mestre de Batalha
-        :target_name: Mestre de Batalha
-        :success: true
-        :advantage: false
-        :riders: []
-        :damage: 11
-        :hp_before: 1
+        :amount: 15
+        :hp_before: 2
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 3
+          - 7
+          :modifiers: {}
+          :total: 15
         :attack_roll:
           :natural: 20
           :total: 26
+          :armor_class: 19
+          :hit: true
           :crit: true
-          :damage: 11
       :gambit: aleatório
   :draw: false
   :outcome: :victory

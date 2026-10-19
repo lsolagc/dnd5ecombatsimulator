@@ -7,7 +7,25 @@ class SimulationBatch < ApplicationRecord
   DICE_FORMAT = /\A[1-9]\d*d[1-9]\d*\z/
   # Parallel workers can finish many simulations a second: push progress at most this often.
   PROGRESS_BROADCAST_INTERVAL = 0.2.seconds
-  SIMULATION_LOG_KEYS = %w[ outcome winning_party total_rounds draw initiative round_log ].freeze
+  # The order of a simulation's keys in the download, nested: key => the order of its value's keys (an array's
+  # items each), nil to keep the value as stored. Below the top, the order CombatSimulatorService builds them in
+  # (Combat::TurnRecord, the attack and effect entries, Combat::Rider); one list serves every kind of an entry
+  # (a weapon attack, an effect; each action type), each kind keeping its own keys' relative order.
+  ROLL_OUTCOME_LOG_ORDER = %w[ expression resolved_expression dice rolls modifiers total ].index_with(nil).freeze
+  ATTACK_ROLL_LOG_ORDER = Combat::EffectExecutor::AttackRoll.members.map(&:to_s).index_with(nil).freeze
+  EFFECT_LOG_ORDER = %w[ kind applied amount hp_before hp_after roll_outcome attack_roll ].index_with(nil)
+    .merge("roll_outcome" => ROLL_OUTCOME_LOG_ORDER, "attack_roll" => ATTACK_ROLL_LOG_ORDER).freeze
+  RIDER_LOG_ORDER = { "feature_slug" => nil, "feature_name" => nil, **EFFECT_LOG_ORDER, "statuses" => nil }.freeze
+  RESULT_LOG_ORDER = { "kind" => nil, "target_id" => nil, "target_name" => nil, "advantage" => nil, "riders" => RIDER_LOG_ORDER,
+                       **EFFECT_LOG_ORDER.except("kind") }.freeze
+  ACTION_LOG_ORDER = %w[ type riders trigger feature_id feature_slug feature_name spell_id spell_slug spell_name target_type ]
+    .index_with(nil).merge("riders" => RIDER_LOG_ORDER).freeze
+  TURN_LOG_ORDER = Combat::TurnRecord.members.map(&:to_s).index_with(nil)
+    .merge("action" => ACTION_LOG_ORDER, "results" => RESULT_LOG_ORDER, "gambit" => %w[ position rule ].index_with(nil)).freeze
+  SIMULATION_LOG_ORDER = {
+    "outcome" => nil, "winning_party" => nil, "total_rounds" => nil, "draw" => nil,
+    "initiative" => %w[ actor_id natural total ].index_with(nil), "round_log" => { "round" => nil, "turns" => TURN_LOG_ORDER }
+  }.freeze
 
   has_many :simulation_runs, -> { order(:id) }
 
@@ -149,7 +167,8 @@ class SimulationBatch < ApplicationRecord
 
   # The download: one pretty JSON with the batch's setup (each combatant's name, settings and gambits as
   # frozen at creation) in a header, then every simulation in order. jsonb doesn't keep key order, so the
-  # hashes are rebuilt here in reading order; keys an older run still carries go after the known ones.
+  # hashes are rebuilt here in reading order (SIMULATION_LOG_ORDER, down to every turn); keys an older run still
+  # carries go after the known ones.
   def logs_json
     parties = { "party_one" => party_one_ids, "party_two" => party_two_ids }.transform_values do |ids|
       ids.map do |id|
@@ -159,8 +178,7 @@ class SimulationBatch < ApplicationRecord
       end
     end
     simulations = simulation_runs.map.with_index(1) do |run, index|
-      { "simulation" => index, "seed" => run.seed, "elapsed_ms" => run.elapsed_ms }
-        .merge(run.result.slice(*SIMULATION_LOG_KEYS), run.result.except(*SIMULATION_LOG_KEYS))
+      { "simulation" => index, "seed" => run.seed, "elapsed_ms" => run.elapsed_ms }.merge(in_log_order(run.result, SIMULATION_LOG_ORDER))
     end
 
     JSON.pretty_generate(
@@ -171,6 +189,18 @@ class SimulationBatch < ApplicationRecord
   end
 
   private
+
+    # value with its hashes' keys in order's order (see SIMULATION_LOG_ORDER), unknown keys last.
+    def in_log_order(value, order)
+      case value
+      when Array then value.map { |item| in_log_order(item, order) }
+      when Hash
+        return value unless order
+
+        ((order.keys & value.keys) + (value.keys - order.keys)).index_with { |key| in_log_order(value[key], order[key]) }
+      else value
+      end
+    end
 
     def claim_progress_broadcast
       SimulationBatch.where(id:)

@@ -384,11 +384,8 @@ class CombatSimulatorService
       action = Combat::CombatAction.new(source_type: :attack, source_id: nil, actor:)
 
       Combat::ActionRunner.attack(action:, next_target:, attacks:, advantage_against: ->(target) { consume_advantage_mark(target:, attacker: actor) }) do |target, result, advantage|
-        hit = result.attack_roll.hit
-        damage = result.roll_outcome.total
-
         riders = []
-        if hit
+        if result.attack_roll.hit
           eldritch_strike = actor.feature_book.rider(event: "weapon_hit", applies: "disadvantage_on_next_save")
           if eldritch_strike
             @eldritch_strike_pending[target.id] = actor.id
@@ -400,23 +397,10 @@ class CombatSimulatorService
           end
         end
 
-        entries << {
-          kind: :attack,
-          target_id: target.id,
-          target_name: target.name,
-          success: hit,
-          advantage: advantage,
-          riders: riders.map(&:to_h),
-          damage: hit ? damage : 0,
-          hp_before: result.hp_before,
-          hp_after: result.hp_after,
-          attack_roll: {
-            natural: result.attack_roll.natural,
-            total: result.attack_roll.total,
-            crit: result.attack_roll.crit,
-            damage: damage
-          }
-        }
+        # The weapon's damage logs like any effect (amount, hp, roll_outcome, attack_roll); applied is left
+        # out, the same as the attack roll's hit.
+        effect = serialize_effect_results(results: [ result ]).first.except(:kind, :applied)
+        entries << { kind: :attack, target_id: target.id, target_name: target.name, advantage:, riders: riders.map(&:to_h), **effect }
       end
 
       turn_record(actor:, round_number:, turn_index:, action: { type: :attack, riders: maneuver && [ Combat::Rider.for(feature: maneuver.class_feature).to_h ] }.compact, results: entries)

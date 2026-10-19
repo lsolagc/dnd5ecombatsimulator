@@ -160,8 +160,29 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert attacks.any?
     attacks.each do |attack|
       assert_operator attack[:hp_after], :<=, attack[:hp_before]
-      assert_equal attack[:hp_before], attack[:hp_after] unless attack[:success]
+      assert_equal attack[:hp_before], attack[:hp_after] unless attack.dig(:attack_roll, :hit)
     end
+  end
+
+  test "weapon and spell attacks log the same attack_roll, against the target's effective AC" do
+    fire_bolt = spells(:fire_bolt)
+    fire_bolt.update!(effect_payload: fire_bolt.effect_payload.merge("attack" => "spell"))
+    caster = spellcaster_with_known_spells(:eldritch_knight_seven)
+    defender = player_characters(:fighter_defender) # Fighting Style: Defense, +1 AC
+    service = simulator(party_one: [ caster ], party_two: [ defender ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+    actor = participant_of(service, caster)
+    cast = service.send(:available_actions_for, actor:).find { |action| action.spell&.slug == "fire-bolt" }
+
+    spell = service.send(:execute_cast_spell_action, actor:, chosen_action: cast, round_number: 1, turn_index: 1).results.sole
+    weapon = service.send(:execute_attack_action, actor:, round_number: 1, turn_index: 1, attacks: 1).results.sole
+
+    [ weapon, spell ].each do |entry|
+      assert_equal %i[ natural total armor_class hit crit ], entry[:attack_roll].keys
+      assert_equal defender.combatant.armor_class + 1, entry.dig(:attack_roll, :armor_class)
+    end
+    assert_equal %i[ kind target_id target_name advantage riders amount hp_before hp_after roll_outcome attack_roll ], weapon.keys
+    assert_equal weapon[:hp_before] - weapon[:hp_after], weapon.dig(:attack_roll, :hit) ? weapon[:amount] : 0
   end
 
   test "loads each combatant's unlocked features once per simulation, not on every turn" do
@@ -241,7 +262,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     precision = { feature_slug: "battle-master-maneuver-precision-attack", feature_name: "Maneuver: Precision Attack" }
     assert_equal [ precision ], turn.action[:riders]
     attack = turn.results.first
-    assert attack[:success]
+    assert attack.dig(:attack_roll, :hit)
     rider = attack[:riders].sole
     assert_equal precision, rider.slice(:feature_slug, :feature_name)
     assert_equal :damage, rider[:kind]
@@ -254,7 +275,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     miss_turn = service.send(:execute_action, actor: participant_of(service, battle_master), chosen_action: action, round_number: 1, turn_index: 1)
     miss = miss_turn.results.first
 
-    assert_not miss[:success]
+    assert_not miss.dig(:attack_roll, :hit)
     assert_equal [], miss[:riders], "a rider applies only on a hit"
     assert_equal [ precision ], miss_turn.action[:riders], "the chosen rider is logged even when nothing hit"
     assert_equal 3, maneuver_action(service:, actor: battle_master, slug: "precision-attack").uses_remaining, "a miss must not spend a die"
@@ -275,12 +296,12 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     attack_now = ->(actor) { service.send(:execute_attack_action, actor: participant_of(service, actor), round_number: 1, turn_index: 1).results.first }
 
     Random.srand(1) # AC 100: a miss
-    assert_not strike_now.call.results.first[:success]
+    assert_not strike_now.call.results.first.dig(:attack_roll, :hit)
     assert_empty marks[target.id], "no hit, no mark"
 
     target.combatant.update!(armor_class: 1)
     Random.srand(1)
-    assert strike_now.call.results.first[:success]
+    assert strike_now.call.results.first.dig(:attack_roll, :hit)
     assert_equal [ battle_master.id ], marks[target.id]
 
     assert_not attack_now.(battle_master)[:advantage], "the mark never helps the one who set it"
@@ -506,7 +527,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     Random.srand(1)
     turn = service.send(:execute_attack_action, actor: participant_of(service, caster), round_number: 1, turn_index: 1)
 
-    assert_equal true, turn.results.first[:success], "expected the attack to hit (attack_bonus is set high for determinism)"
+    assert_equal true, turn.results.first.dig(:attack_roll, :hit), "expected the attack to hit (attack_bonus is set high for determinism)"
     pending = service.send(:instance_variable_get, :@eldritch_strike_pending)
     assert_equal caster.id, pending[target.id]
   end
@@ -520,7 +541,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     Random.srand(1)
     hit = service.send(:execute_attack_action, actor: participant_of(service, caster), round_number: 1, turn_index: 1, attacks: 1)
 
-    assert hit.results.sole[:success]
+    assert hit.results.sole.dig(:attack_roll, :hit)
     assert_equal [ { feature_slug: "eldritch-knight-eldritch-strike", feature_name: "Eldritch Strike", statuses: [ "disadvantage_on_next_save" ] } ],
       hit.results.sole[:riders]
     assert_equal({ type: :attack }, hit.action, "Eldritch Strike rides by itself: no rider is chosen")
@@ -529,7 +550,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     Random.srand(1)
     miss = service.send(:execute_attack_action, actor: participant_of(service, caster), round_number: 1, turn_index: 2, attacks: 1)
 
-    assert_not miss.results.sole[:success]
+    assert_not miss.results.sole.dig(:attack_roll, :hit)
     assert_equal [], miss.results.sole[:riders]
   end
 
@@ -741,7 +762,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     assert_operator positions.uniq.size, :>=, 2
     assert_equal 6, gambit_turns.map { |turn| turn[:actor_id] }.uniq.size
-    assert_equal [ 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1 ], positions
+    assert_equal [ 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1 ], positions
     assert_equal first, second
   end
 

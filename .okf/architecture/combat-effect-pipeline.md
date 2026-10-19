@@ -97,7 +97,10 @@ combat state and returns a `Result` carrying `kind`, `applied`, `amount`,
 evaluated against a `RollContext` (actor, target, level, modifiers), and
 produce a `RollOutcome` carrying the resolved expression, dice, individual
 rolls, modifiers, and total — so combat log/UI/audit can show the full
-breakdown instead of just a final number.[^combat-pipeline-rb]
+breakdown instead of just a final number.[^combat-pipeline-rb] `dice` are the
+terms as rolled and `rolls` one value per die (`"2d6 + 1d4"` →
+`dice: ["2d6", "1d4"]`, `rolls: [3, 4, 2]`), from `Dice.roll`, whose
+`Dice::RollResult#rolls` keeps each die.
 
 # Data shape: `effect_payload`
 
@@ -124,11 +127,19 @@ instead of being an action of its own) and `"debuff": "next_attack_advantage"`
 `ActionRunner.call` / `EffectExecutor.call` accept `crit:` so an effect riding on
 a critical weapon hit doubles its dice.
 
+A **critical hit rolls twice the dice** (5e): `RollExpression#resolve(crit: true)`
+passes `crit:` to `Dice.roll`, which rolls `2n` dice for an `nd` term (a critical
+`1d10` rolls `2d10`, logged `dice: ["2d10"]` with both dice in `rolls`), never
+doubling the flat modifiers. Until 2026-10-18 it rolled `n` dice and doubled their
+sum: the same mean, twice the variance, and fewer draws, so every seed with a
+critical attack roll plays differently from that roll on (see
+[critical-hit-dice-impact.md](/architecture/critical-hit-dice-impact.md)).
+
 Damage effects can also declare `"attack": "spell"` or `"attack": "weapon"` (an
 attack roll against the target's AC; a miss sets `applied: false` and deals 0; a
 natural 20 always hits, a natural 1 always misses, otherwise total >= AC —
 `Dice.hit?`; a critical hit doubles the dice via `RollExpression#resolve(crit:
-true)`, never the flat modifier). A spell attack rolls with
+true)`, as above, never the flat modifier). A spell attack rolls with
 `PlayerCharacter#spell_attack_bonus` and crits on a natural 20; a weapon attack
 rolls with `#weapon_attack_bonus` (attack bonus + passive bonuses such as
 Archery) and crits at `#critical_hit_threshold` (19 for a Champion). `advantage:`

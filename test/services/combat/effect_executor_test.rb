@@ -188,12 +188,13 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
   end
 
   test "a natural 20 on a spell attack always hits, even past the target's AC, and doubles the damage dice" do
-    result = cast_spell_effect(attack: "spell", target_armor_class: 100, seed: 23) # d20 = 20 (total 26 < AC 100), 1d10 = 7
+    result = cast_spell_effect(attack: "spell", target_armor_class: 100, seed: 23) # d20 = 20 (total 26 < AC 100), then 2d10 = 7 + 9
 
     assert result.applied
     assert result.attack_roll.hit
     assert result.attack_roll.crit
-    assert_equal 14, result.amount
+    assert_equal 16, result.amount
+    assert_equal [ [ "2d10" ], [ 7, 9 ] ], [ result.roll_outcome.dice, result.roll_outcome.rolls ]
   end
 
   test "a natural 1 on a spell attack always misses, even when the total beats the target's AC" do

@@ -100,7 +100,7 @@ recording them draws nothing extra. Turn results carry no human-readable
    A payload with `"applies_to": "weapon_attack"` (every Battle Master
    maneuver) is *not* an action of its own: choosing it makes the turn a normal
    weapon attack, and only if the attack hits is the maneuver's die rolled
-   through the same pipeline (doubled on a critical hit) and added as an extra
+   through the same pipeline (twice the dice on a critical hit) and added as an extra
    damage instance, spending one superiority die — a miss spends nothing. A
    `"debuff": "next_attack_advantage"` (Distracting Strike) also marks the
    target: the first weapon attack against it by anyone other than the marker
@@ -131,9 +131,16 @@ recording them draws nothing extra. Turn results carry no human-readable
    save DC (both from the spellcasting ability, see
    [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)); the
    turn's result then carries an `attack_roll` (`natural`, `total`, `armor_class`,
-   `hit`, `crit`). Weapon attacks in the log carry `natural`, `total`, `crit` and
-   `damage` (inside `attack_roll`) plus the target's `hp_before`/`hp_after` around the hit (before any maneuver rider); both kinds decide the hit with `Dice.hit?` (natural 20 always hits,
-   natural 1 always misses), so an auto-hit can show a `total` below the AC.
+   `hit`, `crit`). A weapon attack logs the same `attack_roll` (`armor_class` is the
+   target's effective AC, Fighting Style: Defense included) and its damage as an
+   effect does: `{ kind: :attack, target_id, target_name, advantage, riders, amount,
+   hp_before, hp_after, roll_outcome, attack_roll }`, `amount` 0 on a miss and
+   `hp_before`/`hp_after` around the hit (before any maneuver rider); no `applied`,
+   `success` or `damage`, which repeated `attack_roll.hit` and `amount`. Both kinds
+   decide the hit with `Dice.hit?` (natural 20 always hits, natural 1 always misses),
+   so an auto-hit can show a `total` below the AC. Every `roll_outcome` lists the
+   dice as rolled (`dice: ["2d10"]` for a critical `1d10`) and one value per die in
+   `rolls` (see [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)).
 
 The available actions are collected into a list and one is picked with
 `.sample(random: @rng)` — action choice is random, not strategic — **unless the

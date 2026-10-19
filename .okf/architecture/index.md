@@ -10,3 +10,4 @@
 * [Gambits — design decisions](gambits-decisions.md) - The design decisions behind the FFXII-style gambits, grouped by subject, each with its reason; reviewed by the user.
 * [Gambits — mechanics impact](gambits-impact.md) - What the gambits changed in combat, how it was validated, and the measured effect on Brenna x Corwin.
 * [War Magic — mechanics impact](war-magic-impact.md) - War Magic's bonus cut from a whole Attack action to one weapon attack: the proof on the golden files and the measured effect on the Eldritch Knight.
+* [Critical hits roll twice the dice — mechanics impact](critical-hit-dice-impact.md) - A critical hit rolls twice the dice instead of doubling one roll, one attack_roll shape for weapon and spell attacks, and the download's key order: proof on the golden files and measured effect.

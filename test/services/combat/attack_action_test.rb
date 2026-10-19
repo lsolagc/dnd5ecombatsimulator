@@ -11,10 +11,13 @@ class Combat::AttackActionTest < ActiveSupport::TestCase
     @other = Combat::Participant.new(player_characters(:thorin))
   end
 
-  # Each Dice.d20 call takes the next natural from the list; every die rolls 4 (8 on a crit).
+  # Each Dice.d20 call takes the next natural from the list; every die rolls 4 (a crit rolls twice the dice).
   def with_rolls(*naturals, &)
     d20 = ->(modifier: 0) { natural = naturals.shift; Dice::D20Roll.new(natural:, total: natural + modifier, modifier:) }
-    dice = ->(dice:, modifier: 0, crit: false) { Dice::RollResult.new(natural: crit ? 8 : 4, total: (crit ? 8 : 4) + modifier) }
+    dice = lambda do |dice:, modifier: 0, crit: false|
+      rolls = [ 4 ] * (dice.to_i * (crit ? 2 : 1))
+      Dice::RollResult.new(natural: rolls.sum, total: rolls.sum + modifier, rolls:)
+    end
     Dice.stub(:d20, d20) { Dice.stub(:roll, dice, &) }
   end
 

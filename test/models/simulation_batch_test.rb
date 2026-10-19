@@ -232,6 +232,29 @@ class SimulationBatchTest < ActiveSupport::TestCase
     end
   end
 
+  # The golden files hold the simulator's results in the order it builds them, every kind of entry included.
+  test "the log rebuilds every turn in the simulator's order after jsonb, unknown keys last" do
+    results = CombatRegression::COMPOSITIONS.keys.flat_map { |name| YAML.load_file(CombatRegression.golden_path(name), permitted_classes: [ Symbol ]).values }
+    assert_operator results.size, :>=, 60
+    legacy = results.first[:round_log].first[:turns].first # a key from an older run: one letter, so jsonb puts it first
+    legacy[:a] = 1
+    legacy[:action] = legacy[:action].merge(a: 1)
+    record = batch(requested_count: results.size)
+    record.save!
+    results.each { |result| record.simulation_runs.create!(seed: 1, elapsed_ms: 1, outcome: result[:outcome], result:) }
+
+    stored = record.simulation_runs.map(&:result)
+    simulations = JSON.parse(record.logs_json)["simulations"]
+
+    expected = JSON.parse(results.to_json)
+    assert_not_equal expected.pluck("round_log").to_json, stored.pluck("round_log").to_json, "jsonb must have shuffled the keys"
+    assert_equal expected.pluck("round_log").to_json, simulations.pluck("round_log").to_json
+    assert_equal expected.pluck("initiative").to_json, simulations.pluck("initiative").to_json
+    assert_equal "a", stored.first.dig("round_log", 0, "turns", 0).keys.first
+    turn = simulations.first.dig("round_log", 0, "turns", 0)
+    assert_equal [ "a", "a" ], [ turn.keys.last, turn["action"].keys.last ]
+  end
+
   test "the log keeps each combatant's name from the batch's creation; a rerun takes the current one" do
     aragorn = player_characters(:aragorn)
     record = batch

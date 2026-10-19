@@ -19,7 +19,8 @@ module Combat
       @expression = expression.to_s.downcase.gsub(/\s+/, "")
     end
 
-    # crit: doubles every dice term (a critical hit), never the flat modifiers.
+    # crit: a critical hit rolls twice the dice of every dice term (5e), never doubling the flat modifiers.
+    # The outcome's dice are the terms as rolled ("2d10" for a critical "1d10"), its rolls one value per die.
     def resolve(context:, crit: false)
       tokens = tokenize
 
@@ -33,8 +34,8 @@ module Combat
 
         if term.match?(DICE_PATTERN)
           result = Dice.roll(dice: term, modifier: 0, crit:)
-          dice_terms  << term
-          dice_rolls  << result.natural
+          dice_terms  << "#{result.rolls.size}d#{term.split("d").last}"
+          dice_rolls.concat(result.rolls)
           total       += result.natural * multiplier
         elsif term.match?(NUMBER_PATTERN)
           total += term.to_i * multiplier

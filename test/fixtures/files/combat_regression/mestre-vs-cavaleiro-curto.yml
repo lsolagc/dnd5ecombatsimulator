@@ -23,17 +23,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 3
+        :amount: 3
         :hp_before: 36
         :hp_after: 33
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 3
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -46,17 +55,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 33
         :hp_after: 33
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -101,7 +119,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -120,14 +137,24 @@
             - 1
             :modifiers: {}
             :total: 1
-        :damage: 4
+        :amount: 4
         :hp_before: 36
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 16
           :total: 21
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 4
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -176,17 +203,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 10
+        :amount: 10
         :hp_before: 31
         :hp_after: 21
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 14
           :total: 19
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 10
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached
@@ -242,17 +278,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 5
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -269,7 +314,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -288,14 +332,24 @@
             - 8
             :modifiers: {}
             :total: 8
-        :damage: 12
+        :amount: 12
         :hp_before: 36
         :hp_after: 24
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 12
           :total: 17
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 12
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -311,17 +365,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 16
         :hp_after: 16
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 3
           :total: 8
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 5
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -337,17 +400,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -363,7 +435,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -382,14 +453,24 @@
             - 5
             :modifiers: {}
             :total: 5
-        :damage: 8
+        :amount: 8
         :hp_before: 16
         :hp_after: 8
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 16
           :total: 21
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 8
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached
@@ -420,17 +501,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 9
           :total: 14
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 4
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -443,17 +533,27 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 23
+        :amount: 23
         :hp_before: 36
         :hp_after: 13
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 2d10
+          :rolls:
+          - 10
+          - 10
+          :modifiers: {}
+          :total: 23
         :attack_roll:
           :natural: 20
           :total: 25
+          :armor_class: 16
+          :hit: true
           :crit: true
-          :damage: 23
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -483,8 +583,8 @@
           :modifiers: {}
           :total: 6
         :attack_roll:
-          :natural: 10
-          :total: 15
+          :natural: 11
+          :total: 16
           :armor_class: 19
           :hit: false
           :crit: false
@@ -500,17 +600,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 3
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -526,17 +635,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
+        :amount: 11
         :hp_before: 13
         :hp_after: 2
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 13
           :total: 18
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 11
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -561,7 +679,9 @@
           :dice:
           - 3d8
           :rolls:
-          - 6
+          - 1
+          - 3
+          - 2
           :modifiers: {}
           :total: 6
         :attack_roll:
@@ -600,17 +720,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 2
           :total: 7
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 12
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -626,17 +755,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 9
           :total: 14
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 6
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -683,17 +821,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -709,17 +856,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 9
           :total: 14
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -744,7 +900,9 @@
           :dice:
           - 3d8
           :rolls:
-          - 19
+          - 5
+          - 7
+          - 7
           :modifiers: {}
           :total: 19
         :attack_roll:
@@ -845,17 +1003,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 9
           :total: 14
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -871,17 +1038,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 8
           :total: 13
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 4
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -930,17 +1106,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 5
+        :amount: 5
         :hp_before: 36
         :hp_after: 31
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 13
           :total: 18
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 5
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached
@@ -971,17 +1156,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 4
           :total: 9
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -1023,17 +1217,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 6
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -1082,17 +1285,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 5
+        :amount: 5
         :hp_before: 36
         :hp_after: 31
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 16
           :total: 21
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 5
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -1153,17 +1365,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 4
           :total: 9
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 7
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -1245,7 +1466,9 @@
           :dice:
           - 3d8
           :rolls:
-          - 11
+          - 8
+          - 1
+          - 2
           :modifiers: {}
           :total: 11
         :attack_roll:
@@ -1272,7 +1495,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -1291,14 +1513,24 @@
             - 8
             :modifiers: {}
             :total: 8
-        :damage: 12
+        :amount: 12
         :hp_before: 36
         :hp_after: 24
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 15
           :total: 20
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 12
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -1323,7 +1555,9 @@
           :dice:
           - 3d8
           :rolls:
-          - 14
+          - 5
+          - 1
+          - 8
           :modifiers: {}
           :total: 14
         :attack_roll:
@@ -1449,17 +1683,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 9
           :total: 14
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 4
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -1511,7 +1754,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -1530,14 +1772,24 @@
             - 3
             :modifiers: {}
             :total: 3
-        :damage: 7
+        :amount: 7
         :hp_before: 36
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 18
           :total: 23
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached
@@ -1565,17 +1817,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 3
+        :amount: 3
         :hp_before: 36
         :hp_after: 33
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 3
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -1588,17 +1849,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 33
         :hp_after: 33
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -1615,17 +1885,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 9
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 1
           :total: 6
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 12
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -1669,17 +1948,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 7
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -1695,7 +1983,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -1714,14 +2001,24 @@
             - 7
             :modifiers: {}
             :total: 7
-        :damage: 6
+        :amount: 6
         :hp_before: 36
         :hp_after: 30
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 13
           :total: 18
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 6
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached
@@ -1780,7 +2077,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -1799,14 +2095,24 @@
             - 6
             :modifiers: {}
             :total: 6
-        :damage: 13
+        :amount: 13
         :hp_before: 36
         :hp_after: 23
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 18
           :total: 23
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 13
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -1820,17 +2126,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 8
+        :amount: 8
         :hp_before: 36
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -1877,17 +2192,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 22
         :hp_after: 22
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 10
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 9
           :total: 14
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 13
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -1948,17 +2272,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 36
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 19
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -2036,7 +2369,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -2055,14 +2387,24 @@
             - 6
             :modifiers: {}
             :total: 6
-        :damage: 4
+        :amount: 4
         :hp_before: 36
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 14
           :total: 19
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 4
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -2114,7 +2456,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -2133,14 +2474,24 @@
             - 3
             :modifiers: {}
             :total: 3
-        :damage: 8
+        :amount: 8
         :hp_before: 26
         :hp_after: 18
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 13
           :total: 18
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 8
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached
@@ -2171,7 +2522,6 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: battle-master-maneuver-precision-attack
@@ -2190,14 +2540,24 @@
             - 4
             :modifiers: {}
             :total: 4
-        :damage: 6
+        :amount: 6
         :hp_before: 36
         :hp_after: 30
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 18
           :total: 23
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 6
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -2279,7 +2639,9 @@
           :dice:
           - 3d8
           :rolls:
-          - 17
+          - 5
+          - 6
+          - 6
           :modifiers: {}
           :total: 17
         :attack_roll:
@@ -2303,17 +2665,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 30
         :hp_after: 30
+        :roll_outcome:
+          :expression: 1d10 + 3
+          :resolved_expression: 1d10+3
+          :dice:
+          - 1d10
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 3
           :total: 8
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 10
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -2326,17 +2697,26 @@
       - :kind: :attack
         :target_id: Mestre de Batalha
         :target_name: Mestre de Batalha
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 19
         :hp_after: 19
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 19
+          :hit: false
           :crit: false
-          :damage: 3
       :gambit: aleatório
   :draw: false
   :outcome: :max_rounds_reached

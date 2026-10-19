@@ -98,13 +98,13 @@ class CombatRegressionTest < ActiveSupport::TestCase
       entries = results.flat_map { |result| result[:round_log].flat_map { |round| round[:turns] } }
       attacks = entries.flat_map { |entry| entry[:results] }.select { |effect| effect[:kind] == :attack }
       type = ->(entry) { entry.dig(:action, :type) }
-      # Damage as rolled (an attack's damage, an effect's amount, before defenses) against the HP it took.
+      # Damage as rolled (the effect's amount, an attack's too, before defenses) against the HP it took.
       damage = entries.flat_map { |entry| entry[:results].flat_map { |effect| [ effect, *effect[:riders] ] } }
-        .filter_map { |effect| [ effect[:kind] == :attack ? effect[:damage] : effect[:amount], effect[:hp_before] - effect[:hp_after], effect[:hp_after] ] if effect[:kind].in?(%i[attack damage]) }
+        .filter_map { |effect| [ effect[:amount], effect[:hp_before] - effect[:hp_after], effect[:hp_after] ] if effect[:kind].in?(%i[attack damage]) }
         .select { |rolled, _taken, hp_after| rolled.to_i.positive? && hp_after.positive? }
       maneuver_rider = ->(attack) { attack[:riders].any? { |rider| rider[:kind] } }
       {
-        "critical hit" => attacks.any? { |attack| attack[:success] && attack.dig(:attack_roll, :crit) },
+        "critical hit" => attacks.any? { |attack| attack.dig(:attack_roll, :hit) && attack.dig(:attack_roll, :crit) },
         "maneuver rider" => attacks.any?(&maneuver_rider),
         "maneuver rider on a critical hit" => attacks.any? { |attack| maneuver_rider.(attack) && attack.dig(:attack_roll, :crit) },
         "advantage from Distracting Strike" => attacks.any? { |attack| attack[:advantage] },
@@ -118,7 +118,7 @@ class CombatRegressionTest < ActiveSupport::TestCase
         "victory" => results.any? { |result| result[:outcome] == :victory },
         "max_rounds_reached" => results.any? { |result| result[:outcome] == :max_rounds_reached },
         "Eldritch Strike disadvantage on a save" => eldritch_saves.positive?,
-        "Eldritch Strike rider on a hit" => attacks.any? { |attack| attack[:success] && attack[:riders].any? { |rider| rider[:statuses] == [ "disadvantage_on_next_save" ] } },
+        "Eldritch Strike rider on a hit" => attacks.any? { |attack| attack.dig(:attack_roll, :hit) && attack[:riders].any? { |rider| rider[:statuses] == [ "disadvantage_on_next_save" ] } },
         "damage halved by a resistance" => damage.any? { |rolled, taken, _| rolled >= 2 && taken == rolled / 2 },
         "damage blocked by an immunity" => damage.any? { |_, taken, _| taken.zero? },
         "damage doubled by a vulnerability" => damage.any? { |rolled, taken, _| taken == rolled * 2 }

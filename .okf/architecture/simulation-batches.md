@@ -172,7 +172,13 @@ entry without the name) and `gambits` (`mode`, `rules`, from `gambit_settings`
 through `Gambit.log_section`)). Then `simulations`, one per run in id order:
 `simulation` (1..n), `seed`, `elapsed_ms`, `outcome`, `winning_party`,
 `total_rounds`, `draw`, `initiative`, `round_log`. jsonb does not keep key
-order, so the export rebuilds the hashes in that order. Runs saved before
+order, so the export rebuilds the hashes in that order, and below it in the
+order the simulator builds them (`SimulationBatch::SIMULATION_LOG_ORDER`): each
+initiative entry, round and turn (`Combat::TurnRecord`), its action, results
+(attack and effect entries), riders (`Combat::Rider`), `roll_outcome` and
+`attack_roll`; a key it does not know (an older run's) goes after the known ones
+of its hash, and `modifiers` keep the stored order. The column stays jsonb.
+Runs saved before
 2026-10-17 carry their old keys (a `gambits` section, `message`s, no
 `initiative`) after the known ones, and their batches no frozen names (`name:
 null`); they are kept as they are, not migrated.

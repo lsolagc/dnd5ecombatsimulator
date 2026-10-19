@@ -32,25 +32,22 @@ module Dice
   #
   # @param dice [String] Ex: '2d6', '4d8'
   # @param modifier [Integer] Modificador a ser somado ao resultado total
-  # @return [Dice::RollResult] Resultado da rolagem
+  # @param crit [Boolean] Acerto crítico (5e): rola o dobro de dados ('1d10' rola 2d10), nunca dobra o modificador
+  # @return [Dice::RollResult] Resultado da rolagem, com o valor de cada dado em rolls
   def self.roll(dice:, modifier: 0, crit: false)
     # generic roll, called like Dice.roll(dice: '4d8', modifier: 4)
     dice = dice.to_s.downcase
     raise ArgumentError, "dice must be formatted like [number of dice]d[type of die] (e.g. 4d8)" unless dice.match?(/\d+d\d+/)
     raise ArgumentError, "modifier must be an Integer" unless modifier.is_a?(Integer)
     number_of_dice, max_value_of_die = dice.split("d").map(&:to_i)
+    number_of_dice *= 2 if crit
 
-    dice_rolls = 0
-    number_of_dice.times do
-      dice_rolls += rand(1..max_value_of_die)
-    end
-
-    dice_rolls = dice_rolls * 2 if crit
-    total_roll_value = dice_rolls + modifier
+    rolls = Array.new(number_of_dice) { rand(1..max_value_of_die) }
+    natural = rolls.sum
 
     log_dice_call
 
-    Dice::RollResult.new(natural: dice_rolls, total: total_roll_value)
+    Dice::RollResult.new(natural:, total: natural + modifier, rolls:)
   end
 
   # Regra de acerto de um ataque (5e): 20 natural sempre acerta, 1 natural sempre erra,

@@ -21,6 +21,36 @@ class Combat::RollExpressionTest < ActiveSupport::TestCase
     assert_equal 7, outcome.total # (1 + 1) * 2 + 3
   end
 
+  test "crit never doubles a modifier read from a variable" do
+    outcome = Combat::RollExpression.new(expression: "2d1 + actor_level").resolve(context: @context, crit: true)
+
+    assert_equal 4 + outcome.modifiers.fetch("actor_level"), outcome.total
+  end
+
+  # 5e: a critical hit rolls twice the dice, it does not double one roll (same mean, another spread).
+  test "a crit rolls twice the dice and logs every die rolled" do
+    Random.srand(3)
+    expected = [ rand(1..10), rand(1..10) ]
+    Random.srand(3)
+    outcome = Combat::RollExpression.new(expression: "1d10 + 2").resolve(context: @context, crit: true)
+
+    assert_equal [ "2d10" ], outcome.dice
+    assert_equal expected, outcome.rolls
+    assert_equal expected.sum + 2, outcome.total
+    assert_not_equal expected.first, expected.last, "seed 3 must roll two different dice, else doubling one die passes too"
+  end
+
+  test "the rolls list one value per die, also without a crit" do
+    Random.srand(5)
+    expected = [ rand(1..6), rand(1..6), rand(1..4) ]
+    Random.srand(5)
+    outcome = Combat::RollExpression.new(expression: "2d6 + 1d4").resolve(context: @context)
+
+    assert_equal %w[ 2d6 1d4 ], outcome.dice
+    assert_equal expected, outcome.rolls
+    assert_equal expected.sum, outcome.total
+  end
+
   test "rolls dice with a numeric modifier" do
     Random.srand(1)
     outcome = Combat::RollExpression.new(expression: "1d6 + 3").resolve(context: @context)

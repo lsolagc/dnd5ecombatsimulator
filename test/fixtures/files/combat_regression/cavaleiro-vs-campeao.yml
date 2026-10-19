@@ -51,31 +51,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 9
+        :amount: 9
         :hp_before: 36
         :hp_after: 27
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 27
         :hp_after: 27
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 6
           :total: 12
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 13
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -122,17 +140,26 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 7
       :gambit: aleatório
       :bonus: true
     - :round: 1
@@ -177,31 +204,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 10
+        :amount: 10
         :hp_before: 36
         :hp_after: 26
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 26
         :hp_after: 26
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 7
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -214,53 +259,80 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 7
+        :amount: 7
         :hp_before: 60
         :hp_after: 53
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 53
         :hp_after: 53
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 6
           :total: 12
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 7
+        :amount: 7
         :hp_before: 53
         :hp_after: 46
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -275,31 +347,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 10
+        :amount: 10
         :hp_before: 26
         :hp_after: 16
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 8
+        :amount: 8
         :hp_before: 16
         :hp_after: 8
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 15
           :total: 21
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -312,45 +402,72 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 46
         :hp_after: 46
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 46
         :hp_after: 46
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 46
         :hp_after: 46
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -365,31 +482,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 8
         :hp_after: 1
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 13
+        :amount: 13
         :hp_before: 1
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 13
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -417,31 +552,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 6
+        :amount: 6
         :hp_before: 36
         :hp_after: 30
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 8
+        :amount: 8
         :hp_before: 30
         :hp_after: 22
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -483,53 +636,80 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 10
+        :amount: 10
         :hp_before: 60
         :hp_after: 50
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 8
+        :amount: 8
         :hp_before: 50
         :hp_after: 42
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -578,31 +758,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 22
         :hp_after: 22
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 6
           :total: 12
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 13
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 22
         :hp_after: 22
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 4
           :total: 10
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 12
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -615,49 +813,76 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 34
         :hp_after: 34
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 6
+        :amount: 6
         :hp_before: 34
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 28
         :hp_after: 28
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -672,31 +897,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 22
         :hp_after: 15
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 15
         :hp_after: 15
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 4
           :total: 10
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 11
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -739,31 +982,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 12
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 13
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -776,53 +1037,81 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 6
+        :amount: 12
         :hp_before: 28
-        :hp_after: 22
+        :hp_after: 16
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 2d8
+          :rolls:
+          - 2
+          - 8
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 20
           :total: 26
+          :armor_class: 17
+          :hit: true
           :crit: true
-          :damage: 6
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 22
-        :hp_after: 22
+        :amount: 0
+        :hp_before: 16
+        :hp_after: 16
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 3
           :total: 9
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 3
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 7
-        :hp_before: 22
-        :hp_after: 15
+        :amount: 7
+        :hp_before: 16
+        :hp_after: 9
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 15
           :total: 21
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -837,31 +1126,50 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 15
+        :amount: 13
         :hp_before: 36
-        :hp_after: 21
+        :hp_after: 23
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 5
+          - 3
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 16
+          :hit: true
           :crit: true
-          :damage: 15
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
-        :hp_before: 21
-        :hp_after: 14
+        :amount: 7
+        :hp_before: 23
+        :hp_after: 16
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 16
           :total: 22
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
     - :round: 5
       :turn: 2
@@ -878,15 +1186,17 @@
       - :kind: :damage
         :applied: false
         :amount: 0
-        :hp_before: 15
-        :hp_after: 15
+        :hp_before: 9
+        :hp_after: 9
         :roll_outcome:
           :expression: 3d8
           :resolved_expression: 3d8
           :dice:
           - 3d8
           :rolls:
-          - 16
+          - 8
+          - 7
+          - 1
           :modifiers: {}
           :total: 16
         :attack_roll:
@@ -909,23 +1219,56 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 17
-        :hp_before: 14
-        :hp_after: 0
+        :amount: 14
+        :hp_before: 16
+        :hp_after: 2
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 6
+          - 3
+          :modifiers: {}
+          :total: 14
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 16
+          :hit: true
           :crit: true
-          :damage: 17
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :advantage: false
+        :riders: []
+        :amount: 7
+        :hp_before: 2
+        :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
+        :attack_roll:
+          :natural: 16
+          :total: 22
+          :armor_class: 16
+          :hit: true
+          :crit: false
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 3:
   :winning_party: :party_two
-  :total_rounds: 6
+  :total_rounds: 5
   :initiative:
   - :actor_id: Cavaleiro Arcano
     :natural: 11
@@ -980,21 +1323,31 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 8
+        :amount: 9
         :hp_before: 59
-        :hp_after: 51
+        :hp_after: 50
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 2d8
+          :rolls:
+          - 3
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 20
           :total: 26
+          :armor_class: 17
+          :hit: true
           :crit: true
-          :damage: 8
       :gambit: aleatório
       :bonus: true
     - :round: 1
@@ -1011,21 +1364,21 @@
       :results:
       - :kind: :damage
         :applied: true
-        :amount: 2
-        :hp_before: 51
-        :hp_after: 49
+        :amount: 3
+        :hp_before: 50
+        :hp_after: 47
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
           :dice:
           - 1d8
           :rolls:
-          - 2
+          - 3
           :modifiers: {}
-          :total: 2
+          :total: 3
         :attack_roll:
-          :natural: 12
-          :total: 20
+          :natural: 10
+          :total: 18
           :armor_class: 17
           :hit: true
           :crit: false
@@ -1042,31 +1395,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 8
+        :amount: 0
         :hp_before: 36
-        :hp_after: 28
-        :attack_roll:
-          :natural: 10
-          :total: 16
-          :crit: false
-          :damage: 8
-      - :kind: :attack
-        :target_id: Cavaleiro Arcano
-        :target_name: Cavaleiro Arcano
-        :success: false
-        :advantage: false
-        :riders: []
-        :damage: 0
-        :hp_before: 28
-        :hp_after: 28
+        :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 6
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :advantage: false
+        :riders: []
+        :amount: 11
+        :hp_before: 36
+        :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :armor_class: 16
+          :hit: true
+          :crit: false
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -1079,31 +1450,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
-        :hp_before: 28
-        :hp_after: 17
-        :attack_roll:
-          :natural: 13
-          :total: 19
-          :crit: false
-          :damage: 11
-      - :kind: :attack
-        :target_id: Cavaleiro Arcano
-        :target_name: Cavaleiro Arcano
-        :success: false
-        :advantage: false
-        :riders: []
-        :damage: 0
-        :hp_before: 17
-        :hp_after: 17
+        :amount: 0
+        :hp_before: 25
+        :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 12
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :advantage: false
+        :riders: []
+        :amount: 8
+        :hp_before: 25
+        :hp_after: 17
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
+        :attack_roll:
+          :natural: 18
+          :total: 24
+          :armor_class: 16
+          :hit: true
+          :crit: false
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -1122,18 +1511,25 @@
       :results:
       - :kind: :damage
         :applied: true
-        :amount: 11
-        :hp_before: 49
-        :hp_after: 38
+        :amount: 13
+        :hp_before: 47
+        :hp_after: 34
         :roll_outcome:
           :expression: 8d6
           :resolved_expression: 8d6
           :dice:
           - 8d6
           :rolls:
-          - 22
+          - 3
+          - 3
+          - 5
+          - 2
+          - 4
+          - 3
+          - 6
+          - 1
           :modifiers: {}
-          :total: 22
+          :total: 27
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -1146,31 +1542,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 17
         :hp_after: 17
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
-          :natural: 6
-          :total: 12
+          :natural: 2
+          :total: 8
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 6
         :hp_before: 17
-        :hp_after: 10
+        :hp_after: 11
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
-          :natural: 15
-          :total: 21
+          :natural: 11
+          :total: 17
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -1188,8 +1602,8 @@
       :results:
       - :kind: :heal
         :applied: true
-        :amount: 22
-        :hp_before: 10
+        :amount: 21
+        :hp_before: 11
         :hp_after: 32
         :roll_outcome:
           :expression: 1d10 + actor_level
@@ -1197,10 +1611,10 @@
           :dice:
           - 1d10
           :rolls:
-          - 9
+          - 8
           :modifiers:
             actor_level: 13
-          :total: 22
+          :total: 21
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -1213,31 +1627,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 32
-        :hp_after: 32
-        :attack_roll:
-          :natural: 8
-          :total: 14
-          :crit: false
-          :damage: 6
-      - :kind: :attack
-        :target_id: Cavaleiro Arcano
-        :target_name: Cavaleiro Arcano
-        :success: true
-        :advantage: false
-        :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 32
         :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :advantage: false
+        :riders: []
+        :amount: 6
+        :hp_before: 25
+        :hp_after: 19
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
+        :attack_roll:
+          :natural: 16
+          :total: 22
+          :armor_class: 16
+          :hit: true
+          :crit: false
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -1252,53 +1684,80 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
-        :advantage: false
-        :riders:
-        - :feature_slug: eldritch-knight-eldritch-strike
-          :feature_name: Eldritch Strike
-          :statuses:
-          - disadvantage_on_next_save
-        :damage: 3
-        :hp_before: 38
-        :hp_after: 35
-        :attack_roll:
-          :natural: 16
-          :total: 22
-          :crit: false
-          :damage: 3
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 35
-        :hp_after: 35
+        :amount: 0
+        :hp_before: 34
+        :hp_after: 34
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 6
           :total: 12
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 8
-        :hp_before: 35
-        :hp_after: 27
+        :amount: 8
+        :hp_before: 34
+        :hp_after: 26
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 8
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :advantage: false
+        :riders:
+        - :feature_slug: eldritch-knight-eldritch-strike
+          :feature_name: Eldritch Strike
+          :statuses:
+          - disadvantage_on_next_save
+        :amount: 7
+        :hp_before: 26
+        :hp_after: 19
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
+        :attack_roll:
+          :natural: 15
+          :total: 21
+          :armor_class: 17
+          :hit: true
+          :crit: false
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -1311,31 +1770,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 10
-        :hp_before: 25
-        :hp_after: 15
-        :attack_roll:
-          :natural: 15
-          :total: 21
-          :crit: false
-          :damage: 10
-      - :kind: :attack
-        :target_id: Cavaleiro Arcano
-        :target_name: Cavaleiro Arcano
-        :success: false
-        :advantage: false
-        :riders: []
-        :damage: 0
-        :hp_before: 15
-        :hp_after: 15
+        :amount: 0
+        :hp_before: 19
+        :hp_after: 19
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 6
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :advantage: false
+        :riders: []
+        :amount: 8
+        :hp_before: 19
+        :hp_after: 11
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
+        :attack_roll:
+          :natural: 10
+          :total: 16
+          :armor_class: 16
+          :hit: true
+          :crit: false
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -1350,45 +1827,76 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 27
-        :hp_after: 27
-        :attack_roll:
-          :natural: 10
-          :total: 16
-          :crit: false
-          :damage: 5
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :riders: []
-        :damage: 0
-        :hp_before: 27
-        :hp_after: 27
+        :amount: 0
+        :hp_before: 19
+        :hp_after: 19
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 6
           :total: 12
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 3
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 27
-        :hp_after: 27
+        :amount: 0
+        :hp_before: 19
+        :hp_after: 19
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 8
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :advantage: false
+        :riders:
+        - :feature_slug: eldritch-knight-eldritch-strike
+          :feature_name: Eldritch Strike
+          :statuses:
+          - disadvantage_on_next_save
+        :amount: 4
+        :hp_before: 19
+        :hp_after: 15
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
+        :attack_roll:
+          :natural: 15
+          :total: 21
+          :armor_class: 17
+          :hit: true
+          :crit: false
       :gambit: aleatório
     - :round: 5
       :turn: 2
@@ -1401,115 +1909,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
-        :hp_before: 15
-        :hp_after: 8
-        :attack_roll:
-          :natural: 15
-          :total: 21
-          :crit: false
-          :damage: 7
-      - :kind: :attack
-        :target_id: Cavaleiro Arcano
-        :target_name: Cavaleiro Arcano
-        :success: true
-        :advantage: false
-        :riders: []
-        :damage: 7
-        :hp_before: 8
-        :hp_after: 1
+        :amount: 7
+        :hp_before: 11
+        :hp_after: 4
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
-      :gambit: aleatório
-  - :round: 6
-    :turns:
-    - :round: 6
-      :turn: 1
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :riders:
-        - :feature_slug: eldritch-knight-eldritch-strike
-          :feature_name: Eldritch Strike
-          :statuses:
-          - disadvantage_on_next_save
-        :damage: 6
-        :hp_before: 27
-        :hp_after: 21
-        :attack_roll:
-          :natural: 11
-          :total: 17
-          :crit: false
-          :damage: 6
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
-        :advantage: false
-        :riders: []
-        :damage: 0
-        :hp_before: 21
-        :hp_after: 21
-        :attack_roll:
-          :natural: 5
-          :total: 11
-          :crit: false
-          :damage: 6
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :riders:
-        - :feature_slug: eldritch-knight-eldritch-strike
-          :feature_name: Eldritch Strike
-          :statuses:
-          - disadvantage_on_next_save
-        :damage: 10
-        :hp_before: 21
-        :hp_after: 11
-        :attack_roll:
-          :natural: 17
-          :total: 23
-          :crit: false
-          :damage: 10
-      :gambit: aleatório
-    - :round: 6
-      :turn: 2
-      :actor_id: Campeão
-      :actor_name: Campeão
-      :actor_party: :party_two
-      :action:
-        :type: :attack
-      :results:
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 6
-        :hp_before: 1
+        :amount: 9
+        :hp_before: 4
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
-          :natural: 17
-          :total: 23
+          :natural: 11
+          :total: 17
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 6
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -1570,17 +2012,26 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 5
       :gambit: aleatório
       :bonus: true
     - :round: 1
@@ -1594,45 +2045,72 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 7
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -1674,31 +2152,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 12
+        :amount: 12
         :hp_before: 36
         :hp_after: 24
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 12
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 10
+        :amount: 10
         :hp_before: 24
         :hp_after: 14
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 10
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -1747,17 +2243,26 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
       :bonus: true
     - :round: 2
@@ -1771,31 +2276,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 14
         :hp_after: 14
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 14
         :hp_after: 14
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 3
           :total: 9
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 12
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -1838,31 +2361,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 33
         :hp_after: 33
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 33
         :hp_after: 33
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 3
           :total: 9
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -1877,53 +2418,77 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 60
         :hp_after: 60
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 3
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 8
+        :amount: 11
         :hp_before: 60
-        :hp_after: 52
+        :hp_after: 49
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 2d8
+          :rolls:
+          - 3
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 20
           :total: 26
+          :armor_class: 17
+          :hit: true
           :crit: true
-          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
-        :riders:
-        - :feature_slug: eldritch-knight-eldritch-strike
-          :feature_name: Eldritch Strike
-          :statuses:
-          - disadvantage_on_next_save
-        :damage: 4
-        :hp_before: 52
-        :hp_after: 48
+        :riders: []
+        :amount: 0
+        :hp_before: 49
+        :hp_after: 49
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
-          :natural: 14
-          :total: 20
+          :natural: 2
+          :total: 8
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 4
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -1936,31 +2501,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 33
-        :hp_after: 33
-        :attack_roll:
-          :natural: 1
-          :total: 7
-          :crit: false
-          :damage: 12
-      - :kind: :attack
-        :target_id: Cavaleiro Arcano
-        :target_name: Cavaleiro Arcano
-        :success: true
-        :advantage: false
-        :riders: []
-        :damage: 10
+        :amount: 10
         :hp_before: 33
         :hp_after: 23
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 10
+      - :kind: :attack
+        :target_id: Cavaleiro Arcano
+        :target_name: Cavaleiro Arcano
+        :advantage: false
+        :riders: []
+        :amount: 0
+        :hp_before: 23
+        :hp_after: 23
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
+        :attack_roll:
+          :natural: 4
+          :total: 10
+          :armor_class: 16
+          :hit: false
+          :crit: false
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -1977,25 +2560,26 @@
         :target_type: enemy
       :results:
       - :kind: :damage
-        :applied: false
-        :amount: 0
-        :hp_before: 48
-        :hp_after: 48
+        :applied: true
+        :amount: 11
+        :hp_before: 49
+        :hp_after: 38
         :roll_outcome:
           :expression: 1d8
           :resolved_expression: 1d8
           :dice:
-          - 1d8
+          - 2d8
           :rolls:
+          - 8
           - 3
           :modifiers: {}
-          :total: 3
+          :total: 11
         :attack_roll:
-          :natural: 4
-          :total: 12
+          :natural: 20
+          :total: 28
           :armor_class: 17
-          :hit: false
-          :crit: false
+          :hit: true
+          :crit: true
       :gambit: aleatório
     - :round: 5
       :turn: 1
@@ -2008,21 +2592,30 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 18
-        :hp_before: 48
-        :hp_after: 30
+        :amount: 4
+        :hp_before: 38
+        :hp_after: 34
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
-          :natural: 20
-          :total: 26
-          :crit: true
-          :damage: 18
+          :natural: 19
+          :total: 25
+          :armor_class: 17
+          :hit: true
+          :crit: false
       :gambit: aleatório
       :bonus: true
     - :round: 5
@@ -2036,31 +2629,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 7
         :hp_before: 23
-        :hp_after: 23
+        :hp_after: 16
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
-          :natural: 3
-          :total: 9
+          :natural: 17
+          :total: 23
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 13
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 9
-        :hp_before: 23
-        :hp_after: 14
+        :amount: 9
+        :hp_before: 16
+        :hp_after: 7
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
-          :natural: 19
-          :total: 25
-          :crit: true
-          :damage: 9
+          :natural: 10
+          :total: 16
+          :armor_class: 16
+          :hit: true
+          :crit: false
       :gambit: aleatório
   - :round: 6
     :turns:
@@ -2075,53 +2686,80 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 4
-        :hp_before: 30
-        :hp_after: 26
+        :amount: 7
+        :hp_before: 34
+        :hp_after: 27
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
+        :advantage: false
+        :riders:
+        - :feature_slug: eldritch-knight-eldritch-strike
+          :feature_name: Eldritch Strike
+          :statuses:
+          - disadvantage_on_next_save
+        :amount: 9
+        :hp_before: 27
+        :hp_after: 18
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 9
+        :attack_roll:
+          :natural: 19
+          :total: 25
+          :armor_class: 17
+          :hit: true
+          :crit: false
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 26
-        :hp_after: 26
+        :amount: 0
+        :hp_before: 18
+        :hp_after: 18
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 9
         :attack_roll:
-          :natural: 10
-          :total: 16
+          :natural: 4
+          :total: 10
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 6
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :riders:
-        - :feature_slug: eldritch-knight-eldritch-strike
-          :feature_name: Eldritch Strike
-          :statuses:
-          - disadvantage_on_next_save
-        :damage: 7
-        :hp_before: 26
-        :hp_after: 19
-        :attack_roll:
-          :natural: 17
-          :total: 23
-          :crit: false
-          :damage: 7
       :gambit: aleatório
     - :round: 6
       :turn: 2
@@ -2134,17 +2772,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 19
-        :hp_before: 14
+        :amount: 13
+        :hp_before: 7
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 13
         :attack_roll:
-          :natural: 19
-          :total: 25
-          :crit: true
-          :damage: 19
+          :natural: 12
+          :total: 18
+          :armor_class: 16
+          :hit: true
+          :crit: false
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -2200,31 +2847,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 36
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 29
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 10
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -2266,57 +2931,84 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 9
+        :amount: 9
         :hp_before: 60
         :hp_after: 51
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 10
+        :amount: 10
         :hp_before: 51
         :hp_after: 41
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 10
+        :amount: 10
         :hp_before: 41
         :hp_after: 31
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 10
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -2332,31 +3024,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
+        :amount: 11
         :hp_before: 36
         :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 25
         :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 6
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -2381,7 +3091,12 @@
           :dice:
           - 6d6
           :rolls:
-          - 26
+          - 6
+          - 4
+          - 2
+          - 5
+          - 6
+          - 3
           :modifiers: {}
           :total: 26
         :attack_roll:
@@ -2404,31 +3119,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 8
+        :amount: 8
         :hp_before: 25
         :hp_after: 17
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 17
         :hp_after: 10
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -2453,7 +3186,14 @@
           :dice:
           - 8d6
           :rolls:
-          - 22
+          - 2
+          - 3
+          - 1
+          - 6
+          - 3
+          - 1
+          - 1
+          - 5
           :modifiers: {}
           :total: 22
       :gambit: aleatório
@@ -2495,7 +3235,14 @@
           :dice:
           - 8d6
           :rolls:
-          - 26
+          - 4
+          - 5
+          - 3
+          - 6
+          - 3
+          - 1
+          - 2
+          - 2
           :modifiers: {}
           :total: 26
       :gambit: aleatório
@@ -2522,7 +3269,9 @@
           :dice:
           - 3d8
           :rolls:
-          - 13
+          - 2
+          - 3
+          - 8
           :modifiers: {}
           :total: 13
         :attack_roll:
@@ -2544,31 +3293,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 10
+        :amount: 10
         :hp_before: 36
         :hp_after: 26
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 15
           :total: 21
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 10
       :gambit: aleatório
     - :round: 1
       :turn: 2
@@ -2612,49 +3379,76 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 32
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 7
+        :amount: 7
         :hp_before: 32
         :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 25
         :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 3
           :total: 9
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -2667,31 +3461,50 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 26
         :hp_after: 19
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 16
           :total: 22
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 13
+        :amount: 15
         :hp_before: 19
-        :hp_after: 6
+        :hp_after: 4
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 4
+          - 6
+          :modifiers: {}
+          :total: 15
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 16
+          :hit: true
           :crit: true
-          :damage: 13
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -2718,9 +3531,9 @@
           :dice:
           - 1d8
           :rolls:
-          - 6
+          - 2
           :modifiers: {}
-          :total: 6
+          :total: 2
         :attack_roll:
           :natural: 6
           :total: 14
@@ -2739,21 +3552,26 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
-        :riders:
-        - :feature_slug: eldritch-knight-eldritch-strike
-          :feature_name: Eldritch Strike
-          :statuses:
-          - disadvantage_on_next_save
-        :damage: 7
+        :riders: []
+        :amount: 0
         :hp_before: 25
-        :hp_after: 18
+        :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
-          :natural: 18
-          :total: 24
+          :natural: 5
+          :total: 11
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 7
       :gambit: aleatório
       :bonus: true
     - :round: 3
@@ -2767,31 +3585,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 6
-        :hp_after: 6
-        :attack_roll:
-          :natural: 6
-          :total: 12
-          :crit: false
-          :damage: 12
-      - :kind: :attack
-        :target_id: Cavaleiro Arcano
-        :target_name: Cavaleiro Arcano
-        :success: true
-        :advantage: false
-        :riders: []
-        :damage: 8
-        :hp_before: 6
+        :amount: 8
+        :hp_before: 4
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 8
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -2859,7 +3672,9 @@
           :dice:
           - 3d8
           :rolls:
-          - 20
+          - 4
+          - 8
+          - 8
           :modifiers: {}
           :total: 20
         :attack_roll:
@@ -2909,31 +3724,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 13
+        :amount: 13
         :hp_before: 36
         :hp_after: 23
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 15
           :total: 21
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 13
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 23
         :hp_after: 23
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 7
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -2961,7 +3794,12 @@
           :dice:
           - 6d6
           :rolls:
-          - 18
+          - 3
+          - 3
+          - 1
+          - 5
+          - 1
+          - 5
           :modifiers: {}
           :total: 18
         :attack_roll:
@@ -2982,31 +3820,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 23
         :hp_after: 23
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 23
         :hp_after: 23
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -3021,53 +3877,80 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 10
+        :amount: 10
         :hp_before: 42
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 32
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 6
           :total: 12
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 3
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 6
+        :amount: 6
         :hp_before: 32
         :hp_after: 26
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 6
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -3080,31 +3963,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 23
         :hp_after: 23
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 12
+        :amount: 12
         :hp_before: 23
         :hp_after: 11
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 12
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -3119,49 +4020,76 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 26
         :hp_after: 26
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 4
+        :amount: 4
         :hp_before: 26
         :hp_after: 22
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 15
           :total: 21
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 22
         :hp_after: 22
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 4
           :total: 10
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 6
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -3174,31 +4102,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 11
         :hp_after: 11
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 11
         :hp_after: 4
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -3213,49 +4159,76 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 22
         :hp_after: 22
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 3
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 7
+        :amount: 7
         :hp_before: 22
         :hp_after: 15
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 15
         :hp_after: 15
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 10
       :gambit: aleatório
     - :round: 5
       :turn: 2
@@ -3268,17 +4241,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 4
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -3334,31 +4316,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 6
           :total: 12
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -3412,7 +4412,12 @@
           :dice:
           - 6d6
           :rolls:
-          - 26
+          - 6
+          - 6
+          - 5
+          - 2
+          - 4
+          - 3
           :modifiers: {}
           :total: 26
         :attack_roll:
@@ -3436,31 +4441,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
+        :amount: 11
         :hp_before: 36
         :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
+        :amount: 11
         :hp_before: 25
         :hp_after: 14
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 11
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -3473,53 +4496,80 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 8
+        :amount: 8
         :hp_before: 34
         :hp_after: 26
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 16
           :total: 22
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 26
         :hp_after: 26
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 3
           :total: 9
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 9
+        :amount: 9
         :hp_before: 26
         :hp_after: 17
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 9
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -3534,31 +4584,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 14
         :hp_after: 14
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 9
+        :amount: 9
         :hp_before: 14
         :hp_after: 5
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 9
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -3604,17 +4672,26 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 17
         :hp_after: 17
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 6
       :gambit: aleatório
       :bonus: true
   - :round: 4
@@ -3630,17 +4707,26 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 7
         :hp_before: 5
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -3668,31 +4754,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 6
+        :amount: 6
         :hp_before: 36
         :hp_after: 30
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 30
         :hp_after: 30
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 11
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -3705,31 +4809,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 30
         :hp_after: 30
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 9
+        :amount: 9
         :hp_before: 30
         :hp_after: 21
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 15
           :total: 21
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 9
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -3776,21 +4898,30 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 7
+        :amount: 7
         :hp_before: 51
         :hp_after: 44
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 7
       :gambit: aleatório
       :bonus: true
     - :round: 1
@@ -3840,31 +4971,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 21
         :hp_after: 21
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 21
         :hp_after: 21
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 4
           :total: 10
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -3877,45 +5026,72 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 41
         :hp_after: 41
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 6
           :total: 12
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 41
         :hp_after: 41
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 41
         :hp_after: 41
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 10
           :total: 16
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 3
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -3930,31 +5106,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 13
+        :amount: 13
         :hp_before: 21
         :hp_after: 8
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 13
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 8
         :hp_after: 8
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 11
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -3967,53 +5161,80 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 41
         :hp_after: 41
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 5
+        :amount: 5
         :hp_before: 41
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 3
+        :amount: 3
         :hp_before: 36
         :hp_after: 33
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 3
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -4086,31 +5307,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 27
         :hp_after: 27
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 4
           :total: 10
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 27
         :hp_after: 27
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 8
       :gambit: aleatório
     - :round: 5
       :turn: 2
@@ -4123,57 +5362,85 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 7
+        :amount: 7
         :hp_before: 47
         :hp_after: 40
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 7
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 7
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 8
+        :amount: 8
         :hp_before: 40
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 16
           :total: 22
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 16
+        :amount: 10
         :hp_before: 32
-        :hp_after: 16
+        :hp_after: 22
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 2d8
+          :rolls:
+          - 7
+          - 1
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 20
           :total: 26
+          :armor_class: 17
+          :hit: true
           :crit: true
-          :damage: 16
       :gambit: aleatório
   - :round: 6
     :turns:
@@ -4188,31 +5455,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 27
         :hp_after: 27
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
-          :natural: 9
-          :total: 15
+          :natural: 5
+          :total: 11
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 27
         :hp_after: 27
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 6
       :gambit: aleatório
     - :round: 6
       :turn: 2
@@ -4225,53 +5510,80 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 16
-        :hp_after: 16
+        :amount: 0
+        :hp_before: 22
+        :hp_after: 22
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 6
-        :hp_before: 16
-        :hp_after: 10
+        :amount: 6
+        :hp_before: 22
+        :hp_after: 16
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 6
-        :hp_before: 10
-        :hp_after: 4
+        :amount: 6
+        :hp_before: 16
+        :hp_after: 10
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 6
       :gambit: aleatório
   - :round: 7
     :turns:
@@ -4286,31 +5598,50 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 13
+        :amount: 13
         :hp_before: 27
         :hp_after: 14
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 13
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 21
+        :amount: 14
         :hp_before: 14
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 8
+          - 1
+          :modifiers: {}
+          :total: 14
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 16
+          :hit: true
           :crit: true
-          :damage: 21
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -4350,7 +5681,12 @@
           :dice:
           - 6d6
           :rolls:
-          - 20
+          - 1
+          - 2
+          - 4
+          - 5
+          - 2
+          - 6
           :modifiers: {}
           :total: 20
         :attack_roll:
@@ -4371,53 +5707,80 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 8
+        :amount: 8
         :hp_before: 40
         :hp_after: 32
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 5
+        :amount: 5
         :hp_before: 32
         :hp_after: 27
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 27
         :hp_after: 27
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 9
           :total: 15
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 4
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -4459,31 +5822,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 6
+        :amount: 6
         :hp_before: 36
         :hp_after: 30
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 30
         :hp_after: 30
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -4532,21 +5913,30 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 6
+        :amount: 6
         :hp_before: 32
         :hp_after: 26
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 16
           :total: 22
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 6
       :gambit: aleatório
       :bonus: true
     - :round: 2
@@ -4560,31 +5950,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 8
+        :amount: 8
         :hp_before: 30
         :hp_after: 22
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 22
         :hp_after: 22
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 6
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -4632,21 +6040,30 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 6
+        :amount: 6
         :hp_before: 26
         :hp_after: 20
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 6
       :gambit: aleatório
       :bonus: true
     - :round: 3
@@ -4660,31 +6077,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
+        :amount: 11
         :hp_before: 22
         :hp_after: 11
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 9
+        :amount: 9
         :hp_before: 11
         :hp_after: 2
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 9
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -4732,21 +6167,30 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 4
+        :amount: 4
         :hp_before: 15
         :hp_after: 11
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 4
       :gambit: aleatório
       :bonus: true
     - :round: 4
@@ -4760,31 +6204,50 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 2
         :hp_after: 2
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 17
+        :amount: 17
         :hp_before: 2
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 6
+          - 6
+          :modifiers: {}
+          :total: 17
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 16
+          :hit: true
           :crit: true
-          :damage: 17
       :gambit: aleatório
   :draw: false
   :outcome: :victory
@@ -4840,31 +6303,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 10
+        :amount: 10
         :hp_before: 36
         :hp_after: 26
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 26
         :hp_after: 26
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 13
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 13
       :gambit: aleatório
       :extra: true
     - :round: 1
@@ -4942,31 +6423,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 11
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
+        :amount: 11
         :hp_before: 36
         :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 11
       :gambit: aleatório
     - :round: 2
       :turn: 2
@@ -4979,53 +6478,80 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 59
         :hp_after: 59
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 4
+        :amount: 4
         :hp_before: 59
         :hp_after: 55
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 8
+        :amount: 8
         :hp_before: 55
         :hp_after: 47
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 11
           :total: 17
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 8
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -5040,31 +6566,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 25
         :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 5
+          :modifiers: {}
+          :total: 10
         :attack_roll:
           :natural: 8
           :total: 14
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 10
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 9
+        :amount: 9
         :hp_before: 25
         :hp_after: 16
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 9
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -5089,7 +6633,9 @@
           :dice:
           - 3d8
           :rolls:
-          - 15
+          - 4
+          - 7
+          - 4
           :modifiers: {}
           :total: 15
         :attack_roll:
@@ -5112,31 +6658,50 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
+        :amount: 9
         :hp_before: 16
-        :hp_after: 5
+        :hp_after: 7
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 3
+          - 1
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 16
+          :hit: true
           :crit: true
-          :damage: 11
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 5
-        :hp_after: 5
+        :amount: 6
+        :hp_before: 7
+        :hp_after: 1
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
-          :natural: 1
-          :total: 7
+          :natural: 16
+          :total: 22
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 11
       :gambit: aleatório
     - :round: 4
       :turn: 2
@@ -5149,53 +6714,80 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
-        :advantage: false
-        :riders:
-        - :feature_slug: eldritch-knight-eldritch-strike
-          :feature_name: Eldritch Strike
-          :statuses:
-          - disadvantage_on_next_save
-        :damage: 3
-        :hp_before: 32
-        :hp_after: 29
-        :attack_roll:
-          :natural: 16
-          :total: 22
-          :crit: false
-          :damage: 3
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 29
-        :hp_after: 29
+        :amount: 0
+        :hp_before: 32
+        :hp_after: 32
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 5
-        :hp_before: 29
-        :hp_after: 24
+        :amount: 5
+        :hp_before: 32
+        :hp_after: 27
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 12
           :total: 18
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 5
+      - :kind: :attack
+        :target_id: Campeão
+        :target_name: Campeão
+        :advantage: false
+        :riders:
+        - :feature_slug: eldritch-knight-eldritch-strike
+          :feature_name: Eldritch Strike
+          :statuses:
+          - disadvantage_on_next_save
+        :amount: 8
+        :hp_before: 27
+        :hp_after: 19
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 8
+        :attack_roll:
+          :natural: 13
+          :total: 19
+          :armor_class: 17
+          :hit: true
+          :crit: false
       :gambit: aleatório
   - :round: 5
     :turns:
@@ -5210,23 +6802,32 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
-        :hp_before: 5
+        :amount: 13
+        :hp_before: 1
         :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 8
+          :modifiers: {}
+          :total: 13
         :attack_roll:
-          :natural: 13
-          :total: 19
+          :natural: 15
+          :total: 21
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 11
       :gambit: aleatório
   :draw: false
   :outcome: :victory
 12:
-  :winning_party: :party_one
-  :total_rounds: 5
+  :winning_party: :party_two
+  :total_rounds: 4
   :initiative:
   - :actor_id: Cavaleiro Arcano
     :natural: 12
@@ -5248,53 +6849,80 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 5
+        :amount: 5
         :hp_before: 60
         :hp_after: 55
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 5
         :attack_roll:
           :natural: 18
           :total: 24
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 5
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 55
         :hp_after: 55
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 4
           :total: 10
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 3
+        :amount: 3
         :hp_before: 55
         :hp_after: 52
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 3
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 3
       :gambit: aleatório
     - :round: 1
       :turn: 1
@@ -5319,7 +6947,14 @@
           :dice:
           - 8d6
           :rolls:
-          - 31
+          - 2
+          - 5
+          - 6
+          - 6
+          - 2
+          - 3
+          - 4
+          - 3
           :modifiers: {}
           :total: 31
       :gambit: aleatório
@@ -5363,31 +6998,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 12
         :attack_roll:
           :natural: 4
           :total: 10
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 12
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 5
           :total: 11
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 9
       :gambit: aleatório
       :extra: true
   - :round: 2
@@ -5431,31 +7084,50 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 36
         :hp_after: 36
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 3
+          :modifiers: {}
+          :total: 8
         :attack_roll:
           :natural: 1
           :total: 7
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 8
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 7
+        :amount: 11
         :hp_before: 36
-        :hp_after: 29
+        :hp_after: 25
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 2d8
+          :rolls:
+          - 1
+          - 5
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 19
           :total: 25
+          :armor_class: 16
+          :hit: true
           :crit: true
-          :damage: 7
       :gambit: aleatório
   - :round: 3
     :turns:
@@ -5470,53 +7142,80 @@
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
+        :amount: 0
         :hp_before: 33
         :hp_after: 33
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 7
           :total: 13
+          :armor_class: 17
+          :hit: false
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 4
+        :amount: 4
         :hp_before: 33
         :hp_after: 29
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 2
+          :modifiers: {}
+          :total: 4
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 4
       - :kind: :attack
         :target_id: Campeão
         :target_name: Campeão
-        :success: true
         :advantage: false
         :riders:
         - :feature_slug: eldritch-knight-eldritch-strike
           :feature_name: Eldritch Strike
           :statuses:
           - disadvantage_on_next_save
-        :damage: 9
+        :amount: 9
         :hp_before: 29
         :hp_after: 20
+        :roll_outcome:
+          :expression: 1d8 + 2
+          :resolved_expression: 1d8+2
+          :dice:
+          - 1d8
+          :rolls:
+          - 7
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 14
           :total: 20
+          :armor_class: 17
+          :hit: true
           :crit: false
-          :damage: 9
       :gambit: aleatório
     - :round: 3
       :turn: 2
@@ -5529,31 +7228,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 6
-        :hp_before: 29
-        :hp_after: 23
+        :amount: 6
+        :hp_before: 25
+        :hp_after: 19
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 1
+          :modifiers: {}
+          :total: 6
         :attack_roll:
           :natural: 17
           :total: 23
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 6
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 9
-        :hp_before: 23
-        :hp_after: 14
+        :amount: 9
+        :hp_before: 19
+        :hp_after: 10
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 15
           :total: 21
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 9
       :gambit: aleatório
   - :round: 4
     :turns:
@@ -5580,7 +7297,12 @@
           :dice:
           - 6d6
           :rolls:
-          - 16
+          - 2
+          - 2
+          - 1
+          - 5
+          - 1
+          - 5
           :modifiers: {}
           :total: 16
         :attack_roll:
@@ -5601,60 +7323,49 @@
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: false
         :advantage: false
         :riders: []
-        :damage: 0
-        :hp_before: 14
-        :hp_after: 14
+        :amount: 0
+        :hp_before: 10
+        :hp_after: 10
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 4
+          :modifiers: {}
+          :total: 9
         :attack_roll:
           :natural: 2
           :total: 8
+          :armor_class: 16
+          :hit: false
           :crit: false
-          :damage: 9
       - :kind: :attack
         :target_id: Cavaleiro Arcano
         :target_name: Cavaleiro Arcano
-        :success: true
         :advantage: false
         :riders: []
-        :damage: 11
-        :hp_before: 14
-        :hp_after: 3
+        :amount: 11
+        :hp_before: 10
+        :hp_after: 0
+        :roll_outcome:
+          :expression: 1d8 + 5
+          :resolved_expression: 1d8+5
+          :dice:
+          - 1d8
+          :rolls:
+          - 6
+          :modifiers: {}
+          :total: 11
         :attack_roll:
           :natural: 13
           :total: 19
+          :armor_class: 16
+          :hit: true
           :crit: false
-          :damage: 11
-      :gambit: aleatório
-  - :round: 5
-    :turns:
-    - :round: 5
-      :turn: 1
-      :actor_id: Cavaleiro Arcano
-      :actor_name: Cavaleiro Arcano
-      :actor_party: :party_one
-      :action:
-        :type: :attack
-      :results:
-      - :kind: :attack
-        :target_id: Campeão
-        :target_name: Campeão
-        :success: true
-        :advantage: false
-        :riders:
-        - :feature_slug: eldritch-knight-eldritch-strike
-          :feature_name: Eldritch Strike
-          :statuses:
-          - disadvantage_on_next_save
-        :damage: 8
-        :hp_before: 4
-        :hp_after: 0
-        :attack_roll:
-          :natural: 12
-          :total: 18
-          :crit: false
-          :damage: 8
       :gambit: aleatório
   :draw: false
   :outcome: :victory
