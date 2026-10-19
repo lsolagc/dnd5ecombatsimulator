@@ -358,11 +358,11 @@ features:
         action_type: no_action
         resource_name: Superiority Dice
         source_reference: Battle Master 3
-        notes: "O dado é somado ao dano do ataque com arma (applies_to: weapon_attack). O rider é a marca debuff: next_attack_advantage no alvo: o próximo ataque com arma contra ele, feito por outra criatura que não quem aplicou, tem vantagem; a marca expira no início do próximo turno de quem aplicou. Só vale para ataques com arma. damage_type fixado em bludgeoning (mesmo default do motor), pelo mesmo motivo do Precision Attack."
+        notes: "O dado é somado ao dano do ataque com arma (applies_to: weapon_attack). O rider aplica no alvo o status next_attack_advantage (statuses: [{ kind: next_attack_advantage, ends: source_turn_start }]): o próximo ataque com arma contra ele, feito por outra criatura que não quem aplicou, tem vantagem; o status expira no início do próximo turno de quem aplicou (ends: source_turn_start). Aplicado de novo por quem já o aplicou, renova em vez de acumular; vantagem não acumula, então um ataque gasta as marcas de todas as fontes de uma vez. Só vale para ataques com arma. damage_type fixado em bludgeoning (mesmo default do motor), pelo mesmo motivo do Precision Attack."
         unlocks:
           - level: 3
             description: Manobra disponível para escolha do Battle Master.
-            effect_payload: { kind: damage, roll: "1d8", target: enemy, damage_type: bludgeoning, applies_to: weapon_attack, debuff: next_attack_advantage }
+            effect_payload: { kind: damage, roll: "1d8", target: enemy, damage_type: bludgeoning, applies_to: weapon_attack, statuses: [ { kind: next_attack_advantage, ends: source_turn_start } ] }
       - name: "Maneuver: Commander's Strike"
         slug: battle-master-maneuver-commanders-strike
         description: "Na ação de Ataque, desiste de um dos ataques e usa uma ação bônus para gastar um dado de superioridade e permitir que um aliado use a reação para atacar, adicionando o dado ao dano do aliado."

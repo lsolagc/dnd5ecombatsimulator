@@ -14,7 +14,7 @@ module ActiveSupport
 
     # The Combat::Participant the character fights as in the service (built by its initialize_state).
     def participant_of(service, character)
-      service.send(:all_combatants).find { |participant| participant.character.equal?(character) }
+      service.send(:encounter).participants.find { |participant| participant.character.equal?(character) }
     end
   end
 end

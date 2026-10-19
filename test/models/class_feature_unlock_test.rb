@@ -59,6 +59,24 @@ class ClassFeatureUnlockTest < ActiveSupport::TestCase
     assert_equal [ "is missing roll" ], error_for.({ kind: "heal", target: "self" })
   end
 
+  test "a maneuver's statuses are a list of objects with exactly a kind and an end from Combat::Status's vocabulary" do
+    error_for = ->(payload) { ClassFeatureUnlock.new(class_feature: @feature, level: 4, effect_payload: payload).tap(&:valid?).errors[:effect_payload] }
+    maneuver = { kind: "damage", roll: "1d8", target: "enemy", applies_to: "weapon_attack" }
+    mark = { kind: "next_attack_advantage", ends: "source_turn_start" }
+
+    assert_empty error_for.(maneuver.merge(statuses: [ mark ]))
+    assert_empty error_for.(maneuver.merge(statuses: []))
+    assert_equal [ "has an unknown field debuff" ], error_for.(maneuver.merge(debuff: "next_attack_advantage")), "debuff left the vocabulary"
+    assert_equal [ "statuses must be a list" ], error_for.(maneuver.merge(statuses: mark))
+    assert_equal [ "statuses[0] must be an object" ], error_for.(maneuver.merge(statuses: [ "next_attack_advantage" ]))
+    assert_equal [ "statuses[1].kind must be one of #{Combat::Status::KINDS.join(', ')}" ], error_for.(maneuver.merge(statuses: [ mark, mark.merge(kind: "stunned") ]))
+    assert_equal [ "statuses[0].ends must be one of source_turn_start" ], error_for.(maneuver.merge(statuses: [ mark.merge(ends: "end_of_round") ]))
+    assert_equal [ "is missing statuses[0].ends" ], error_for.(maneuver.merge(statuses: [ mark.except(:ends) ]))
+    assert_equal [ "has an unknown field statuses[0].rounds" ], error_for.(maneuver.merge(statuses: [ mark.merge(rounds: 1) ]))
+    assert_equal [ "applies must be one of #{Combat::Status::KINDS.join(', ')}" ],
+      error_for.({ kind: "rider", event: "weapon_hit", applies: "stunned", against: "own_spells" }), "the rider applies a Status kind"
+  end
+
   test "every fixture and seed unlock fits the effect vocabulary" do
     SeedData.load_all
 

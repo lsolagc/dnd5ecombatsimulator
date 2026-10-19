@@ -1,7 +1,7 @@
 module Combat
   # Who fights in a simulation: CombatSimulatorService builds one per character sheet (a PlayerCharacter, the
   # Combatant's owner) when it starts. It owns what changes during the fight: the current HP, the spell slots
-  # left and each limited feature's uses left. Everything else it reads from the sheet through the delegate
+  # left, each limited feature's uses left and the statuses it carries (Combat::Status). Everything else it reads from the sheet through the delegate
   # list below, the contract a future Monster has to meet; the sheet itself is never written.
   class Participant
     # What the combat pipeline reads of whoever fights: the simulator, TurnRecord, EffectResolver (the weapon),
@@ -13,7 +13,7 @@ module Combat
              *AbilityScores::ABILITY_SCORE_COLUMNS.map { |ability| :"#{ability}_modifier" },
              to: :character
 
-    attr_reader :character, :current_hit_points, :feature_book
+    attr_reader :character, :current_hit_points, :feature_book, :statuses
 
     # hit_points: the HP it starts with (an experiment's), the sheet's maximum by default. Rolls the uses of
     # any feature whose uses_formula has dice (FeatureBook#initial_uses).
@@ -22,6 +22,7 @@ module Combat
       @current_hit_points = hit_points || character.max_hit_points
       @feature_book = FeatureBook.new(character)
       @uses = @feature_book.initial_uses
+      @statuses = []
     end
 
     def dead? = current_hit_points <= 0
@@ -74,7 +75,35 @@ module Combat
       end
     end
 
+    # At most one status per kind and source: applied again by the same source, it renews (replaces) the old one.
+    def add_status(status)
+      statuses.reject! { |held| held.kind == status.kind && held.source.equal?(status.source) }
+      statuses << status
+    end
+
+    # Removes and returns every status of the kind (not_from: applied by anyone but that participant; from: by
+    # that one only).
+    def take_statuses(kind, not_from: nil, from: nil)
+      return [] if statuses.empty?
+
+      taken, @statuses = statuses.partition { |status| status_matches?(status, kind, not_from:, from:) }
+      taken
+    end
+
+    def status?(kind, not_from: nil, from: nil)
+      statuses.any? { |status| status_matches?(status, kind, not_from:, from:) }
+    end
+
+    # The source's turn starts: the statuses it applied that end then go.
+    def expire_statuses!(source:)
+      statuses.reject! { |status| status.ends == "source_turn_start" && status.source.equal?(source) }
+    end
+
     private
+
+      def status_matches?(status, kind, not_from:, from:)
+        status.kind == kind && !(not_from && status.source.equal?(not_from)) && (from.nil? || status.source.equal?(from))
+      end
 
       def spend_spell_slot!(spell_level)
         remaining = available_spell_slots[spell_level].to_i

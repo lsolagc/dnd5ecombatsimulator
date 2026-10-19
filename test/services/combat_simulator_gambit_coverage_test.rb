@@ -90,18 +90,18 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     marked = add_rule(actor, position: 1, condition: :marked)
     unmarked = add_rule(actor, position: 2, condition: :unmarked)
     service = prepared_service(party_one: [ actor, ally ], party_two: [ first, second ], initiative_order: [ actor, ally, first, second ])
-    actor, first, second = [ actor, first, second ].map { |character| participant_of(service, character) }
-    marks = service.instance_variable_get(:@advantage_marks)
+    actor, ally, first, second = [ actor, ally, first, second ].map { |character| participant_of(service, character) }
+    mark = ->(target, source) { target.add_status(Combat::Status.new(kind: "next_attack_advantage", source:, ends: "source_turn_start")) }
 
-    marks[first.id] << actor.id # the actor's own mark: its next attack would not get advantage from it
+    mark.(first, actor) # the actor's own mark: its next attack would not get advantage from it
     assert_nil service.send(:gambit_target, actor:, gambit: marked)
     assert_equal first, service.send(:gambit_target, actor:, gambit: unmarked)
 
-    marks[second.id] << ally.id
+    mark.(second, ally)
     assert_equal second, service.send(:gambit_target, actor:, gambit: marked)
     assert_equal first, service.send(:gambit_target, actor:, gambit: unmarked)
 
-    marks[first.id] << ally.id
+    mark.(first, ally)
     assert_equal first, service.send(:gambit_target, actor:, gambit: marked)
     assert_nil service.send(:gambit_target, actor:, gambit: unmarked)
   end
@@ -213,7 +213,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     enemy = seed_character("Campeão", hit_points: 1)
     service = prepared_service(party_one: [ knight ], party_two: [ enemy ])
 
-    turns = service.send(:execute_round, round_number: 1, initiative_order: service.instance_variable_get(:@initiative_order))
+    turns = service.send(:execute_round, round_number: 1, initiative_order: service.send(:encounter).initiative_order)
 
     assert participant_of(service, enemy).dead?
     assert_equal [ [ :action_surge, 1 ], [ :cast_spell, 2 ] ], turns.map { |turn| [ turn.action[:type], turn.gambit[:position] ] }
@@ -320,9 +320,9 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     spell_target, other = seed_character("Campeão"), seed_character("Mestre de Batalha")
     gambit = add_rule(knight, position: 1, spell: "fire-bolt")
     service = prepared_service(party_one: [ knight ], party_two: [ spell_target, other ])
-    knight, spell_target = participant_of(service, knight), participant_of(service, spell_target)
+    knight, spell_target, other = [ knight, spell_target, other ].map { |character| participant_of(service, character) }
     chosen_action = service.send(:available_actions_for, actor: knight).find { |action| action.spell&.slug == "fire-bolt" }
-    service.instance_variable_get(:@advantage_marks)[spell_target.id] << other.id # a Distracting Strike mark from someone else
+    spell_target.add_status(Combat::Status.new(kind: "next_attack_advantage", source: other, ends: "source_turn_start")) # a Distracting Strike mark from someone else
 
     bonus = Dice.stub(:hit?, true) do
       service.send(:war_magic_turn, actor: knight, chosen_action: chosen_action.with(target: spell_target, gambit:), round_number: 1, turn_index: 1)
@@ -330,8 +330,8 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
 
     assert_equal 2, knight.attacks_per_action
     assert_equal [ [ spell_target.id, true ] ], bonus.results.map { |entry| entry.values_at(:target_id, :advantage) }, "one attack, with the mark's advantage"
-    assert_empty service.instance_variable_get(:@advantage_marks)[spell_target.id], "the bonus spends the mark"
-    assert_equal knight.id, service.instance_variable_get(:@eldritch_strike_pending)[spell_target.id], "the bonus leaves the Eldritch Strike mark"
+    assert_equal [ [ "disadvantage_on_next_save", knight ] ], spell_target.statuses.map { |status| [ status.kind, status.source ] },
+      "the bonus spends the mark and leaves the Eldritch Strike mark"
 
     attack = Dice.stub(:hit?, true) { service.send(:execute_attack_action, actor: knight, round_number: 1, turn_index: 1, focus: spell_target) }
     assert_equal [ spell_target.id ] * 2, attack.results.map { |entry| entry[:target_id] }, "the Attack action still makes attacks_per_action attacks"
@@ -397,14 +397,14 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     def prepared_service(party_one:, party_two:, initiative_order: party_one + party_two)
       service = simulator(party_one:, party_two:, seed: 1, max_rounds: 1)
       service.send(:initialize_state)
-      service.instance_variable_set(:@initiative_order, initiative_order.map { |character| participant_of(service, character) })
+      service.send(:encounter).initiative_order = initiative_order.map { |character| participant_of(service, character) }
       service
     end
 
     # Runs one round with the actor first, against a sturdy seed enemy; returns the actor's entries.
     def one_turn(actor)
       service = prepared_service(party_one: [ actor ], party_two: [ seed_character("Mestre de Batalha") ])
-      turns = service.send(:execute_round, round_number: 1, initiative_order: service.instance_variable_get(:@initiative_order))
+      turns = service.send(:execute_round, round_number: 1, initiative_order: service.send(:encounter).initiative_order)
       [ service, turns.select { |turn| turn.actor_id == actor.id } ]
     end
 

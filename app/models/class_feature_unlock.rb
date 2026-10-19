@@ -2,10 +2,13 @@ class ClassFeatureUnlock < ApplicationRecord
   TARGETS = %w[self enemy ally].freeze
   # The PHB's costs of an activity in the turn's economy (declared only: the simulator does not charge them yet).
   ACTION_COSTS = %w[action bonus_action reaction].freeze
+  # One status a maneuver applies to the target it hits (Distracting Strike), from Combat::Status's vocabulary.
+  STATUS = { "kind" => Combat::Status::KINDS, "ends" => Combat::Status::ENDS }.freeze
 
   # Every effect a feature can declare in its effect_payload: kind => the fields it requires and the ones it
   # may carry, each with the values it accepts (nil: any value; an Array: one of them; a Class: an instance of
-  # it; a Hash: a nested object with exactly those fields, all required). Any other field is refused.
+  # it; a Hash: a nested object with exactly those fields, all required; [ Hash ]: a list of such objects).
+  # Any other field is refused.
   # Only heal and damage without a trigger are turn actions (ClassFeature#action_payload_at); a trigger makes a
   # passive (PlayerCharacter#passive_effect_payloads). The other kinds carry no trigger: Combat::FeatureBook and
   # PlayerCharacter#combat_superiority read them by kind.
@@ -17,7 +20,7 @@ class ClassFeatureUnlock < ApplicationRecord
     "damage" => {
       required: { "roll" => String, "target" => TARGETS },
       optional: { "damage_type" => String, "attack" => %w[spell weapon], "save" => Hash, "applies_to" => %w[weapon_attack],
-                  "debuff" => %w[next_attack_advantage], "trigger" => %w[turn_start turn_end], "conditions" => Hash }
+                  "statuses" => [ STATUS ], "trigger" => %w[turn_start turn_end], "conditions" => Hash }
     },
     # attack_bonus and armor_class: no feature declares them, the sheet holds the final values (Archery, Defense in).
     "modifier" => {
@@ -32,7 +35,7 @@ class ClassFeatureUnlock < ApplicationRecord
                   "after" => { "cast_with_action" => %w[cantrip any_spell] } }
     },
     # Rides along a hit (Eldritch Strike): the target's next save against the attacker's own spells has disadvantage.
-    "rider" => { required: { "event" => %w[weapon_hit], "applies" => %w[disadvantage_on_next_save], "against" => %w[own_spells] } },
+    "rider" => { required: { "event" => %w[weapon_hit], "applies" => Combat::Status::KINDS, "against" => %w[own_spells] } },
     # Reroll a failed saving throw (Indomitable); its uses are the unlock's.
     "reroll_save" => { required: { "when" => %w[failed] } },
     # The pool whose uses every feature with the same resource_name spends (Combat Superiority's superiority dice).
@@ -63,16 +66,21 @@ class ClassFeatureUnlock < ApplicationRecord
       name = ->(key) { [ path, key ].compact.join(".") }
       missing = (required.keys - fields.keys).map { "is missing #{name.(it)}" }
       unknown = (fields.keys - required.keys - optional.keys).map { "has an unknown field #{name.(it)}" }
-      invalid = fields.flat_map do |key, value|
-        accepted = required.fetch(key) { optional[key] }
-        case accepted
-        when Hash then value.is_a?(Hash) ? field_problems(value.stringify_keys, accepted, {}, name.(key)) : [ "#{name.(key)} must be an object" ]
-        when Array then accepted.include?(value) ? [] : [ "#{name.(key)} must be one of #{accepted.join(', ')}" ]
-        when Class then value.is_a?(accepted) ? [] : [ "#{name.(key)} must be of type #{accepted.name.downcase}" ]
-        when Range then value.is_a?(Integer) && accepted.cover?(value) ? [] : [ "#{name.(key)} must be an integer of at least #{accepted.begin}" ]
-        else []
-        end
-      end
+      invalid = fields.flat_map { |key, value| value_problems(value, required.fetch(key) { optional[key] }, name.(key)) }
       missing + unknown + invalid
+    end
+
+    def value_problems(value, accepted, label)
+      case accepted
+      in [ Hash => item ]
+        return [ "#{label} must be a list" ] unless value.is_a?(Array)
+
+        value.each_with_index.flat_map { |element, index| value_problems(element, item, "#{label}[#{index}]") }
+      in Hash then value.is_a?(Hash) ? field_problems(value.stringify_keys, accepted, {}, label) : [ "#{label} must be an object" ]
+      in Array then accepted.include?(value) ? [] : [ "#{label} must be one of #{accepted.join(', ')}" ]
+      in Class then value.is_a?(accepted) ? [] : [ "#{label} must be of type #{accepted.name.downcase}" ]
+      in Range then value.is_a?(Integer) && accepted.cover?(value) ? [] : [ "#{label} must be an integer of at least #{accepted.begin}" ]
+      else []
+      end
     end
 end

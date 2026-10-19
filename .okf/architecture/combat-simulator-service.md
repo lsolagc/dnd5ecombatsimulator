@@ -21,6 +21,12 @@ sources:
   - id: participant-rb
     title: app/services/combat/participant.rb
     resource: ../../app/services/combat/participant.rb
+  - id: encounter-rb
+    title: app/services/combat/encounter.rb
+    resource: ../../app/services/combat/encounter.rb
+  - id: status-rb
+    title: app/services/combat/status.rb
+    resource: ../../app/services/combat/status.rb
 status: stable
 ---
 
@@ -74,7 +80,7 @@ result = CombatSimulatorService.new(
   true, `call` raises `CombatSimulatorService::Aborted` (used to cancel
   [simulation batches](/architecture/simulation-batches.md)).
 - `max_rounds`: default 20; the loop stops early once one party has no
-  combatants left alive (`combat_over?`).
+  combatants left alive (`Combat::Encounter#over?`).
 
 # Turn resolution
 
@@ -101,12 +107,10 @@ recording them draws nothing extra. Turn results carry no human-readable
    maneuver) is *not* an action of its own: choosing it makes the turn a normal
    weapon attack, and only if the attack hits is the maneuver's die rolled
    through the same pipeline (twice the dice on a critical hit) and added as an extra
-   damage instance, spending one superiority die — a miss spends nothing. A
-   `"debuff": "next_attack_advantage"` (Distracting Strike) also marks the
-   target: the first weapon attack against it by anyone other than the marker
-   rolls with advantage and uses the mark up, and the mark expires at the start
-   of the marker's next turn (`@advantage_marks`). Weapon attacks only; spell
-   attacks ignore marks.
+   damage instance, spending one superiority die — a miss spends nothing. Each
+   item of the payload's `"statuses"` is then applied to the target as a
+   `Combat::Status` (see Statuses below): Distracting Strike's
+   `next_attack_advantage`, `ends: source_turn_start`.
    Both are **riders** ([glossary](/ubiquitous-language.md)), logged as
    `Combat::Rider#to_h`:[^rider-rb] the attack action lists the riders chosen
    for it (`action: { type: :attack, riders: [ { feature_slug, feature_name } ] }`,
@@ -114,10 +118,10 @@ recording them draws nothing extra. Turn results carry no human-readable
    attack lists the riders it applied in `riders`, always present and empty on a
    miss. An applied rider is `{ feature_slug, feature_name }`, then its effect's
    keys when it has one (`kind`, `applied`, `amount`, `hp_before`, `hp_after`,
-   `roll_outcome`: the maneuver's die), then `statuses` when it applied any (the
-   maneuver's `debuff`, Eldritch Strike's `disadvantage_on_next_save`). The order
-   of several riders on one attack is not settled yet: no combatant has both. The marks themselves are still
-   `@eldritch_strike_pending` and `@advantage_marks` until phase 3.4 (Status).
+   `roll_outcome`: the maneuver's die), then `statuses` when it applied any (only
+   the kinds: the maneuver's `statuses`, Eldritch Strike's
+   `disadvantage_on_next_save`). The order of several riders on one attack is not
+   settled yet: no combatant has both.
    The target is picked at random from the payload's `"target"` kind
    (`self`, `enemy` = opposing party, `ally` = own party): a damage feature or
    spell never lands on the actor or their party, and a heal never on an enemy.
@@ -165,11 +169,11 @@ An actor with enabled gambits never samples: its rules are walked by
 (attack always; a feature with uses, a known maneuver, a spell with a slot) and
 its condition finds a target among the living combatants of the rule's side
 (`self`, `ally` = own party with the actor, `enemy`), **walked in initiative
-order** (`@initiative_order`) — `any` takes the first, `hp_below`/`hp_above`
+order** (`Combat::Encounter#initiative_order`) — `any` takes the first, `hp_below`/`hp_above`
 the first strictly under/over X% of max HP, `lowest_hp`/`highest_hp` the
 minimum/maximum (ties to initiative order), `marked`/`unmarked` whether the
-target carries a Distracting Strike mark from someone else (one the actor would
-use), and `resource_at_least` checks the actor's resource for the rule's own
+target carries a `next_attack_advantage` status from someone else (one the actor
+would use: `Participant#status?(kind, not_from: actor)`), and `resource_at_least` checks the actor's resource for the rule's own
 action (feature uses, the superiority-dice pool for maneuvers, slots of the
 spell's level) and takes the first candidate. The
 chosen target replaces `resolve_feature_target` for features and spells; every
@@ -203,6 +207,52 @@ Attack action, so no Extra Attack; since 2026-10-18, see the
 target if it is a living enemy, else the first living enemy in initiative order. Decisions:
 [gambits-decisions.md](/architecture/gambits-decisions.md).
 
+# Encounter
+
+The fight as a whole is one `Combat::Encounter` (phase 3.4 of the DDD
+refactor), built in `initialize_state` from the two parties of participants;
+`call` sets its `initiative_order` once initiative is rolled (party order
+before that).[^encounter-rb] The simulator asks it every side question and
+keeps none of that state itself:
+
+| Query | Answers |
+|---|---|
+| `party_one`, `party_two`, `participants` | the parties, and both in party order (the initiative rolls' order) |
+| `party_for(participant)` | `:party_one` or `:party_two` (the log's `actor_party`) |
+| `allies_of(participant)`, `enemies_of(participant)` | its own party (itself included), the other one |
+| `alive(party)`, `first_living_enemy(participant)` | who is standing; the first living enemy in initiative order (War Magic's and a gambit's fallback) |
+| `over?` | a party has no one standing |
+| `start_turn(actor)` | called at the top of every turn, before the dead actor is skipped: expires on every participant the statuses the actor applied with `ends: source_turn_start` |
+
+# Statuses
+
+A status is a `Combat::Status` (`kind`, `source`: the participant who applied
+it, `ends`), carried by the participant it is on.[^status-rb] `kind` comes from
+`Combat::Status::KINDS`, the one vocabulary that
+[ClassFeatureUnlock](/models/class-feature-unlock.md) also validates the
+`rider`'s `applies` and a maneuver's `statuses` against; `ends` is
+`source_turn_start` or nil (only used up). A carrier holds **at most one per
+kind and source**: the same source applying it again renews it
+(`Participant#add_status`). Two kinds:
+
+- `next_attack_advantage` (Distracting Strike, `ends: source_turn_start`): the
+  first weapon attack against the carrier by anyone other than a source rolls
+  with advantage and uses up **every** such mark that applies to that attacker
+  (`take_statuses(kind, not_from: attacker)`), since advantage does not stack
+  (5e): marks from two Battle Masters give one attack advantage once. The
+  attacker's own mark stays. Weapon attacks only; spell attacks ignore marks.
+  Weapon attacks have no disadvantage yet (issue #48), so nothing cancels it.
+- `disadvantage_on_next_save` (Eldritch Strike, applied on every hit by a
+  feature whose `rider` `applies` it, no end of its own; 5e ends it at the end
+  of the attacker's next turn, [issue #50](https://github.com/lsolagc/dnd5ecombatsimulator/issues/50)): the next spell the source
+  casts at the carrier uses up the source's own status, save or not
+  (`take_statuses(kind, from: caster)`), and a save it calls for has
+  disadvantage. Each attacker keeps its own: a second Eldritch Knight's hit no
+  longer erases the first's.
+
+Same RNG draws, golden files, queries and impact metrics (200 seeds per composition) as before the move;
+the old `@advantage_marks` and `@eldritch_strike_pending` are gone.
+
 # Participant
 
 Who fights is a `Combat::Participant`, one per sheet, built in
@@ -218,6 +268,7 @@ owns what changes during the fight, and nothing writes the sheet:
 | spell slots left | `available_spell_slots` (from `PlayerCharacter#spell_slots`), `cast_spell(spell, targets:, disadvantage_on_save:)` (spends a slot of the spell's level, none for a cantrip) |
 | uses left | `uses_left(class_feature_id)` (nil: unlimited), `spend_use!(class_feature_id)` (floored at 0), from `FeatureBook#initial_uses` |
 | turn passives | `apply_turn_passives!(trigger:)` (see [passive-effect-triggers.md](/architecture/passive-effect-triggers.md)) |
+| statuses it carries | `statuses`, `add_status(status)` (renews one of the same kind and source), `take_statuses(kind, not_from:, from:)` (removes and returns them), `status?(kind, not_from:, from:)`, `expire_statuses!(source:)` (see Statuses) |
 | what it can do | `feature_book` |
 
 Everything else it reads from the sheet through one explicit `delegate` list,
@@ -245,7 +296,7 @@ walks unlocks or compares feature names.[^feature-book-rb] It is read-only and h
 | `action_payload(feature)` | the feature's action effect (`PlayerCharacter#action_payload`), nil when not unlocked, not an action at the level, or a maneuver the character has not learned |
 | `unlock_with(kind)` | the unlock in force of the feature whose effect is `extra_action` (Action Surge) or `reroll_save` (Indomitable), or nil |
 | `weapon_attacks_after(spell)` | how many bonus weapon attacks (a `grants_activity`'s `count`, one) follow this spell: `after.cast_with_action` `cantrip` (War Magic) only after a cantrip, `any_spell` (Improved War Magic) after any; nil for none |
-| `rider(event:, applies:)` | the feature whose hit leaves the Eldritch Strike mark (`rider`, `event: weapon_hit`, `applies: disadvantage_on_next_save`), or nil; its slug and name go in the attack's `riders` |
+| `rider(event:, applies:)` | the feature whose hit leaves the Eldritch Strike status (`rider`, `event: weapon_hit`, `applies: disadvantage_on_next_save`), or nil; its slug and name go in the attack's `riders` |
 | `resource_feature_id(feature)` | whose uses the feature spends: the `resource_pool`'s (Combat Superiority) for a maneuver, else its own |
 | `initial_uses` | `{ class_feature_id => uses }` at the start of combat (see Resource tracking) |
 
@@ -297,5 +348,9 @@ floored at 0 (`spend_use!`); once exhausted, that action stops being offered.
 [^feature-book-rb]: Source: `app/services/combat/feature_book.rb`
 
 [^participant-rb]: Source: `app/services/combat/participant.rb`
+
+[^encounter-rb]: Source: `app/services/combat/encounter.rb`
+
+[^status-rb]: Source: `app/services/combat/status.rb`
 
 [^rider-rb]: Source: `app/services/combat/rider.rb`

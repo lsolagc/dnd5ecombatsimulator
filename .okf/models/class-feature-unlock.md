@@ -54,13 +54,15 @@ the full trigger/condition contract, which `PlayerCharacter` reads directly
 rather than through `Combat::EffectResolver`.
 
 A Battle Master maneuver's payload also carries `applies_to: weapon_attack`
-(and Distracting Strike `debuff: next_attack_advantage`), which
-`CombatSimulatorService` reads to run the maneuver as a rider on a weapon attack
-— see [combat-simulator-service.md](/architecture/combat-simulator-service.md).
-`debuff` is a single string with one supported value, so its shape will change
-once other features or spells apply a [status](/ubiquitous-language.md) with
-a duration; [issue #45](https://github.com/lsolagc/dnd5ecombatsimulator/issues/45)
-plans it as part of the status system.[^issue-45]
+(and Distracting Strike `statuses: [ { kind: next_attack_advantage, ends:
+source_turn_start } ]`), which `CombatSimulatorService` reads to run the
+maneuver as a rider on a weapon attack and apply each item as a
+[status](/ubiquitous-language.md) (`Combat::Status`) on the target it hits — see
+[combat-simulator-service.md](/architecture/combat-simulator-service.md).
+`statuses` replaced the single-string `debuff` (phase 3.4); each item has
+exactly a `kind` (`Combat::Status::KINDS`) and an `ends`
+(`Combat::Status::ENDS`: `source_turn_start`). Conditions and durations in
+rounds stay with [issue #45](https://github.com/lsolagc/dnd5ecombatsimulator/issues/45).[^issue-45]
 
 # Effect vocabulary
 
@@ -68,17 +70,18 @@ Every `effect_payload` is validated against one table,
 `ClassFeatureUnlock::EFFECT_KINDS` (enumerable, the base of a future wizard for
 custom classes and monsters): a `kind` outside it, a required field missing, a
 value it does not accept or a field it does not know is refused. Nested objects
-(`after`) are checked the same way. The engine reads a feature by this `kind`,
+(`after`) and each object of a list (`statuses`, errors named `statuses[0].kind`)
+are checked the same way. The engine reads a feature by this `kind`,
 never by its name (phase 5.2 of the DDD refactor).[^unlock-rb]
 
 | `kind` | Required | Optional | Read by |
 |---|---|---|---|
 | `heal` | `roll` (string), `target` (`self`\|`enemy`\|`ally`) | `trigger` (`turn_start`\|`turn_end`), `conditions`, `save` | the turn action pipeline; with a `trigger`, the passives |
-| `damage` | `roll`, `target` | `damage_type`, `attack` (`spell`\|`weapon`), `save`, `applies_to` (`weapon_attack`), `debuff` (`next_attack_advantage`), `trigger`, `conditions` | the same; `applies_to` makes a maneuver |
+| `damage` | `roll`, `target` | `damage_type`, `attack` (`spell`\|`weapon`), `save`, `applies_to` (`weapon_attack`), `statuses` (a list of `{ kind, ends }`: `kind` from `Combat::Status::KINDS`, `ends` `source_turn_start`), `trigger`, `conditions` | the same; `applies_to` makes a maneuver |
 | `modifier` | `modifier` (`attack_bonus`\|`armor_class`\|`damage_bonus`\|`critical_hit_threshold`), `value` (integer) | `trigger` (`always`), `target` | the passives |
 | `extra_action` | — | — | Action Surge: `FeatureBook#unlock_with`, `Gambit#action_surge?`; uses in `uses` |
 | `grants_activity` | `activity` (`weapon_attack`), `count` (integer ≥ 1), `as` (an [action cost](/ubiquitous-language.md): `action`\|`bonus_action`\|`reaction`), `after.cast_with_action` (`cantrip`\|`any_spell`) | — | War Magic / Improved War Magic: `FeatureBook#weapon_attacks_after`; `as` is declared, not charged (issue #39) |
-| `rider` | `event` (`weapon_hit`), `applies` (`disadvantage_on_next_save`), `against` (`own_spells`) | — | Eldritch Strike: `FeatureBook#rider` |
+| `rider` | `event` (`weapon_hit`), `applies` (a `Combat::Status::KINDS` kind; Eldritch Strike `disadvantage_on_next_save`), `against` (`own_spells`) | — | Eldritch Strike: `FeatureBook#rider` |
 | `reroll_save` | `when` (`failed`) | — | Indomitable: `FeatureBook#unlock_with`; uses in `uses` |
 | `resource_pool` | — | — | Combat Superiority: `PlayerCharacter#combat_superiority`, `PlayerCharacterManeuver`; maneuvers with its `resource_name` spend its uses |
 

@@ -107,4 +107,45 @@ class Combat::ParticipantTest < ActiveSupport::TestCase
                  Combat::Participant.new(merlin).then { |wizard| [ wizard.spellcasting_feature, wizard.spell_save_dc, wizard.spell_attack_bonus ] }
     assert_equal thorin.passive_effect_payloads(trigger: "always"), fighter.passive_effect_payloads(trigger: "always")
   end
+
+  test "a status is one per kind and source on its carrier: applied again by the same source, it renews" do
+    carrier, source, other = [ :aragorn, :aragorn_copy, :merlin ].map { |name| Combat::Participant.new(player_characters(name)) }
+    mark = ->(from, ends: "source_turn_start") { Combat::Status.new(kind: "next_attack_advantage", source: from, ends:) }
+
+    carrier.add_status(mark.(source, ends: nil))
+    carrier.add_status(mark.(source))
+    carrier.add_status(mark.(other))
+    carrier.add_status(Combat::Status.new(kind: "disadvantage_on_next_save", source:, ends: nil))
+
+    assert_equal [ mark.(source), mark.(other) ], carrier.statuses.first(2), "the renewed one replaces the old, it does not stack"
+    assert_equal 3, carrier.statuses.size, "another kind from the same source is its own status"
+  end
+
+  test "take_statuses removes and returns the kind's statuses, by anyone but not_from or only from" do
+    carrier, source, other = [ :aragorn, :aragorn_copy, :merlin ].map { |name| Combat::Participant.new(player_characters(name)) }
+    [ source, other ].each { |from| carrier.add_status(Combat::Status.new(kind: "next_attack_advantage", source: from, ends: nil)) }
+    save = Combat::Status.new(kind: "disadvantage_on_next_save", source:, ends: nil)
+    carrier.add_status(save)
+
+    assert carrier.status?("next_attack_advantage", not_from: source)
+    assert_not carrier.status?("disadvantage_on_next_save", from: other)
+    assert_equal [ other ], carrier.take_statuses("next_attack_advantage", not_from: source).map(&:source)
+    assert_not carrier.status?("next_attack_advantage", not_from: source)
+    assert_equal [], carrier.take_statuses("disadvantage_on_next_save", from: other)
+    assert_equal [ save ], carrier.take_statuses("disadvantage_on_next_save", from: source)
+    assert_equal [ source ], carrier.statuses.map(&:source)
+    assert_equal [], Combat::Participant.new(@aragorn).take_statuses("next_attack_advantage")
+  end
+
+  test "expire_statuses! removes only the source's statuses that end at the start of its turn" do
+    carrier, source, other = [ :aragorn, :aragorn_copy, :merlin ].map { |name| Combat::Participant.new(player_characters(name)) }
+    kept = [ Combat::Status.new(kind: "disadvantage_on_next_save", source:, ends: nil),
+             Combat::Status.new(kind: "next_attack_advantage", source: other, ends: "source_turn_start") ]
+    carrier.add_status(Combat::Status.new(kind: "next_attack_advantage", source:, ends: "source_turn_start"))
+    kept.each { |status| carrier.add_status(status) }
+
+    carrier.expire_statuses!(source:)
+
+    assert_equal kept, carrier.statuses
+  end
 end

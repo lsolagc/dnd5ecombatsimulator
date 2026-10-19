@@ -30,25 +30,17 @@ class CombatSimulatorService
 
     @rng = @seed.nil? ? Random.new : Random.new(@seed)
     @round_log = []
-    # Eldritch Strike pending marks (a disadvantage_on_next_save rider): target.id => attacker.id, consumed by the first
-    # saving throw the target rolls against a spell from that same attacker. No
-    # turn/round tracking — see notes on the Eldritch Strike class feature (db/seeds.rb).
-    @eldritch_strike_pending = {}
-    # Distracting Strike marks: target.id => ids of the combatants who marked it. The first weapon attack
-    # against the target by anyone else rolls with advantage and uses one mark up; a mark also
-    # expires at the start of its owner's next turn (see execute_round).
-    @advantage_marks = Hash.new { |marks, target_id| marks[target_id] = [] }
   end
 
   def call
     with_seed do
       initialize_state
-      initiative_order = @initiative_order = build_initiative_order
+      initiative_order = @encounter.initiative_order = build_initiative_order
 
       round_number = 0
 
       while round_number < @max_rounds
-        break if combat_over?
+        break if @encounter.over?
         raise Aborted if @abort_if&.call
 
         round_number += 1
@@ -75,16 +67,18 @@ class CombatSimulatorService
 
     # In party order, so the uses rolled from a formula (Combat::Participant.new) keep the RNG sequence.
     def initialize_state
-      @party_one, @party_two = @sheets.map do |sheets|
+      party_one, party_two = @sheets.map do |sheets|
         sheets.map { |sheet| Combat::Participant.new(sheet, hit_points: @hit_points[sheet.id]) }
       end
-      @all_combatants = @party_one + @party_two
+      @encounter = Combat::Encounter.new(party_one:, party_two:)
     end
+
+    attr_reader :encounter
 
     # One d20 per combatant, in party order (the RNG sequence), sorted by total with ties kept in that
     # order. The rolls stay in @initiative for the result.
     def build_initiative_order
-      initiative_entries = all_combatants.each_with_index.map do |combatant, index|
+      initiative_entries = @encounter.participants.each_with_index.map do |combatant, index|
         roll = Dice.d20(modifier: combatant.initiative)
         { combatant:, natural: roll.natural, total: roll.total, tie_breaker: index }
       end
@@ -97,9 +91,9 @@ class CombatSimulatorService
       turns = []
 
       initiative_order.each_with_index do |actor, turn_index|
-        @advantage_marks.each_value { |sources| sources.delete(actor.id) }
+        @encounter.start_turn(actor)
         next if actor.dead?
-        break if combat_over?
+        break if @encounter.over?
 
         start_log = turn_passive_log(actor:, trigger: :turn_start, round_number:, turn_index: turn_index + 1)
         turns << start_log if start_log
@@ -152,7 +146,7 @@ class CombatSimulatorService
     # spends one use, logs a marker and runs the list twice more (normal action, then the extra one),
     # with surge rules skipped inside both, so a surge never chains into another.
     def gambit_turns(actor:, gambits:, round_number:, turn_index:, surging: false, extra: false)
-      return [] if combat_over?
+      return [] if @encounter.over?
 
       chosen_action = choose_gambit_action(actor:, gambits:, available: available_actions_for(actor:), surging:)
       return [ idle_turn(actor:, round_number:, turn_index:).with(extra:) ] unless chosen_action
@@ -168,7 +162,7 @@ class CombatSimulatorService
       return [ gambit_turn(actor:, chosen_action:, round_number:, turn_index:).with(extra: true) ] if extra
 
       [ gambit_turn(actor:, chosen_action:, round_number:, turn_index:),
-        (war_magic_turn(actor:, chosen_action:, round_number:, turn_index:) unless combat_over?) ].compact
+        (war_magic_turn(actor:, chosen_action:, round_number:, turn_index:) unless @encounter.over?) ].compact
     end
 
     # FFXII-style choice: the first enabled gambit (top to bottom) whose action is available right now
@@ -221,10 +215,10 @@ class CombatSimulatorService
     def gambit_target(actor:, gambit:)
       pool = case gambit.target
       when "self" then [ actor ]
-      when "ally" then own_party_for(actor)
-      when "enemy" then enemy_party_for(actor)
+      when "ally" then @encounter.allies_of(actor)
+      when "enemy" then @encounter.enemies_of(actor)
       end
-      candidates = @initiative_order.select { |combatant| pool.include?(combatant) && !combatant.dead? }
+      candidates = @encounter.initiative_order.select { |combatant| pool.include?(combatant) && !combatant.dead? }
 
       case gambit.condition
       when "any", "resource_at_least" then candidates.first # the resource is checked in choose_gambit_action
@@ -232,15 +226,10 @@ class CombatSimulatorService
       when "hp_above" then candidates.find { |combatant| combatant.current_hit_points * 100 > gambit.condition_value * combatant.max_hit_points }
       when "lowest_hp" then candidates.min_by(&:current_hit_points)
       when "highest_hp" then candidates.max_by(&:current_hit_points)
-      when "marked" then candidates.find { |combatant| marked_for?(actor:, target: combatant) }
-      when "unmarked" then candidates.find { |combatant| !marked_for?(actor:, target: combatant) }
+      when "marked" then candidates.find { |combatant| combatant.status?("next_attack_advantage", not_from: actor) }
+      when "unmarked" then candidates.find { |combatant| !combatant.status?("next_attack_advantage", not_from: actor) }
       else raise ArgumentError, "Unsupported gambit condition: #{gambit.condition.inspect}"
       end
-    end
-
-    # The actor's next weapon attack on the target would use up someone else's Distracting Strike mark.
-    def marked_for?(actor:, target:)
-      @advantage_marks.fetch(target.id, []).any? { |source_id| source_id != actor.id }
     end
 
     def gambit_turn(actor:, chosen_action:, round_number:, turn_index:)
@@ -254,14 +243,14 @@ class CombatSimulatorService
 
     # The turn's log entry; the header (round, turn, actor) is built in Combat::TurnRecord.for.
     def turn_record(actor:, round_number:, turn_index:, **entry)
-      Combat::TurnRecord.for(actor:, party: party_for(actor), round: round_number, turn: turn_index, **entry)
+      Combat::TurnRecord.for(actor:, party: @encounter.party_for(actor), round: round_number, turn: turn_index, **entry)
     end
 
     # Action Surge for an actor without gambits: if the actor has an unused Action Surge, take one extra
     # action right after their normal action. Not recursive — the extra action never grants another one.
     # A gambit-driven actor only surges through a rule (see gambit_turns).
     def action_surge_turn(actor:, round_number:, turn_index:)
-      return nil if combat_over?
+      return nil if @encounter.over?
 
       unlock = actor.feature_book.unlock_with("extra_action")
       return nil unless unlock
@@ -290,7 +279,7 @@ class CombatSimulatorService
 
       if chosen_action.chosen_by_gambit?
         spell_target = chosen_action.target
-        focus = enemy_party_for(actor).include?(spell_target) && !spell_target.dead? ? spell_target : first_living_enemy(actor:)
+        focus = @encounter.enemies_of(actor).include?(spell_target) && !spell_target.dead? ? spell_target : @encounter.first_living_enemy(actor)
       end
       gambit = chosen_action.chosen_by_gambit? ? gambit_log(chosen_action.gambit) : RANDOM_GAMBIT
       execute_attack_action(actor:, round_number:, turn_index:, focus:, attacks:).with(bonus: true, gambit:)
@@ -368,27 +357,31 @@ class CombatSimulatorService
     # focus: a fixed target (War Magic for a gambit-driven actor), with the same fallback once it is down.
     # attacks: how many attacks to make; the Attack action's attacks_per_action (Extra Attack) by default.
     def execute_attack_action(actor:, round_number:, turn_index:, maneuver: nil, gambit: nil, focus: nil, attacks: actor.attacks_per_action)
-      enemy_party = enemy_party_for(actor)
+      enemy_party = @encounter.enemies_of(actor)
       entries = []
       pending_maneuver = maneuver
 
       next_target = lambda do
         if gambit
-          gambit_target(actor:, gambit:) || first_living_enemy(actor:)
+          gambit_target(actor:, gambit:) || @encounter.first_living_enemy(actor)
         elsif focus
-          focus.dead? ? first_living_enemy(actor:) : focus
+          focus.dead? ? @encounter.first_living_enemy(actor) : focus
         else
-          alive_combatants(enemy_party).sample(random: @rng)
+          @encounter.alive(enemy_party).sample(random: @rng)
         end
       end
       action = Combat::CombatAction.new(source_type: :attack, source_id: nil, actor:)
 
-      Combat::ActionRunner.attack(action:, next_target:, attacks:, advantage_against: ->(target) { consume_advantage_mark(target:, attacker: actor) }) do |target, result, advantage|
+      # The first weapon attack against a target marked by others (Distracting Strike) uses every such mark up
+      # and rolls with advantage once: advantage does not stack. The attacker's own mark stays.
+      advantage_against = ->(target) { target.take_statuses("next_attack_advantage", not_from: actor).any? }
+      Combat::ActionRunner.attack(action:, next_target:, attacks:, advantage_against:) do |target, result, advantage|
         riders = []
         if result.attack_roll.hit
           eldritch_strike = actor.feature_book.rider(event: "weapon_hit", applies: "disadvantage_on_next_save")
           if eldritch_strike
-            @eldritch_strike_pending[target.id] = actor.id
+            # ponytail: no end of its own (5e: until the end of the attacker's next turn); only a save uses it up.
+            target.add_status(Combat::Status.new(kind: "disadvantage_on_next_save", source: actor, ends: nil))
             riders << Combat::Rider.for(feature: eldritch_strike, statuses: [ "disadvantage_on_next_save" ])
           end
           if pending_maneuver
@@ -407,8 +400,8 @@ class CombatSimulatorService
     end
 
     # Adds the maneuver's die to a weapon attack that just hit: rolls it through the effect pipeline
-    # (doubled on a critical hit), spends a superiority die and applies the payload's debuff, if any.
-    # Returns the applied Combat::Rider, the debuff as its status.
+    # (doubled on a critical hit), spends a superiority die and applies the payload's statuses to the target,
+    # if any (Distracting Strike: next_attack_advantage). Returns the applied Combat::Rider, with their kinds.
     # ponytail: the die lands as its own damage instance (own log line, own resistance rounding), not
     # inside the weapon's single damage roll; merge them if that ever distorts a metric.
     def apply_maneuver_rider(actor:, target:, maneuver:, crit:)
@@ -417,26 +410,10 @@ class CombatSimulatorService
       results = Combat::ActionRunner.call(action:, crit:)
       actor.spend_use!(actor.feature_book.resource_feature_id(feature))
 
-      # ponytail: `debuff` is one string with one supported value, no duration and one effect per payload;
-      # replace it with a list of status applications once a feature or spell applies a status (issue #45).
-      debuff = maneuver.payload["debuff"]
-      case debuff
-      when nil then nil
-      when "next_attack_advantage" then @advantage_marks[target.id] << actor.id
-      else raise ArgumentError, "Unsupported debuff: #{debuff.inspect}"
-      end
+      statuses = maneuver.payload.fetch("statuses", [])
+      statuses.each { |status| target.add_status(Combat::Status.new(kind: status["kind"], source: actor, ends: status["ends"])) }
 
-      Combat::Rider.for(feature:, effect: serialize_effect_results(results:).first.compact, statuses: Array(debuff))
-    end
-
-    # The first attacker other than a mark's owner uses that mark up and rolls with advantage.
-    def consume_advantage_mark(target:, attacker:)
-      marks = @advantage_marks[target.id]
-      index = marks.index { |source_id| source_id != attacker.id }
-      return false unless index
-
-      marks.delete_at(index)
-      true
+      Combat::Rider.for(feature:, effect: serialize_effect_results(results:).first.compact, statuses: statuses.pluck("kind"))
     end
 
     def execute_class_feature_action(actor:, chosen_action:, round_number:, turn_index:)
@@ -479,10 +456,10 @@ class CombatSimulatorService
       payload = chosen_action.payload
       target = chosen_action.chosen_by_gambit? ? chosen_action.target : resolve_feature_target(actor:, payload:)
 
-      disadvantage_on_save = target && @eldritch_strike_pending[target.id] == actor.id
-      @eldritch_strike_pending.delete(target.id) if disadvantage_on_save
+      # Any spell of the actor at the target uses up the actor's Eldritch Strike mark on it, save or not.
+      disadvantage_on_save = target&.take_statuses("disadvantage_on_next_save", from: actor).present?
 
-      results = actor.cast_spell(spell, targets: [ target ].compact, disadvantage_on_save: !!disadvantage_on_save)
+      results = actor.cast_spell(spell, targets: [ target ].compact, disadvantage_on_save:)
 
       turn_record(actor:, round_number:, turn_index:, results: serialize_effect_results(results:), action: {
         type: :cast_spell,
@@ -520,8 +497,8 @@ class CombatSimulatorService
     def resolve_feature_target(actor:, payload:)
       candidates = case payload["target"]
       when "self" then [ actor ]
-      when "enemy" then alive_combatants(enemy_party_for(actor))
-      when "ally" then alive_combatants(own_party_for(actor))
+      when "enemy" then @encounter.alive(@encounter.enemies_of(actor))
+      when "ally" then @encounter.alive(@encounter.allies_of(actor))
       else raise ArgumentError, "Unsupported target: #{payload["target"].inspect}"
       end
 
@@ -529,8 +506,8 @@ class CombatSimulatorService
     end
 
     def build_result(round_number:)
-      party_one_alive = alive_combatants(@party_one).any?
-      party_two_alive = alive_combatants(@party_two).any?
+      party_one_alive = @encounter.alive(@encounter.party_one).any?
+      party_two_alive = @encounter.alive(@encounter.party_two).any?
 
       draw = !party_one_alive && !party_two_alive
       winning_party = if draw
@@ -559,32 +536,5 @@ class CombatSimulatorService
         draw: draw,
         outcome: outcome
       }
-    end
-
-    def combat_over?
-      alive_combatants(@party_one).empty? || alive_combatants(@party_two).empty?
-    end
-
-    attr_reader :all_combatants
-
-    def alive_combatants(collection)
-      collection.reject(&:dead?)
-    end
-
-    def party_for(combatant)
-      @party_one.include?(combatant) ? :party_one : :party_two
-    end
-
-    def own_party_for(combatant)
-      party_for(combatant) == :party_one ? @party_one : @party_two
-    end
-
-    def first_living_enemy(actor:)
-      enemy_party = enemy_party_for(actor)
-      @initiative_order.find { |combatant| enemy_party.include?(combatant) && !combatant.dead? }
-    end
-
-    def enemy_party_for(combatant)
-      party_for(combatant) == :party_one ? @party_two : @party_one
     end
 end

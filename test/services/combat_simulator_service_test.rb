@@ -293,26 +293,63 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     ally = fresh_character(:aragorn_copy)
     target = hittable_target(armor_class: 100)
     service = maneuver_service(battle_master:, target:, allies: [ ally ])
-    marks = service.send(:instance_variable_get, :@advantage_marks)
+    marks = -> { participant_of(service, target).statuses.map { |status| [ status.kind, status.source.id, status.ends ] } }
     strike = maneuver_action(service:, actor: battle_master, slug: "distracting-strike")
     strike_now = -> { service.send(:execute_action, actor: participant_of(service, battle_master), chosen_action: strike, round_number: 1, turn_index: 1) }
     attack_now = ->(actor) { service.send(:execute_attack_action, actor: participant_of(service, actor), round_number: 1, turn_index: 1).results.first }
 
     Random.srand(1) # AC 100: a miss
     assert_not strike_now.call.results.first.dig(:attack_roll, :hit)
-    assert_empty marks[target.id], "no hit, no mark"
+    assert_empty marks.call, "no hit, no mark"
 
     target.combatant.update!(armor_class: 1)
     Random.srand(1)
-    assert strike_now.call.results.first.dig(:attack_roll, :hit)
-    assert_equal [ battle_master.id ], marks[target.id]
+    hit = strike_now.call.results.first
+    assert hit.dig(:attack_roll, :hit)
+    assert_equal [ "next_attack_advantage" ], hit[:riders].sole[:statuses], "the log keeps only the kinds"
+    assert_equal [ [ "next_attack_advantage", battle_master.id, "source_turn_start" ] ], marks.call
 
     assert_not attack_now.(battle_master)[:advantage], "the mark never helps the one who set it"
-    assert_equal [ battle_master.id ], marks[target.id]
+    assert_equal [ [ "next_attack_advantage", battle_master.id, "source_turn_start" ] ], marks.call
 
     assert attack_now.(ally)[:advantage], "the next attack by anyone else has advantage"
-    assert_empty marks[target.id]
+    assert_empty marks.call
     assert_not attack_now.(ally)[:advantage], "the mark is consumed by that one attack"
+  end
+
+  test "Distracting Strike again by the same Battle Master renews its mark instead of stacking it" do
+    battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
+    ally = fresh_character(:aragorn_copy)
+    target = hittable_target(armor_class: 1)
+    service = maneuver_service(battle_master:, target:, allies: [ ally ])
+    strike = maneuver_action(service:, actor: battle_master, slug: "distracting-strike")
+    attack_now = -> { service.send(:execute_attack_action, actor: participant_of(service, ally), round_number: 1, turn_index: 1, attacks: 1).results.sole }
+
+    2.times do |turn|
+      Random.srand(1)
+      assert service.send(:execute_action, actor: participant_of(service, battle_master), chosen_action: strike, round_number: 1, turn_index: turn).results.first.dig(:attack_roll, :hit)
+    end
+
+    assert_equal [ battle_master.id ], participant_of(service, target).statuses.map { |status| status.source.id }
+    assert attack_now.call[:advantage]
+    assert_not attack_now.call[:advantage], "two hits from the same source leave one mark: one advantage"
+  end
+
+  test "marks from two sources give one attack advantage once and are all used up by it; the attacker's own mark stays" do
+    battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
+    other_marker, attacker = fresh_character(:aragorn_copy), fresh_character(:merlin)
+    target = hittable_target(armor_class: 1)
+    service = maneuver_service(battle_master:, target:, allies: [ other_marker, attacker ])
+    marked = participant_of(service, target)
+    [ battle_master, other_marker, attacker ].each do |source|
+      marked.add_status(Combat::Status.new(kind: "next_attack_advantage", source: participant_of(service, source), ends: "source_turn_start"))
+    end
+    attack_now = -> { service.send(:execute_attack_action, actor: participant_of(service, attacker), round_number: 1, turn_index: 1, attacks: 1).results.sole }
+
+    # Advantage does not stack (5e): two marks that apply still make one attack with advantage, not two.
+    assert attack_now.call[:advantage]
+    assert_equal [ attacker.id ], marked.statuses.map { |status| status.source.id }, "both marks that applied are gone, the attacker's own is left"
+    assert_not attack_now.call[:advantage], "the attacker's own mark never helps it"
   end
 
   test "a Distracting Strike mark expires at the start of its owner's next turn, leaving other owners' marks alone" do
@@ -321,12 +358,30 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     target = hittable_target(armor_class: 1)
     @hit_points[target.id] = 0 # the fight is over, so the turn ends right after the expiry and no attack spends a mark
     service = maneuver_service(battle_master:, target:, allies: [ ally ])
-    marks = service.send(:instance_variable_get, :@advantage_marks)
-    marks[target.id] = [ ally.id, battle_master.id ]
+    marked = participant_of(service, target)
+    [ ally, battle_master ].each do |source|
+      marked.add_status(Combat::Status.new(kind: "next_attack_advantage", source: participant_of(service, source), ends: "source_turn_start"))
+    end
 
     service.send(:execute_round, round_number: 1, initiative_order: [ participant_of(service, battle_master) ])
 
-    assert_equal [ ally.id ], marks[target.id]
+    assert_equal [ ally.id ], marked.statuses.map { |status| status.source.id }
+  end
+
+  test "a fallen Battle Master's mark still expires when its turn comes up" do
+    battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
+    ally = fresh_character(:aragorn_copy)
+    target = hittable_target(armor_class: 1)
+    @hit_points[battle_master.id] = 0
+    service = maneuver_service(battle_master:, target:, allies: [ ally ])
+    marked = participant_of(service, target)
+    [ ally, battle_master ].each do |source|
+      marked.add_status(Combat::Status.new(kind: "next_attack_advantage", source: participant_of(service, source), ends: "source_turn_start"))
+    end
+
+    service.send(:execute_round, round_number: 1, initiative_order: [ participant_of(service, battle_master) ])
+
+    assert_equal [ ally.id ], marked.statuses.map { |status| status.source.id }
   end
 
   test "a Battle Master who does not know Precision Attack does not see it as an available action" do
@@ -531,8 +586,23 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     turn = service.send(:execute_attack_action, actor: participant_of(service, caster), round_number: 1, turn_index: 1)
 
     assert_equal true, turn.results.first.dig(:attack_roll, :hit), "expected the attack to hit (attack_bonus is set high for determinism)"
-    pending = service.send(:instance_variable_get, :@eldritch_strike_pending)
-    assert_equal caster.id, pending[target.id]
+    assert_equal [ [ "disadvantage_on_next_save", caster.id, nil ] ],
+      participant_of(service, target).statuses.map { |status| [ status.kind, status.source.id, status.ends ] }, "no end of its own: only a save uses it up"
+  end
+
+  test "two Eldritch Knights hitting the same target each keep their own disadvantage" do
+    first, second = spellcaster_with_known_spells(:eldritch_knight_ten), spellcaster_with_known_spells(:eldritch_knight_eighteen)
+    target = hittable_target(armor_class: 1)
+    service = simulator(party_one: [ first, second ], party_two: [ target ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+    first, second, target = [ first, second, target ].map { |character| participant_of(service, character) }
+
+    Dice.stub(:hit?, true) { [ first, second ].each { |knight| service.send(:execute_attack_action, actor: knight, round_number: 1, turn_index: 1, attacks: 1) } }
+    assert_equal [ first, second ], target.statuses.map(&:source), "the second attacker's mark does not erase the first's"
+
+    save_spell = service.send(:available_actions_for, actor: first).find { |action| action.spell&.slug == "test-save-spell" }
+    service.send(:execute_cast_spell_action, actor: first, chosen_action: save_spell, round_number: 1, turn_index: 2)
+    assert_equal [ second ], target.statuses.map(&:source), "a spell from the first uses up only the first's"
   end
 
   test "Eldritch Strike is logged as a rider on the attack that hits, not on a miss" do
@@ -563,8 +633,8 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     service = simulator(party_one: [ caster ], party_two: [ target ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
-    service.send(:instance_variable_get, :@eldritch_strike_pending)[target.id] = caster.id
     caster = participant_of(service, caster)
+    participant_of(service, target).add_status(Combat::Status.new(kind: "disadvantage_on_next_save", source: caster, ends: nil))
 
     chosen_action = service.send(:available_actions_for, actor: caster).find do |action|
       action.spell&.slug == "test-save-spell"
@@ -577,8 +647,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     first_turn = service.send(:execute_cast_spell_action, actor: caster, chosen_action:, round_number: 1, turn_index: 1)
     assert_equal 3, first_turn.results.first[:amount], "expected disadvantage to cause the save to fail (full damage)"
 
-    pending = service.send(:instance_variable_get, :@eldritch_strike_pending)
-    assert_nil pending[target.id], "expected the Eldritch Strike mark to be consumed by the first save"
+    assert_empty participant_of(service, target).statuses, "expected the Eldritch Strike mark to be consumed by the first save"
 
     # Same seed, no pending mark this time: only one d20 is rolled (total 16), the save
     # succeeds against DC 8, halving the damage (3 / 2 = 1).
@@ -594,8 +663,9 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     other_caster = spellcaster_with_known_spells(:eldritch_knight_eighteen)
     attacker_leak_service = simulator(party_one: [ other_caster ], party_two: [ marked_target ], seed: 1, max_rounds: 1)
     attacker_leak_service.send(:initialize_state)
-    attacker_leak_service.send(:instance_variable_get, :@eldritch_strike_pending)[marked_target.id] = player_characters(:eldritch_knight_ten).id
     other_caster = participant_of(attacker_leak_service, other_caster)
+    someone_else = Combat::Participant.new(player_characters(:eldritch_knight_ten))
+    participant_of(attacker_leak_service, marked_target).add_status(Combat::Status.new(kind: "disadvantage_on_next_save", source: someone_else, ends: nil))
 
     other_action = attacker_leak_service.send(:available_actions_for, actor: other_caster).find do |action|
       action.spell&.slug == "test-save-spell"
@@ -611,19 +681,22 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     # The same attacker must not get disadvantage against a target they haven't marked.
     marker = spellcaster_with_known_spells(:eldritch_knight_ten)
     unmarked_target = fresh_character(:aragorn_copy)
-    target_leak_service = simulator(party_one: [ marker ], party_two: [ unmarked_target ], seed: 1, max_rounds: 1)
+    target_leak_service = simulator(party_one: [ marker ], party_two: [ unmarked_target, marked_target ], seed: 1, max_rounds: 1)
     target_leak_service.send(:initialize_state)
-    target_leak_service.send(:instance_variable_get, :@eldritch_strike_pending)[marked_target.id] = marker.id # a mark on someone else entirely
     marker = participant_of(target_leak_service, marker)
+    other_target = participant_of(target_leak_service, marked_target) # in the same fight, marked by the caster
+    other_target.add_status(Combat::Status.new(kind: "disadvantage_on_next_save", source: marker, ends: nil))
 
     marker_action = target_leak_service.send(:available_actions_for, actor: marker).find do |action|
       action.spell&.slug == "test-save-spell"
     end
     assert marker_action, "expected test-save-spell to be available to the marking attacker"
+    aimed = marker_action.with(target: participant_of(target_leak_service, unmarked_target), gambit: Gambit.new(position: 1, target: :enemy, condition: :any, action_kind: :spell)) # aimed, like a gambit pick
 
     Random.srand(4)
-    unmarked_turn = target_leak_service.send(:execute_cast_spell_action, actor: marker, chosen_action: marker_action, round_number: 1, turn_index: 1)
+    unmarked_turn = target_leak_service.send(:execute_cast_spell_action, actor: marker, chosen_action: aimed, round_number: 1, turn_index: 1)
     assert_equal 1, unmarked_turn.results.first[:amount], "the same attacker casting against an unmarked target must not get disadvantage"
+    assert_equal [ marker ], other_target.statuses.map(&:source), "the mark on the other target must stay"
   end
 
   test "serialized results carry the spell attack roll only when the effect made one" do
@@ -731,7 +804,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
       add_gambit(actor, position: 1, condition: :lowest_hp)
       service = simulator(party_one: [ actor ], party_two: enemies, seed: SEED_WITH_REVERSED_INITIATIVE, max_rounds: 1)
       first_target = actor_turns(actor:, result: service.call).first[:results].first[:target_id]
-      [ first_target, service.instance_variable_get(:@initiative_order).map(&:id) - [ actor.id ] ]
+      [ first_target, service.send(:encounter).initiative_order.map(&:id) - [ actor.id ] ]
     end
 
     target, order = run.call
@@ -831,10 +904,10 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     service = gambit_service(actor:)
     service.send(:initialize_state)
     fighter = participant_of(service, actor)
-    service.instance_variable_set(:@initiative_order, [ fighter, *service.instance_variable_get(:@party_two) ])
+    service.send(:encounter).initiative_order = [ fighter, *service.send(:encounter).party_two ]
     assert_equal 3, fighter.uses_left(second_wind.id)
 
-    turns = service.send(:execute_round, round_number: 1, initiative_order: service.instance_variable_get(:@initiative_order))
+    turns = service.send(:execute_round, round_number: 1, initiative_order: service.send(:encounter).initiative_order)
 
     assert_equal 1, turns.count { |turn| turn.actor_id == actor.id && turn.action[:feature_slug] == "second-wind" }
     assert_equal 2, fighter.uses_left(second_wind.id)
@@ -874,7 +947,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     service = simulator(party_one: [ actor ], party_two: enemies, seed: 1, max_rounds: 1)
     service.send(:initialize_state)
     enemies.each { |enemy| participant_of(service, enemy).define_singleton_method(:take_damage) { |**| @current_hit_points = 0 } }
-    service.instance_variable_set(:@initiative_order, [ e, actor, c, a, d, b ].map { |character| participant_of(service, character) })
+    service.send(:encounter).initiative_order = [ e, actor, c, a, d, b ].map { |character| participant_of(service, character) }
 
     turn = Dice.stub(:hit?, true) do # every attack hits and kills
       service.send(:execute_attack_action, actor: participant_of(service, actor), round_number: 1, turn_index: 1, gambit:)
@@ -992,7 +1065,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     target = hittable_target(armor_class: 1)
     service = maneuver_service(battle_master:, target:)
     fighter = participant_of(service, battle_master)
-    service.instance_variable_set(:@initiative_order, [ fighter, participant_of(service, target) ])
+    service.send(:encounter).initiative_order = [ fighter, participant_of(service, target) ]
     gambit = add_gambit(battle_master, position: 1, action_kind: :class_feature,
                                        class_feature: class_features(:fighter_battle_master_maneuver_precision_attack))
     chosen = service.send(:choose_gambit_action, actor: fighter, gambits: [ gambit ], available: service.send(:available_actions_for, actor: fighter))
@@ -1014,7 +1087,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
 
     turn = actor_turns(actor:, result: service.call).first
 
-    order = service.instance_variable_get(:@initiative_order).map(&:id) - [ actor.id ]
+    order = service.send(:encounter).initiative_order.map(&:id) - [ actor.id ]
     assert_equal enemies.reverse.map(&:id), order, "the seed must put the enemies in initiative order opposite to their party order"
     assert_equal [ order.first ] * 20, turn[:results].map { |attack| attack[:target_id] }
   end
@@ -1048,7 +1121,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     service.send(:initialize_state)
     gambits = actor.gambits.to_a
     ally, actor, enemy = [ ally, actor, enemy ].map { |character| participant_of(service, character) }
-    service.instance_variable_set(:@initiative_order, [ ally, actor, enemy ])
+    service.send(:encounter).initiative_order = [ ally, actor, enemy ]
 
     chosen = service.send(:choose_gambit_action, actor:, gambits:, available: service.send(:available_actions_for, actor:))
 
@@ -1064,7 +1137,7 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     service = simulator(party_one: [ actor ], party_two: [ enemy ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
     actor, enemy = participant_of(service, actor), participant_of(service, enemy)
-    service.instance_variable_set(:@initiative_order, [ actor, enemy ])
+    service.send(:encounter).initiative_order = [ actor, enemy ]
 
     assert_nil service.send(:gambit_target, actor:, gambit:)
 

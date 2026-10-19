@@ -28,7 +28,9 @@ features:
         # Omitido = herda o efeito do unlock anterior com effect_payload (num nível, vale o do maior unlock até
         # ele que tem um; ClassFeature#effect_payload_at). Repita-o só quando o efeito muda no nível.
         # Manobras (kind: damage) acrescentam applies_to: weapon_attack (o dado é somado ao dano de um ataque com
-        # arma que acertou, em vez de ser uma ação própria) e, opcionalmente, debuff: next_attack_advantage.
+        # arma que acertou, em vez de ser uma ação própria) e, opcionalmente, os status que aplicam no alvo:
+        # statuses: [ { kind: next_attack_advantage, ends: source_turn_start } ] (kind: Combat::Status::KINDS;
+        # ends: Combat::Status::ENDS; cada item com exatamente kind e ends).
         # O kind vem de um vocabulário fechado (ClassFeatureUnlock::EFFECT_KINDS; campo desconhecido é recusado):
         # heal | damage | modifier e, rodados pelo motor por regra própria (sem trigger):
         #   { kind: extra_action }                                    # Surto de Ação

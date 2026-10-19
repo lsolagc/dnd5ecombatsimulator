@@ -122,8 +122,9 @@ actor included). The pipeline itself only distinguishes `self` from "the
 
 Two more optional keys are read only by `CombatSimulatorService`, not by the
 pipeline: `"applies_to": "weapon_attack"` (the effect rides on a weapon attack
-instead of being an action of its own) and `"debuff": "next_attack_advantage"`
-(mark the target, see [combat-simulator-service.md](/architecture/combat-simulator-service.md)).
+instead of being an action of its own) and `"statuses": [ { "kind":
+"next_attack_advantage", "ends": "source_turn_start" } ]` (statuses applied to
+the target it hits, see [combat-simulator-service.md](/architecture/combat-simulator-service.md)).
 `ActionRunner.call` / `EffectExecutor.call` accept `crit:` so an effect riding on
 a critical weapon hit doubles its dice.
 

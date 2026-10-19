@@ -150,7 +150,9 @@ battle_master_maneuver_distracting_strike_level_3:
     target: enemy
     damage_type: bludgeoning
     applies_to: weapon_attack
-    debuff: next_attack_advantage
+    statuses:
+      - kind: next_attack_advantage
+        ends: source_turn_start
 
 eldritch_knight_archetype_level_3:
   class_feature: fighter_eldritch_knight_archetype
