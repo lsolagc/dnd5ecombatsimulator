@@ -141,8 +141,8 @@ natural 20 always hits, a natural 1 always misses, otherwise total >= AC —
 `Dice.hit?`; a critical hit doubles the dice via `RollExpression#resolve(crit:
 true)`, as above, never the flat modifier). A spell attack rolls with
 `PlayerCharacter#spell_attack_bonus` and crits on a natural 20; a weapon attack
-rolls with `#weapon_attack_bonus` (attack bonus + passive bonuses such as
-Archery) and crits at `#critical_hit_threshold` (19 for a Champion). `advantage:`
+rolls with `#weapon_attack_bonus` (the sheet's final attack bonus, Archery
+included, + any passive `attack_bonus`) and crits at `#critical_hit_threshold` (19 for a Champion). `advantage:`
 on `EffectExecutor.call` rolls the d20 twice and keeps the higher. Damage is
 applied with the **effect's** `damage_type` (the attacker's weapon), so the
 target's resistance, immunity or vulnerability to *that* type applies.

@@ -15,8 +15,8 @@ combatant:
   intelligence: 12
   wisdom: 10
   charisma: 8
-  armor_class: 16
-  attack_bonus: 5
+  armor_class: 16     # valor final, como na ficha: armadura, escudo, Destreza e estilo de luta já somados
+  attack_bonus: 5     # bônus final de acerto, com proficiência e estilo de luta
   damage_dice: 1d8
   damage_type: slashing
 spells: [fire-bolt, shield]      # opcional; respeita os limites de magias conhecidas do nível

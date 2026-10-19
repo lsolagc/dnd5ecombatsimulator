@@ -63,8 +63,13 @@ In combat, a weapon attack runs through the pipeline as the Attack action
 (see [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)),
 which reads these from the character:[^player-character-rb]
 
-- `weapon_attack_bonus`: the combatant's `attack_bonus` plus passive
-  `attack_bonus` modifiers (Fighting Style: Archery's +2).
+- `weapon_attack_bonus`: the combatant's `attack_bonus`, the sheet's final
+  to-hit bonus (proficiency and Fighting Style: Archery already in it), plus
+  any passive `attack_bonus` modifier a feature declares (none does).
+- `armor_class`: the combatant's `armor_class`, the sheet's final AC
+  (armor, shield, Dexterity and Fighting Style: Defense already in it), plus
+  any passive `armor_class` modifier a feature declares (none does). The
+  wizard's help texts say both are final values.
 - `weapon_damage_modifier`: `strength_modifier` plus passive `damage_bonus`
   modifiers (Fighting Style: Dueling's +2).
 - `damage_dice`: default `"1d4"`. It must be a single `NdM` die.

@@ -82,6 +82,12 @@ never by its name (phase 5.2 of the DDD refactor).[^unlock-rb]
 | `reroll_save` | `when` (`failed`) | — | Indomitable: `FeatureBook#unlock_with`; uses in `uses` |
 | `resource_pool` | — | — | Combat Superiority: `PlayerCharacter#combat_superiority`, `PlayerCharacterManeuver`; maneuvers with its `resource_name` spend its uses |
 
+No feature declares a `modifier` of `attack_bonus` or `armor_class`: the
+sheet holds the final to-hit bonus and AC ([PlayerCharacter](/models/player-character.md)),
+so Fighting Style: Archery and Defense have no `effect_payload` (still
+choosable, informative only). Both values stay in the vocabulary, and the
+engine still adds such a passive if one is declared.
+
 Only `heal` and `damage` without a `trigger` are turn actions
 (`#action_payload_at`); only a payload with a `trigger` is a passive. The last
 five kinds take no `trigger`, so they are neither. The rider names its moment

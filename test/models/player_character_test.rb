@@ -223,10 +223,23 @@ class PlayerCharacterTest < ActiveSupport::TestCase
 
   # basic attack configuration
 
-  test "armor_class includes the +1 bonus from Fighting Style: Defense" do
+  test "armor_class is the sheet's final value: Fighting Style: Defense adds nothing on top" do
     character = player_characters(:fighter_defender)
 
+    assert_equal 17, character.armor_class
+    assert_equal character.combatant.armor_class, character.armor_class
+  end
+
+  test "armor_class and weapon_attack_bonus add a passive modifier a feature declares" do
+    character = player_characters(:fighter_defender)
+    ClassFeatureUnlock.create!(class_feature: class_features(:fighter_fighting_style_defense), level: 2, description: "Test.",
+                               effect_payload: { kind: "modifier", trigger: "always", modifier: "armor_class", value: 1 })
+    ClassFeatureUnlock.create!(class_feature: class_features(:fighter_second_wind), level: 2, description: "Test.",
+                               effect_payload: { kind: "modifier", trigger: "always", modifier: "attack_bonus", value: 2 })
+    character.level = 2
+
     assert_equal character.combatant.armor_class + 1, character.armor_class
+    assert_equal character.combatant.attack_bonus + 2, character.weapon_attack_bonus
   end
 
   test "armor_class has no bonus without a chosen fighting style" do

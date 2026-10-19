@@ -64,7 +64,7 @@ Three findings from reading a batch's downloaded log, approved by the user:
   draws): `dice: ["2d10"]`, both values in `rolls`, total their sum + 2; `"2d6 + 1d4"`
   without a crit lists three values. A weapon attack and a Fire Bolt spell attack against
   a Fighting Style: Defense target log `attack_roll` with the same keys in the same order
-  and `armor_class` = base + 1. Every golden-file result saved as a `SimulationRun`
+  and `armor_class` = base + 1 (since 2026-10-18 the +1 is a passive the test declares). Every golden-file result saved as a `SimulationRun`
   (jsonb, checked to have reordered the keys) comes back from `logs_json` in the
   simulator's order, an unknown key last. `SimulationRunTest` (metrics) unchanged and green.
 - Sabotage, each red then restored by copy: doubling the sum again (two variants: one sum

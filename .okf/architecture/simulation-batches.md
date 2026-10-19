@@ -52,8 +52,12 @@ between two sides of `PlayerCharacter`s and aggregates the results.[^batch-model
   `ActiveRecord::ReadOnlyRecord`; the starting HP goes to the simulator instead
   (`SimulationBatch#hit_points`, `{ id => current_hit_points }`, passed by
   `SimulationRunJob` as `hit_points:`), whose `Combat::Participant`s hold the
-  HP, slots and uses, so the sheet never changes. AC and attack bonus are the sheet's base values: passive bonuses
-  such as the Defense or Archery fighting styles still stack on top.
+  HP, slots and uses, so the sheet never changes. AC and attack bonus are the sheet's final values (the Defense
+  and Archery fighting styles already in them, since 2026-10-18); a batch saved
+  before holds the base AC and attack bonus of its time, without them, so it
+  runs, and "Repetir" repeats it, with a Defense fighter 1 AC and an Archery
+  fighter 2 to hit lower than when it was saved, and shows that lower AC. Not
+  migrated: those batches are test data (decided with the user).
   The snapshot also freezes each character's `name` into its entry, once (a
   missing name only, never rewritten, not even by `cancel!`'s `update!`), so
   the log's header keeps the name the batch ran with.

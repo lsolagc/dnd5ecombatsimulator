@@ -10,7 +10,7 @@ combatant:
   intelligence: 10
   wisdom: 12
   charisma: 8
-  armor_class: 18
+  armor_class: 19
   attack_bonus: 5
   damage_dice: 1d10
   damage_type: slashing

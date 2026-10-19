@@ -58,6 +58,7 @@ elora_combatant:
 
 fighter_archer_combatant:
   armor_class: 16
+  attack_bonus: 2
   strength: 15
   dexterity: 12
   constitution: 14
@@ -70,7 +71,7 @@ fighter_archer_combatant:
   combatable: fighter_archer (PlayerCharacter)
 
 fighter_defender_combatant:
-  armor_class: 16
+  armor_class: 17
   strength: 15
   dexterity: 12
   constitution: 14

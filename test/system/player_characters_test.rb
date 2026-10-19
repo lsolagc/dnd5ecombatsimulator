@@ -51,6 +51,20 @@ class PlayerCharactersTest < ApplicationSystemTestCase
     page.save_screenshot(Rails.root.join("tmp/screenshots/edit_prefilled_step2.png"))
   end
 
+  test "the sheet's AC and attack bonus are the final values, as the help texts say" do
+    defender = player_characters(:fighter_defender) # Fighting Style: Defense, already in the sheet's AC
+    visit edit_player_character_url(defender)
+    find("[data-wizard-target='railItem'][data-step='2']").click
+
+    assert_field "Classe de armadura", with: "17"
+    assert_selector "#armor_class_help", text: "Valor final, como na ficha: armadura, escudo, Destreza e estilo de luta já somados."
+    assert_equal "armor_class_help", find_field("Classe de armadura")["aria-describedby"]
+    assert_equal 17, defender.armor_class, "the simulator uses the sheet's value"
+    assert_selector "#attack_bonus_help", text: "Bônus final de acerto, com proficiência e estilo de luta."
+    assert_equal "attack_bonus_help", find("input[name$='[attack_bonus]']")["aria-describedby"]
+    page.save_screenshot(Rails.root.join("tmp/screenshots/wizard_final_values_help.png"))
+  end
+
   test "changing class while editing clears the stale HP override so it recalculates" do
     visit edit_player_character_url(@player_character)
     find("[data-wizard-target='railItem'][data-step='2']").click

@@ -19,6 +19,7 @@ class ClassFeatureUnlock < ApplicationRecord
       optional: { "damage_type" => String, "attack" => %w[spell weapon], "save" => Hash, "applies_to" => %w[weapon_attack],
                   "debuff" => %w[next_attack_advantage], "trigger" => %w[turn_start turn_end], "conditions" => Hash }
     },
+    # attack_bonus and armor_class: no feature declares them, the sheet holds the final values (Archery, Defense in).
     "modifier" => {
       required: { "modifier" => %w[attack_bonus armor_class damage_bonus critical_hit_threshold], "value" => Integer },
       optional: { "trigger" => %w[always], "target" => TARGETS }

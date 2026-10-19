@@ -132,7 +132,7 @@ recording them draws nothing extra. Turn results carry no human-readable
    [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)); the
    turn's result then carries an `attack_roll` (`natural`, `total`, `armor_class`,
    `hit`, `crit`). A weapon attack logs the same `attack_roll` (`armor_class` is the
-   target's effective AC, Fighting Style: Defense included) and its damage as an
+   target's effective AC: the sheet's final AC, Fighting Style: Defense in it) and its damage as an
    effect does: `{ kind: :attack, target_id, target_name, advantage, riders, amount,
    hp_before, hp_after, roll_outcome, attack_roll }`, `amount` 0 on a miss and
    `hp_before`/`hp_after` around the hit (before any maneuver rider); no `applied`,

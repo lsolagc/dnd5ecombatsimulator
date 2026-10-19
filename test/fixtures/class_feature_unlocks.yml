@@ -52,21 +52,11 @@ fighting_style_archery_level_1:
   class_feature: fighter_fighting_style_archery
   level: 1
   description: Gain +2 to attack rolls made with ranged weapons.
-  effect_payload:
-    kind: modifier
-    trigger: always
-    modifier: attack_bonus
-    value: 2
 
 fighting_style_defense_level_1:
   class_feature: fighter_fighting_style_defense
   level: 1
   description: Gain +1 to Armor Class while wearing armor.
-  effect_payload:
-    kind: modifier
-    trigger: always
-    modifier: armor_class
-    value: 1
 
 fighting_style_dueling_level_1:
   class_feature: fighter_fighting_style_dueling

@@ -3,7 +3,8 @@
 # Idempotent: features, unlocks, spell slots and spells are updated in place; classes, level
 # progressions and characters that already exist are left alone (ClassLevelProgression freezes
 # itself after_find, so existing rows are immutable). Keys omitted from a YAML entry take the
-# column default.
+# column default on a new record and keep their stored value on an existing one: removing a key
+# from a seed takes a data migration.
 module SeedData
   ROOT = Rails.root.join("db/seeds")
   CLASS_KEYS = %w[ name hit_die description spellcasting_modifier progression features ].freeze

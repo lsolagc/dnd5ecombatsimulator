@@ -168,7 +168,10 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     fire_bolt = spells(:fire_bolt)
     fire_bolt.update!(effect_payload: fire_bolt.effect_payload.merge("attack" => "spell"))
     caster = spellcaster_with_known_spells(:eldritch_knight_seven)
-    defender = player_characters(:fighter_defender) # Fighting Style: Defense, +1 AC
+    defender = player_characters(:fighter_defender)
+    # No seed declares an AC passive (the sheet's AC is final); one declared here, so the effective AC differs.
+    class_feature_unlocks(:fighting_style_defense_level_1)
+      .update!(effect_payload: { kind: "modifier", trigger: "always", modifier: "armor_class", value: 1 })
     service = simulator(party_one: [ caster ], party_two: [ defender ], seed: 1, max_rounds: 1)
     service.send(:initialize_state)
     actor = participant_of(service, caster)

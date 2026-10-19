@@ -62,11 +62,11 @@ documentation described — resistances/vulnerabilities/immunities are
 |-------|------|-------------|
 | combatable_type / combatable_id | string / integer | Delegated type — today always `PlayerCharacter` |
 | strength / dexterity / constitution / intelligence / wisdom / charisma | integer | Ability scores, default 10 |
-| armor_class | integer | Default 10 |
+| armor_class | integer | Default 10 — the sheet's final AC (fighting style included) |
 | speed | integer | Default 30 |
 | proficiency_bonus | integer | Default 2 |
 | max_hit_points | integer | Default 1 |
-| attack_bonus | integer | Default 0 — basic-attack to-hit modifier |
+| attack_bonus | integer | Default 0 — basic-attack to-hit modifier, the sheet's final value (fighting style included) |
 | damage_dice | string | Default `"1d4"` — basic-attack damage dice notation |
 | damage_type | string | Default `"bludgeoning"` — basic-attack damage type, validated against the known damage-type set |
 | resistances / vulnerabilities / immunities | jsonb | `{ "conditions" => {...}, "damage_types" => {...} }`, all keys default `false` |

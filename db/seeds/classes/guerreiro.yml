@@ -86,8 +86,6 @@ features:
     source_reference: Fighter 1
     unlocks:
       - level: 1
-        effect_payload: { kind: modifier, trigger: always, modifier: attack_bonus, value: 2 }
-        notes: "Aplicado a todo ataque (não só à distância) porque o motor não distingue arma corpo-a-corpo de arma à distância."
   - name: "Fighting Style: Defense"
     slug: fighting-style-defense
     description: "Ganha +1 de bônus na Classe de Armadura enquanto estiver usando armadura."
@@ -95,8 +93,6 @@ features:
     source_reference: Fighter 1
     unlocks:
       - level: 1
-        effect_payload: { kind: modifier, trigger: always, modifier: armor_class, value: 1 }
-        notes: Aplicado incondicionalmente porque o uso de armadura não é rastreado pelo motor.
   - name: "Fighting Style: Dueling"
     slug: fighting-style-dueling
     description: "Ganha +2 de bônus nas jogadas de dano ao empunhar uma arma corpo-a-corpo em uma mão e nenhuma outra arma."

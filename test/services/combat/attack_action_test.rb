@@ -92,11 +92,12 @@ class Combat::AttackActionTest < ActiveSupport::TestCase
     assert_equal 17, result.attack_roll.natural
   end
 
-  test "Fighting Style: Archery adds +2 to the weapon attack roll" do
+  test "Fighting Style: Archery adds nothing on top of the sheet's final attack_bonus" do
     @attacker = player_characters(:fighter_archer)
     (_, result, _), = with_rolls(10) { attack(next_target: -> { @target }) }
 
-    assert_equal 10 + @attacker.combatant.attack_bonus + 2, result.attack_roll.total
+    assert_equal 10 + 2, result.attack_roll.total
+    assert_equal 2, @attacker.combatant.attack_bonus
   end
 
   test "Fighting Style: Dueling adds +2 to the weapon damage" do

@@ -61,7 +61,8 @@ class PlayerCharacter < ApplicationRecord
     hit_die.to_s.delete("d").to_i
   end
 
-  # To-hit bonus of the equipped weapon, with passive bonuses (e.g. Fighting Style: Archery).
+  # To-hit bonus of the equipped weapon: the sheet's final value (Fighting Style: Archery already in it), plus
+  # any attack_bonus passive a feature declares (none does).
   def weapon_attack_bonus
     attack_bonus + modifier_bonus("attack_bonus")
   end
@@ -71,6 +72,8 @@ class PlayerCharacter < ApplicationRecord
     strength_modifier + modifier_bonus("damage_bonus")
   end
 
+  # The sheet's final AC (Fighting Style: Defense already in it), plus any armor_class passive a feature
+  # declares (none does).
   def armor_class
     combatant.armor_class + modifier_bonus("armor_class")
   end
