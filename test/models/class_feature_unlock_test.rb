@@ -73,8 +73,10 @@ class ClassFeatureUnlockTest < ActiveSupport::TestCase
     assert_equal [ "statuses[0].ends must be one of source_turn_start" ], error_for.(maneuver.merge(statuses: [ mark.merge(ends: "end_of_round") ]))
     assert_equal [ "is missing statuses[0].ends" ], error_for.(maneuver.merge(statuses: [ mark.except(:ends) ]))
     assert_equal [ "has an unknown field statuses[0].rounds" ], error_for.(maneuver.merge(statuses: [ mark.merge(rounds: 1) ]))
-    assert_equal [ "applies must be one of #{Combat::Status::KINDS.join(', ')}" ],
-      error_for.({ kind: "rider", event: "weapon_hit", applies: "stunned", against: "own_spells" }), "the rider applies a Status kind"
+    [ "stunned", "next_attack_advantage" ].each do |status|
+      assert_equal [ "applies must be one of disadvantage_on_next_save" ],
+        error_for.({ kind: "rider", event: "weapon_hit", applies: status, against: "own_spells" }), "a rider applies only what the engine runs on a hit"
+    end
   end
 
   test "every fixture and seed unlock fits the effect vocabulary" do
