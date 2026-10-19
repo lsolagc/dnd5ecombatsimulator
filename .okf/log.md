@@ -1,6 +1,7 @@
 # Update Log
 
 ## 2026-10-19
+* **Update**: Eldritch Strike's disadvantage is used up only by the knight's next spell that calls for a save; a spell attack such as Fire Bolt leaves it in place (5e). 2 of 72 seeds changed, both at the first Fireball after a no-save spell at a marked target; queries unchanged. Created [architecture/eldritch-strike-save-impact.md](architecture/eldritch-strike-save-impact.md); updated [architecture/combat-simulator-service.md](architecture/combat-simulator-service.md) and [architecture/index.md](architecture/index.md).
 * **Fix**: the `rider` kind's `applies` accepts only `disadvantage_on_next_save` again: phase 3.4 had opened it to every `Combat::Status::KINDS` kind, but the engine applies only that one on a hit (`FeatureBook#rider`), so `next_attack_advantage` validated and did nothing. Updated [models/class-feature-unlock.md](models/class-feature-unlock.md).
 
 ## 2026-10-18

@@ -11,3 +11,4 @@
 * [Gambits — mechanics impact](gambits-impact.md) - What the gambits changed in combat, how it was validated, and the measured effect on Brenna x Corwin.
 * [War Magic — mechanics impact](war-magic-impact.md) - War Magic's bonus cut from a whole Attack action to one weapon attack: the proof on the golden files and the measured effect on the Eldritch Knight.
 * [Critical hits roll twice the dice — mechanics impact](critical-hit-dice-impact.md) - A critical hit rolls twice the dice instead of doubling one roll, one attack_roll shape for weapon and spell attacks, and the download's key order: proof on the golden files and measured effect.
+* [Eldritch Strike kept for a save — mechanics impact](eldritch-strike-save-impact.md) - Eldritch Strike's disadvantage is used up only by a spell that calls for a save, not by Fire Bolt: proof on the golden files and measured effect.

@@ -656,6 +656,27 @@ class CombatSimulatorServiceTest < ActiveSupport::TestCase
     assert_equal 1, second_turn.results.first[:amount], "expected the second save, without disadvantage, to succeed and halve damage"
   end
 
+  test "a spell without a save leaves the Eldritch Strike mark for the caster's next save spell" do
+    caster = spellcaster_with_known_spells(:eldritch_knight_ten)
+    target = fresh_character(:aragorn) # dexterity 12 (mod +1)
+    service = simulator(party_one: [ caster ], party_two: [ target ], seed: 1, max_rounds: 1)
+    service.send(:initialize_state)
+    caster = participant_of(service, caster)
+    marked = participant_of(service, target)
+    marked.add_status(Combat::Status.new(kind: "disadvantage_on_next_save", source: caster, ends: nil))
+    aimed = ->(option) { option.with(target: marked, gambit: Gambit.new(position: 1, target: :enemy, condition: :any, action_kind: :spell)) }
+
+    fire_bolt = Combat::ActionOption.new(type: :cast_spell, spell: spells(:fire_bolt), payload: spells(:fire_bolt).effect_payload.deep_stringify_keys)
+    service.send(:execute_cast_spell_action, actor: caster, chosen_action: aimed.(fire_bolt), round_number: 1, turn_index: 1)
+    assert_equal [ caster ], marked.statuses.map(&:source), "a spell that calls for no save must not use the mark up"
+
+    save_spell = service.send(:available_actions_for, actor: caster).find { |action| action.spell&.slug == "test-save-spell" }
+    Random.srand(4) # same roll math as the sibling test: with disadvantage the save fails -> full damage (3)
+    turn = service.send(:execute_cast_spell_action, actor: caster, chosen_action: aimed.(save_spell), round_number: 1, turn_index: 2)
+    assert_equal 3, turn.results.first[:amount]
+    assert_empty marked.statuses
+  end
+
   test "Eldritch Strike's disadvantage does not leak to a different attacker or a different target" do
     marked_target = fresh_character(:aragorn) # dexterity 12 (mod +1)
 

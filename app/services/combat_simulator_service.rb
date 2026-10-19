@@ -456,8 +456,9 @@ class CombatSimulatorService
       payload = chosen_action.payload
       target = chosen_action.chosen_by_gambit? ? chosen_action.target : resolve_feature_target(actor:, payload:)
 
-      # Any spell of the actor at the target uses up the actor's Eldritch Strike mark on it, save or not.
-      disadvantage_on_save = target&.take_statuses("disadvantage_on_next_save", from: actor).present?
+      # Only a spell that calls for a save uses up the actor's Eldritch Strike mark on the target (5e: the next
+      # saving throw against the actor's spell); a spell attack such as Fire Bolt leaves it for a later save.
+      disadvantage_on_save = payload["save"].present? && target&.take_statuses("disadvantage_on_next_save", from: actor).present?
 
       results = actor.cast_spell(spell, targets: [ target ].compact, disadvantage_on_save:)
 

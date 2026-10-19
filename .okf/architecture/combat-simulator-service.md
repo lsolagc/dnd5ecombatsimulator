@@ -245,9 +245,10 @@ kind and source**: the same source applying it again renews it
 - `disadvantage_on_next_save` (Eldritch Strike, applied on every hit by a
   feature whose `rider` `applies` it, no end of its own; 5e ends it at the end
   of the attacker's next turn, [issue #50](https://github.com/lsolagc/dnd5ecombatsimulator/issues/50)): the next spell the source
-  casts at the carrier uses up the source's own status, save or not
-  (`take_statuses(kind, from: caster)`), and a save it calls for has
-  disadvantage. Each attacker keeps its own: a second Eldritch Knight's hit no
+  casts at the carrier **that calls for a save** uses up the source's own status
+  (`take_statuses(kind, from: caster)`) and that save has disadvantage; a spell
+  attack such as Fire Bolt leaves it in place (since 2026-10-19, see
+  [eldritch-strike-save-impact.md](/architecture/eldritch-strike-save-impact.md)). Each attacker keeps its own: a second Eldritch Knight's hit no
   longer erases the first's.
 
 Same RNG draws, golden files, queries and impact metrics (200 seeds per composition) as before the move;
