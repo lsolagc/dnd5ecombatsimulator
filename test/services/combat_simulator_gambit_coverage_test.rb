@@ -55,32 +55,34 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     enemy = seed_character("Mestre de Batalha", hit_points: 10)
     gambit = add_rule(actor, position: 1, condition: :hp_above, condition_value: 50)
     enemy.max_hit_points = 20 # 10: exactly 50%
-    service = prepared_service(party_one: [ actor ], party_two: [ enemy ])
-    actor, enemy = participant_of(service, actor), participant_of(service, enemy)
+    encounter = prepared_encounter(party_one: [ actor ], party_two: [ enemy ])
+    actor, enemy = participant_of(encounter, actor), participant_of(encounter, enemy)
+    policy = Combat::GambitPolicy.new(encounter:)
 
-    assert_nil service.send(:gambit_target, actor:, gambit:)
+    assert_nil policy.target(actor:, gambit:)
 
     enemy.heal(1)
-    assert_equal enemy, service.send(:gambit_target, actor:, gambit:)
+    assert_equal enemy, policy.target(actor:, gambit:)
 
     # 63/125 = 50.4%: above 50% even though it rounds to 50.
     enemy.character.max_hit_points = 125
     enemy.heal(52)
-    assert_equal enemy, service.send(:gambit_target, actor:, gambit:)
+    assert_equal enemy, policy.target(actor:, gambit:)
   end
 
   test "highest_hp picks the healthiest enemy, ties going to initiative order" do
     actor = seed_character("Cavaleiro Arcano")
     first_in_party, second_in_party = seed_character("Campeão", hit_points: 30), seed_character("Mestre de Batalha", hit_points: 30)
     gambit = add_rule(actor, position: 1, condition: :highest_hp)
-    service = prepared_service(party_one: [ actor ], party_two: [ first_in_party, second_in_party ],
-                               initiative_order: [ second_in_party, actor, first_in_party ])
-    actor, first_in_party, second_in_party = [ actor, first_in_party, second_in_party ].map { |character| participant_of(service, character) }
+    encounter = prepared_encounter(party_one: [ actor ], party_two: [ first_in_party, second_in_party ],
+                                   initiative_order: [ second_in_party, actor, first_in_party ])
+    actor, first_in_party, second_in_party = [ actor, first_in_party, second_in_party ].map { |character| participant_of(encounter, character) }
+    policy = Combat::GambitPolicy.new(encounter:)
 
-    assert_equal second_in_party, service.send(:gambit_target, actor:, gambit:), "a tie goes to the first in initiative order"
+    assert_equal second_in_party, policy.target(actor:, gambit:), "a tie goes to the first in initiative order"
 
     second_in_party.take_damage(amount: 1, damage_type: "force")
-    assert_equal first_in_party, service.send(:gambit_target, actor:, gambit:)
+    assert_equal first_in_party, policy.target(actor:, gambit:)
   end
 
   test "marked and unmarked look at marks the actor would use: someone else's, never its own" do
@@ -89,21 +91,22 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     first, second = seed_character("Campeão"), player_characters(:aragorn) # the seeds hold only three characters
     marked = add_rule(actor, position: 1, condition: :marked)
     unmarked = add_rule(actor, position: 2, condition: :unmarked)
-    service = prepared_service(party_one: [ actor, ally ], party_two: [ first, second ], initiative_order: [ actor, ally, first, second ])
-    actor, ally, first, second = [ actor, ally, first, second ].map { |character| participant_of(service, character) }
+    encounter = prepared_encounter(party_one: [ actor, ally ], party_two: [ first, second ], initiative_order: [ actor, ally, first, second ])
+    actor, ally, first, second = [ actor, ally, first, second ].map { |character| participant_of(encounter, character) }
+    policy = Combat::GambitPolicy.new(encounter:)
     mark = ->(target, source) { target.add_status(Combat::Status.new(kind: "next_attack_advantage", source:, ends: "source_turn_start")) }
 
     mark.(first, actor) # the actor's own mark: its next attack would not get advantage from it
-    assert_nil service.send(:gambit_target, actor:, gambit: marked)
-    assert_equal first, service.send(:gambit_target, actor:, gambit: unmarked)
+    assert_nil policy.target(actor:, gambit: marked)
+    assert_equal first, policy.target(actor:, gambit: unmarked)
 
     mark.(second, ally)
-    assert_equal second, service.send(:gambit_target, actor:, gambit: marked)
-    assert_equal first, service.send(:gambit_target, actor:, gambit: unmarked)
+    assert_equal second, policy.target(actor:, gambit: marked)
+    assert_equal first, policy.target(actor:, gambit: unmarked)
 
     mark.(first, ally)
-    assert_equal first, service.send(:gambit_target, actor:, gambit: marked)
-    assert_nil service.send(:gambit_target, actor:, gambit: unmarked)
+    assert_equal first, policy.target(actor:, gambit: marked)
+    assert_nil policy.target(actor:, gambit: unmarked)
   end
 
   test "resource_at_least measures the rule's own resource: feature uses, the superiority pool, spell slots" do
@@ -117,10 +120,10 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     cases.each do |resource, (actor, rule, remaining)|
       at_least = ->(value) do
         actor.gambits.reset
-        gambits = [ add_rule(actor, position: 1, condition: :resource_at_least, condition_value: value, **rule) ]
-        service = prepared_service(party_one: [ actor ], party_two: [ enemy ])
-        fighter = participant_of(service, actor)
-        service.send(:choose_gambit_action, actor: fighter, gambits:, available: service.send(:available_actions_for, actor: fighter))
+        add_rule(actor, position: 1, condition: :resource_at_least, condition_value: value, **rule)
+        encounter = prepared_encounter(party_one: [ actor ], party_two: [ enemy ])
+        fighter = participant_of(encounter, actor)
+        Combat::GambitPolicy.new(encounter:).choose(actor: fighter, options: fighter.action_options)
       end
 
       assert at_least.(remaining), "#{resource}: #{remaining} left must satisfy ≥ #{remaining}"
@@ -135,12 +138,12 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     knight.player_character_spells.create!(spell: Spell.find_by!(slug: "fireball"))
     knight.player_character_spells.create!(spell: Spell.find_by!(slug: "scorching-ray"))
     assert_equal({ 1 => 4, 2 => 3, 3 => 2, 4 => 0 }, knight.spell_slots)
-    service = prepared_service(party_one: [ knight ], party_two: [ player_characters(:aragorn) ])
-    caster = participant_of(service, knight)
+    encounter = prepared_encounter(party_one: [ knight ], party_two: [ player_characters(:aragorn) ])
+    caster = participant_of(encounter, knight)
     fires = lambda do |spell, value|
       knight.gambits.reset
-      gambits = [ add_rule(knight, position: 1, condition: :resource_at_least, condition_value: value, spell:) ]
-      service.send(:choose_gambit_action, actor: caster, gambits:, available: service.send(:available_actions_for, actor: caster)).present?
+      add_rule(knight, position: 1, condition: :resource_at_least, condition_value: value, spell:)
+      Combat::GambitPolicy.new(encounter:).choose(actor: caster, options: caster.action_options).present?
     end
 
     assert fires.("fireball", 2)
@@ -155,26 +158,30 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
   test "resource_at_least counts unlimited uses as available and picks the first candidate in initiative order" do
     actor = seed_character("Campeão")
     first, second = seed_character("Mestre de Batalha"), seed_character("Cavaleiro Arcano")
-    service = prepared_service(party_one: [ actor ], party_two: [ first, second ], initiative_order: [ second, actor, first ])
-    actor, second = participant_of(service, actor), participant_of(service, second)
+    encounter = prepared_encounter(party_one: [ actor ], party_two: [ first, second ], initiative_order: [ second, actor, first ])
+    actor, second = participant_of(encounter, actor), participant_of(encounter, second)
     gambit = add_rule(actor.character, position: 1, target: :enemy, condition: :resource_at_least, condition_value: 20,
                                        feature: "battle-master-maneuver-precision-attack")
+    policy = Combat::GambitPolicy.new(encounter:)
+    unlimited = Combat::ActionOption.new(type: :class_feature, class_feature: seed_feature("battle-master-maneuver-precision-attack")) # no uses_remaining
 
-    assert service.send(:gambit_resource_at_least?, actor:, action: Combat::ActionOption.new(type: :class_feature), minimum: 20)
-    assert_equal second, service.send(:gambit_target, actor:, gambit:)
+    chosen = policy.choose(actor:, options: [ unlimited ])
+    assert chosen, "unlimited uses must satisfy ≥ 20"
+    assert_equal second, chosen.target
+    assert_equal second, policy.target(actor:, gambit:)
   end
 
   test "resource_at_least on an Action Surge rule counts its uses" do
     champion = seed_character("Campeão") # level 5: one Action Surge
-    service = prepared_service(party_one: [ champion ], party_two: [ seed_character("Mestre de Batalha") ])
-    fighter = participant_of(service, champion)
+    encounter = prepared_encounter(party_one: [ champion ], party_two: [ seed_character("Mestre de Batalha") ])
+    fighter = participant_of(encounter, champion)
     fires = lambda do |value|
       champion.gambits.reset
-      gambits = [ add_rule(champion, position: 1, target: :self, condition: :resource_at_least, condition_value: value, feature: "action-surge") ]
-      service.send(:choose_gambit_action, actor: fighter, gambits:, available: service.send(:available_actions_for, actor: fighter))&.type
+      add_rule(champion, position: 1, target: :self, condition: :resource_at_least, condition_value: value, feature: "action-surge")
+      Combat::GambitPolicy.new(encounter:).choose(actor: fighter, options: fighter.action_options)&.type
     end
 
-    assert_equal 1, uses_left(service, champion, "action-surge")
+    assert_equal 1, uses_left(encounter, champion, "action-surge")
     assert_equal :action_surge, fires.(1)
     assert_nil fires.(2)
   end
@@ -183,23 +190,23 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     actor = seed_character("Campeão")
     add_rule(actor, position: 1, target: :self, feature: "action-surge")
     add_rule(actor, position: 2)
-    service, turns = one_turn(actor)
+    encounter, turns = one_turn(actor)
 
     assert_equal [ [ :action_surge, 1, false ], [ :attack, 2, false ], [ :attack, 2, true ] ],
                  turns.map { |turn| [ turn.action[:type], turn.gambit[:position], turn.extra ] }
     assert_equal [], turns.first.results
-    assert_equal 0, uses_left(service, actor, "action-surge")
+    assert_equal 0, uses_left(encounter, actor, "action-surge")
   end
 
   test "Action Surge through a gambit spends exactly one use and never chains, even with two uses" do
     actor = seed_character("Campeão", level: 17)
     add_rule(actor, position: 1, target: :self, feature: "action-surge")
     add_rule(actor, position: 2)
-    service, turns = one_turn(actor)
+    encounter, turns = one_turn(actor)
 
     assert_equal 2, actor.feature_unlocks.find { |unlock| unlock.class_feature == seed_feature("action-surge") }.uses, "two uses at level 17"
     assert_equal [ :action_surge, :attack, :attack ], turns.map { |turn| turn.action[:type] }
-    assert_equal 1, uses_left(service, actor, "action-surge")
+    assert_equal 1, uses_left(encounter, actor, "action-surge")
   end
 
   test "nothing happens after the fight ends inside an Action Surge: no extra action, no War Magic bonus" do
@@ -211,13 +218,13 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     add_rule(knight, position: 2, spell: "fireball")
     add_rule(knight, position: 3, target: :self, feature: "second-wind")
     enemy = seed_character("Campeão", hit_points: 1)
-    service = prepared_service(party_one: [ knight ], party_two: [ enemy ])
+    encounter = prepared_encounter(party_one: [ knight ], party_two: [ enemy ])
 
-    turns = service.send(:execute_round, round_number: 1, initiative_order: service.send(:encounter).initiative_order)
+    turns = build_turn_executor(encounter).take_turn(participant_of(encounter, knight), round: 1, turn: 1)
 
-    assert participant_of(service, enemy).dead?
+    assert participant_of(encounter, enemy).dead?
     assert_equal [ [ :action_surge, 1 ], [ :cast_spell, 2 ] ], turns.map { |turn| [ turn.action[:type], turn.gambit[:position] ] }
-    assert_equal 1, uses_left(service, knight, "second-wind")
+    assert_equal 1, uses_left(encounter, knight, "second-wind")
   end
 
   test "inside an Action Surge each evaluation may stand idle, and only the extra one is marked extra" do
@@ -258,13 +265,13 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
       actor = seed_character("Campeão")
       actor.gambits.reset
       add_rule(actor, position: 1, **rule)
-      service = simulator(party_one: [ actor ], party_two: [ seed_character("Mestre de Batalha") ], seed: 1, max_rounds: 3)
+      simulation = simulator(party_one: [ actor ], party_two: [ seed_character("Mestre de Batalha") ], seed: 1, max_rounds: 3)
 
-      turns = actor_turns(actor, service.call, extras: true)
+      turns = actor_turns(actor, simulation.call, extras: true)
 
       assert_equal 3, turns.size, scenario
       assert turns.none? { |turn| turn[:extra] || turn.dig(:action, :type) == :action_surge }, "#{scenario}: surged without a rule"
-      assert_equal 1, uses_left(service, actor, "action-surge"), scenario
+      assert_equal 1, uses_left(simulation, actor, "action-surge"), scenario
     end
   end
 
@@ -272,11 +279,13 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     actor = seed_character("Cavaleiro Arcano", level: 7)
     first, second = seed_character("Campeão"), seed_character("Mestre de Batalha")
     gambit = add_rule(actor, position: 1, spell: "fire-bolt")
-    service = prepared_service(party_one: [ actor ], party_two: [ first, second ], initiative_order: [ first, actor, second ])
-    actor, second = participant_of(service, actor), participant_of(service, second)
-    chosen_action = service.send(:available_actions_for, actor:).find { |action| action.spell&.slug == "fire-bolt" }
+    encounter = prepared_encounter(party_one: [ actor ], party_two: [ first, second ], initiative_order: [ first, actor, second ])
+    rng = Random.new(1)
+    executor = build_turn_executor(encounter, rng:)
+    actor, second = participant_of(encounter, actor), participant_of(encounter, second)
+    option = actor.action_options.find { |action| action.spell&.slug == "fire-bolt" }
     bonus_targets = lambda do
-      service.send(:war_magic_turn, actor:, chosen_action: chosen_action.with(target: second, gambit:), round_number: 1, turn_index: 1).results
+      executor.war_magic_turn(actor:, option: option.with(target: second, gambit:), round: 1, turn: 1).results
         .map { |attack| attack[:target_id] }
     end
 
@@ -285,7 +294,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     second.take_damage(amount: second.current_hit_points, damage_type: "force")
     assert second.dead?
     assert_equal [ first.id ], bonus_targets.call
-    assert_equal Marshal.dump(Random.new(1)), Marshal.dump(service.instance_variable_get(:@rng))
+    assert_equal Marshal.dump(Random.new(1)), Marshal.dump(rng)
   end
 
   test "War Magic's fallback with several enemies left: the first living one in initiative order" do
@@ -296,36 +305,38 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     enemies.each { |enemy| @hit_points[enemy.id] = 1000 }
     @hit_points[spell_target.id] = 0 # the spell killed its own target, leaving three enemies alive
     gambit = add_rule(knight, position: 1, spell: "fire-bolt")
-    service = prepared_service(party_one: [ knight ], party_two: enemies,
-                               initiative_order: [ initiative_first, knight, party_last, spell_target, party_first ])
+    encounter = prepared_encounter(party_one: [ knight ], party_two: enemies,
+                                   initiative_order: [ initiative_first, knight, party_last, spell_target, party_first ])
     enemies.each do |enemy| # with Dice.hit? stubbed below, every attack hits and kills
-      participant_of(service, enemy).define_singleton_method(:take_damage) { |**| @current_hit_points = 0 }
+      participant_of(encounter, enemy).define_singleton_method(:take_damage) { |**| @current_hit_points = 0 }
     end
-    caster = participant_of(service, knight)
-    chosen_action = service.send(:available_actions_for, actor: caster).find { |action| action.spell&.slug == "fire-bolt" }
+    rng = Random.new(1)
+    caster = participant_of(encounter, knight)
+    option = caster.action_options.find { |action| action.spell&.slug == "fire-bolt" }
 
     bonus = Dice.stub(:hit?, true) do
-      service.send(:war_magic_turn, actor: caster, chosen_action: chosen_action.with(target: participant_of(service, spell_target), gambit:),
-                                    round_number: 1, turn_index: 1)
+      build_turn_executor(encounter, rng:).war_magic_turn(actor: caster, option: option.with(target: participant_of(encounter, spell_target), gambit:),
+                                                          round: 1, turn: 1)
     end
 
     # The attack goes to the first living enemy in initiative order, not the first or last in party order.
     assert_equal [ initiative_first.id ], bonus.results.map { |attack| attack[:target_id] }
-    assert_equal Marshal.dump(Random.new(1)), Marshal.dump(service.instance_variable_get(:@rng)),
-      "War Magic's fallback must not consume @rng"
+    assert_equal Marshal.dump(Random.new(1)), Marshal.dump(rng),
+      "War Magic's fallback must not consume the RNG"
   end
 
   test "War Magic's bonus is one weapon attack despite Extra Attack, with the marks of any attack; the Attack action keeps Extra Attack" do
     knight = seed_character("Cavaleiro Arcano", level: 10) # Extra Attack (2 attacks) and Eldritch Strike
     spell_target, other = seed_character("Campeão"), seed_character("Mestre de Batalha")
     gambit = add_rule(knight, position: 1, spell: "fire-bolt")
-    service = prepared_service(party_one: [ knight ], party_two: [ spell_target, other ])
-    knight, spell_target, other = [ knight, spell_target, other ].map { |character| participant_of(service, character) }
-    chosen_action = service.send(:available_actions_for, actor: knight).find { |action| action.spell&.slug == "fire-bolt" }
+    encounter = prepared_encounter(party_one: [ knight ], party_two: [ spell_target, other ])
+    executor = build_turn_executor(encounter)
+    knight, spell_target, other = [ knight, spell_target, other ].map { |character| participant_of(encounter, character) }
+    option = knight.action_options.find { |action| action.spell&.slug == "fire-bolt" }
     spell_target.add_status(Combat::Status.new(kind: "next_attack_advantage", source: other, ends: "source_turn_start")) # a Distracting Strike mark from someone else
 
     bonus = Dice.stub(:hit?, true) do
-      service.send(:war_magic_turn, actor: knight, chosen_action: chosen_action.with(target: spell_target, gambit:), round_number: 1, turn_index: 1)
+      executor.war_magic_turn(actor: knight, option: option.with(target: spell_target, gambit:), round: 1, turn: 1)
     end
 
     assert_equal 2, knight.attacks_per_action
@@ -333,11 +344,13 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     assert_equal [ [ "disadvantage_on_next_save", knight ] ], spell_target.statuses.map { |status| [ status.kind, status.source ] },
       "the bonus spends the mark and leaves the Eldritch Strike mark"
 
-    attack = Dice.stub(:hit?, true) { service.send(:execute_attack_action, actor: knight, round_number: 1, turn_index: 1, focus: spell_target) }
+    # The Attack action by an attack rule on the first enemy in initiative order: the spell's target.
+    attack_rule = Gambit.new(position: 2, target: :enemy, condition: :any, action_kind: :attack)
+    attack = Dice.stub(:hit?, true) { executor.run(actor: knight, option: Combat::ActionOption.new(type: :attack, gambit: attack_rule), round: 1, turn: 1) }
     assert_equal [ spell_target.id ] * 2, attack.results.map { |entry| entry[:target_id] }, "the Attack action still makes attacks_per_action attacks"
   end
 
-  test "a gambit-driven combat with Action Surge and War Magic never draws from @rng" do
+  test "a gambit-driven combat with Action Surge and War Magic never draws from the RNG" do
     seed = 4
     knight = seed_character("Cavaleiro Arcano", level: 7) # War Magic, one Action Surge
     add_rule(knight, position: 1, target: :self, feature: "action-surge")
@@ -345,17 +358,17 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     champion = seed_character("Campeão") # Action Surge but no rule for it: must never surge
     battle_master = seed_character("Mestre de Batalha") # two enemies, so a random pick would draw from @rng
     [ champion, battle_master ].each { |enemy| add_rule(enemy, position: 1) }
-    service = simulator(party_one: [ knight ], party_two: [ champion, battle_master ], seed:, max_rounds: 3)
+    simulation = simulator(party_one: [ knight ], party_two: [ champion, battle_master ], seed:, max_rounds: 3)
 
-    rounds = service.call[:round_log]
+    rounds = simulation.call[:round_log]
     turns = rounds.flat_map { |round| round[:turns] }
 
     # War Magic follows the surge's first action only, never the extra one.
     assert_equal [ [ :action_surge, false, false ], [ :cast_spell, false, false ], [ :attack, true, false ], [ :cast_spell, false, true ] ],
                  rounds.first[:turns].select { |turn| turn[:actor_id] == knight.id }.map { |turn| [ turn.dig(:action, :type), !!turn[:bonus], !!turn[:extra] ] }
     assert turns.any? { |turn| turn[:actor_id] == champion.id }
-    assert_equal Marshal.dump(Random.new(seed)), Marshal.dump(service.instance_variable_get(:@rng)),
-      "a gambit-driven turn, Action Surge or War Magic bonus must not consume @rng"
+    assert_equal Marshal.dump(Random.new(seed)), Marshal.dump(simulation.rng),
+      "a gambit-driven turn, Action Surge or War Magic bonus must not consume the RNG"
   end
 
   private
@@ -370,7 +383,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
 
     # The simulator, with the HP the test set (#seed_character).
     def simulator(**)
-      CombatSimulatorService.new(hit_points: @hit_points, **)
+      Combat::Simulator.new(hit_points: @hit_points, **)
     end
 
     def seed_feature(slug)
@@ -393,23 +406,19 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
       character.gambits.build(position:, target:, condition:, **action, **attributes).tap { |gambit| assert gambit.valid?, gambit.errors.full_messages.to_sentence }
     end
 
-    # Its participants built, in the given initiative order (of characters).
-    def prepared_service(party_one:, party_two:, initiative_order: party_one + party_two)
-      service = simulator(party_one:, party_two:, seed: 1, max_rounds: 1)
-      service.send(:initialize_state)
-      service.send(:encounter).initiative_order = initiative_order.map { |character| participant_of(service, character) }
-      service
+    # The fight with the HP the test set (#seed_character), in the given initiative order (of characters).
+    def prepared_encounter(party_one:, party_two:, initiative_order: nil)
+      build_encounter(party_one:, party_two:, hit_points: @hit_points, initiative_order:)
     end
 
-    # Runs one round with the actor first, against a sturdy seed enemy; returns the actor's entries.
+    # The actor's turn against a sturdy seed enemy; returns the encounter and the actor's entries.
     def one_turn(actor)
-      service = prepared_service(party_one: [ actor ], party_two: [ seed_character("Mestre de Batalha") ])
-      turns = service.send(:execute_round, round_number: 1, initiative_order: service.send(:encounter).initiative_order)
-      [ service, turns.select { |turn| turn.actor_id == actor.id } ]
+      encounter = prepared_encounter(party_one: [ actor ], party_two: [ seed_character("Mestre de Batalha") ])
+      [ encounter, build_turn_executor(encounter).take_turn(participant_of(encounter, actor), round: 1, turn: 1) ]
     end
 
-    def uses_left(service, actor, slug)
-      participant_of(service, actor).uses_left(seed_feature(slug).id)
+    def uses_left(source, actor, slug)
+      participant_of(source, actor).uses_left(seed_feature(slug).id)
     end
 
     def actor_turns(actor, result, extras: false)

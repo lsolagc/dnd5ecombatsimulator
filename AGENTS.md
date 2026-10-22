@@ -11,8 +11,9 @@ e simular combates entre equipes, medindo taxa de vitória, duração e impacto 
 
 ## Pontos críticos de arquitetura
 
-- `CombatSimulatorService` é o orquestrador de combate oficial e único (o antigo `EncounterService` foi
-  removido em 2026-10-11). Ver [.okf/architecture/combat-simulator-service.md](.okf/architecture/combat-simulator-service.md).
+- `Combat::Simulator` é o orquestrador de combate oficial e único (o antigo `EncounterService` foi
+  removido em 2026-10-11), com `Combat::GambitPolicy` (escolha por gambits) e `Combat::TurnExecutor` (o turno
+  de um ator). Ver [.okf/architecture/combat-simulator.md](.okf/architecture/combat-simulator.md).
 - Mecânica nova (habilidades, magias, efeitos) entra pelo pipeline `Combat::*` (ações, resolução de
   efeitos, execução estruturada), chamado pelo simulador.
   Ver [.okf/architecture/combat-effect-pipeline.md](.okf/architecture/combat-effect-pipeline.md).

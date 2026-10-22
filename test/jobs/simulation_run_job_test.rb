@@ -34,7 +34,7 @@ class SimulationRunJobTest < ActiveJob::TestCase
 
     SimulationRunJob.perform_now(batch)
 
-    simulate = ->(**hit_points) { CombatSimulatorService.new(party_one: batch.party_one, party_two: batch.party_two, seed: 77, **hit_points).call.as_json }
+    simulate = ->(**hit_points) { Combat::Simulator.new(party_one: batch.party_one, party_two: batch.party_two, seed: 77, **hit_points).call.as_json }
     assert_equal simulate.(hit_points: { copy.id => 3 }), batch.simulation_runs.sole.result
     assert_not_equal simulate.call, batch.simulation_runs.sole.result, "the seed must make the starting HP show"
   end
@@ -45,7 +45,7 @@ class SimulationRunJobTest < ActiveJob::TestCase
     SimulationRunJob.perform_now(seeded)
 
     run = seeded.simulation_runs.sole
-    expected = CombatSimulatorService.new(party_one: seeded.party_one, party_two: seeded.party_two, seed: 77).call
+    expected = Combat::Simulator.new(party_one: seeded.party_one, party_two: seeded.party_two, seed: 77).call
     assert_equal 77, run.seed
     assert_equal expected.as_json, run.result
     assert seeded.reload.completed?
@@ -69,12 +69,12 @@ class SimulationRunJobTest < ActiveJob::TestCase
   test "a simulation cancelled during its last round is dropped, not saved" do
     cancelled = false
     @batch.define_singleton_method(:cancelled_in_database?) { cancelled }
-    result = CombatSimulatorService.new(party_one: @batch.party_one, party_two: @batch.party_two, seed: 1).call
+    result = Combat::Simulator.new(party_one: @batch.party_one, party_two: @batch.party_two, seed: 1).call
     # A simulation that gets through its last between-rounds check just before the batch is cancelled.
     finishing = Object.new
     finishing.define_singleton_method(:call) { cancelled = true; result }
 
-    CombatSimulatorService.stub(:new, ->(**) { finishing }) { SimulationRunJob.perform_now(@batch) }
+    Combat::Simulator.stub(:new, ->(**) { finishing }) { SimulationRunJob.perform_now(@batch) }
 
     assert cancelled
     assert_equal 0, @batch.simulation_runs.count

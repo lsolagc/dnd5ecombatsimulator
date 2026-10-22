@@ -1,6 +1,6 @@
 ---
 name: safe-change-sensitive-area
-description: 'Conduza mudanças em áreas sensíveis com alto risco de regressão, especialmente no loop de turnos do CombatSimulatorService. Use para limitar escopo, validar impactos e reduzir acoplamento acidental.'
+description: 'Conduza mudanças em áreas sensíveis com alto risco de regressão, especialmente no loop de turnos (Combat::Simulator e Combat::TurnExecutor). Use para limitar escopo, validar impactos e reduzir acoplamento acidental.'
 argument-hint: 'Descreva a mudança proposta, a área sensível afetada e o risco principal.'
 user-invocable: true
 ---
@@ -11,7 +11,7 @@ user-invocable: true
 Executar alterações com segurança em partes acopladas ou de alto risco de regressão.
 
 ## Quando usar
-- Mudança no loop de turnos do `CombatSimulatorService` (ordem de iniciativa, ordem de sorteios do RNG,
+- Mudança no loop de turnos (`Combat::Simulator`, `Combat::TurnExecutor`, `Combat::GambitPolicy`) (ordem de iniciativa, ordem de sorteios do RNG,
   formato do `round_log`, desfecho).
 - Ajuste com alto risco de regressão silenciosa.
 

@@ -440,7 +440,7 @@ features:
         slug: eldritch-knight-war-magic
         description: "Ao usar a ação para conjurar um truque, pode realizar um ataque com arma com uma ação bônus."
         source_reference: Eldritch Knight 7
-        notes: "Implementado em CombatSimulatorService: exatamente UM ataque com arma (não a ação de Ataque, então sem Extra Attack) dispara sempre que a ação normal do turno for conjurar um truque (cast_spell com spell.cantrip? true), sem consumir recurso (a ação bônus ainda não é modelada). Não encadeia com Action Surge nem com o próprio ataque bônus."
+        notes: "Implementado em Combat::TurnExecutor#war_magic_turn: exatamente UM ataque com arma (não a ação de Ataque, então sem Extra Attack) dispara sempre que a ação normal do turno for conjurar um truque (cast_spell com spell.cantrip? true), sem consumir recurso (a ação bônus ainda não é modelada). Não encadeia com Action Surge nem com o próprio ataque bônus."
         unlocks:
           - level: 7
             description: Conjurar um truque como ação permite um ataque com arma como ação bônus.
@@ -465,7 +465,7 @@ features:
         slug: eldritch-knight-improved-war-magic
         description: "Ao usar a ação para conjurar qualquer magia, pode realizar um ataque com arma com uma ação bônus."
         source_reference: Eldritch Knight 18
-        notes: "Implementado em CombatSimulatorService: mesma regra do War Magic (um único ataque com arma, sem Extra Attack), mas sem restringir a truque — qualquer cast_spell na ação normal do turno dispara o ataque bônus."
+        notes: "Implementado em Combat::TurnExecutor#war_magic_turn: mesma regra do War Magic (um único ataque com arma, sem Extra Attack), mas sem restringir a truque — qualquer cast_spell na ação normal do turno dispara o ataque bônus."
         unlocks:
           - level: 18
             description: Conjurar qualquer magia como ação permite um ataque com arma como ação bônus.

@@ -148,4 +148,42 @@ class Combat::ParticipantTest < ActiveSupport::TestCase
 
     assert_equal kept, carrier.statuses
   end
+
+  test "action_options: an unlock without an effect inherits the one before it: the options, the resolver and the gambits all see it" do
+    second_wind = class_features(:fighter_second_wind)
+    ClassFeatureUnlock.create!(class_feature: second_wind, level: 10, uses: 2, description: "Test: one more use, same effect.")
+    fighter = player_characters(:eldritch_knight_ten)
+    participant = Combat::Participant.new(fighter)
+
+    action = participant.action_options.find { |candidate| candidate.class_feature == second_wind }
+    assert_equal [ "heal", 2 ], [ action&.payload&.dig("kind"), action&.uses_remaining ]
+
+    effects = Combat::EffectResolver.call(action: Combat::CombatAction.new(source_type: :class_feature, source_id: second_wind.id, actor: participant))
+    assert_equal [ "heal" ], effects.map(&:kind).map(&:to_s)
+
+    assert_includes fighter.gambit_action_options, [ second_wind.name, "class_feature:#{second_wind.id}" ]
+    assert Gambit.new(owner: fighter, position: 1, target: :self, condition: :any, action_kind: :class_feature, class_feature: second_wind).valid?
+  end
+
+  test "action_options: a Battle Master who does not know Precision Attack does not see it" do
+    battle_master = player_characters(:battle_master_seven)
+    battle_master.player_character_maneuvers.destroy_all
+
+    options = Combat::Participant.new(battle_master).action_options
+
+    assert_nil options.find { |action| action.type == :class_feature && action.class_feature.slug == "battle-master-maneuver-precision-attack" }
+  end
+
+  test "action_options: a spell disappears once its spell slot is exhausted" do
+    wizard = Combat::Participant.new(player_characters(:merlin))
+    cast_slugs = -> { wizard.action_options.select(&:spell?).map { |action| action.spell.slug } }
+
+    assert_includes cast_slugs.call, "magic-missile"
+    assert_includes cast_slugs.call, "fire-bolt"
+
+    wizard.available_spell_slots[1] = 0
+
+    assert_not_includes cast_slugs.call, "magic-missile"
+    assert_includes cast_slugs.call, "fire-bolt" # cantrips never consume a slot
+  end
 end

@@ -28,7 +28,7 @@ status: stable
 
 # Context
 
-Affects [CombatSimulatorService](/architecture/combat-simulator-service.md) turn choice and [simulation batches](/architecture/simulation-batches.md) logs. The model is [Gambit](/models/gambit.md); the measured effect is in the [impact report](/architecture/gambits-impact.md); the vocabulary (criterion, status) is in the [ubiquitous language](/ubiquitous-language.md).
+Affects [Combat::Simulator](/architecture/combat-simulator.md) turn choice and [simulation batches](/architecture/simulation-batches.md) logs. The model is [Gambit](/models/gambit.md); the measured effect is in the [impact report](/architecture/gambits-impact.md); the vocabulary (criterion, status) is in the [ubiquitous language](/ubiquitous-language.md).
 
 The gambits were built in an autonomous task. The user had already decided a few things in the task text: no gambit enabled means random; gambits but none fires means idle; presets are copies both ways; one polymorphic `gambits` table; the condition enum lives in code. Everything below was decided by the agent during the build and reviewed by the user on 2026-10-11. No decision was vetoed; the user's caveats are recorded in the rows they qualify.
 

@@ -106,8 +106,8 @@ and Scorching Ray are spell attacks; Fireball is a DEX save for half. Scorching
 Ray is one all-or-nothing 6d6 attack (RAW: three 2d6 rays), and Shield/Stoneskin
 have no payload yet.
 
-`CombatSimulatorService`'s turn loop does offer castable spells as `:cast_spell`
-actions (see [combat-simulator-service.md](/architecture/combat-simulator-service.md));
+`Combat::Participant#action_options` offers castable spells as `:cast_spell`
+actions, run by `Combat::TurnExecutor` (see [combat-simulator.md](/architecture/combat-simulator.md));
 its round log carries an `attack_roll` (`natural`, `total`, `armor_class`, `hit`,
 `crit`) on results of spell-attack effects.
 

@@ -8,7 +8,7 @@ class SimulationBatch < ApplicationRecord
   # Parallel workers can finish many simulations a second: push progress at most this often.
   PROGRESS_BROADCAST_INTERVAL = 0.2.seconds
   # The order of a simulation's keys in the download, nested: key => the order of its value's keys (an array's
-  # items each), nil to keep the value as stored. Below the top, the order CombatSimulatorService builds them in
+  # items each), nil to keep the value as stored. Below the top, the order Combat::Simulator builds them in
   # (Combat::TurnRecord, the attack and effect entries, Combat::Rider); one list serves every kind of an entry
   # (a weapon attack, an effect; each action type), each kind keeping its own keys' relative order.
   ROLL_OUTCOME_LOG_ORDER = %w[ expression resolved_expression dice rolls modifiers total ].index_with(nil).freeze
@@ -102,7 +102,7 @@ class SimulationBatch < ApplicationRecord
     build_party(party_two_ids)
   end
 
-  # The experiment's starting HP, { character id => HP }, for CombatSimulatorService's hit_points:.
+  # The experiment's starting HP, { character id => HP }, for Combat::Simulator's hit_points:.
   def hit_points
     (party_one_ids + party_two_ids).index_with { |id| combatant_settings.dig(id.to_s, "current_hit_points") }
   end

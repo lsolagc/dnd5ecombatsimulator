@@ -1,20 +1,26 @@
 ---
 type: Service
-title: CombatSimulatorService — seeded, feature-aware combat orchestrator
-description: The official combat orchestrator; runs seeded, repeatable encounters combining basic attacks with class-feature effects gated by remaining uses, ending in victory/draw/max-rounds outcomes.
-resource: app/services/combat_simulator_service.rb
+title: Combat::Simulator — seeded, feature-aware combat orchestrator (with GambitPolicy and TurnExecutor)
+description: The official combat orchestrator, split in three objects (Simulator, GambitPolicy, TurnExecutor); runs seeded, repeatable encounters combining basic attacks with class-feature effects gated by remaining uses, ending in victory/draw/max-rounds outcomes.
+resource: app/services/combat/simulator.rb
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-18T00:00:00Z
+  at: 2026-10-19T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T19:06:20Z }
 sources:
   - id: combat-simulator-rb
-    title: app/services/combat_simulator_service.rb
-    resource: ../../app/services/combat_simulator_service.rb
+    title: app/services/combat/simulator.rb
+    resource: ../../app/services/combat/simulator.rb
+  - id: gambit-policy-rb
+    title: app/services/combat/gambit_policy.rb
+    resource: ../../app/services/combat/gambit_policy.rb
+  - id: turn-executor-rb
+    title: app/services/combat/turn_executor.rb
+    resource: ../../app/services/combat/turn_executor.rb
   - id: combat-simulator-test
-    title: test/services/combat_simulator_service_test.rb
-    resource: ../../test/services/combat_simulator_service_test.rb
+    title: test/services/combat/simulator_test.rb
+    resource: ../../test/services/combat/simulator_test.rb
   - id: feature-book-rb
     title: app/services/combat/feature_book.rb
     resource: ../../app/services/combat/feature_book.rb
@@ -32,8 +38,10 @@ status: stable
 
 # Overview
 
-`CombatSimulatorService` is the project's **single, official** combat
-orchestrator (the legacy `EncounterService` was removed on 2026-10-11). It is
+`Combat::Simulator` is the project's **single, official** combat
+orchestrator (the legacy `EncounterService` was removed on 2026-10-11; until
+phase 3.5 of the DDD refactor, 2026-10-19, it was one class,
+`CombatSimulatorService`). It is
 where basic attacks and
 [the Combat::* effect pipeline](/architecture/combat-effect-pipeline.md)
 run side by side in the same turn loop, each combatant picking one action
@@ -43,15 +51,33 @@ for why it became the official orchestrator and what Phases 2 and 3 still
 owe it).[^combat-simulator-rb]
 
 It is **seedable** — `Random.new(seed)` drives
-every roll and every `sample`, and the same seed reproduces an identical
+every random pick and `Random.srand(seed)` every dice roll, and the same seed reproduces an identical
 `round_log` and outcome, which is what makes it useful for measuring win
 rate and mechanic impact across repeated simulations rather than a single
 playthrough.[^combat-simulator-test]
 
+# Structure
+
+Three objects since phase 3.5 (decisions D1–D5, approved 2026-10-19), all in
+`app/services/combat/`:
+
+| Object | Owns | Public API |
+|---|---|---|
+| `Combat::Simulator`[^combat-simulator-rb] | the fight as a whole: the seed (`with_seed`), the `Encounter` and its participants (built in party order), initiative, the round loop, each turn's start (`Encounter#start_turn`, skipping the dead) and turn passives (`turn_start`/`turn_end`), the result | `new(...)`, `#call` (with an optional block, see Contract), `#encounter`, `#rng`, `Aborted`, `DEFAULT_MAX_ROUNDS` |
+| `Combat::GambitPolicy`[^gambit-policy-rb] | the gambit-driven choice, one per simulation; never draws from any RNG | `#rules_for(actor)` (enabled rules by position, loaded once: the actor's own or the `gambits:` copy's), `#choose(actor:, options:, surging: false)` (the winning `ActionOption` with its target and gambit, Action Surge included, or nil), `#target(actor:, gambit:)` (the criteria), `#log(gambit)` (`{ position:, rule: }`, the copy's label when it has one) |
+| `Combat::TurnExecutor`[^turn-executor-rb] | one actor's decisions in a turn, with the encounter, the simulator's RNG and the policy: gambits or the random choice (the coin flip between physical and spell options stays here: no RandomPolicy), Action Surge (by rule or at random), War Magic, and running the actions through the pipeline into `TurnRecord`s | `#take_turn(actor, round:, turn:)` (the turn's decision entries, passives aside), `#run(actor:, option:, round:, turn:)` (one chosen option, without its gambit), `#war_magic_turn`, `#action_surge_turn`, `#choose_at_random(actor:, options:)`, `#random_target(actor:, payload:)`; `RANDOM_GAMBIT`, `IDLE_GAMBIT` |
+
+What an actor can do this turn is `Combat::Participant#action_options` (see
+Participant); how an effect result is logged is
+`Combat::TurnRecord.serialize_results`. The simulator builds the executor and
+the policy once per `#call`, after the encounter. Same RNG draws, golden
+files, queries and time as the single class it replaced (see
+[combat-regression.md](/ops/combat-regression.md)).
+
 # Contract
 
 ```ruby
-result = CombatSimulatorService.new(
+result = Combat::Simulator.new(
   party_one:, party_two:, seed: 1234, max_rounds: 20,
   hit_points: { 7 => 9 }, gambits: nil, abort_if: nil # all optional
 ).call
@@ -77,10 +103,14 @@ result = CombatSimulatorService.new(
   every dice roll — including inside `Combat::RollExpression` — is
   reproducible.
 - `abort_if`: optional callable checked before every round; when it returns
-  true, `call` raises `CombatSimulatorService::Aborted` (used to cancel
+  true, `call` raises `Combat::Simulator::Aborted` (used to cancel
   [simulation batches](/architecture/simulation-batches.md)).
 - `max_rounds`: default 20; the loop stops early once one party has no
   combatants left alive (`Combat::Encounter#over?`).
+- A block given to `call` gets the encounter once initiative is rolled, before
+  the first round, inside the seed: a test sets statuses or the initiative
+  order there. After `call`, `#encounter` holds the participants as they
+  ended and `#rng` the random-choice RNG (the tests check what it drew).
 
 # Turn resolution
 
@@ -93,7 +123,7 @@ recording them draws nothing extra. Turn results carry no human-readable
 
 1. **Attack** is always available: a `Combat::CombatAction(source_type:
    :attack)` run by `Combat::ActionRunner.attack`, which makes
-   `attacks_per_action` weapon attacks (War Magic's bonus: exactly one) and asks `execute_attack_action` for
+   `attacks_per_action` weapon attacks (War Magic's bonus: exactly one) and asks the turn executor for
    each attack's target (a random living enemy, the gambit's target, or War
    Magic's focus), so an attack after a kill goes to someone else. See
    [combat-action-language.md](/architecture/combat-action-language.md).
@@ -147,7 +177,7 @@ recording them draws nothing extra. Turn results carry no human-readable
    `rolls` (see [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)).
 
 The available actions are collected into a list and one is picked with
-`.sample(random: @rng)` — action choice is random, not strategic — **unless the
+`.sample(random: rng)` (`TurnExecutor#choose_at_random`) — action choice is random, not strategic — **unless the
 actor has at least one enabled [gambit](/models/gambit.md)** (see below).
 
 **Turn objects.** Each offered action is a `Combat::ActionOption` (an immutable
@@ -165,7 +195,7 @@ and the effects in `results` are still hashes.
 # Gambits (FFXII-style turn AI)
 
 An actor with enabled gambits never samples: its rules are walked by
-`position` (1 first). A rule wins when its action is in `available_actions_for`
+`position` (1 first). A rule wins when its action is in `Participant#action_options`
 (attack always; a feature with uses, a known maneuver, a spell with a slot) and
 its condition finds a target among the living combatants of the rule's side
 (`self`, `ally` = own party with the actor, `enemy`), **walked in initiative
@@ -176,13 +206,13 @@ target carries a `next_attack_advantage` status from someone else (one the actor
 would use: `Participant#status?(kind, not_from: actor)`), and `resource_at_least` checks the actor's resource for the rule's own
 action (feature uses, the superiority-dice pool for maneuvers, slots of the
 spell's level) and takes the first candidate. The
-chosen target replaces `resolve_feature_target` for features and spells; every
+chosen target replaces `TurnExecutor#random_target` for features and spells; every
 attack of the action re-runs the rule's pick, falling back to the first living
 enemy in initiative order. No rule fires → the turn logs `action: { type: :idle }`
-with empty `results`. Gambit choices draw nothing from `@rng`, and actors with
+with empty `results`. Gambit choices draw nothing from the simulator's `rng`, and actors with
 no enabled gambit take the old random path unchanged. Open:
 [issue #40](https://github.com/lsolagc/dnd5ecombatsimulator/issues/40) makes
-`any` pick a random target and merges the dice RNG (`srand`) and `@rng` into
+`any` pick a random target and merges the dice RNG (`srand`) and the choice `rng` into
 one stream. Rules are loaded once per
 simulation and evaluated over `Gambit` objects (saved or not).
 
@@ -210,7 +240,7 @@ target if it is a living enemy, else the first living enemy in initiative order.
 # Encounter
 
 The fight as a whole is one `Combat::Encounter` (phase 3.4 of the DDD
-refactor), built in `initialize_state` from the two parties of participants;
+refactor), built in `Simulator#call` from the two parties of participants;
 `call` sets its `initiative_order` once initiative is rolled (party order
 before that).[^encounter-rb] The simulator asks it every side question and
 keeps none of that state itself:
@@ -257,7 +287,7 @@ the old `@advantage_marks` and `@eldritch_strike_pending` are gone.
 # Participant
 
 Who fights is a `Combat::Participant`, one per sheet, built in
-`initialize_state` in party order (phase 3.3 of the DDD refactor); the party
+`Simulator#call` in party order (phase 3.3 of the DDD refactor); the party
 arrays, the initiative order, gambit and feature targets and the pipeline
 (`Combat::EffectExecutor`, `EffectResolver`, `RollContext`, `SavingThrow`,
 `ActionRunner`, `TurnRecord`) all work on participants.[^participant-rb] It
@@ -270,7 +300,7 @@ owns what changes during the fight, and nothing writes the sheet:
 | uses left | `uses_left(class_feature_id)` (nil: unlimited), `spend_use!(class_feature_id)` (floored at 0), from `FeatureBook#initial_uses` |
 | turn passives | `apply_turn_passives!(trigger:)` (see [passive-effect-triggers.md](/architecture/passive-effect-triggers.md)) |
 | statuses it carries | `statuses`, `add_status(status)` (renews one of the same kind and source), `take_statuses(kind, not_from:, from:)` (removes and returns them), `status?(kind, not_from:, from:)`, `expire_statuses!(source:)` (see Statuses) |
-| what it can do | `feature_book` |
+| what it can do | `feature_book`; `action_options`: this turn's `ActionOption`s, in a fixed order (a seed's pick depends on it) — the Attack action, each unlocked action feature with a use left (a known maneuver included), each spell with an `effect_payload` that is a cantrip or has a slot of its level left (moved from the simulator in phase 3.5); `action_surge_option`: Action Surge as an option when unlocked with a use left, for the policy's gambit action and the executor's random surge |
 
 Everything else it reads from the sheet through one explicit `delegate` list,
 the contract a future Monster has to meet: `id`, `name`, `level`,
@@ -342,9 +372,13 @@ floored at 0 (`spend_use!`); once exhausted, that action stops being offered.
 - **`:max_rounds_reached`** — the loop hit `max_rounds` with no winner and
   no draw.
 
-[^combat-simulator-rb]: Source: `app/services/combat_simulator_service.rb`
+[^combat-simulator-rb]: Source: `app/services/combat/simulator.rb`
 
-[^combat-simulator-test]: Source: `test/services/combat_simulator_service_test.rb`
+[^gambit-policy-rb]: Source: `app/services/combat/gambit_policy.rb`
+
+[^turn-executor-rb]: Source: `app/services/combat/turn_executor.rb`
+
+[^combat-simulator-test]: Source: `test/services/combat/simulator_test.rb` (the turn executor's, policy's and `action_options` tests are beside it)
 
 [^feature-book-rb]: Source: `app/services/combat/feature_book.rb`
 

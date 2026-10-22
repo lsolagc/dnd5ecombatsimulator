@@ -24,7 +24,7 @@ Bootstrap), a business-logic layer (services + validators), a persistence
 layer (ActiveRecord models), and a database (SQLite in development, with
 PostgreSQL support).
 
-[CombatSimulatorService](/architecture/combat-simulator-service.md) is the
+[Combat::Simulator](/architecture/combat-simulator.md) is the
 single, official combat orchestrator. It runs class features and spells
 through [the Combat::* effect pipeline](/architecture/combat-effect-pipeline.md);
 [passive effect triggers](/architecture/passive-effect-triggers.md) are a
@@ -45,7 +45,7 @@ separate, data-driven mechanism on `PlayerCharacter`. The legacy
 
 # Combat-execution flow
 
-1. **[CombatSimulatorService](/architecture/combat-simulator-service.md)** —
+1. **[Combat::Simulator](/architecture/combat-simulator.md)** —
    seeded, repeatable simulation that mixes basic attacks with class-feature
    and spell effects run through
    [the Combat::* pipeline](/architecture/combat-effect-pipeline.md), gated
@@ -57,7 +57,7 @@ separate, data-driven mechanism on `PlayerCharacter`. The legacy
    applies the `turn_start`/`turn_end` ones around each combatant's turn.
 
 Repeated runs are driven by [simulation batches](/architecture/simulation-batches.md):
-up to 1000 `CombatSimulatorService` combats between two sides, one Solid Queue
+up to 1000 `Combat::Simulator` combats between two sides, one Solid Queue
 job each, run in parallel by worker processes that push progress to the page,
 aggregated into win rate, healing and damage metrics.
 

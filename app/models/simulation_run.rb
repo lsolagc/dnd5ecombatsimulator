@@ -1,7 +1,7 @@
 class SimulationRun < ApplicationRecord
   belongs_to :simulation_batch
 
-  # Batch metrics from a CombatSimulatorService round_log. Healing done is the HP actually
+  # Batch metrics from a Combat::Simulator round_log. Healing done is the HP actually
   # restored; wasted healing is what a heal rolled past the target's max HP. Damage is HP
   # actually removed (after resistances, not counting overkill below 0 HP). The riders an attack applied
   # count like any effect (an attack's riders key; one without an effect, like Eldritch Strike's, counts nothing).

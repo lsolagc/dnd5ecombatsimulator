@@ -57,7 +57,7 @@ depends on it.
 
 Rather than Phase 2 (migrating `EncounterService`'s own basic attack onto
 `CombatAction`), the next concrete step was a **new, separate** orchestrator:
-[CombatSimulatorService](/architecture/combat-simulator-service.md) runs
+[CombatSimulatorService](/architecture/combat-simulator.md) runs
 attacks and class features side by side in its own turn loop, seeded for
 reproducibility, without touching `EncounterService` at all. That satisfies
 the same low-invasion principle from a different angle — a second
@@ -78,6 +78,7 @@ attack-roll methods it called stayed, since the simulator used them then;
 those methods have since been replaced by the Attack action and removed, see
 [combat-action-language.md](/architecture/combat-action-language.md)).
 
-Phases 2 and 3 now apply to `CombatSimulatorService`. The basic attack
+Phases 2 and 3 now apply to `CombatSimulatorService` (since phase 3.5 of the DDD refactor,
+`Combat::Simulator`, `Combat::GambitPolicy` and `Combat::TurnExecutor`). The basic attack
 moved onto `CombatAction` the same day; what is left of Phase 2 is the
 unified log shape.

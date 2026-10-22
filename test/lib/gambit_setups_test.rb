@@ -94,7 +94,7 @@ class GambitSetupsTest < ActiveSupport::TestCase
 
     SIMULATION_SEEDS.each do |seed|
       brenna, corwin = PlayerCharacter.find(@brenna.id, @corwin.id)
-      CombatSimulatorService.new(party_one: [ brenna ], party_two: [ corwin ], seed:).call[:round_log].flat_map { |round| round[:turns] }
+      Combat::Simulator.new(party_one: [ brenna ], party_two: [ corwin ], seed:).call[:round_log].flat_map { |round| round[:turns] }
         .each { |turn| fired[[ turn[:actor_id], turn.dig(:gambit, :position) ]] += 1 if turn[:gambit].is_a?(Hash) }
     end
 

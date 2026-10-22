@@ -1,5 +1,5 @@
 module Combat
-  # One action the actor can take this turn, as CombatSimulatorService lists it: a weapon attack, a class
+  # One action the actor can take this turn, as Combat::Participant#action_options lists it: a weapon attack, a class
   # feature (a maneuver rides on an attack), a spell, or Action Surge (a gambit-only option). A gambit's
   # pick is the same option with the rule's target and gambit filled in (#with).
   #

@@ -1,6 +1,6 @@
 ---
 name: declarative-effect-implementation
-description: 'Adicione habilidades via pipeline declarativo de efeitos. Use para criar efeito novo com payload, resolução, execução, testes e documentação, evitando lógica ad hoc no CombatSimulatorService.'
+description: 'Adicione habilidades via pipeline declarativo de efeitos. Use para criar efeito novo com payload, resolução, execução, testes e documentação, evitando lógica ad hoc no Combat::TurnExecutor.'
 argument-hint: 'Descreva o efeito desejado, regras 5e envolvidas e comportamento esperado.'
 user-invocable: true
 ---

@@ -1,11 +1,11 @@
 ---
 type: Runbook
 title: Combat regression safety net
-description: Golden files, query ceiling and time benchmark that prove a CombatSimulatorService refactor changes neither behavior nor performance; how to run, regenerate and read the baseline.
+description: Golden files, query ceiling and time benchmark that prove a Combat::Simulator refactor changes neither behavior nor performance; how to run, regenerate and read the baseline.
 tags: [testing, performance, combat]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-17T00:00:00Z
+  at: 2026-10-19T00:00:00Z
 sources:
   - id: compositions
     title: lib/combat_regression.rb
@@ -21,7 +21,8 @@ status: draft
 
 # Overview
 
-Phase 0 of the DDD refactor of [CombatSimulatorService](/architecture/combat-simulator-service.md):
+Phase 0 of the DDD refactor of the combat simulator (then `CombatSimulatorService`, since phase 3.5
+[Combat::Simulator](/architecture/combat-simulator.md), `Combat::GambitPolicy` and `Combat::TurnExecutor`):
 three checks over the same compositions, defined once in `CombatRegression::COMPOSITIONS`, on the
 content of `db/seeds` (Campeão, Cavaleiro Arcano, Mestre de Batalha, levels and choices adjusted per
 composition, every change rolled back). Six compositions × seeds 1–12 = 72 simulations: 1v1 and 2v1,

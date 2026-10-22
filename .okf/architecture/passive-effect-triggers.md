@@ -54,10 +54,10 @@ no `CombatAction` involved:
   participant — always self-targeted; a non-`"self"` `target` on a passive is
   silently skipped. The `conditions` below read the participant's HP.
 
-[CombatSimulatorService](/architecture/combat-simulator-service.md) calls
+[Combat::Simulator](/architecture/combat-simulator.md) calls
 `apply_turn_passives!(trigger: "turn_start")` before each living combatant's
 action and `"turn_end"` after it, logging any result as its own turn
-entry (`turn_passive_log`).
+entry (`Combat::Simulator#turn_passive_log`).
 
 # `conditions`
 

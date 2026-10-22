@@ -271,9 +271,9 @@ fighter_eldritch_knight_improved_war_magic:
 
 # Test-only fixture: not a real game feature. Gives an enemy a damage effect with a
 # saving throw so Indomitable's reroll can be exercised end-to-end via
-# CombatSimulatorService (no seeded game feature currently has a `save` payload).
+# Combat::Simulator (no seeded game feature currently has a `save` payload).
 # player_class must match barbarian_test_striker's (see player_characters.yml for why
-# it's monk, not barbarian) — available_actions_for filters unlocks by the actor's
+# it's monk, not barbarian) — Combat::Participant#action_options filters unlocks by the actor's
 # own player_class_id.
 barbarian_test_save_strike:
   player_class: monk

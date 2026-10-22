@@ -1,5 +1,5 @@
 module Combat
-  # Who fights in a simulation: CombatSimulatorService builds one per character sheet (a PlayerCharacter, the
+  # Who fights in a simulation: Combat::Simulator builds one per character sheet (a PlayerCharacter, the
   # Combatant's owner) when it starts. It owns what changes during the fight: the current HP, the spell slots
   # left, each limited feature's uses left and the statuses it carries (Combat::Status). Everything else it reads from the sheet through the delegate
   # list below, the contract a future Monster has to meet; the sheet itself is never written.
@@ -62,6 +62,41 @@ module Combat
     def spend_use!(class_feature_id)
       uses = @uses[class_feature_id]
       @uses[class_feature_id] = [ uses - 1, 0 ].max if uses
+    end
+
+    # What it can do with its action right now, as Combat::ActionOptions: the Attack action (always), each
+    # unlocked action feature with a use left (a maneuver it knows included) and each spell it can cast (a
+    # cantrip, or with a slot of its level left). In that order: a seed's random pick depends on it.
+    def action_options
+      options = [ ActionOption.new(type: :attack) ]
+
+      feature_book.unlocks.each do |unlock|
+        feature = unlock.class_feature
+        payload = feature_book.action_payload(feature)
+        next unless payload
+
+        uses = uses_left(feature_book.resource_feature_id(feature))
+        next if uses.is_a?(Integer) && uses <= 0
+
+        options << ActionOption.new(type: :class_feature, class_feature: feature, payload:, uses_remaining: uses)
+      end
+
+      spells.each do |spell|
+        next if spell.effect_payload.blank?
+        next unless spell.cantrip? || available_spell_slots[spell.level].to_i.positive?
+
+        options << ActionOption.new(type: :cast_spell, spell:, payload: spell.effect_payload.deep_stringify_keys)
+      end
+
+      options
+    end
+
+    # Action Surge as an option (Combat::GambitPolicy's gambit action, Combat::TurnExecutor's random surge):
+    # unlocked and with a use left, else nil.
+    def action_surge_option
+      unlock = feature_book.unlock_with("extra_action")
+      uses = unlock && uses_left(unlock.class_feature_id)
+      ActionOption.new(type: :action_surge, class_feature: unlock.class_feature, uses_remaining: uses) if uses.is_a?(Integer) && uses.positive?
     end
 
     # Runs the self-targeted heal and damage passives of the trigger ("turn_start", "turn_end") whose HP

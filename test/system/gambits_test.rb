@@ -144,7 +144,7 @@ class GambitsTest < ApplicationSystemTestCase
     # Thorin's first decision in a one-round fight, with the rule that drove it.
     def first_decision
       thorin = PlayerCharacter.find(@thorin.id)
-      result = CombatSimulatorService.new(party_one: [ thorin ], party_two: [ player_characters(:aragorn) ], seed: 1, max_rounds: 1).call
+      result = Combat::Simulator.new(party_one: [ thorin ], party_two: [ player_characters(:aragorn) ], seed: 1, max_rounds: 1).call
       turn = result[:round_log].flat_map { |round| round[:turns] }
         .find { |entry| entry[:actor_id] == thorin.id && entry.dig(:action, :type) != :turn_passive }
       assert_equal 1, turn.dig(:gambit, :position), "not driven by the rule in position 1"

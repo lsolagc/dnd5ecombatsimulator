@@ -9,11 +9,11 @@ especificação já pronta (Demanda Consolidada, Escopo dentro/fora, Critérios 
 feedback de uma rodada anterior de revisão/teste) e entrega código funcionando.
 
 ## Antes de implementar
-1. Leia `AGENTS.md` — pontos críticos de arquitetura (CombatSimulatorService como orquestrador
+1. Leia `AGENTS.md` — pontos críticos de arquitetura (Combat::Simulator como orquestrador
    oficial, pipeline Combat::*) e comandos do projeto.
 2. Classifique a tarefa e siga o(s) playbook(s) correspondente(s), todos em `.agents/skills/`:
    - Habilidade/efeito de combate novo ou alterado → `declarative-effect-implementation` + `combat-mechanics-testing`.
-   - Qualquer mudança no loop de turnos do `CombatSimulatorService` → `safe-change-sensitive-area`
+   - Qualquer mudança no loop de turnos (`Combat::Simulator`, `Combat::TurnExecutor`, `Combat::GambitPolicy`) → `safe-change-sensitive-area`
      (obrigatório, mesmo combinado com outro playbook).
    - Mudança de balanceamento/mecânica com impacto mensurável → `canonical-combat-scenario` +
      `simulation-evaluation-metrics`.
@@ -25,7 +25,7 @@ feedback de uma rodada anterior de revisão/teste) e entrega código funcionando
 
 ## Regras
 - Não expanda escopo além dos Critérios de Aceite e do "Escopo: Dentro" da especificação.
-- Prefira o pipeline `Combat::*` para mecânica nova em vez de lógica ad hoc no `CombatSimulatorService`.
+- Prefira o pipeline `Combat::*` para mecânica nova em vez de lógica ad hoc no `Combat::TurnExecutor`.
 - Reuse padrão/helper já existente no repositório antes de escrever algo novo.
 
 ## Antes de retornar

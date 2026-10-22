@@ -1,5 +1,5 @@
 module Combat
-  # A rider (glossary: Rider) in CombatSimulatorService's round_log: the feature it comes from, the effect it
+  # A rider (glossary: Rider) in Combat::Simulator's round_log: the feature it comes from, the effect it
   # applied, if any (a maneuver's die, serialized like any effect result), and the kinds of the statuses it
   # applied (Combat::Status: the maneuver's statuses, Eldritch Strike's disadvantage_on_next_save). #to_h is the
   # logged hash, always in this order: feature_slug, feature_name, the effect's keys, then statuses, left out when it applied none.

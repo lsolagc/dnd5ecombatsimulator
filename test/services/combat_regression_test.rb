@@ -1,7 +1,7 @@
 require "test_helper"
 require "minitest/mock"
 
-# Safety net for refactoring CombatSimulatorService (.okf/ops/combat-regression.md): every composition of
+# Safety net for refactoring Combat::Simulator (.okf/ops/combat-regression.md): every composition of
 # CombatRegression, on every seed, must replay its golden file byte for byte and stay under its query
 # ceiling. COMBAT_REGRESSION_WRITE=1 (bin/rails combat_regression:regenerate) rewrites both instead.
 class CombatRegressionTest < ActiveSupport::TestCase
@@ -110,7 +110,7 @@ class CombatRegressionTest < ActiveSupport::TestCase
         "advantage from Distracting Strike" => attacks.any? { |attack| attack[:advantage] },
         "cast_spell turn" => entries.any? { |entry| type.(entry) == :cast_spell },
         "War Magic bonus attack" => entries.any? { |entry| entry[:bonus] },
-        "random Action Surge" => entries.any? { |entry| entry[:extra] && entry[:gambit] == CombatSimulatorService::RANDOM_GAMBIT },
+        "random Action Surge" => entries.any? { |entry| entry[:extra] && entry[:gambit] == Combat::TurnExecutor::RANDOM_GAMBIT },
         "Action Surge by gambit" => entries.any? { |entry| type.(entry) == :action_surge },
         "Second Wind heal" => entries.any? { |entry| entry.dig(:action, :feature_slug) == "second-wind" && entry[:results].any? { |effect| effect[:kind] == :heal } },
         "entry driven by a gambit" => entries.any? { |entry| entry[:gambit].is_a?(Hash) && entry[:gambit].keys == %i[position rule] },

@@ -17,14 +17,14 @@ O objetivo principal deste repositório não é apenas cadastrar personagens ou 
 
 ## Estado atual da arquitetura
 
-- `CombatSimulatorService` é o orquestrador de combate oficial: combates com seed, ataques, habilidades de classe, magias e gambits.
+- `Combat::Simulator` é o orquestrador de combate oficial: combates com seed, ataques, habilidades de classe, magias e gambits.
 - Mecânicas executáveis passam pelo pipeline `Combat::*`, que introduz ações, resolução de efeitos e execução estruturada.
 - A documentação arquitetural descreve tanto o comportamento atual quanto a direção incremental de refatoração.
 
 Pontos de entrada recomendados:
 - [.okf/index.md](.okf/index.md)
 - [.okf/architecture/overview.md](.okf/architecture/overview.md)
-- [.okf/architecture/combat-simulator-service.md](.okf/architecture/combat-simulator-service.md)
+- [.okf/architecture/combat-simulator.md](.okf/architecture/combat-simulator.md)
 - [.okf/architecture/combat-effect-pipeline.md](.okf/architecture/combat-effect-pipeline.md)
 
 ## Setup rápido
@@ -60,7 +60,7 @@ bin/rails test test/integration
 Se você quer:
 
 - entender a arquitetura geral: [.okf/architecture/overview.md](.okf/architecture/overview.md)
-- entender o combate atual: [.okf/architecture/combat-simulator-service.md](.okf/architecture/combat-simulator-service.md)
+- entender o combate atual: [.okf/architecture/combat-simulator.md](.okf/architecture/combat-simulator.md)
 - trabalhar no pipeline novo de habilidades e efeitos: [.okf/architecture/combat-effect-pipeline.md](.okf/architecture/combat-effect-pipeline.md)
 - entender os modelos e persistência: [.okf/models/index.md](.okf/models/index.md)
 - entender a modelagem de habilidades: [.okf/models/class-feature.md](.okf/models/class-feature.md)

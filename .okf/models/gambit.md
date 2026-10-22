@@ -1,7 +1,7 @@
 ---
 type: Model
 title: "Gambit"
-description: One FFXII-style turn rule (target + condition → action) owned by a PlayerCharacter or a GambitPreset, up to 6 per owner, evaluated by position in CombatSimulatorService.
+description: One FFXII-style turn rule (target + condition → action) owned by a PlayerCharacter or a GambitPreset, up to 6 per owner, evaluated by position in Combat::GambitPolicy.
 resource: app/models/gambit.rb
 tags: [combat, gambits]
 generated:
@@ -25,7 +25,7 @@ status: stable
 
 A `Gambit` belongs to a polymorphic `owner` ([PlayerCharacter](/models/player-character.md)
 `has_many :gambits, -> { order(:position) }, as: :owner`). It is data only:
-[CombatSimulatorService](/architecture/combat-simulator-service.md) evaluates the
+[Combat::GambitPolicy](/architecture/combat-simulator.md) evaluates the
 enabled ones top to bottom.[^gambit-rb]
 
 Caveat: once a monster model exists, the owner could be the

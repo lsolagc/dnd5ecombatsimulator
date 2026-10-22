@@ -1,5 +1,5 @@
 # One FFXII-style turn rule: "target: condition → action". A combatant evaluates its enabled gambits
-# by position (1 = highest priority) in CombatSimulatorService; the first one with a valid target and
+# by position (1 = highest priority) in Combat::GambitPolicy; the first one with a valid target and
 # an available action decides the turn.
 class Gambit < ApplicationRecord
   MAX_PER_OWNER = 6

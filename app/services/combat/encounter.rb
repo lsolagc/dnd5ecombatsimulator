@@ -4,7 +4,7 @@ module Combat
   # participants that carry them; the encounter only expires them as turns start.
   class Encounter
     attr_reader :party_one, :party_two, :participants
-    # The order turns are taken in; party order until CombatSimulatorService rolls initiative.
+    # The order turns are taken in; party order until Combat::Simulator rolls initiative.
     attr_accessor :initiative_order
 
     def initialize(party_one:, party_two:)

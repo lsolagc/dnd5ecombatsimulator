@@ -1,11 +1,11 @@
 ---
 type: Glossary
 title: Ubiquitous language
-description: The project's agreed vocabulary in one place (action, Attack action, attack, effect, rider, action cost, feature book, combatant, participant, encounter; effect kinds; condition, status, criterion), with each term's name in code and its meaning, so code, UI and docs use the same words.
+description: The project's agreed vocabulary in one place (action, Attack action, attack, effect, rider, action cost, feature book, combatant, participant, encounter, simulator, gambit policy, turn executor; effect kinds; condition, status, criterion), with each term's name in code and its meaning, so code, UI and docs use the same words.
 tags: [combat, gambits]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-18T00:00:00Z
+  at: 2026-10-19T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:31:58Z }
 sources:
   - id: issue-43
@@ -32,13 +32,16 @@ decisions behind it are in
 | **Attack action** | `CombatAction(source_type: :attack)` | The action every combatant has, with the equipped weapon or bare fists. It holds `attacks_per_action` attacks (Extra Attack). War Magic's bonus is not one: it is a single weapon attack. |
 | **Attack** | one weapon attack inside the Attack action | One attack roll against one target; on a hit it produces a damage effect. |
 | **Effect** | `Combat::EffectInstance` | The atomic outcome of an action: damage or healing, with an optional attack roll or saving throw. |
-| **Action option** | `Combat::ActionOption` | One action the simulator offers an actor this turn (Attack, a feature or maneuver, a spell, Action Surge), before it runs. A gambit's pick is the same option with the rule's target and gambit. Not an Action: running it builds the `CombatAction`. |
+| **Action option** | `Combat::ActionOption`, listed by `Combat::Participant#action_options` | One action an actor can take this turn (Attack, a feature or maneuver, a spell; Action Surge is added by the **gambit policy**), before it runs. A gambit's pick is the same option with the rule's target and gambit. Not an Action: running it (`TurnExecutor#run`) builds the `CombatAction`. The participant lists them since phase 3.5. |
 | **Rider** | `Combat::Rider` (`app/services/combat/rider.rb`); in the log, the `riders` list of the attack action (the riders chosen for it: `feature_slug`, `feature_name`) and of each attack (the riders it applied, empty on a miss: the feature, its effect when it has one, `statuses` when it applied any); the `rider` effect kind (Eldritch Strike) | An effect that rides along on an **attack**: chosen with the action or triggered by it, applied when the attack hits, on top of the attack's own damage. Today the Battle Master maneuvers (their die and, for Distracting Strike, the `next_attack_advantage` **status**) and Eldritch Strike (`kind: rider`, `event: weapon_hit`: the hit leaves disadvantage on the target's next save against the attacker's spells); later Divine Smite, Sneak Attack, Hunter's Mark. An attack can carry several. Agreed on 2026-10-18 as attack-only: whether something can ride on a spell or a feature is decided when the first such case arrives. |
 | **Action cost** | the `as` of a `grants_activity` (`action` \| `bonus_action` \| `reaction`, PHB terms) | What doing something takes from the turn's economy. Distinct from **Action** (the activity itself). Declared, not charged yet (issue #39). |
 | **Feature book** | `Combat::FeatureBook` | What a combatant knows how to do in a simulation: its unlocked features, which of them are actions, the ones the simulator runs by rules of its own (read by effect kind: Action Surge, War Magic, Eldritch Strike, Indomitable), whose uses each spends and the uses it starts with. Read-only: the uses left are combat state, kept by the **participant**. |
 | **Combatant** | `Combatant` (the record), and "a combatant" in prose | The sheet's combat stats (ability scores, AC, max HP, weapon, defenses), persisted; the parent of anything that fights (today `PlayerCharacter`). Never written by a simulation. |
 | **Participant** | `Combat::Participant` | Who fights in one simulation, built from a sheet when it starts: owns current HP, spell slots left, uses left, the **statuses** it carries and its feature book, and reads everything else from the sheet (its `delegate` list is the contract another kind of combatant, a Monster, has to meet). |
 | **Encounter** | `Combat::Encounter` (`app/services/combat/encounter.rb`) | The fight as a whole, one per simulation: the two parties of participants and the initiative order. Answers who is on whose side (`party_for`, `allies_of`, the participant included, `enemies_of`), who is standing (`alive`, `first_living_enemy` in initiative order) and whether it is `over?`; at the start of each turn (`start_turn`) it expires the statuses the actor applied that end then. Agreed on 2026-10-18 (phase 3.4). |
+| **Simulator** | `Combat::Simulator` (`app/services/combat/simulator.rb`) | The combat orchestrator: one seeded fight from two parties of sheets. Builds the **encounter**, rolls initiative, runs the rounds and each turn's start and turn passives, and returns the result. Was `CombatSimulatorService` until phase 3.5 (2026-10-19). |
+| **Gambit policy** | `Combat::GambitPolicy` (`app/services/combat/gambit_policy.rb`) | How a gambit-driven actor chooses, one per simulation: its enabled rules by priority (its own, or a batch's copy), the first one whose action is offered and whose **criterion** finds a target, and the log of the rule. Draws nothing random. Agreed on 2026-10-19 (phase 3.5). |
+| **Turn executor** | `Combat::TurnExecutor` (`app/services/combat/turn_executor.rb`) | One actor's turn in an encounter: by the **gambit policy** or at random, chains Action Surge and War Magic, runs the actions through the pipeline and returns the **turn records**. Agreed on 2026-10-19 (phase 3.5). |
 
 # Effect kinds
 

@@ -8,11 +8,11 @@ generated:
   at: 2026-10-19T00:00:00Z
 sources:
   - id: simulator-rb
-    title: app/services/combat_simulator_service.rb
-    resource: ../../app/services/combat_simulator_service.rb
+    title: app/services/combat/turn_executor.rb (then app/services/combat_simulator_service.rb)
+    resource: ../../app/services/combat/turn_executor.rb
   - id: simulator-test
-    title: test/services/combat_simulator_service_test.rb
-    resource: ../../test/services/combat_simulator_service_test.rb
+    title: test/services/combat/turn_executor_test.rb (then test/services/combat_simulator_service_test.rb)
+    resource: ../../test/services/combat/turn_executor_test.rb
 status: draft
 ---
 
@@ -21,10 +21,10 @@ status: draft
 Eldritch Strike (Eldritch Knight 10): a creature hit by the knight's weapon has disadvantage on the next
 saving throw it makes against a spell the knight casts. The simulator keeps that as a
 `disadvantage_on_next_save` status on the target (see
-[combat-simulator-service.md](/architecture/combat-simulator-service.md)). Until 2026-10-19 any spell the
+[combat-simulator.md](/architecture/combat-simulator.md)). Until 2026-10-19 any spell the
 knight cast at the target used it up, so a Fire Bolt or Ray of Frost (spell attacks, no save) spent the
 disadvantage without it doing anything. Decided with the user: only a spell whose payload calls for a
-`save` uses it up (`CombatSimulatorService#execute_cast_spell_action`).[^simulator-rb] The expiry at the
+`save` uses it up (`Combat::TurnExecutor#cast_spell`, then `CombatSimulatorService#execute_cast_spell_action`).[^simulator-rb] The expiry at the
 end of the knight's next turn is still missing: issue #50.
 
 # Proof on the golden files
@@ -49,5 +49,5 @@ same marked target before hitting it again.
 Risk: without an expiry (issue #50) the mark can now last several rounds until a save spell; before, any
 cantrip used it up, which happened to cut it short much like 5e's "before the end of your next turn".
 
-[^simulator-rb]: Source: app/services/combat_simulator_service.rb
-[^simulator-test]: Source: test/services/combat_simulator_service_test.rb
+[^simulator-rb]: Source: app/services/combat/turn_executor.rb (then app/services/combat_simulator_service.rb)
+[^simulator-test]: Source: test/services/combat/turn_executor_test.rb (then test/services/combat_simulator_service_test.rb)

@@ -32,7 +32,7 @@ variable resource pools.[^unlock-rb]
 the [combat effect-execution pipeline](/architecture/combat-effect-pipeline.md):
 it lets an unlocked feature describe an executable effect (`kind`, `roll`,
 `target` — `self`, `enemy` or `ally`, the valid-target indicator — …) without pushing new logic into
-[CombatSimulatorService](/architecture/combat-simulator-service.md).[^unlock-rb]
+[Combat::Simulator](/architecture/combat-simulator.md).[^unlock-rb]
 `Combat::EffectResolver` reads this payload to build the runtime
 `EffectInstance`.
 
@@ -55,10 +55,10 @@ rather than through `Combat::EffectResolver`.
 
 A Battle Master maneuver's payload also carries `applies_to: weapon_attack`
 (and Distracting Strike `statuses: [ { kind: next_attack_advantage, ends:
-source_turn_start } ]`), which `CombatSimulatorService` reads to run the
+source_turn_start } ]`), which `Combat::TurnExecutor` reads to run the
 maneuver as a rider on a weapon attack and apply each item as a
 [status](/ubiquitous-language.md) (`Combat::Status`) on the target it hits — see
-[combat-simulator-service.md](/architecture/combat-simulator-service.md).
+[combat-simulator.md](/architecture/combat-simulator.md).
 `statuses` replaced the single-string `debuff` (phase 3.4); each item has
 exactly a `kind` (`Combat::Status::KINDS`) and an `ends`
 (`Combat::Status::ENDS`: `source_turn_start`). Conditions and durations in

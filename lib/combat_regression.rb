@@ -1,4 +1,4 @@
-# Safety net for refactoring CombatSimulatorService (.okf/ops/combat-regression.md): the compositions
+# Safety net for refactoring Combat::Simulator (.okf/ops/combat-regression.md): the compositions
 # that the golden-file test, the query-ceiling test and the benchmark all run, on the content of
 # db/seeds. Every helper that writes to the database must run inside a transaction that rolls back.
 module CombatRegression
@@ -114,7 +114,7 @@ module CombatRegression
     party_one, party_two = composition.values_at(:party_one, :party_two).map do |party|
       party.map { |spec| PlayerCharacter.find_by!(name: spec[:name]) }
     end
-    yield CombatSimulatorService.new(party_one:, party_two:, seed:, max_rounds: composition[:max_rounds])
+    yield Combat::Simulator.new(party_one:, party_two:, seed:, max_rounds: composition[:max_rounds])
   end
 
   # Queries run inside the block, schema lookups aside.

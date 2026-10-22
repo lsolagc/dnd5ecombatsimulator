@@ -33,7 +33,7 @@ persisted "identity" record (`PlayerCharacter`) is thin, and the "sheet"
 
 **A simulation never writes the character.** Current HP, spell slots left
 and feature uses left belong to the `Combat::Participant` that
-[CombatSimulatorService](/architecture/combat-simulator-service.md) builds
+[Combat::Simulator](/architecture/combat-simulator.md) builds
 from the character (phase 3.3); the character has no `current_hit_points`
 any more. `CombatantBehavior` keeps the delegations to the `Combatant` and
 `initiative`.[^combatant-behavior-rb]
@@ -104,7 +104,7 @@ passive has no explicit actor intent to model.
 A class feature runs through
 [the combat effect-execution pipeline](/architecture/combat-effect-pipeline.md)
 via `Combat::CombatAction` + `Combat::ActionRunner`, built by
-[CombatSimulatorService](/architecture/combat-simulator-service.md).
+[Combat::TurnExecutor](/architecture/combat-simulator.md).
 
 `spellcasting_ability` returns the ability name the character casts with: the
 chosen subclass's spellcasting feature (`spellcasting_feature`) wins, falling
@@ -133,7 +133,7 @@ per action, proficiency bonus) and `spellcasting_feature` are cached on the
 instance, keyed by what they depend on (`player_class_id`, `level`,
 `martial_archetype_id`, `fighting_style_id`): changing one of those on the
 same instance recomputes, and `#reload` clears the cache. The combat loop asks
-for them on every attack, and [CombatSimulatorService](/architecture/combat-simulator-service.md)
+for them on every attack, and [Combat::Simulator](/architecture/combat-simulator.md)
 builds fresh instances per simulation. Rows edited in the database while an
 instance is alive (unlocks, progressions) are not seen until `reload`.
 

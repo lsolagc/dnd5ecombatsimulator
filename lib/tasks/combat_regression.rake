@@ -1,4 +1,4 @@
-# Safety net for refactoring CombatSimulatorService: see .okf/ops/combat-regression.md.
+# Safety net for refactoring Combat::Simulator: see .okf/ops/combat-regression.md.
 require "etc"
 
 namespace :combat_regression do

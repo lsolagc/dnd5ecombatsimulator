@@ -31,4 +31,21 @@ class Combat::TurnRecordTest < ActiveSupport::TestCase
     assert_equal({ round: 2, turn: 3, actor_id: @actor.id, actor_name: @actor.name, actor_party: :party_one, action: { type: :attack },
                    results: [ { kind: :attack } ], gambit: "aleatório", extra: true }, @record.with(extra: true, gambit: "aleatório").to_h)
   end
+
+  test "serialized results carry the spell attack roll only when the effect made one" do
+    caster = Combat::Participant.new(player_characters(:eldritch_knight_seven)) # proficiency +2 (no progression), INT 10 (+0)
+    player_characters(:aragorn).combatant.update!(armor_class: 100)
+    target = Combat::Participant.new(player_characters(:aragorn))
+
+    attack_effect = Combat::EffectInstance.new(kind: :damage, roll_expression: "1d10", target_type: "target", attack: "spell")
+    plain_effect = Combat::EffectInstance.new(kind: :damage, roll_expression: "1d10", target_type: "target")
+    Random.srand(2) # first d20 = 9: neither an auto-hit nor an auto-miss against AC 100
+    results = [ attack_effect, plain_effect ].map { |effect| Combat::EffectExecutor.call(effect:, actor: caster, target:) }
+
+    with_attack, without_attack = Combat::TurnRecord.serialize_results(results)
+
+    assert_equal({ natural: with_attack.dig(:attack_roll, :natural), total: with_attack.dig(:attack_roll, :natural) + 2,
+                   armor_class: 100, hit: false, crit: with_attack.dig(:attack_roll, :natural) == 20 }, with_attack[:attack_roll])
+    assert_not_includes without_attack.keys, :attack_roll
+  end
 end

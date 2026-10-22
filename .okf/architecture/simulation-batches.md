@@ -1,7 +1,7 @@
 ---
 type: Service
-title: Simulation batches — experiments running CombatSimulatorService N times in the background
-description: The SimulationBatch/SimulationRun models, SimulationRunJob (one per simulation, run in parallel by Solid Queue workers) and the simulation_batches screen that configure, run, poll, cancel and summarize up to 1000 seeded CombatSimulatorService combats, with a single-JSON log download.
+title: Simulation batches — experiments running Combat::Simulator N times in the background
+description: The SimulationBatch/SimulationRun models, SimulationRunJob (one per simulation, run in parallel by Solid Queue workers) and the simulation_batches screen that configure, run, poll, cancel and summarize up to 1000 seeded Combat::Simulator combats, with a single-JSON log download.
 resource: app/jobs/simulation_run_job.rb
 tags: [combat, ui]
 generated:
@@ -29,7 +29,7 @@ status: stable
 
 # Overview
 
-A batch runs [CombatSimulatorService](/architecture/combat-simulator-service.md) several times
+A batch runs [Combat::Simulator](/architecture/combat-simulator.md) several times
 between two sides of `PlayerCharacter`s and aggregates the results.[^batch-model]
 
 - **`SimulationBatch`**: `party_one_ids` / `party_two_ids` (Postgres bigint
@@ -100,7 +100,7 @@ remaining jobs skip.
 
 **Cancelling** sets `status = cancelled`. Each job passes
 `abort_if: -> { batch.cancelled_in_database? }` to the simulator, which checks
-it before every round and raises `CombatSimulatorService::Aborted`; the job
+it before every round and raises `Combat::Simulator::Aborted`; the job
 re-checks once more after the simulator returns, so a combat cancelled during
 its last round is dropped too. Never saved, finished ones stay; jobs not yet
 started skip. `cancelled_in_database?` must bypass the query cache
@@ -198,7 +198,7 @@ running server, the progress frame picking up a run created after the page
 loaded, and cancellation.[^batch-system-test] System tests do not run the job
 while the page is open (`perform_enqueued_jobs` runs it synchronously), so
 aborting the *in-flight* combat is only covered by the job and
-`CombatSimulatorService` tests. Seed 42 is the deterministic screenshot
+`Combat::Simulator` tests. Seed 42 is the deterministic screenshot
 scenario: the same seed reproduces the same summary.
 
 [^batch-model]: Source: `app/models/simulation_batch.rb`

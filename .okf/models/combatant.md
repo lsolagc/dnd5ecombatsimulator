@@ -44,7 +44,7 @@ reader rather than a raw polymorphic association.
 phase 3.3 it belongs to the `Combat::Participant` the simulator builds for
 the character, starting from this record's `max_hit_points` (or an
 experiment's starting HP) — see
-[combat-simulator-service.md](/architecture/combat-simulator-service.md).
+[combat-simulator.md](/architecture/combat-simulator.md).
 "Combatant" (this record: the sheet's combat stats) and "participant" (who
 fights in one simulation) are distinct terms, see
 [ubiquitous-language.md](/ubiquitous-language.md).

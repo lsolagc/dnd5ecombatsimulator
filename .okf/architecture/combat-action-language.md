@@ -37,8 +37,8 @@ weapon path apply resistances with the wrong damage type (see below).
   attack that follows a kill goes to another enemy instead of being lost;
   the action ends early only when no target is left.[^attack-action-test]
 - **Target choice stays in the orchestrator.** Gambit rules, War Magic's
-  focus and the random pick (with its own `@rng`) live in
-  [CombatSimulatorService](/architecture/combat-simulator-service.md); the
+  focus and the random pick (with the simulator's own `rng`) live in
+  [Combat::TurnExecutor and Combat::GambitPolicy](/architecture/combat-simulator.md); the
   pipeline only asks for "the next target". So do the hooks around each
   attack: Distracting Strike advantage marks, the maneuver die on the first
   hit, and the Eldritch Strike mark.

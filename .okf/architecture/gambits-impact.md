@@ -12,7 +12,7 @@ status: stable
 
 # Context
 
-Before this work, [CombatSimulatorService](/architecture/combat-simulator-service.md)
+Before this work, [CombatSimulatorService](/architecture/combat-simulator.md)
 picked every action and target with `sample(random: @rng)`. Characters can now carry
 up to 6 [gambits](/models/gambit.md) that choose for them; decisions are in
 [gambits-decisions.md](/architecture/gambits-decisions.md).

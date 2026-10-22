@@ -8,8 +8,8 @@ generated:
   at: 2026-10-18T00:00:00Z
 sources:
   - id: simulator-rb
-    title: app/services/combat_simulator_service.rb
-    resource: ../../app/services/combat_simulator_service.rb
+    title: app/services/combat/turn_executor.rb (then app/services/combat_simulator_service.rb)
+    resource: ../../app/services/combat/turn_executor.rb
   - id: action-runner-rb
     title: app/services/combat/action_runner.rb
     resource: ../../app/services/combat/action_runner.rb
@@ -23,7 +23,7 @@ status: draft
 
 War Magic (Eldritch Knight 7: after using the action to cast a cantrip, *one* weapon attack as a
 bonus action) and Improved War Magic (18: the same after any spell) were run by
-[CombatSimulatorService](/architecture/combat-simulator-service.md) as a whole Attack action, so a
+[CombatSimulatorService](/architecture/combat-simulator.md) as a whole Attack action, so a
 knight with Extra Attack made `attacks_per_action` attacks: in the golden files, 71 of the 94 bonus
 entries had 2 attacks and 19 had 3.
 
@@ -91,7 +91,7 @@ bonus are bonus entries with no attack, logged on the random path when nobody wa
 - **Still no action economy:** the bonus spends no bonus action, so it can stack with anything that
   would also need one, once those exist.
 
-[^simulator-rb]: Source: `app/services/combat_simulator_service.rb`
+[^simulator-rb]: Source: `app/services/combat/turn_executor.rb` (then `app/services/combat_simulator_service.rb`)
 
 [^action-runner-rb]: Source: `app/services/combat/action_runner.rb`
 

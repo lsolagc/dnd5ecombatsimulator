@@ -1,7 +1,7 @@
 ---
 type: Pipeline
 title: Combat effect-execution pipeline (Combat::*)
-description: The path every combat action takes in CombatSimulatorService — the basic Attack action, class features and spells — through CombatAction, EffectResolver, EffectExecutor, ActionRunner, and the RollExpression roll layer.
+description: The path every combat action takes in Combat::Simulator — the basic Attack action, class features and spells — through CombatAction, EffectResolver, EffectExecutor, ActionRunner, and the RollExpression roll layer.
 resource: app/services/combat
 tags: [combat, evolution]
 generated:
@@ -18,7 +18,7 @@ status: stable
 # Overview
 
 The `Combat::*` pipeline is the path every combat action takes in
-[CombatSimulatorService](/architecture/combat-simulator-service.md), from the
+[Combat::Simulator](/architecture/combat-simulator.md), from the
 basic Attack action every combatant has to class features and spells. An
 action's **effect** is its atomic outcome: the Attack action's effect is
 weapon damage on a hit, the same shape as a spell attack such as Fire Bolt.
@@ -117,14 +117,14 @@ one before it; see [class-feature-unlock.md](/models/class-feature-unlock.md)):
 `"target"` is the valid-target indicator: `"self"` (the actor), `"enemy"` (a
 member of the opposing party) or `"ally"` (a member of the actor's own party,
 actor included). The pipeline itself only distinguishes `self` from "the
-`targets` it was handed"; it is `CombatSimulatorService` that enforces
+`targets` it was handed"; it is `Combat::TurnExecutor` (`#random_target`) that enforces
 `enemy`/`ally` when choosing the target.
 
-Two more optional keys are read only by `CombatSimulatorService`, not by the
+Two more optional keys are read only by `Combat::TurnExecutor`, not by the
 pipeline: `"applies_to": "weapon_attack"` (the effect rides on a weapon attack
 instead of being an action of its own) and `"statuses": [ { "kind":
 "next_attack_advantage", "ends": "source_turn_start" } ]` (statuses applied to
-the target it hits, see [combat-simulator-service.md](/architecture/combat-simulator-service.md)).
+the target it hits, see [combat-simulator.md](/architecture/combat-simulator.md)).
 `ActionRunner.call` / `EffectExecutor.call` accept `crit:` so an effect riding on
 a critical weapon hit doubles its dice.
 

@@ -14,8 +14,8 @@ sources:
     title: app/services/combat/roll_expression.rb
     resource: ../../app/services/combat/roll_expression.rb
   - id: simulator-rb
-    title: app/services/combat_simulator_service.rb
-    resource: ../../app/services/combat_simulator_service.rb
+    title: app/services/combat/turn_executor.rb (then app/services/combat_simulator_service.rb)
+    resource: ../../app/services/combat/turn_executor.rb
   - id: simulation-batch-rb
     title: app/models/simulation_batch.rb
     resource: ../../app/models/simulation_batch.rb
@@ -30,7 +30,7 @@ Three findings from reading a batch's downloaded log, approved by the user:
    `Combat::RollExpression` logged one sum per term in `rolls` and the written term in
    `dice` ("1d10" on a critical hit too). In 5e a critical hit rolls twice the dice.
 2. A weapon attack's `attack_roll` was built by hand in
-   [CombatSimulatorService](/architecture/combat-simulator-service.md) as `{ natural,
+   [CombatSimulatorService](/architecture/combat-simulator.md) as `{ natural,
    total, crit, damage }`, with `success`/`damage` beside it, while a spell attack logs
    `Combat::EffectExecutor::AttackRoll#to_h` (`{ natural, total, armor_class, hit, crit }`).
 3. `simulation_runs.result` is jsonb, which reorders keys; `SimulationBatch#logs_json`
@@ -129,6 +129,6 @@ its attack rule needs a hurt enemy and it never gets there.)
 
 [^roll-expression-rb]: Source: `app/services/combat/roll_expression.rb`
 
-[^simulator-rb]: Source: `app/services/combat_simulator_service.rb`
+[^simulator-rb]: Source: `app/services/combat/turn_executor.rb` (then `app/services/combat_simulator_service.rb`)
 
 [^simulation-batch-rb]: Source: `app/models/simulation_batch.rb`
