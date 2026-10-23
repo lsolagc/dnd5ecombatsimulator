@@ -31,7 +31,7 @@ class GambitPresetTest < ActiveSupport::TestCase
     assert_difference("Gambit.count", -6) { preset.destroy }
   end
 
-  test "copy_rules replaces the destination with new rows copying every attribute, in priority order" do
+  test "copy_gambits_from replaces the destination with new rows copying every attribute, in priority order" do
     # Created out of position order, so the ids do not follow the priority.
     second = rule(@thorin, position: 2, target: :self, condition: :hp_below, condition_value: 40, action_kind: :class_feature,
       class_feature: @second_wind, enabled: false)
@@ -40,7 +40,7 @@ class GambitPresetTest < ActiveSupport::TestCase
     preset = GambitPreset.create!(name: "Thorin")
     stale = rule(preset, position: 1, target: :enemy, condition: :marked, action_kind: :attack)
 
-    assert Gambit.copy_rules(from: @thorin, to: preset)
+    assert preset.copy_gambits_from(@thorin)
 
     assert_not Gambit.exists?(stale.id), "the destination's old rules are deleted"
     assert_equal rules_of(@thorin), rules_of(preset)
@@ -50,12 +50,12 @@ class GambitPresetTest < ActiveSupport::TestCase
     assert_equal [ first, second, third ].map(&:id), @thorin.gambits.reload.ids, "the source is untouched"
   end
 
-  test "copy_rules compacts the source's positions in their order" do
+  test "copy_gambits_from compacts the source's positions in their order" do
     rule(@thorin, position: 5, target: :enemy, condition: :lowest_hp, action_kind: :attack)
     rule(@thorin, position: 2, target: :enemy, condition: :any, action_kind: :attack)
     preset = GambitPreset.create!(name: "Lacunas")
 
-    Gambit.copy_rules(from: @thorin, to: preset)
+    preset.copy_gambits_from(@thorin)
 
     assert_equal [ [ 1, "any" ], [ 2, "lowest_hp" ] ], preset.gambits.map { |gambit| [ gambit.position, gambit.condition ] }
   end
@@ -65,7 +65,7 @@ class GambitPresetTest < ActiveSupport::TestCase
     rule(@thorin, position: 2, target: :self, condition: :any, action_kind: :class_feature, class_feature: @second_wind)
     preset = GambitPreset.create!(name: "Duas vezes")
 
-    2.times { Gambit.copy_rules(from: @thorin, to: preset) }
+    2.times { preset.copy_gambits_from(@thorin) }
 
     assert_equal 2, Gambit.where(owner: preset).count
   end
@@ -74,7 +74,7 @@ class GambitPresetTest < ActiveSupport::TestCase
     preset = GambitPreset.create!(name: "Cheio")
     kept = rule(preset, position: 1, target: :enemy, condition: :any, action_kind: :attack)
 
-    assert_not Gambit.copy_rules(from: @thorin, to: preset)
+    assert_not preset.copy_gambits_from(@thorin)
     assert_equal [ kept.id ], preset.gambits.reload.ids
   end
 

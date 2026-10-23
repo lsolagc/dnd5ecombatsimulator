@@ -33,12 +33,10 @@ module GambitSetups
     Gambit.transaction do
       setups.to_h do |name, rules|
         character = PlayerCharacter.find_by(name:) or raise ActiveRecord::RecordNotFound, "Personagem não encontrado: #{name}"
-        Gambit.where(owner: character).delete_all
-        character.gambits.reset
-        gambits = rules.each.with_index(1).map do |rule, position|
-          character.gambits.create!(position:, target: rule[:target], condition: rule[:condition],
-                                    condition_value: rule[:value], enabled: rule[:enabled], **action(character, rule[:action]))
-        end
+        gambits = character.replace_gambits(rules.map do |rule|
+          { target: rule[:target], condition: rule[:condition], condition_value: rule[:value], enabled: rule[:enabled],
+            **action(character, rule[:action]) }
+        end)
         [ character, gambits ]
       end
     end

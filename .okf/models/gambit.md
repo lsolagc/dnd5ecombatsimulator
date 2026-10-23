@@ -6,7 +6,7 @@ resource: app/models/gambit.rb
 tags: [combat, gambits]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-15T00:00:00Z
+  at: 2026-10-22T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:20:29Z }
 sources:
   - id: gambit-rb
@@ -48,17 +48,28 @@ it, not planned soon.[^issue-46]
   owner's level (`ClassFeature#action_payload_at`, the same function the simulator uses): a
   character's rule at the character's level, a preset's (no level) at the feature's highest
   unlock with a payload; passive (`trigger`) and non heal/damage payloads are rejected. An `extra_action` feature (Action Surge, found by that kind, `Gambit#action_surge?`) is accepted with target Self only. A rule naming an action its owner lacks is valid and skipped at runtime: a feature from another subclass, or one with no effect yet at the owner's level (checked like a preset's, at the feature's highest unlock). Only a feature the owner has, whose effect at its level does not fit the target, makes the rule invalid.
-- `position` 1..6 (check constraint), at most 6 per owner, and a unique
-  `(owner_type, owner_id, position)` constraint **deferrable initially deferred**, so a
-  reorder can permute positions inside one transaction.[^gambit-test]
-- `Gambit.copy_rules(from:, to:)` is the only copy (preset save, overwrite and apply): in one
-  transaction holding a row lock on `to`, deletes `to`'s rules and creates new rows from `from`'s in
-  priority order, positions 1..n. Returns false, changing nothing, when `from` has none. No link is kept.
+- At most `Gambit::MAX_PER_OWNER` (6) per owner: the ceiling lives only in that constant (validations
+  `position` in 1..6 and `owner_has_room`); the database checks only `position >= 1`
+  (`gambits_position_range`, relaxed in phase 4.1). A unique `(owner_type, owner_id, position)`
+  constraint **deferrable initially deferred** lets a reorder permute positions inside one
+  transaction.[^gambit-test]
+- The list rules live in the `GambitOwner` concern (`app/models/concerns/gambit_owner.rb`, included by
+  `PlayerCharacter` and `GambitPreset`, which also declares `has_many :gambits, -> { order(:position) },
+  as: :owner`): positions stay contiguous 1..n and every write of them runs in `with_gambits_locked`
+  (one transaction holding a row lock on the owner). `add_gambit(attributes)` (next position; returns
+  the gambit, saved or with errors), `move_gambit(gambit, :up/:down)` (nothing moves at either end),
+  `reorder_gambits(ids)` (false, changing nothing, unless an exact permutation of the owner's ids),
+  `remove_gambit(gambit)` (compacts the rest; another owner's rule raises `RecordNotFound`), `replace_gambits(list_of_attributes)` (used by
+  `lib/gambit_setups.rb`) and `copy_gambits_from(other)`. `GambitsController` keeps only the HTTP
+  format checks (direction, ids) and calls these.
+- `to.copy_gambits_from(from)` is the only copy (preset save, overwrite and apply): deletes `to`'s
+  rules and creates new rows from `from`'s in priority order, positions 1..n. Returns false, changing
+  nothing, when `from` has none. No link is kept.
   Each copy is validated for `to`: a rule that does not hold at the character's level raises
   `ActiveRecord::RecordInvalid` and changes nothing, and the gambits screen answers 422 naming the
   rule (position and label) and why. Applying a preset is all or nothing.
 - `GambitPreset` (`app/models/gambit_preset.rb`): `name` stripped, unique case-insensitively (validation
-  + unique index on `lower(name)`); `has_many :gambits, as: :owner`. Created and used only from a
+  + unique index on `lower(name)`); owns its gambits through `GambitOwner`. Created and used only from a
   character's gambits screen (Presets panel).
 - `label` renders the rule in PT-BR, e.g. `Inimigo: HP < 50% → Ataque`.
 

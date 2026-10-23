@@ -61,27 +61,6 @@ class Gambit < ApplicationRecord
     }
   end
 
-  # Replaces the rules of `to` with new copies of the rules of `from` (presets: save, overwrite and apply),
-  # in one transaction holding a row lock on `to`. Copies take positions 1..n in the source's priority
-  # order; being new rows, they keep no link to the source. Returns false, changing nothing, when `from`
-  # has no rules. Each copy is validated for `to` (a character's level, see #active_feature_payload): the
-  # first one that does not hold raises ActiveRecord::RecordInvalid, changing nothing.
-  def self.copy_rules(from:, to:)
-    transaction do
-      to.lock!
-      rules = from.gambits.reorder(:position).to_a
-      next false if rules.empty?
-
-      where(owner: to).delete_all
-      rules.each.with_index(1) do |rule, position|
-        create!(rule.attributes.slice(*SNAPSHOT_ATTRIBUTES).merge("owner" => to, "position" => position))
-      end
-      true
-    end
-  ensure
-    to.gambits.reset
-  end
-
   def label
     "#{TARGET_LABELS[target]}: #{condition_label} → #{action_label}"
   end

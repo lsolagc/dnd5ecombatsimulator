@@ -1,6 +1,7 @@
 class PlayerCharacter < ApplicationRecord
   include AbilityScores
   include CombatantBehavior
+  include GambitOwner
 
   belongs_to :player_class
   belongs_to :martial_archetype, class_name: "ClassFeature", optional: true
@@ -21,8 +22,6 @@ class PlayerCharacter < ApplicationRecord
 
   has_many :player_character_maneuvers, dependent: :destroy
   has_many :known_maneuvers, through: :player_character_maneuvers, source: :maneuver
-
-  has_many :gambits, -> { order(:position) }, as: :owner, dependent: :destroy
 
   MAX_HIT_POINTS_INPUT_CEILING = 2_147_483_647
 

@@ -29,10 +29,12 @@ class GambitTest < ActiveSupport::TestCase
     assert build_gambit(position: 6).valid?
   end
 
-  test "the database rejects a position outside 1..6" do
+  test "the database rejects a position below 1 and leaves the ceiling to Gambit::MAX_PER_OWNER" do
     gambit = build_gambit(position: 1).tap(&:save!)
 
-    assert_raises(ActiveRecord::StatementInvalid) { gambit.update_column(:position, 7) }
+    gambit.update_column(:position, 7)
+    assert_equal 7, gambit.reload.position, "the database has no ceiling"
+    assert_raises(ActiveRecord::StatementInvalid) { gambit.update_column(:position, 0) }
   end
 
   test "an owner holds at most six gambits" do

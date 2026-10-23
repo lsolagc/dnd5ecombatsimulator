@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_19_002857) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_23_014101) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -111,7 +111,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_19_002857) do
     t.datetime "updated_at", null: false
     t.index ["class_feature_id"], name: "index_gambits_on_class_feature_id"
     t.index ["spell_id"], name: "index_gambits_on_spell_id"
-    t.check_constraint "\"position\" >= 1 AND \"position\" <= 6", name: "gambits_position_range"
+    t.check_constraint "\"position\" >= 1", name: "gambits_position_range"
     t.check_constraint "action_kind = 0 AND class_feature_id IS NULL AND spell_id IS NULL OR action_kind = 1 AND class_feature_id IS NOT NULL AND spell_id IS NULL OR action_kind = 2 AND class_feature_id IS NULL AND spell_id IS NOT NULL", name: "gambits_action_consistency"
     t.unique_constraint ["owner_type", "owner_id", "position"], deferrable: :deferred, name: "gambits_owner_position_unique"
   end
