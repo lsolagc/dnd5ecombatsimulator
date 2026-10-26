@@ -295,7 +295,7 @@ owns what changes during the fight, and nothing writes the sheet:
 
 | State | API |
 |---|---|
-| current HP | `current_hit_points`, `dead?`, `take_damage(amount:, damage_type:)` (defenses first, floored at 0), `heal(amount)` (capped at the maximum) |
+| current HP | `current_hit_points`, `dead?`, `take_damage(amount:, damage_type:)` (after `defenses.apply`, floored at 0), `heal(amount)` (capped at the maximum) |
 | spell slots left | `available_spell_slots` (from `PlayerCharacter#spell_slots`), `cast_spell(spell, targets:, disadvantage_on_save:)` (spends a slot of the spell's level, none for a cantrip) |
 | uses left | `uses_left(class_feature_id)` (nil: unlimited), `spend_use!(class_feature_id)` (floored at 0), from `FeatureBook#initial_uses` |
 | turn passives | `apply_turn_passives!(trigger:)` (see [passive-effect-triggers.md](/architecture/passive-effect-triggers.md)) |
@@ -308,7 +308,7 @@ the contract a future Monster has to meet: `id`, `name`, `level`,
 `attacks_per_action`, `weapon_attack_bonus`, `weapon_damage_modifier`,
 `critical_hit_threshold`, `proficiency_bonus`, `spellcasting_feature`,
 `spell_save_dc`, `spell_attack_bonus`, `spells`, `gambits`,
-`passive_effect_payloads`, `immune_to?`/`resistant_to?`/`vulnerable_to?` and the
+`passive_effect_payloads`, `defenses` (a `Combatant::Defenses`) and the
 six `*_modifier`s. Participants compare by identity, so a party lookup no longer
 compares records by id. Building one rolls any dice of a `uses_formula`, which is
 why they are built in party order inside the seeded block. Same RNG draws and

@@ -1,7 +1,4 @@
 class PlayerCharactersController < ApplicationController
-  DAMAGE_TYPES = Combatant.column_defaults["resistances"]["damage_types"].keys.freeze
-  DAMAGE_FLAG_TO_COLUMN = { "R" => :resistances, "I" => :immunities, "V" => :vulnerabilities }.freeze
-
   before_action :set_player_character, only: %i[ show edit update destroy ]
   before_action :set_player_classes, only: %i[ new create edit update ]
 
@@ -88,18 +85,13 @@ class PlayerCharactersController < ApplicationController
     end
 
     # Damage chips submit a single R/I/V/"" flag per damage type (player_character[damage_type_flags][fire]),
-    # translated here into the three boolean jsonb maps the Combatant model actually stores.
+    # written through Combatant#defenses= (a type left out, or with an unknown flag, has no defense).
     def assign_damage_type_flags(player_character)
       flags = params.dig(:player_character, :damage_type_flags)
-      return if flags.blank?
+      return unless flags.respond_to?(:permit)
 
       combatant = player_character.combatant || player_character.build_combatant
-      DAMAGE_TYPES.each do |damage_type|
-        flag = flags[damage_type].presence
-
-        DAMAGE_FLAG_TO_COLUMN.each do |symbol, column|
-          combatant.public_send(column)["damage_types"][damage_type] = (flag == symbol)
-        end
-      end
+      combatant.defenses = flags.permit(*Combatant::Defenses::TYPES).to_h
+        .select { |_type, flag| Combatant::Defenses::FLAGS.key?(flag) }
     end
 end

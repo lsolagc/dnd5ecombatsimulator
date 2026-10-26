@@ -15,6 +15,9 @@ sources:
   - id: condition-logic-rb
     title: app/models/concerns/condition_and_damage_type_logic.rb
     resource: ../../app/models/concerns/condition_and_damage_type_logic.rb
+  - id: defenses-rb
+    title: app/models/combatant/defenses.rb
+    resource: ../../app/models/combatant/defenses.rb
 status: stable
 ---
 
@@ -49,10 +52,35 @@ experiment's starting HP) — see
 fights in one simulation) are distinct terms, see
 [ubiquitous-language.md](/ubiquitous-language.md).
 
-`immune_to?`/`resistant_to?`/`vulnerable_to?` look up
-`resistances/vulnerabilities/immunities.dig("damage_types"|"conditions",
-key)`; `Combat::Participant#take_damage` calls these (delegated through the
-character) before applying damage.[^condition-logic-rb] This is the opposite of what earlier project
+# Defenses
+
+The damage-type side of those three columns is read and written as one value
+object, `Combatant::Defenses` (`app/models/combatant/defenses.rb`, phase 4.2):
+`{ damage type => "I" | "R" | "V" }` (immunity, resistance, vulnerability),
+only the defended types.[^defenses-rb] `Defenses::TYPES` is the damage-type
+list of `ConditionAndDamageTypeFormatValidator::EXPECTED_STRUCTURE`;
+`Defenses::FLAGS` maps each flag to its column (`I` immunities, `R`
+resistances, `V` vulnerabilities, also the reading precedence).
+
+- `Combatant#defenses` (`Defenses.of(self)`) reads them;
+  `Combatant#defenses=` takes a `Defenses` or its hash and writes all three
+  columns' `"damage_types"` (every type true/false) through
+  `Defenses#columns_for(combatant)`, leaving `"conditions"` untouched.
+- `Defenses.new(hash)` raises `ArgumentError` on an unknown type or flag.
+  `#flag(type)` (string or symbol; nil without a defense), `#to_h`,
+  `#immune_to?(type)`/`#resistant_to?(type)`/`#vulnerable_to?(type)`.
+- `#apply(amount, damage_type)`: 0 for an immunity, `amount / 2` (rounded
+  down) for a resistance, `amount * 2` for a vulnerability, `amount`
+  otherwise (nil or unknown type included). `Combat::Participant#take_damage`
+  applies it (`defenses` delegated through the character).
+- **One defense per damage type**, validated: a type `true` in more than one
+  column makes the record invalid ("Um tipo de dano tem uma defesa só (fire:
+  imunidade e resistência)").[^combatant-rb]
+
+The character wizard, the sheet page, `SimulationBatch` (its
+`settings["defenses"]` has the same `{ type => flag }` shape) and
+`CombatRegression` all go through it. The conditions section has no reader:
+the engine applies no condition (the concern only validates the format).[^condition-logic-rb] This is the opposite of what earlier project
 documentation described — resistances/vulnerabilities/immunities are
 `Combatant` columns, not `PlayerCharacter` ones.[^combatant-rb]
 
@@ -74,3 +102,5 @@ documentation described — resistances/vulnerabilities/immunities are
 [^combatant-rb]: Source: `app/models/combatant.rb`
 
 [^condition-logic-rb]: Source: `app/models/concerns/condition_and_damage_type_logic.rb`
+
+[^defenses-rb]: Source: `app/models/combatant/defenses.rb`

@@ -87,14 +87,9 @@ module CombatRegression
     end
   end
 
-  # defenses: { damage type => "I" | "R" | "V" }, the flags of SimulationBatch::DEFENSE_COLUMNS.
+  # defenses: { damage type => "I" | "R" | "V" } (Combatant::Defenses).
   def set_defenses!(character, defenses)
-    combatant = character.combatant
-    SimulationBatch::DEFENSE_COLUMNS.each do |flag, column|
-      flagged = defenses.select { |_type, value| value == flag }.transform_values { true }
-      combatant[column] = combatant[column].deep_merge("damage_types" => flagged)
-    end
-    combatant.save!
+    character.combatant.update!(defenses:)
   end
 
   # Runs the block with the composition applied, rolling the changes back (compositions change the same

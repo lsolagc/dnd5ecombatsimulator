@@ -9,7 +9,7 @@ module Combat
     delegate :id, :name, :level, :max_hit_points, :initiative, :armor_class,
              :damage_dice, :damage_type, :attacks_per_action, :weapon_attack_bonus, :weapon_damage_modifier, :critical_hit_threshold,
              :proficiency_bonus, :spellcasting_feature, :spell_save_dc, :spell_attack_bonus, :spells, :gambits,
-             :passive_effect_payloads, :immune_to?, :resistant_to?, :vulnerable_to?,
+             :passive_effect_payloads, :defenses,
              *AbilityScores::ABILITY_SCORE_COLUMNS.map { |ability| :"#{ability}_modifier" },
              to: :character
 
@@ -30,11 +30,8 @@ module Combat
     # After the defenses: an immunity takes nothing, a resistance halves (rounded down), a vulnerability doubles.
     def take_damage(amount:, damage_type:)
       raise ArgumentError, "Amount must be a positive Integer" unless amount.is_a?(Integer) && amount.positive?
-      return if immune_to?(damage_type:)
 
-      amount /= 2 if resistant_to?(damage_type:)
-      amount *= 2 if vulnerable_to?(damage_type:)
-      @current_hit_points = [ current_hit_points - amount, 0 ].max
+      @current_hit_points = [ current_hit_points - defenses.apply(amount, damage_type), 0 ].max
     end
 
     # Never past the maximum (from above it, healing brings it down to it).

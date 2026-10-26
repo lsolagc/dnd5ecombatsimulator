@@ -28,6 +28,22 @@ class PlayerCharactersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "show lists each defended damage type with its flag, and only those" do
+    @player_character.combatant.update!(defenses: { "fire" => "I", "cold" => "V" })
+
+    get player_character_url(@player_character)
+
+    assert_select ".wizard-chip--active", count: 2
+    assert_select ".wizard-chip--active", text: /#{ApplicationHelper::DAMAGE_TYPE_LABELS["fire"]}\s+I/
+    assert_select ".wizard-chip--active", text: /#{ApplicationHelper::DAMAGE_TYPE_LABELS["cold"]}\s+V/
+  end
+
+  test "update ignores damage_type_flags that are not a list of flags" do
+    patch player_character_url(@player_character), params: { player_character: { name: @player_character.name, damage_type_flags: "foo" } }
+
+    assert_redirected_to player_character_url(@player_character)
+  end
+
   test "should get edit" do
     get edit_player_character_url(@player_character)
     assert_response :success

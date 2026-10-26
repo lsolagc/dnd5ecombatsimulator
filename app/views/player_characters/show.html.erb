@@ -66,12 +66,12 @@
   </div>
 
   <p class="small text-uppercase text-body-secondary fw-semibold mb-2">Resistências, imunidades e vulnerabilidades</p>
-  <% flagged_damage_types = damage_type_labels.select { |type, _| @player_character.resistant_to?(damage_type: type) || @player_character.immune_to?(damage_type: type) || @player_character.vulnerable_to?(damage_type: type) } %>
+  <% defenses = @player_character.defenses %>
+  <% flagged_damage_types = damage_type_labels.select { |type, _| defenses.flag(type) } %>
   <% if flagged_damage_types.any? %>
     <div class="d-flex flex-wrap gap-2 mb-4">
       <% flagged_damage_types.each do |type, label| %>
-        <% flag = @player_character.immune_to?(damage_type: type) ? "I" : (@player_character.resistant_to?(damage_type: type) ? "R" : "V") %>
-        <span class="badge rounded-pill border wizard-chip wizard-chip--active"><%= label %> <span class="font-monospace"><%= flag %></span></span>
+        <span class="badge rounded-pill border wizard-chip wizard-chip--active"><%= label %> <span class="font-monospace"><%= defenses.flag(type) %></span></span>
       <% end %>
     </div>
   <% else %>

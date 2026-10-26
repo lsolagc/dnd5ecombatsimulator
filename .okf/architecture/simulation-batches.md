@@ -43,8 +43,8 @@ between two sides of `PlayerCharacter`s and aggregates the results.[^batch-model
   `current_hit_points` (1..the sheet's max HP; the max itself is never
   edited), `armor_class`, `attack_bonus`, `damage_dice` (`NdM`),
   `damage_type` and `defenses` (`{ damage_type => "R" | "I" | "V" }`, one
-  flag per type, immunity outranking resistance as in the character
-  wizard). `before_validation` snapshots missing entries from the sheet
+  flag per type, a `Combatant::Defenses#to_h`; applied through
+  `Combatant#defenses=`). `before_validation` snapshots missing entries from the sheet
   (`SimulationBatch.blueprint_settings`), so every batch records exactly what
   it ran with. `party_one`/`party_two` load fresh characters, apply the
   settings **in memory only** (`combatant.assign_attributes`) and mark

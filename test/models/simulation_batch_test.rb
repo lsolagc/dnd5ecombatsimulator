@@ -124,16 +124,14 @@ class SimulationBatchTest < ActiveSupport::TestCase
     assert_equal 9, fighter.attack_bonus
     assert_equal "2d6", fighter.damage_dice
     assert_equal "fire", fighter.damage_type
-    assert fighter.immune_to?(damage_type: :cold)
-    assert fighter.vulnerable_to?(damage_type: :fire)
-    assert_not fighter.resistant_to?(damage_type: :cold)
+    assert_equal({ "cold" => "I", "fire" => "V" }, fighter.defenses.to_h)
 
     assert_raises(ActiveRecord::ReadOnlyRecord) { fighter.save! }
     assert_raises(ActiveRecord::ReadOnlyRecord) { fighter.combatant.save! }
 
     aragorn.reload
     assert_equal 16, aragorn.armor_class
-    assert_not aragorn.immune_to?(damage_type: :cold)
+    assert_not aragorn.defenses.immune_to?(:cold)
   end
 
   test "a rerun copies the combatants, their settings, count and seed into a new experiment" do

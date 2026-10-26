@@ -11,9 +11,7 @@ module CombatantBehavior
                 :attack_bonus,
                 :damage_dice,
                 :damage_type,
-                :immune_to?,
-                :resistant_to?,
-                :vulnerable_to?,
+                :defenses,
                 to: :combatant
     end
   end

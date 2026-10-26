@@ -1,9 +1,6 @@
 class SimulationBatch < ApplicationRecord
   MAX_SIMULATIONS = 1000
   MAX_SEED = 2**63 - 1
-  DAMAGE_TYPES = ConditionAndDamageTypeFormatValidator::EXPECTED_STRUCTURE["damage_types"]
-  # One defense per damage type, in the wizard's precedence (an immunity outranks a resistance).
-  DEFENSE_COLUMNS = { "I" => "immunities", "R" => "resistances", "V" => "vulnerabilities" }.freeze
   DICE_FORMAT = /\A[1-9]\d*d[1-9]\d*\z/
   # Parallel workers can finish many simulations a second: push progress at most this often.
   PROGRESS_BROADCAST_INTERVAL = 0.2.seconds
@@ -43,18 +40,13 @@ class SimulationBatch < ApplicationRecord
   # The combat parameters a saved character sheet (the blueprint) brings into an experiment.
   def self.blueprint_settings(character)
     combatant = character.combatant
-    defenses = DAMAGE_TYPES.filter_map do |type|
-      flag, _column = DEFENSE_COLUMNS.find { |_flag, column| combatant.public_send(column).dig("damage_types", type) }
-      [ type, flag ] if flag
-    end
-
     {
       "current_hit_points" => character.max_hit_points,
       "armor_class" => combatant.armor_class,
       "attack_bonus" => combatant.attack_bonus,
       "damage_dice" => combatant.damage_dice,
       "damage_type" => combatant.damage_type,
-      "defenses" => defenses.to_h
+      "defenses" => combatant.defenses.to_h
     }
   end
 
@@ -218,7 +210,6 @@ class SimulationBatch < ApplicationRecord
 
     def apply_settings(character)
       settings = settings_for(character)
-      defenses = settings["defenses"] || {}
       combatant = character.combatant
 
       combatant.assign_attributes(
@@ -226,9 +217,7 @@ class SimulationBatch < ApplicationRecord
         attack_bonus: settings["attack_bonus"],
         damage_dice: settings["damage_dice"],
         damage_type: settings["damage_type"],
-        **DEFENSE_COLUMNS.to_h do |flag, column|
-          [ column, combatant.public_send(column).deep_merge("damage_types" => DAMAGE_TYPES.index_with { |type| defenses[type] == flag }) ]
-        end
+        defenses: settings["defenses"] || {}
       )
       combatant.readonly!
       character.tap(&:readonly!)
@@ -282,8 +271,17 @@ class SimulationBatch < ApplicationRecord
       problems << "CA deve ser um número inteiro a partir de 0" unless armor_class.is_a?(Integer) && armor_class >= 0
       problems << "bônus de ataque deve ser um número inteiro" unless settings["attack_bonus"].is_a?(Integer)
       problems << "dano deve ter o formato 1d8" unless DICE_FORMAT.match?(settings["damage_dice"].to_s)
-      problems << "tipo de dano inválido" unless DAMAGE_TYPES.include?(settings["damage_type"])
-      problems << "defesas inválidas" unless (settings["defenses"] || {}).all? { |type, flag| DAMAGE_TYPES.include?(type) && DEFENSE_COLUMNS.key?(flag) }
+      problems << "tipo de dano inválido" unless Combatant::Defenses::TYPES.include?(settings["damage_type"])
+      problems << "defesas inválidas" unless valid_defenses?(settings["defenses"] || {})
       problems.each { |problem| errors.add(:base, "#{character.name}: #{problem}") }
+    end
+
+    def valid_defenses?(defenses)
+      return false unless defenses.is_a?(Hash)
+
+      Combatant::Defenses.new(defenses)
+      true
+    rescue ArgumentError
+      false
     end
 end

@@ -109,7 +109,7 @@ class PlayerCharactersTest < ApplicationSystemTestCase
     reloaded = PlayerCharacter.includes(:combatant).find(@player_character.id)
     assert_equal 18, reloaded.strength
     assert_equal 77, reloaded.max_hit_points
-    assert reloaded.resistant_to?(damage_type: "fire")
+    assert reloaded.defenses.resistant_to?("fire")
   end
 
   test "saving the edit wizard without changing anything does not alter the character" do
