@@ -12,6 +12,9 @@ sources:
   - id: batch-model
     title: app/models/simulation_batch.rb
     resource: ../../app/models/simulation_batch.rb
+  - id: log-export
+    title: app/models/simulation_batch/log_export.rb
+    resource: ../../app/models/simulation_batch/log_export.rb
   - id: run-model
     title: app/models/simulation_run.rb
     resource: ../../app/models/simulation_run.rb
@@ -168,7 +171,8 @@ renders a headline ("Lado B venceu 52,0% dos combates"), a 100% win-rate bar
 (A / sem vencedor / B, with a legend carrying the numbers), tiles for
 healing done, wasted healing (also as a share of healing rolled), biggest
 round damage and average time, and "Baixar logs (JSON)" (`#logs`):
-`SimulationBatch#logs_json`, one pretty `simulacoes-batch-<id>.json`
+`SimulationBatch#logs_json`, which delegates to `SimulationBatch::LogExport.new(batch).json`
+(phase 4.3), one pretty `simulacoes-batch-<id>.json`
 (`application/json`). It opens with a `header`: `batch` (`id`, `status`,
 `requested_count`, `seed`, `summary`) and `parties` (`party_one`/`party_two`,
 per combatant `id`, the frozen `name`, `settings` (its `combatant_settings`
@@ -177,11 +181,11 @@ through `Gambit.log_section`)). Then `simulations`, one per run in id order:
 `simulation` (1..n), `seed`, `elapsed_ms`, `outcome`, `winning_party`,
 `total_rounds`, `draw`, `initiative`, `round_log`. jsonb does not keep key
 order, so the export rebuilds the hashes in that order, and below it in the
-order the simulator builds them (`SimulationBatch::SIMULATION_LOG_ORDER`): each
+order the simulator builds them (`SimulationBatch::LogExport::SIMULATION_LOG_ORDER`): each
 initiative entry, round and turn (`Combat::TurnRecord`), its action, results
 (attack and effect entries), riders (`Combat::Rider`), `roll_outcome` and
 `attack_roll`; a key it does not know (an older run's) goes after the known ones
-of its hash, and `modifiers` keep the stored order. The column stays jsonb.
+of its hash, and `modifiers` keep the stored order. The column stays jsonb.[^log-export]
 Runs saved before
 2026-10-17 carry their old keys (a `gambits` section, `message`s, no
 `initiative`) after the known ones, and their batches no frozen names (`name:
@@ -202,6 +206,8 @@ aborting the *in-flight* combat is only covered by the job and
 scenario: the same seed reproduces the same summary.
 
 [^batch-model]: Source: `app/models/simulation_batch.rb`
+
+[^log-export]: Source: `app/models/simulation_batch/log_export.rb`
 
 [^run-model]: Source: `app/models/simulation_run.rb`
 

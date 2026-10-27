@@ -17,8 +17,8 @@ sources:
     title: app/services/combat/turn_executor.rb (then app/services/combat_simulator_service.rb)
     resource: ../../app/services/combat/turn_executor.rb
   - id: simulation-batch-rb
-    title: app/models/simulation_batch.rb
-    resource: ../../app/models/simulation_batch.rb
+    title: app/models/simulation_batch/log_export.rb (then app/models/simulation_batch.rb)
+    resource: ../../app/models/simulation_batch/log_export.rb
 status: draft
 ---
 
@@ -55,7 +55,7 @@ Three findings from reading a batch's downloaded log, approved by the user:
   Gone: `success` (= `attack_roll.hit`), `damage` (= `amount`) and `attack_roll.damage`
   (= `roll_outcome.total`); new: `roll_outcome`.
 - **Export (no mechanical change):** `logs_json` rebuilds every hash below a simulation in
-  the order the simulator builds it (`SimulationBatch::SIMULATION_LOG_ORDER`), unknown keys
+  the order the simulator builds it (`SimulationBatch::LogExport::SIMULATION_LOG_ORDER`), unknown keys
   last; the column stays jsonb.[^simulation-batch-rb]
 
 # Evidence
@@ -119,7 +119,7 @@ its attack rule needs a hurt enemy and it never gets there.)
 - **Older runs keep the old shape** in the download: `success`, `damage`,
   `attack_roll.damage`, per-term `rolls` and `"1d10"` on a crit, their unknown keys after
   the known ones. Not migrated.
-- **The key order lives in `SimulationBatch::SIMULATION_LOG_ORDER`**, apart from the code
+- **The key order lives in `SimulationBatch::LogExport::SIMULATION_LOG_ORDER`**, apart from the code
   that builds the entries; the export test replays every golden file, so a new key goes
   red there unless it is already last in its hash.
 - **A weapon attack's `riders` still come before its own damage** in the entry, where they
@@ -131,4 +131,4 @@ its attack rule needs a hurt enemy and it never gets there.)
 
 [^simulator-rb]: Source: `app/services/combat/turn_executor.rb` (then `app/services/combat_simulator_service.rb`)
 
-[^simulation-batch-rb]: Source: `app/models/simulation_batch.rb`
+[^simulation-batch-rb]: Source: `app/models/simulation_batch/log_export.rb` (then `app/models/simulation_batch.rb`)
