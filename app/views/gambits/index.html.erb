@@ -39,7 +39,7 @@
 
         <%= form_with model: gambit, url: player_character_gambit_path(@player_character, gambit), namespace: dom_id(gambit),
               class: "d-flex flex-wrap align-items-end gap-2 flex-grow-1 #{"opacity-50" unless gambit.enabled?}" do |form| %>
-          <%= render "fields", form:, gambit:, action_options: @action_options %>
+          <%= render "fields", form:, gambit:, character: @player_character %>
           <%= form.submit "Salvar", class: "btn btn-sm btn-primary" %>
         <% end %>
 
@@ -64,7 +64,7 @@
           <p class="small text-uppercase text-body-secondary fw-semibold mb-1"><span class="font-monospace"><%= position %></span> · Novo gambit</p>
           <%= form_with model: @new_gambit, url: player_character_gambits_path(@player_character), namespace: "new_gambit",
                 class: "d-flex flex-wrap align-items-end gap-2" do |form| %>
-            <%= render "fields", form:, gambit: @new_gambit, action_options: @action_options %>
+            <%= render "fields", form:, gambit: @new_gambit, character: @player_character %>
             <%= form.submit "Adicionar", class: "btn btn-sm btn-primary" %>
           <% end %>
           <% if @new_gambit.errors.any? %>

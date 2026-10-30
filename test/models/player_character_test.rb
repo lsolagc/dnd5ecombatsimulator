@@ -270,20 +270,25 @@ class PlayerCharacterTest < ActiveSupport::TestCase
     assert_equal({}, aragorn.spell_slots)
   end
 
-  test "gambit_action_options are the character's turn actions, encoded as Gambit#action_choice" do
+  test "gambit_actions are the character's turn actions, as unsaved gambits in select order" do
     second_wind, surge = class_features(:fighter_second_wind), class_features(:fighter_action_surge)
 
+    aragorn_actions = player_characters(:aragorn).gambit_actions
     assert_equal [ [ "Ataque", "attack" ], [ "Second Wind", "class_feature:#{second_wind.id}" ] ],
-      player_characters(:aragorn).gambit_action_options, "Action Surge unlocks at level 2"
-    assert_equal [ "Ataque", "Second Wind", "Action Surge" ], player_characters(:thorin).gambit_action_options.map(&:first)
+      aragorn_actions.map { |action| [ action.action_label, action.action_choice ] }, "Action Surge unlocks at level 2"
+    assert aragorn_actions.none?(&:persisted?)
+    assert_equal [ "Ataque", "Second Wind", "Action Surge" ], player_characters(:thorin).gambit_actions.map(&:action_label)
 
     battle_master = player_characters(:battle_master_seven)
+    assert_equal [ "Ataque", "Second Wind", "Action Surge", "Maneuver: Distracting Strike", "Maneuver: Precision Attack" ],
+      battle_master.gambit_actions.map(&:action_label), "features of one unlock level by name"
     player_character_maneuvers(:battle_master_seven_distracting_strike).destroy!
+    battle_master.reload
     assert_equal [ "Ataque", "Second Wind", "Action Surge", "Maneuver: Precision Attack" ],
-      battle_master.gambit_action_options.map(&:first), "only known maneuvers"
+      battle_master.gambit_actions.map(&:action_label), "only known maneuvers"
 
-    spell_options = player_characters(:eldritch_knight_seven).gambit_action_options.select { |_, value| value.start_with?("spell:") }
+    spell_actions = player_characters(:eldritch_knight_seven).gambit_actions.select(&:action_spell?)
     assert_equal [ spells(:fire_bolt), spells(:chromatic_orb), spells(:magic_missile) ].map { |spell| [ spell.name, "spell:#{spell.id}" ] },
-      spell_options, "known spells with an effect (Shield has none)"
+      spell_actions.map { |action| [ action.action_label, action.action_choice ] }, "known spells with an effect (Shield has none)"
   end
 end

@@ -197,21 +197,20 @@ class PlayerCharacter < ApplicationRecord
     progression ? progression.slots_by_level : {}
   end
 
-  # The turn actions a gambit of this character can choose, as [label, value] select options (value as in
-  # Gambit#action_choice): Ataque, unlocked features the simulator runs as an action at the character's level
+  # The turn actions a gambit of this character can choose, as unsaved Gambits (GambitsHelper#gambit_action_options
+  # turns them into select options): Ataque, unlocked features the simulator runs as an action at the character's level
   # (ClassFeature#action_payload_at, plus an extra_action such as Action Surge) by first unlock level, maneuvers only when known,
   # and known spells with an effect by level.
-  def gambit_action_options
+  def gambit_actions
     known_maneuver_ids = known_maneuvers.ids
     features = feature_unlocks.map(&:class_feature)
       .reject { |feature| feature.maneuver_of?(combat_superiority) && !known_maneuver_ids.include?(feature.id) }
       .sort_by { |feature| [ feature.class_feature_unlocks.map(&:level).min, feature.name ] }
 
-    choices = [ Gambit.new(action_kind: :attack) ] +
+    [ Gambit.new(action_kind: :attack) ] +
       features.map { |feature| Gambit.new(action_kind: :class_feature, class_feature: feature) }
               .select { |gambit| gambit.action_surge? || gambit.class_feature.action_payload_at(level) } +
       spells.select { |spell| spell.effect_payload.present? }.sort_by { |spell| [ spell.level, spell.name ] }.map { |spell| Gambit.new(action_kind: :spell, spell:) }
-    choices.map { |gambit| [ gambit.action_label, gambit.action_choice ] }
   end
 
   private

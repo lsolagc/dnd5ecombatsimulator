@@ -154,7 +154,6 @@ class GambitsController < ApplicationController
     def load_screen(new_gambit: nil, invalid: nil)
       @gambits = @player_character.gambits.includes(:class_feature, :spell).map { |gambit| gambit == invalid ? invalid : gambit }
       @new_gambit = new_gambit || Gambit.new(target: :enemy, condition: :any, action_kind: :attack)
-      @action_options = @player_character.gambit_action_options
       @presets = GambitPreset.includes(:gambits).order(:name)
     end
 end

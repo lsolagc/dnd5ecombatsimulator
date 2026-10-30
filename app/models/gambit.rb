@@ -87,7 +87,7 @@ class Gambit < ApplicationRecord
   end
 
   # The action as one select value ("attack", "class_feature:ID", "spell:ID"), the encoding of
-  # PlayerCharacter#gambit_action_options and GambitsController.
+  # GambitsHelper#gambit_action_options and GambitsController.
   def action_choice
     action_attack? ? "attack" : "#{action_kind}:#{class_feature_id || spell_id}"
   end

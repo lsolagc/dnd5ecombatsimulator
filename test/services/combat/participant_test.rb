@@ -161,7 +161,7 @@ class Combat::ParticipantTest < ActiveSupport::TestCase
     effects = Combat::EffectResolver.call(action: Combat::CombatAction.new(source_type: :class_feature, source_id: second_wind.id, actor: participant))
     assert_equal [ "heal" ], effects.map(&:kind).map(&:to_s)
 
-    assert_includes fighter.gambit_action_options, [ second_wind.name, "class_feature:#{second_wind.id}" ]
+    assert_includes fighter.gambit_actions.map(&:action_choice), "class_feature:#{second_wind.id}"
     assert Gambit.new(owner: fighter, position: 1, target: :self, condition: :any, action_kind: :class_feature, class_feature: second_wind).valid?
   end
 
