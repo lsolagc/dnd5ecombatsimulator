@@ -46,7 +46,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
 
       assert_equal action, turn[:action].slice(:type, :riders, :feature_slug, :spell_slug), "#{item}: wrong action"
       assert_equal 1, turn.dig(:gambit, :position), "#{item}: not fired by the rule"
-      assert_equal [ enemy.id ], turn[:results].map { |result| result[:target_id] }.uniq if action[:type] == :attack
+      assert_equal [ enemy.combatant.id ], turn[:results].map { |result| result[:target_id] }.uniq if action[:type] == :attack
     end
   end
 
@@ -244,11 +244,11 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     idler = seed_character("Mestre de Batalha")
     add_rule(idler, position: 1, condition: :hp_below, condition_value: 1) # never fires on a living enemy
     champion = seed_character("Campeão", level: 18) # no gambits: random, with Action Surge
-    @hit_points[champion.id] = champion.max_hit_points / 2 # Survivor heals at the start of its turn
+    @hit_points[champion.combatant.id] = champion.max_hit_points / 2 # Survivor heals at the start of its turn
 
     entries = simulator(party_one: [ knight, idler ], party_two: [ champion ], seed: 1, max_rounds: 1).call[:round_log]
       .flat_map { |round| round[:turns] }
-    logged = ->(actor) { entries.select { |turn| turn[:actor_id] == actor.id }.map { |turn| [ turn.dig(:action, :type), turn.slice(:bonus, :extra, :gambit) ] } }
+    logged = ->(actor) { entries.select { |turn| turn[:actor_id] == actor.combatant.id }.map { |turn| [ turn.dig(:action, :type), turn.slice(:bonus, :extra, :gambit) ] } }
 
     surge = { position: 1, rule: "Self: qualquer → Action Surge" }
     bolt = { position: 2, rule: "Inimigo: qualquer → Fire Bolt" }
@@ -293,7 +293,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
 
     second.take_damage(amount: second.current_hit_points, damage_type: "force")
     assert second.dead?
-    assert_equal [ first.id ], bonus_targets.call
+    assert_equal [ first.combatant.id ], bonus_targets.call
     assert_equal Marshal.dump(Random.new(1)), Marshal.dump(rng)
   end
 
@@ -302,8 +302,8 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     spell_target, party_first, initiative_first, party_last =
       seed_character("Campeão"), seed_character("Mestre de Batalha"), player_characters(:aragorn), player_characters(:aragorn_copy)
     enemies = [ spell_target, party_first, initiative_first, party_last ]
-    enemies.each { |enemy| @hit_points[enemy.id] = 1000 }
-    @hit_points[spell_target.id] = 0 # the spell killed its own target, leaving three enemies alive
+    enemies.each { |enemy| @hit_points[enemy.combatant.id] = 1000 }
+    @hit_points[spell_target.combatant.id] = 0 # the spell killed its own target, leaving three enemies alive
     gambit = add_rule(knight, position: 1, spell: "fire-bolt")
     encounter = prepared_encounter(party_one: [ knight ], party_two: enemies,
                                    initiative_order: [ initiative_first, knight, party_last, spell_target, party_first ])
@@ -320,7 +320,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     end
 
     # The attack goes to the first living enemy in initiative order, not the first or last in party order.
-    assert_equal [ initiative_first.id ], bonus.results.map { |attack| attack[:target_id] }
+    assert_equal [ initiative_first.combatant.id ], bonus.results.map { |attack| attack[:target_id] }
     assert_equal Marshal.dump(Random.new(1)), Marshal.dump(rng),
       "War Magic's fallback must not consume the RNG"
   end
@@ -365,8 +365,8 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
 
     # War Magic follows the surge's first action only, never the extra one.
     assert_equal [ [ :action_surge, false, false ], [ :cast_spell, false, false ], [ :attack, true, false ], [ :cast_spell, false, true ] ],
-                 rounds.first[:turns].select { |turn| turn[:actor_id] == knight.id }.map { |turn| [ turn.dig(:action, :type), !!turn[:bonus], !!turn[:extra] ] }
-    assert turns.any? { |turn| turn[:actor_id] == champion.id }
+                 rounds.first[:turns].select { |turn| turn[:actor_id] == knight.combatant.id }.map { |turn| [ turn.dig(:action, :type), !!turn[:bonus], !!turn[:extra] ] }
+    assert turns.any? { |turn| turn[:actor_id] == champion.combatant.id }
     assert_equal Marshal.dump(Random.new(seed)), Marshal.dump(simulation.rng),
       "a gambit-driven turn, Action Surge or War Magic bonus must not consume the RNG"
   end
@@ -377,7 +377,7 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
     def seed_character(name, level: nil, hit_points: 1000)
       character = PlayerCharacter.find_by!(name:)
       character.update!(level:) if level
-      @hit_points[character.id] = hit_points
+      @hit_points[character.combatant.id] = hit_points
       character
     end
 
@@ -423,6 +423,6 @@ class CombatSimulatorGambitCoverageTest < ActiveSupport::TestCase
 
     def actor_turns(actor, result, extras: false)
       result[:round_log].flat_map { |round| round[:turns] }
-        .select { |turn| turn[:actor_id] == actor.id && turn.dig(:action, :type) != :turn_passive && (extras || !turn[:extra]) }
+        .select { |turn| turn[:actor_id] == actor.combatant.id && turn.dig(:action, :type) != :turn_passive && (extras || !turn[:extra]) }
     end
 end

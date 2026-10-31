@@ -6,8 +6,8 @@ class SimulationRunJobTest < ActiveJob::TestCase
   include Turbo::Broadcastable::TestHelper
 
   setup do
-    @batch = SimulationBatch.create!(party_one_ids: [ player_characters(:aragorn).id, player_characters(:elora).id ],
-                                     party_two_ids: [ player_characters(:aragorn_copy).id ], requested_count: 3)
+    @batch = SimulationBatch.create!(party_one_ids: [ player_characters(:aragorn).combatant.id, player_characters(:elora).combatant.id ],
+                                     party_two_ids: [ player_characters(:aragorn_copy).combatant.id ], requested_count: 3)
   end
 
   test "runs one simulation with its own seed and metrics, and only the last one completes the batch" do
@@ -29,13 +29,13 @@ class SimulationRunJobTest < ActiveJob::TestCase
 
   test "a run starts each combatant at the experiment's HP, not the sheet's maximum" do
     aragorn, copy = player_characters(:aragorn), player_characters(:aragorn_copy)
-    batch = SimulationBatch.create!(party_one_ids: [ aragorn.id ], party_two_ids: [ copy.id ], seed: 77,
-                                    combatant_settings: { copy.id.to_s => SimulationBatch.blueprint_settings(copy).merge("current_hit_points" => 3) })
+    batch = SimulationBatch.create!(party_one_ids: [ aragorn.combatant.id ], party_two_ids: [ copy.combatant.id ], seed: 77,
+                                    combatant_settings: { copy.combatant.id.to_s => SimulationBatch.blueprint_settings(copy).merge("current_hit_points" => 3) })
 
     SimulationRunJob.perform_now(batch)
 
     simulate = ->(**hit_points) { Combat::Simulator.new(party_one: batch.party_one, party_two: batch.party_two, seed: 77, **hit_points).call.as_json }
-    assert_equal simulate.(hit_points: { copy.id => 3 }), batch.simulation_runs.sole.result
+    assert_equal simulate.(hit_points: { copy.combatant.id => 3 }), batch.simulation_runs.sole.result
     assert_not_equal simulate.call, batch.simulation_runs.sole.result, "the seed must make the starting HP show"
   end
 
@@ -140,7 +140,7 @@ class SimulationRunJobTest < ActiveJob::TestCase
     edits.each do |name, edit|
       aragorn.gambits.reload.destroy_all
       aragorn.gambits.create!(position: 1, target: :self, condition: :any, action_kind: :class_feature, class_feature: class_features(:fighter_second_wind))
-      batch = SimulationBatch.create!(party_one_ids: [ aragorn.id ], party_two_ids: [ player_characters(:aragorn_copy).id ], seed: 1)
+      batch = SimulationBatch.create!(party_one_ids: [ aragorn.combatant.id ], party_two_ids: [ player_characters(:aragorn_copy).combatant.id ], seed: 1)
       edit.call
       aragorn.gambits.reload
 
@@ -148,7 +148,7 @@ class SimulationRunJobTest < ActiveJob::TestCase
 
       result = batch.simulation_runs.sole.result
       first_turn = result["round_log"].flat_map { |round| round["turns"] }
-        .find { |turn| turn["actor_id"] == aragorn.id && turn.dig("action", "type") != "turn_passive" }
+        .find { |turn| turn["actor_id"] == aragorn.combatant.id && turn.dig("action", "type") != "turn_passive" }
       assert_equal [ "second-wind", { "position" => 1, "rule" => "Self: qualquer → Second Wind" } ],
                    [ first_turn.dig("action", "feature_slug"), first_turn["gambit"] ], "#{name}: the run must follow the copy"
       assert_equal [ "gambits", [ "Self: qualquer → Second Wind" ] ],
@@ -161,7 +161,7 @@ class SimulationRunJobTest < ActiveJob::TestCase
     rule = aragorn.gambits.create!(position: 1, target: :enemy, condition: :any, action_kind: :attack)
     second_wind = class_features(:fighter_second_wind)
     aragorn.gambits.create!(position: 2, target: :self, condition: :hp_below, condition_value: 50, action_kind: :class_feature, class_feature: second_wind)
-    batch = SimulationBatch.create!(party_one_ids: [ aragorn.id ], party_two_ids: [ player_characters(:aragorn_copy).id ], seed: 1)
+    batch = SimulationBatch.create!(party_one_ids: [ aragorn.combatant.id ], party_two_ids: [ player_characters(:aragorn_copy).combatant.id ], seed: 1)
     SimulationRunJob.perform_now(batch)
     before = JSON.parse(batch.reload.logs_json)
 
@@ -173,5 +173,38 @@ class SimulationRunJobTest < ActiveJob::TestCase
     rules = before.dig("header", "parties", "party_one", 0, "gambits", "rules")
     assert_equal [ "Inimigo: qualquer → Ataque", "Self: HP < 50% → Second Wind" ], rules.pluck("rule")
     assert_equal [ "Ataque", "Second Wind" ], rules.pluck("action")
+  end
+
+  test "the batch and the log resolve each combatant by its Combatant id, even when it is another character's sheet id" do
+    aragorn = player_characters(:aragorn)
+    aragorn.gambits.create!(position: 1, target: :self, condition: :any, action_kind: :class_feature, class_feature: class_features(:fighter_second_wind))
+    # A sheet whose own id is Aragorn's combatant id: keyed by sheet id, Aragorn's entries would resolve to it.
+    impostor = PlayerCharacter.create!(id: aragorn.combatant.id, name: "Impostor", level: 1, player_class: player_classes(:fighter))
+    assert_not_equal impostor.combatant.id, aragorn.combatant.id
+    batch = SimulationBatch.create!(party_one_ids: [ aragorn.combatant.id ], party_two_ids: [ impostor.combatant.id ], seed: 1,
+                                    combatant_settings: { aragorn.combatant.id.to_s => SimulationBatch.blueprint_settings(aragorn).merge("current_hit_points" => 5) })
+
+    assert_equal [ [ "Aragorn" ], [ "Impostor" ] ], [ batch.party_one.map(&:name), batch.party_two.map(&:name) ]
+    assert_equal({ aragorn.combatant.id => 5, impostor.combatant.id => impostor.max_hit_points }, batch.hit_points)
+    assert_equal [ [ "Self: qualquer → Second Wind" ], [] ], [ aragorn, impostor ].map { |character| batch.gambit_settings[character.combatant.id.to_s].pluck("label") }
+
+    starting = nil
+    result = Combat::Simulator.new(party_one: batch.party_one, party_two: batch.party_two, seed: 1, gambits: batch.gambit_settings, hit_points: batch.hit_points)
+      .call { |encounter| starting = encounter.participants.to_h { |participant| [ participant.name, participant.current_hit_points ] } }
+    assert_equal({ "Aragorn" => 5, "Impostor" => impostor.max_hit_points }, starting, "hit_points: by combatant id")
+    assert_equal [ aragorn.combatant.id, impostor.combatant.id ].sort, result[:initiative].pluck(:actor_id).sort
+
+    SimulationRunJob.perform_now(batch)
+
+    turns = batch.simulation_runs.sole.result["round_log"].flat_map { |round| round["turns"] }
+    first_turn = turns.find { |turn| turn["actor_id"] == aragorn.combatant.id && turn.dig("action", "type") != "turn_passive" }
+    assert_equal [ "Aragorn", "second-wind", 1 ], [ first_turn["actor_name"], first_turn.dig("action", "feature_slug"), first_turn.dig("gambit", "position") ],
+      "gambits: by combatant id"
+    impostor_turns = turns.select { |turn| turn["actor_id"] == impostor.combatant.id }
+    assert_not_empty impostor_turns
+    assert impostor_turns.all? { |turn| turn["actor_name"] == "Impostor" && turn["gambit"] == "aleatório" }
+    parties = JSON.parse(batch.logs_json).dig("header", "parties")
+    assert_equal [ [ aragorn.combatant.id, "Aragorn" ], [ impostor.combatant.id, "Impostor" ] ],
+                 parties.values.flatten.map { |entry| entry.values_at("id", "name") }
   end
 end

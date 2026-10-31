@@ -21,7 +21,7 @@ module ActiveSupport
     # A fight between the sheets as Combat::Simulator builds it (participants in party order), before initiative:
     # in party order, or the given order of sheets.
     def build_encounter(party_one:, party_two:, hit_points: {}, initiative_order: nil)
-      party = ->(sheets) { sheets.map { |sheet| Combat::Participant.new(sheet, hit_points: hit_points[sheet.id]) } }
+      party = ->(sheets) { sheets.map { |sheet| Combat::Participant.new(sheet, hit_points: hit_points[sheet.combatant.id]) } }
       encounter = Combat::Encounter.new(party_one: party.(party_one), party_two: party.(party_two))
       encounter.initiative_order = initiative_order.map { |sheet| participant_of(encounter, sheet) } if initiative_order
       encounter

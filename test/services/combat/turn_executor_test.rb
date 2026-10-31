@@ -89,10 +89,10 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
     hit = strike_now.call.results.first
     assert hit.dig(:attack_roll, :hit)
     assert_equal [ "next_attack_advantage" ], hit[:riders].sole[:statuses], "the log keeps only the kinds"
-    assert_equal [ [ "next_attack_advantage", battle_master.id, "source_turn_start" ] ], marks.call
+    assert_equal [ [ "next_attack_advantage", battle_master.combatant.id, "source_turn_start" ] ], marks.call
 
     assert_not attack_now.(battle_master)[:advantage], "the mark never helps the one who set it"
-    assert_equal [ [ "next_attack_advantage", battle_master.id, "source_turn_start" ] ], marks.call
+    assert_equal [ [ "next_attack_advantage", battle_master.combatant.id, "source_turn_start" ] ], marks.call
 
     assert attack_now.(ally)[:advantage], "the next attack by anyone else has advantage"
     assert_empty marks.call
@@ -113,7 +113,7 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
       assert executor.run(actor: fighter, option: strike, round: 1, turn:).results.first.dig(:attack_roll, :hit)
     end
 
-    assert_equal [ battle_master.id ], participant_of(encounter, target).statuses.map { |status| status.source.id }
+    assert_equal [ battle_master.combatant.id ], participant_of(encounter, target).statuses.map { |status| status.source.id }
     assert attack_now.call[:advantage]
     assert_not attack_now.call[:advantage], "two hits from the same source leave one mark: one advantage"
   end
@@ -131,7 +131,7 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
 
     # Advantage does not stack (5e): two marks that apply still make one attack with advantage, not two.
     assert attack_now.call[:advantage]
-    assert_equal [ attacker.id ], marked.statuses.map { |status| status.source.id }, "both marks that applied are gone, the attacker's own is left"
+    assert_equal [ attacker.combatant.id ], marked.statuses.map { |status| status.source.id }, "both marks that applied are gone, the attacker's own is left"
     assert_not attack_now.call[:advantage], "the attacker's own mark never helps it"
   end
 
@@ -277,7 +277,7 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
     turn = executor.run(actor: participant_of(encounter, caster), option: ATTACK, round: 1, turn: 1)
 
     assert_equal true, turn.results.first.dig(:attack_roll, :hit), "expected the attack to hit (attack_bonus is set high for determinism)"
-    assert_equal [ [ "disadvantage_on_next_save", caster.id, nil ] ],
+    assert_equal [ [ "disadvantage_on_next_save", caster.combatant.id, nil ] ],
       participant_of(encounter, target).statuses.map { |status| [ status.kind, status.source.id, status.ends ] }, "no end of its own: only a save uses it up"
   end
 
@@ -423,7 +423,7 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
   test "an enemy-targeted feature has no target once every enemy is down" do
     actor = fresh_character(:aragorn)
     downed = fresh_character(:merlin)
-    @hit_points[downed.id] = 0
+    @hit_points[downed.combatant.id] = 0
     encounter, executor = fight(party_one: [ actor ], party_two: [ downed ])
 
     assert_nil executor.random_target(actor: participant_of(encounter, actor), payload: { "target" => "enemy" })
@@ -440,7 +440,7 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
 
     turns = executor.take_turn(fighter, round: 1, turn: 1)
 
-    assert_equal 1, turns.count { |turn| turn.actor_id == actor.id && turn.action[:feature_slug] == "second-wind" }
+    assert_equal 1, turns.count { |turn| turn.actor_id == actor.combatant.id && turn.action[:feature_slug] == "second-wind" }
     assert_equal 2, fighter.uses_left(second_wind.id)
   end
 
@@ -449,7 +449,7 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
     actor.define_singleton_method(:attacks_per_action) { 3 }
     enemies = %i[aragorn aragorn_copy elora fighter_archer fighter_defender].map { |name| fresh_character(name) }
     a, b, c, d, e = enemies
-    @hit_points[a.id] = @hit_points[d.id] = 5 # below 50%: the rule's only candidates
+    @hit_points[a.combatant.id] = @hit_points[d.combatant.id] = 5 # below 50%: the rule's only candidates
     gambit = add_gambit(actor, position: 1, condition: :hp_below, condition_value: 50)
     encounter, executor = fight(party_one: [ actor ], party_two: enemies, initiative_order: [ e, actor, c, a, d, b ])
     enemies.each { |enemy| participant_of(encounter, enemy).define_singleton_method(:take_damage) { |**| @current_hit_points = 0 } }
@@ -460,7 +460,7 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
 
     # a and d by the rule (in initiative order), then e: the first living enemy in initiative order
     # (not b, the first in party order).
-    assert_equal [ a.id, d.id, e.id ], turn.results.map { |attack| attack[:target_id] }
+    assert_equal [ a.combatant.id, d.combatant.id, e.combatant.id ], turn.results.map { |attack| attack[:target_id] }
   end
 
   test "gambits: a maneuver fired by a gambit spends exactly one superiority die on a hit" do
@@ -522,7 +522,7 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
 
     # Starts with enough HP that nobody falls over the few rounds a gambit test runs.
     def sturdy(character)
-      @hit_points[character.id] = 1000
+      @hit_points[character.combatant.id] = 1000
       character
     end
 

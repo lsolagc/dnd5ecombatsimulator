@@ -1,6 +1,6 @@
 <% content_for :title, "Novo experimento" %>
 <% characters = PlayerCharacter.includes(:player_class, :combatant, gambits: %i[class_feature spell]).order(:name) %>
-<% selected = characters.index_by(&:id) %>
+<% selected = characters.index_by { |character| character.combatant.id } %>
 
 <div class="sim-page">
   <header class="mb-4">
@@ -51,7 +51,7 @@
                       data-action="change->simulation-form#add">
                 <option value="">+ Adicionar personagem…</option>
                 <% characters.each do |character| %>
-                  <option value="<%= character.id %>"><%= character.name %> — <%= character.player_class.name %>, nível <%= character.level %></option>
+                  <option value="<%= character.combatant.id %>"><%= character.name %> — <%= character.player_class.name %>, nível <%= character.level %></option>
                 <% end %>
               </select>
             </section>
@@ -60,7 +60,7 @@
       </div>
 
       <% characters.each do |character| %>
-        <template data-simulation-form-target="template" data-character-id="<%= character.id %>">
+        <template data-simulation-form-target="template" data-combatant-id="<%= character.combatant.id %>">
           <%= render "combatant_card", character:, settings: SimulationBatch.blueprint_settings(character), side: "" %>
         </template>
       <% end %>

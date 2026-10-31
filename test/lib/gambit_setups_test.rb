@@ -100,7 +100,7 @@ class GambitSetupsTest < ActiveSupport::TestCase
 
     [ @brenna, @corwin ].each do |character|
       character.gambits.reload.select(&:enabled).each do |gambit|
-        assert fired[[ character.id, gambit.position ]].positive?, "#{character.name} #{gambit.position}. #{gambit.label} never fired"
+        assert fired[[ character.combatant.id, gambit.position ]].positive?, "#{character.name} #{gambit.position}. #{gambit.label} never fired"
       end
     end
   end

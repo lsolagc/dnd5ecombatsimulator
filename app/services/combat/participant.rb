@@ -6,7 +6,7 @@ module Combat
   class Participant
     # What the combat pipeline reads of whoever fights: the simulator, TurnRecord, EffectResolver (the weapon),
     # EffectExecutor (attack, AC, save DC), RollContext and SavingThrow (level, proficiency, ability modifiers).
-    delegate :id, :name, :level, :max_hit_points, :initiative, :armor_class,
+    delegate :name, :level, :max_hit_points, :initiative, :armor_class,
              :damage_dice, :damage_type, :attacks_per_action, :weapon_attack_bonus, :weapon_damage_modifier, :critical_hit_threshold,
              :proficiency_bonus, :spellcasting_feature, :spell_save_dc, :spell_attack_bonus, :spells, :gambits,
              :passive_effect_payloads, :defenses,
@@ -14,6 +14,10 @@ module Combat
              to: :character
 
     attr_reader :character, :current_hit_points, :feature_book, :statuses
+
+    # The Combatant's id, not the sheet's: a PlayerCharacter and a Monster can share an id. The log's
+    # actor_id/target_id and the keys of Combat::Simulator's hit_points:/gambits: are this id.
+    def id = character.combatant.id
 
     # hit_points: the HP it starts with (an experiment's), the sheet's maximum by default. Rolls the uses of
     # any feature whose uses_formula has dice (FeatureBook#initial_uses).

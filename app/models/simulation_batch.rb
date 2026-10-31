@@ -31,7 +31,8 @@ class SimulationBatch < ApplicationRecord
     }
   end
 
-  # Form input, keyed by character id:
+  # Form input, keyed by combatant id (the character's Combatant's id, never the sheet's: party_one_ids,
+  # party_two_ids and the keys of combatant_settings and gambit_settings are all combatant ids):
   # { "7" => { "side" => "party_one", "current_hit_points" => "12", "armor_class" => "16", "attack_bonus" => "5",
   #            "damage_dice" => "1d8", "damage_type" => "slashing", "defenses" => { "fire" => "R", "cold" => "" } } }
   def combatants=(entries)
@@ -58,7 +59,7 @@ class SimulationBatch < ApplicationRecord
   end
 
   def settings_for(character)
-    combatant_settings[character.id.to_s] || self.class.blueprint_settings(character)
+    combatant_settings[character.combatant.id.to_s] || self.class.blueprint_settings(character)
   end
 
   def finished?
@@ -75,7 +76,7 @@ class SimulationBatch < ApplicationRecord
     build_party(party_two_ids)
   end
 
-  # The experiment's starting HP, { character id => HP }, for Combat::Simulator's hit_points:.
+  # The experiment's starting HP, { combatant id => HP }, for Combat::Simulator's hit_points:.
   def hit_points
     (party_one_ids + party_two_ids).index_with { |id| combatant_settings.dig(id.to_s, "current_hit_points") }
   end
@@ -156,7 +157,12 @@ class SimulationBatch < ApplicationRecord
     end
 
     def build_party(ids)
-      PlayerCharacter.includes(:combatant).where(id: ids).map { |character| apply_settings(character) }
+      characters(ids).map { |character| apply_settings(character) }
+    end
+
+    # The sheets whose Combatants have these ids; only a PlayerCharacter's Combatant fights in a batch.
+    def characters(combatant_ids)
+      PlayerCharacter.includes(:combatant).where(id: Combatant.player_characters.where(id: combatant_ids).select(:combatable_id))
     end
 
     def apply_settings(character)
@@ -175,7 +181,7 @@ class SimulationBatch < ApplicationRecord
     end
 
     def blueprints
-      @blueprints ||= PlayerCharacter.includes(:combatant).where(id: party_one_ids + party_two_ids).index_by(&:id)
+      @blueprints ||= characters(party_one_ids + party_two_ids).index_by { |character| character.combatant.id }
     end
 
     # Keeps exactly one settings entry per selected character, filling the missing ones from the
@@ -214,7 +220,7 @@ class SimulationBatch < ApplicationRecord
     end
 
     def validate_settings(character)
-      settings = combatant_settings[character.id.to_s]
+      settings = combatant_settings[character.combatant.id.to_s]
       hit_points, armor_class = settings.values_at("current_hit_points", "armor_class")
 
       problems = []

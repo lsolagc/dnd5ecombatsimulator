@@ -42,7 +42,7 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
     # Recorded from the code before gambits existed: the random path must not change.
     party_one = %i[thorin fighter_archer].map { |name| fresh_character(name) }
     party_two = %i[aragorn aragorn_copy fighter_defender].map { |name| fresh_character(name) }
-    name_of = %i[thorin fighter_archer aragorn aragorn_copy fighter_defender].index_by { |name| player_characters(name).id }
+    name_of = %i[thorin fighter_archer aragorn aragorn_copy fighter_defender].index_by { |name| player_characters(name).combatant.id }
 
     result = simulator(party_one:, party_two:, seed: 77, max_rounds: 3).call
 
@@ -65,7 +65,7 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
     # War Magic bonus attack after a cantrip, must not change on the random path.
     eldritch_knight = sturdy(spellcaster_with_known_spells(:eldritch_knight_seven))
     enemies = %i[aragorn aragorn_copy].map { |name| sturdy(fresh_character(name)) }
-    name_of = { eldritch_knight.id => :eldritch_knight_seven, enemies.first.id => :aragorn, enemies.second.id => :aragorn_copy }
+    name_of = { eldritch_knight.combatant.id => :eldritch_knight_seven, enemies.first.combatant.id => :aragorn, enemies.second.combatant.id => :aragorn_copy }
 
     result = simulator(party_one: [ eldritch_knight ], party_two: enemies, seed: 6, max_rounds: 3).call
 
@@ -98,7 +98,7 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
 
   test "a simulation only reads the sheets: a batch's come out unchanged and cannot be saved" do
     merlin, aragorn = player_characters(:merlin), player_characters(:aragorn)
-    batch = SimulationBatch.create!(party_one_ids: [ merlin.id ], party_two_ids: [ aragorn.id ], seed: 1)
+    batch = SimulationBatch.create!(party_one_ids: [ merlin.combatant.id ], party_two_ids: [ aragorn.combatant.id ], seed: 1)
     sheets = [ batch.party_one.sole, batch.party_two.sole ]
     reading = -> { sheets.map { |sheet| [ sheet.attributes, sheet.combatant.attributes, sheet.spell_slots ] } }
     before = reading.call
@@ -122,7 +122,7 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
   test "signals explicit draw on simultaneous elimination" do
     fallen_one = fresh_character(:aragorn)
     fallen_two = fresh_character(:aragorn_copy)
-    @hit_points[fallen_one.id] = @hit_points[fallen_two.id] = 0
+    @hit_points[fallen_one.combatant.id] = @hit_points[fallen_two.combatant.id] = 0
 
     result = simulator(
       party_one: [ fallen_one ],
@@ -193,13 +193,13 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
 
   test "Survivor heals a Champion at half HP or below at the start of their turn" do
     champion = fresh_character(:champion_eighteen)
-    starting_hit_points = @hit_points[champion.id] = champion.max_hit_points / 2
+    starting_hit_points = @hit_points[champion.combatant.id] = champion.max_hit_points / 2
 
     simulation = simulator(party_one: [ champion ], party_two: [ fresh_character(:aragorn) ], seed: 99, max_rounds: 1)
     result = simulation.call
 
     passive_entries = result[:round_log].flat_map { |round| round[:turns] }
-      .select { |turn| turn[:actor_id] == champion.id && turn.dig(:action, :type) == :turn_passive && turn.dig(:action, :trigger) == "turn_start" }
+      .select { |turn| turn[:actor_id] == champion.combatant.id && turn.dig(:action, :type) == :turn_passive && turn.dig(:action, :trigger) == "turn_start" }
 
     assert_equal 1, passive_entries.size
     assert_equal :heal, passive_entries.first[:results].first[:kind]
@@ -215,19 +215,19 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
 
     simulation.call { |encounter| mark_and_play_first(encounter, target:, sources: [ ally, battle_master ], first: battle_master) }
 
-    assert_equal [ ally.id ], participant_of(simulation, target).statuses.map { |status| status.source.id }
+    assert_equal [ ally.combatant.id ], participant_of(simulation, target).statuses.map { |status| status.source.id }
   end
 
   test "a fallen Battle Master's mark still expires when its turn comes up" do
     battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
     ally = fresh_character(:aragorn_copy)
     target = hittable_target(armor_class: 1)
-    @hit_points[battle_master.id] = 0
+    @hit_points[battle_master.combatant.id] = 0
     simulation = simulator(party_one: [ battle_master, ally ], party_two: [ target ], seed: 1, max_rounds: 1)
 
     simulation.call { |encounter| mark_and_play_first(encounter, target:, sources: [ ally, battle_master ], first: battle_master) }
 
-    assert_equal [ ally.id ], participant_of(simulation, target).statuses.map { |status| status.source.id }
+    assert_equal [ ally.combatant.id ], participant_of(simulation, target).statuses.map { |status| status.source.id }
   end
 
   test "an Eldritch Knight autonomously casts a spell during a simulated round" do
@@ -237,7 +237,7 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
     result = simulator(party_one: [ caster ], party_two: [ target ], seed: 2, max_rounds: 1).call
 
     cast_turn = result[:round_log].flat_map { |round| round[:turns] }
-      .find { |turn| turn[:actor_id] == caster.id && turn.dig(:action, :type) == :cast_spell }
+      .find { |turn| turn[:actor_id] == caster.combatant.id && turn.dig(:action, :type) == :cast_spell }
 
     assert cast_turn, "expected the Eldritch Knight to autonomously cast a spell"
     assert_equal "magic-missile", cast_turn.dig(:action, :spell_slug)
@@ -301,15 +301,15 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
     run = lambda do |weaken: nil|
       actor = sturdy(fresh_character(:thorin))
       enemies = [ fresh_character(:aragorn), fresh_character(:aragorn_copy) ]
-      enemies.find { |enemy| enemy.id == weaken }&.then { |enemy| @hit_points[enemy.id] = enemy.max_hit_points - 5 }
+      enemies.find { |enemy| enemy.combatant.id == weaken }&.then { |enemy| @hit_points[enemy.combatant.id] = enemy.max_hit_points - 5 }
       add_gambit(actor, position: 1, condition: :lowest_hp)
       simulation = simulator(party_one: [ actor ], party_two: enemies, seed: SEED_WITH_REVERSED_INITIATIVE, max_rounds: 1)
       first_target = actor_turns(actor:, result: simulation.call).first[:results].first[:target_id]
-      [ first_target, simulation.encounter.initiative_order.map(&:id) - [ actor.id ] ]
+      [ first_target, simulation.encounter.initiative_order.map(&:id) - [ actor.combatant.id ] ]
     end
 
     target, order = run.call
-    assert_equal [ player_characters(:aragorn_copy).id, player_characters(:aragorn).id ], order,
+    assert_equal [ player_characters(:aragorn_copy).combatant.id, player_characters(:aragorn).combatant.id ], order,
       "the seed must put the enemies in initiative order opposite to their party order, or the tie-break is untested"
     assert_equal order.first, target
 
@@ -348,7 +348,7 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
     add_gambit(actor, position: 1) # its own rule: an attack
     second_wind = Gambit.new(position: 1, target: :self, condition: :any, action_kind: :class_feature, class_feature: class_features(:fighter_second_wind))
     disabled = Gambit.new(position: 2, target: :enemy, condition: :any, action_kind: :attack, enabled: false)
-    copy = { actor.id.to_s => [ disabled.snapshot, second_wind.snapshot.merge("label" => "rótulo da cópia") ] }
+    copy = { actor.combatant.id.to_s => [ disabled.snapshot, second_wind.snapshot.merge("label" => "rótulo da cópia") ] }
 
     result = simulator(party_one: [ actor ], party_two: [ sturdy(fresh_character(:merlin)) ], seed: 5, max_rounds: 1, gambits: copy).call
 
@@ -362,12 +362,12 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
     result = simulator(party_one: combatants.first(2), party_two: combatants.last(2), seed: 1, max_rounds: 1).call
 
     initiative = result[:initiative]
-    assert_equal combatants.map(&:id).sort, initiative.pluck(:actor_id).sort
+    assert_equal combatants.map { it.combatant.id }.sort, initiative.pluck(:actor_id).sort
     assert_equal initiative.pluck(:actor_id), result[:round_log].first[:turns].pluck(:actor_id).uniq, "round 1 plays in the logged order"
-    assert_not_equal combatants.map(&:id), initiative.pluck(:actor_id), "the seed must put them out of party order"
+    assert_not_equal combatants.map { it.combatant.id }, initiative.pluck(:actor_id), "the seed must put them out of party order"
     assert_equal initiative.pluck(:total).sort.reverse, initiative.pluck(:total)
     initiative.each do |entry|
-      assert_equal entry[:natural] + combatants.find { |combatant| combatant.id == entry[:actor_id] }.initiative, entry[:total]
+      assert_equal entry[:natural] + combatants.find { |combatant| combatant.combatant.id == entry[:actor_id] }.initiative, entry[:total]
       assert_includes 1..20, entry[:natural]
     end
   end
@@ -530,8 +530,8 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
 
     turn = actor_turns(actor:, result: simulation.call).first
 
-    order = simulation.encounter.initiative_order.map(&:id) - [ actor.id ]
-    assert_equal enemies.reverse.map(&:id), order, "the seed must put the enemies in initiative order opposite to their party order"
+    order = simulation.encounter.initiative_order.map(&:id) - [ actor.combatant.id ]
+    assert_equal enemies.reverse.map { it.combatant.id }, order, "the seed must put the enemies in initiative order opposite to their party order"
     assert_equal [ order.first ] * 20, turn[:results].map { |attack| attack[:target_id] }
   end
 
@@ -547,7 +547,7 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
       turn = actor_turns(actor:, result: simulator(party_one: [ actor ], party_two: enemies, seed:, max_rounds: 1).call).first
 
       assert_equal "Maneuver: Precision Attack", turn.dig(:action, :riders, 0, :feature_name)
-      assert_equal enemies.second.id, turn[:results].first[:target_id], "seed #{seed}: expected the weakest enemy as target"
+      assert_equal enemies.second.combatant.id, turn[:results].first[:target_id], "seed #{seed}: expected the weakest enemy as target"
     end
   end
 
@@ -597,7 +597,7 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
 
     # Starts with enough HP that nobody falls over the few rounds a gambit test runs.
     def sturdy(character)
-      @hit_points[character.id] = 1000
+      @hit_points[character.combatant.id] = 1000
       character
     end
 
@@ -613,6 +613,6 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
     # The actor's own turn entries (not passives or Action Surge extras).
     def actor_turns(actor:, result:)
       result[:round_log].flat_map { |round| round[:turns] }
-        .select { |turn| turn[:actor_id] == actor.id && turn.dig(:action, :type) != :turn_passive && !turn[:extra] }
+        .select { |turn| turn[:actor_id] == actor.combatant.id && turn.dig(:action, :type) != :turn_passive && !turn[:extra] }
     end
 end

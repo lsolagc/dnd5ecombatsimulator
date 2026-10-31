@@ -93,9 +93,12 @@ result = Combat::Simulator.new(
 
 - `party_one` / `party_two`: non-empty arrays of character sheets
   (`PlayerCharacter`); raises `ArgumentError` otherwise. Each fights as a
-  `Combat::Participant` (see below) and the sheets are only read; the result's
-  ids are the sheets'.
-- `hit_points`: optional starting HP, `{ character id => HP }` (a
+  `Combat::Participant` (see below) and the sheets are only read. The result's
+  ids (`initiative[].actor_id`, each turn's `actor_id`, an attack's `target_id`)
+  are **combatant ids**, `Combat::Participant#id` = `sheet.combatant.id`, never
+  the sheet's (since phase 5.1, 2026-10-31: a `PlayerCharacter` and a Monster
+  can share an id).
+- `hit_points`: optional starting HP, `{ combatant id => HP }` (a
   [batch](/architecture/simulation-batches.md)'s `current_hit_points`
   settings); a combatant left out starts at its `max_hit_points`.
 - `seed`: optional; when given, both the instance RNG and the global
@@ -216,7 +219,7 @@ no enabled gambit take the old random path unchanged. Open:
 one stream. Rules are loaded once per
 simulation and evaluated over `Gambit` objects (saved or not).
 
-**Log.** `gambits:` (optional, a batch's `gambit_settings`) makes the
+**Log.** `gambits:` (optional, a batch's `gambit_settings`, `{ combatant id (string) => [Gambit#snapshot, ...] }`) makes the
 simulation run and log from that copy, rebuilding unsaved `Gambit`s. The result
 does not list the rules: a batch's log lists them once in its header, from the
 same copy, through `Gambit.log_section` (per combatant `mode`, `"gambits"` or

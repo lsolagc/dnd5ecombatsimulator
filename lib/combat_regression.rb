@@ -128,14 +128,14 @@ module CombatRegression
   end
 
   # The result with record ids (which change between runs: sequences are not rolled back) replaced by
-  # stable labels: character name, feature or spell slug. Any other id key fails loudly.
+  # stable labels: the combatant's character name, feature or spell slug. Any other id key fails loudly.
   def normalize(value, key = nil)
     case value
     when Hash then value.to_h { |k, v| [ k, normalize(v, k) ] }
     when Array then value.map { |item| normalize(item) }
     else
       case key
-      when :id, :actor_id, :target_id then PlayerCharacter.find(value).name
+      when :id, :actor_id, :target_id then Combatant.find(value).combatable.name
       when :feature_id then ClassFeature.find(value).slug
       when :spell_id then Spell.find(value).slug
       else

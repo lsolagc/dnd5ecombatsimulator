@@ -2,7 +2,7 @@ require "test_helper"
 
 class SimulationBatchTest < ActiveSupport::TestCase
   def batch(**attributes)
-    SimulationBatch.new(party_one_ids: [ player_characters(:aragorn).id ], party_two_ids: [ player_characters(:merlin).id ], requested_count: 10, **attributes)
+    SimulationBatch.new(party_one_ids: [ player_characters(:aragorn).combatant.id ], party_two_ids: [ player_characters(:merlin).combatant.id ], requested_count: 10, **attributes)
   end
 
   test "is valid with one character on each side" do
@@ -15,8 +15,8 @@ class SimulationBatchTest < ActiveSupport::TestCase
   end
 
   test "rejects a character on both sides" do
-    shared = player_characters(:aragorn).id
-    record = batch(party_one_ids: [ shared ], party_two_ids: [ shared, player_characters(:merlin).id ])
+    shared = player_characters(:aragorn).combatant.id
+    record = batch(party_one_ids: [ shared ], party_two_ids: [ shared, player_characters(:merlin).combatant.id ])
 
     assert_not record.valid?
     assert_includes record.errors[:base], "Um personagem não pode estar nos dois lados"
@@ -26,8 +26,21 @@ class SimulationBatchTest < ActiveSupport::TestCase
     assert_not batch(party_two_ids: [ -1 ]).valid?
   end
 
+  test "takes combatant ids, of PlayerCharacters only: a sheet id or another kind of combatant is unknown" do
+    merlin = player_characters(:merlin)
+    other = Combatant.insert(merlin.combatant.attributes.except("id", "created_at", "updated_at").merge("combatable_type" => "Monster"), returning: :id).rows.sole.sole
+
+    assert_not Combatant.exists?(merlin.id), "the sheet id must not happen to be a combatant id"
+    [ merlin.id, other, -1 ].each do |id|
+      record = batch(party_two_ids: [ id ])
+      assert_not record.valid?
+      assert_includes record.errors[:base], "Personagem inexistente selecionado"
+    end
+    assert_equal [ merlin.name ], batch.party_two.map(&:name)
+  end
+
   test "allows several characters per side" do
-    assert batch(party_one_ids: [ player_characters(:aragorn).id, player_characters(:elora).id ]).valid?
+    assert batch(party_one_ids: [ player_characters(:aragorn).combatant.id, player_characters(:elora).combatant.id ]).valid?
   end
 
   test "caps the batch at 1000 simulations" do
@@ -78,30 +91,30 @@ class SimulationBatchTest < ActiveSupport::TestCase
     aragorn = player_characters(:aragorn)
     assert_equal({ "name" => "Aragorn", "current_hit_points" => aragorn.max_hit_points, "armor_class" => 16, "attack_bonus" => aragorn.combatant.attack_bonus,
                    "damage_dice" => aragorn.combatant.damage_dice, "damage_type" => aragorn.combatant.damage_type, "defenses" => {} },
-                 record.combatant_settings[aragorn.id.to_s])
-    assert_equal [ aragorn.id, player_characters(:merlin).id ].map(&:to_s).sort, record.combatant_settings.keys.sort
+                 record.combatant_settings[aragorn.combatant.id.to_s])
+    assert_equal [ aragorn.combatant.id, player_characters(:merlin).combatant.id ].map(&:to_s).sort, record.combatant_settings.keys.sort
   end
 
   test "reads sides and settings from the experiment form" do
     aragorn, merlin = player_characters(:aragorn), player_characters(:merlin)
     record = SimulationBatch.new(requested_count: 3, combatants: {
-      aragorn.id.to_s => form_entry("party_one", current_hit_points: "5", armor_class: "18", defenses: { "fire" => "R", "cold" => "" }),
-      merlin.id.to_s => form_entry("party_two")
+      aragorn.combatant.id.to_s => form_entry("party_one", current_hit_points: "5", armor_class: "18", defenses: { "fire" => "R", "cold" => "" }),
+      merlin.combatant.id.to_s => form_entry("party_two")
     })
 
     assert record.valid?, record.errors.full_messages.to_sentence
-    assert_equal [ aragorn.id ], record.party_one_ids
-    assert_equal [ merlin.id ], record.party_two_ids
+    assert_equal [ aragorn.combatant.id ], record.party_one_ids
+    assert_equal [ merlin.combatant.id ], record.party_two_ids
     assert_equal({ "name" => "Aragorn", "current_hit_points" => 5, "armor_class" => 18, "attack_bonus" => 4, "damage_dice" => "1d8", "damage_type" => "slashing",
-                   "defenses" => { "fire" => "R" } }, record.combatant_settings[aragorn.id.to_s])
+                   "defenses" => { "fire" => "R" } }, record.combatant_settings[aragorn.combatant.id.to_s])
   end
 
   test "rejects experiment settings the simulator cannot run" do
     aragorn = player_characters(:aragorn)
     record = SimulationBatch.new(requested_count: 3, combatants: {
-      aragorn.id.to_s => form_entry("party_one", current_hit_points: (aragorn.max_hit_points + 1).to_s, armor_class: "-1", attack_bonus: "x",
+      aragorn.combatant.id.to_s => form_entry("party_one", current_hit_points: (aragorn.max_hit_points + 1).to_s, armor_class: "-1", attack_bonus: "x",
                                     damage_dice: "d8", damage_type: "sonic", defenses: { "fire" => "X" }),
-      player_characters(:merlin).id.to_s => form_entry("party_two")
+      player_characters(:merlin).combatant.id.to_s => form_entry("party_two")
     })
 
     assert_not record.valid?
@@ -113,13 +126,13 @@ class SimulationBatchTest < ActiveSupport::TestCase
   test "applies the settings to in-memory combatants and leaves the sheet untouched" do
     aragorn = player_characters(:aragorn)
     record = SimulationBatch.create!(requested_count: 1, combatants: {
-      aragorn.id.to_s => form_entry("party_one", current_hit_points: "3", armor_class: "20", attack_bonus: "9", damage_dice: "2d6",
+      aragorn.combatant.id.to_s => form_entry("party_one", current_hit_points: "3", armor_class: "20", attack_bonus: "9", damage_dice: "2d6",
                                     damage_type: "fire", defenses: { "cold" => "I", "fire" => "V" }),
-      player_characters(:merlin).id.to_s => form_entry("party_two")
+      player_characters(:merlin).combatant.id.to_s => form_entry("party_two")
     })
 
     fighter = record.party_one.sole
-    assert_equal 3, record.hit_points[aragorn.id], "the starting HP goes to the simulator, not the sheet"
+    assert_equal 3, record.hit_points[aragorn.combatant.id], "the starting HP goes to the simulator, not the sheet"
     assert_equal 20, fighter.armor_class
     assert_equal 9, fighter.attack_bonus
     assert_equal "2d6", fighter.damage_dice
@@ -152,8 +165,8 @@ class SimulationBatchTest < ActiveSupport::TestCase
     record = batch
     record.save!
 
-    assert_equal [ aragorn.id, player_characters(:merlin).id ].map(&:to_s).sort, record.gambit_settings.keys.sort
-    assert_equal [], record.gambit_settings[player_characters(:merlin).id.to_s]
+    assert_equal [ aragorn.combatant.id, player_characters(:merlin).combatant.id ].map(&:to_s).sort, record.gambit_settings.keys.sort
+    assert_equal [], record.gambit_settings[player_characters(:merlin).combatant.id.to_s]
     assert_equal [
       { "position" => 1, "enabled" => true, "target" => "self", "condition" => "any", "condition_value" => nil, "action_kind" => "class_feature",
         "class_feature_id" => class_features(:fighter_second_wind).id, "spell_id" => nil,
@@ -161,7 +174,7 @@ class SimulationBatchTest < ActiveSupport::TestCase
       { "position" => 2, "enabled" => false, "target" => "enemy", "condition" => "hp_below", "condition_value" => 50, "action_kind" => "attack",
         "class_feature_id" => nil, "spell_id" => nil,
         "target_label" => "Inimigo", "condition_label" => "HP < 50%", "action_label" => "Ataque", "label" => "Inimigo: HP < 50% → Ataque" }
-    ], SimulationBatch.find(record.id).gambit_settings[aragorn.id.to_s]
+    ], SimulationBatch.find(record.id).gambit_settings[aragorn.combatant.id.to_s]
   end
 
   test "the gambits copy is never rewritten by later saves, even after the character's rules change" do
@@ -179,8 +192,8 @@ class SimulationBatchTest < ActiveSupport::TestCase
     SimulationBatch.find(record.id).cancel!
 
     assert_equal copied, SimulationBatch.find(record.id).gambit_settings
-    assert_equal [ "Inimigo: qualquer → Ataque" ], copied[aragorn.id.to_s].pluck("label")
-    assert_equal [], SimulationBatch.find(record.id).gambit_settings[merlin.id.to_s]
+    assert_equal [ "Inimigo: qualquer → Ataque" ], copied[aragorn.combatant.id.to_s].pluck("label")
+    assert_equal [], SimulationBatch.find(record.id).gambit_settings[merlin.combatant.id.to_s]
   end
 
   test "a rerun does not copy the gambits: the new experiment takes the character's current rules" do
@@ -194,8 +207,8 @@ class SimulationBatchTest < ActiveSupport::TestCase
     assert_equal({}, copy.gambit_settings)
 
     copy.save!
-    assert_equal [ false ], copy.gambit_settings[aragorn.id.to_s].pluck("enabled")
-    assert_equal [ true ], record.reload.gambit_settings[aragorn.id.to_s].pluck("enabled")
+    assert_equal [ false ], copy.gambit_settings[aragorn.combatant.id.to_s].pluck("enabled")
+    assert_equal [ true ], record.reload.gambit_settings[aragorn.combatant.id.to_s].pluck("enabled")
   end
 
   test "the log is one JSON: a header with the batch and each side's combatants, then every simulation in order" do
@@ -215,11 +228,11 @@ class SimulationBatchTest < ActiveSupport::TestCase
     assert_equal %w[ party_one party_two ], log.dig("header", "parties").keys
     aragorn_entry = log.dig("header", "parties", "party_one").sole
     assert_equal %w[ id name settings gambits ], aragorn_entry.keys
-    assert_equal [ aragorn.id, "Aragorn", record.combatant_settings[aragorn.id.to_s].except("name") ], aragorn_entry.values_at("id", "name", "settings")
+    assert_equal [ aragorn.combatant.id, "Aragorn", record.combatant_settings[aragorn.combatant.id.to_s].except("name") ], aragorn_entry.values_at("id", "name", "settings")
     assert_equal({ "mode" => "gambits", "rules" => [
       { "position" => 1, "enabled" => true, "target" => "Inimigo", "condition" => "qualquer", "action" => "Ataque", "rule" => "Inimigo: qualquer → Ataque" }
     ] }, aragorn_entry["gambits"])
-    assert_equal [ merlin.id, merlin.name, { "mode" => "aleatório", "rules" => [] } ],
+    assert_equal [ merlin.combatant.id, merlin.name, { "mode" => "aleatório", "rules" => [] } ],
                  log.dig("header", "parties", "party_two").sole.values_at("id", "name", "gambits")
 
     simulations = log["simulations"]

@@ -4,7 +4,7 @@ module Combat
   # condition finds a target wins.
   #
   # Works on Gambit objects (saved or not), never querying mid-turn, so a copy of the rules can stand in for
-  # the owner's own: given gambits: (a batch's gambit_settings, { character id (string) => [Gambit#snapshot,
+  # the owner's own: given gambits: (a batch's gambit_settings, { combatant id (string) => [Gambit#snapshot,
   # ...] }), each actor's rules are rebuilt from it as unsaved gambits and logged with the copy's own label.
   class GambitPolicy
     def initialize(encounter:, gambits: nil)

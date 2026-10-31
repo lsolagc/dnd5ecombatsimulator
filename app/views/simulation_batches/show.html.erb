@@ -30,7 +30,7 @@
               <% settings = @simulation_batch.settings_for(character) %>
               <% defenses = settings["defenses"] || {} %>
               <%# The batch's own copy of the rules, taken when it was created. %>
-              <% rules = @simulation_batch.gambit_settings.fetch(character.id.to_s, []).sort_by { |rule| rule["position"] } %>
+              <% rules = @simulation_batch.gambit_settings.fetch(character.combatant.id.to_s, []).sort_by { |rule| rule["position"] } %>
               <% enabled = rules.count { |rule| rule["enabled"] } %>
               <li class="sim-roster__item">
                 <div class="sim-roster__head">

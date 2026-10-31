@@ -16,9 +16,10 @@ module Combat
     # abort_if: optional callable checked before every round (e.g. a batch cancelled from the UI).
     # party_one, party_two: the character sheets; each fights as a Combat::Participant (built in #call), so
     # the sheets are only read.
-    # gambits: optional copy of the rules, { character id (string) => [Gambit#snapshot, ...] } (a batch's
+    # gambits: optional copy of the rules, { combatant id (string) => [Gambit#snapshot, ...] } (a batch's
     # gambit_settings); the simulation runs and logs from it instead of each combatant's own gambits.
-    # hit_points: optional starting HP, { character id => HP } (an experiment's); the sheet's maximum otherwise.
+    # hit_points: optional starting HP, { combatant id => HP } (an experiment's); the sheet's maximum otherwise.
+    # The combatant id is the sheet's Combatant's (sheet.combatant.id, Combat::Participant#id), never the sheet's.
     def initialize(party_one:, party_two:, seed: nil, max_rounds: DEFAULT_MAX_ROUNDS, abort_if: nil, gambits: nil, hit_points: {})
       raise ArgumentError, "Both parties must be Arrays" unless party_one.is_a?(Array) && party_two.is_a?(Array)
       raise ArgumentError, "Parties must not be empty" if party_one.empty? || party_two.empty?
@@ -75,7 +76,7 @@ module Combat
       # In party order, so the uses rolled from a formula (Combat::Participant.new) keep the RNG sequence.
       def build_encounter
         party_one, party_two = @sheets.map do |sheets|
-          sheets.map { |sheet| Participant.new(sheet, hit_points: @hit_points[sheet.id]) }
+          sheets.map { |sheet| Participant.new(sheet, hit_points: @hit_points[sheet.combatant.id]) }
         end
         @encounter = Encounter.new(party_one:, party_two:)
         @executor = TurnExecutor.new(encounter: @encounter, rng: @rng, policy: GambitPolicy.new(encounter: @encounter, gambits: @gambit_settings))

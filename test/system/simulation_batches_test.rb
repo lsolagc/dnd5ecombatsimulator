@@ -60,7 +60,7 @@ class SimulationBatchesTest < ApplicationSystemTestCase
     assert batch.completed?
     assert_equal 5, batch.simulation_runs.count
     assert_equal 5, batch.simulation_runs.distinct.count(:seed), "every simulation gets its own seed"
-    assert_equal({ "fire" => "R" }, batch.combatant_settings[player_characters(:aragorn).id.to_s]["defenses"])
+    assert_equal({ "fire" => "R" }, batch.combatant_settings[player_characters(:aragorn).combatant.id.to_s]["defenses"])
     assert_equal 16, player_characters(:aragorn).reload.armor_class, "the character sheet is not changed"
     assert_link "Baixar logs (JSON)"
   end
@@ -103,8 +103,8 @@ class SimulationBatchesTest < ApplicationSystemTestCase
   test "repeating an experiment brings back its combatants and parameters to tweak" do
     aragorn = player_characters(:aragorn)
     batch = SimulationBatch.create!(requested_count: 30, status: "completed", combatants: {
-      aragorn.id => { side: "party_one", current_hit_points: 9, armor_class: 21, attack_bonus: 0, damage_dice: "1d4", damage_type: "bludgeoning" },
-      player_characters(:merlin).id => { side: "party_two", current_hit_points: 8, armor_class: 12, attack_bonus: 0, damage_dice: "1d4", damage_type: "bludgeoning" }
+      aragorn.combatant.id => { side: "party_one", current_hit_points: 9, armor_class: 21, attack_bonus: 0, damage_dice: "1d4", damage_type: "bludgeoning" },
+      player_characters(:merlin).combatant.id => { side: "party_two", current_hit_points: 8, armor_class: 12, attack_bonus: 0, damage_dice: "1d4", damage_type: "bludgeoning" }
     })
 
     visit simulation_batch_url(batch)
@@ -125,7 +125,7 @@ class SimulationBatchesTest < ApplicationSystemTestCase
     visit new_simulation_batch_url
 
     add :party_one, :aragorn
-    aragorn_id = player_characters(:aragorn).id.to_s
+    aragorn_id = player_characters(:aragorn).combatant.id.to_s
     assert find("select[data-side=party_two] option[value='#{aragorn_id}']").disabled?
 
     within(card(:aragorn)) { find("button[aria-label='Remover Aragorn']").click }
@@ -179,7 +179,7 @@ class SimulationBatchesTest < ApplicationSystemTestCase
   end
 
   test "a running experiment updates its progress live and can be interrupted" do
-    batch = SimulationBatch.create!(party_one_ids: [ player_characters(:aragorn).id ], party_two_ids: [ player_characters(:merlin).id ],
+    batch = SimulationBatch.create!(party_one_ids: [ player_characters(:aragorn).combatant.id ], party_two_ids: [ player_characters(:merlin).combatant.id ],
                                     requested_count: 10, status: "running")
     batch.simulation_runs.create!(seed: 1, elapsed_ms: 40, outcome: "victory", winning_party: "party_one", result: {})
 
@@ -217,11 +217,11 @@ class SimulationBatchesTest < ApplicationSystemTestCase
     end
 
     def add(side, fixture)
-      find("select[data-side=#{side}]").find("option[value='#{player_characters(fixture).id}']").select_option
+      find("select[data-side=#{side}]").find("option[value='#{player_characters(fixture).combatant.id}']").select_option
     end
 
     def card(fixture)
-      ".sim-card[data-character-id='#{player_characters(fixture).id}']"
+      ".sim-card[data-combatant-id='#{player_characters(fixture).combatant.id}']"
     end
 
     # Fetches the link from the running app server and returns the parsed JSON.

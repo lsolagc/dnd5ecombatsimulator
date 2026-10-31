@@ -36,13 +36,18 @@ A batch runs [Combat::Simulator](/architecture/combat-simulator.md) several time
 between two sides of `PlayerCharacter`s and aggregates the results.[^batch-model]
 
 - **`SimulationBatch`**: `party_one_ids` / `party_two_ids` (Postgres bigint
-  arrays; "Lado A" / "Lado B" in the UI), `requested_count` (1..1000),
+  arrays of **Combatant ids**, `character.combatant.id`, never the sheet's:
+  a `PlayerCharacter` and a future Monster can share an id; since phase 5.1,
+  2026-10-31; "Lado A" / "Lado B" in the UI), `requested_count` (1..1000),
   optional `seed`, `status` (`pending → running → completed | cancelled |
   failed`) and `error_message`. Validation: both sides non-empty, no
   character on both sides (one sheet fights as one participant on one side),
-  every id exists. A `seed` forces `requested_count = 1`.
+  every id is the Combatant of an existing `PlayerCharacter` (an unknown id
+  or another type's Combatant: "Personagem inexistente selecionado"). A
+  `seed` forces `requested_count = 1`. Batches from before the switch (keyed
+  by sheet id) were deleted by a migration (runs cascade).
 - **Characters are blueprints.** `combatant_settings` (jsonb, keyed by
-  character id) holds each combatant's experiment parameters: starting
+  combatant id) holds each combatant's experiment parameters: starting
   `current_hit_points` (1..the sheet's max HP; the max itself is never
   edited), `armor_class`, `attack_bonus`, `damage_dice` (`NdM`),
   `damage_type` and `defenses` (`{ damage_type => "R" | "I" | "V" }`, one
@@ -53,7 +58,7 @@ between two sides of `PlayerCharacter`s and aggregates the results.[^batch-model
   settings **in memory only** (`combatant.assign_attributes`) and mark
   character and combatant `readonly!`, so an accidental save raises
   `ActiveRecord::ReadOnlyRecord`; the starting HP goes to the simulator instead
-  (`SimulationBatch#hit_points`, `{ id => current_hit_points }`, passed by
+  (`SimulationBatch#hit_points`, `{ combatant id => current_hit_points }`, passed by
   `SimulationRunJob` as `hit_points:`), whose `Combat::Participant`s hold the
   HP, slots and uses, so the sheet never changes. AC and attack bonus are the sheet's final values (the Defense
   and Archery fighting styles already in them, since 2026-10-18); a batch saved
@@ -64,11 +69,12 @@ between two sides of `PlayerCharacter`s and aggregates the results.[^batch-model
   The snapshot also freezes each character's `name` into its entry, once (a
   missing name only, never rewritten, not even by `cancel!`'s `update!`), so
   the log's header keeps the name the batch ran with.
-  `combatants=` reads the form (`{ id => { side, current_hit_points, … } }`)
+  `combatants=` reads the form (`{ combatant id => { side, current_hit_points, … } }`;
+  the form's option values, card field names and `data-combatant-id` carry the combatant id)
   into the side arrays and settings; `rerun` copies combatants, settings
   (without the frozen names: the new batch freezes the current ones), count
   and seed into a new unsaved batch ("Repetir com ajustes").
-- **`gambit_settings`** (jsonb, keyed by character id): a copy of each
+- **`gambit_settings`** (jsonb, keyed by combatant id): a copy of each
   character's [gambits](/models/gambit.md) taken when the batch is created
   (missing keys only, never rewritten); every run is simulated from it and the
   log's header lists it per combatant, so editing a character later never
@@ -175,7 +181,7 @@ round damage and average time, and "Baixar logs (JSON)" (`#logs`):
 (phase 4.3), one pretty `simulacoes-batch-<id>.json`
 (`application/json`). It opens with a `header`: `batch` (`id`, `status`,
 `requested_count`, `seed`, `summary`) and `parties` (`party_one`/`party_two`,
-per combatant `id`, the frozen `name`, `settings` (its `combatant_settings`
+per combatant `id` (its combatant id, like the log's `actor_id`/`target_id`), the frozen `name`, `settings` (its `combatant_settings`
 entry without the name) and `gambits` (`mode`, `rules`, from `gambit_settings`
 through `Gambit.log_section`)). Then `simulations`, one per run in id order:
 `simulation` (1..n), `seed`, `elapsed_ms`, `outcome`, `winning_party`,

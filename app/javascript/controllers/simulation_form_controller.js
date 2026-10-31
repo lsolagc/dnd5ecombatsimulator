@@ -17,7 +17,7 @@ export default class extends Controller {
 
   add(event) {
     const picker = event.currentTarget
-    const template = this.templateTargets.find((t) => t.dataset.characterId === picker.value)
+    const template = this.templateTargets.find((t) => t.dataset.combatantId === picker.value)
     picker.value = ""
     if (!template) return
 
@@ -92,7 +92,7 @@ export default class extends Controller {
 
   // Keeps the pickers, side counters and run summary in step with the cards on the page.
   sync() {
-    const chosen = new Set(this.cardTargets.map((card) => card.dataset.characterId))
+    const chosen = new Set(this.cardTargets.map((card) => card.dataset.combatantId))
     this.pickerTargets.forEach((picker) => {
       picker.querySelectorAll("option[value]:not([value=''])").forEach((option) => { option.disabled = chosen.has(option.value) })
     })

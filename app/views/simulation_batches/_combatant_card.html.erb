@@ -1,9 +1,9 @@
 <%# Locals: character, settings (the experiment's values), side ("party_one" | "party_two") %>
 <% blueprint = SimulationBatch.blueprint_settings(character) %>
-<% prefix = "simulation_batch[combatants][#{character.id}]" %>
-<% dom = "combatant_#{character.id}" %>
+<% prefix = "simulation_batch[combatants][#{character.combatant.id}]" %>
+<% dom = "combatant_#{character.combatant.id}" %>
 <% field = ->(key) { { class: [ "sim-field", ("is-edited" if settings[key].to_s != blueprint[key].to_s) ], data: { field: key } } } %>
-<article class="sim-card" data-simulation-form-target="card" data-character-id="<%= character.id %>" aria-label="<%= character.name %>">
+<article class="sim-card" data-simulation-form-target="card" data-combatant-id="<%= character.combatant.id %>" aria-label="<%= character.name %>">
   <%= hidden_field_tag "#{prefix}[side]", side, id: nil, data: { side_input: true } %>
 
   <header class="sim-card__header">

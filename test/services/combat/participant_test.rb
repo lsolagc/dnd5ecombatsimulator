@@ -96,7 +96,8 @@ class Combat::ParticipantTest < ActiveSupport::TestCase
     thorin = player_characters(:thorin)
     fighter = Combat::Participant.new(thorin)
 
-    %i[id name level max_hit_points initiative armor_class damage_dice damage_type attacks_per_action weapon_attack_bonus
+    assert_equal thorin.combatant.id, fighter.id, "the Combatant's id, not the sheet's"
+    %i[name level max_hit_points initiative armor_class damage_dice damage_type attacks_per_action weapon_attack_bonus
        weapon_damage_modifier critical_hit_threshold proficiency_bonus strength_modifier
        dexterity_modifier constitution_modifier intelligence_modifier wisdom_modifier charisma_modifier].each do |reading|
       assert_equal thorin.public_send(reading), fighter.public_send(reading), reading

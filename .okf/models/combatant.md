@@ -43,6 +43,15 @@ combatants later without a schema change, but resolves the concrete type
 through `combatable_type`/`combatable_id` plus a generated `player_character`
 reader rather than a raw polymorphic association.
 
+**Its id is who fights.** Since phase 5.1 (2026-10-31) a batch's sides
+(`party_one_ids`/`party_two_ids`), the keys of its `combatant_settings` and
+`gambit_settings`, the simulator's `hit_points:`/`gambits:` keys and the log's
+`actor_id`/`target_id`/`initiative[].actor_id` are the Combatant's id
+(`Combat::Participant#id` = `character.combatant.id`), never the sheet's: a
+`PlayerCharacter` and a future Monster can share an id. The gambits still
+belong to the sheet; only a batch's copy is keyed by combatant id. See
+[simulation-batches.md](/architecture/simulation-batches.md).
+
 **In-combat current HP is not stored here, nor on the character.** Since
 phase 3.3 it belongs to the `Combat::Participant` the simulator builds for
 the character, starting from this record's `max_hit_points` (or an
