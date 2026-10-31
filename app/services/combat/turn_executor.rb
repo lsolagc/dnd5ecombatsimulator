@@ -1,14 +1,8 @@
 module Combat
-  # One actor's turn in an encounter (glossary: Turn executor): decides the action, by the actor's gambits
-  # (Combat::GambitPolicy) or at random from rng, chains Action Surge and War Magic, runs the actions through
-  # the Combat::* pipeline and returns the Combat::TurnRecords. rng draws the random choices only (picks and
-  # targets); the dice roll on the global Random, which Combat::Simulator seeds.
-  #
-  # Public: #take_turn (the whole turn), and its pieces a caller can run on their own: #run (one chosen
-  # option), #war_magic_turn, #action_surge_turn, #choose_at_random and #random_target.
+  # One actor's turn as Combat::TurnRecords (glossary: Turn executor): .okf/architecture/combat-simulator.md
+  # rng draws the random picks and targets only; the dice roll on the global Random, which Combat::Simulator seeds.
   class TurnExecutor
-    # The `gambit` of a decision entry when no rule drove it: a random pick, or a gambit-driven actor whose
-    # rules all failed.
+    # The `gambit` of a decision entry no rule drove: a random pick, or a gambit-driven actor whose rules all failed.
     RANDOM_GAMBIT = "aleatório"
     IDLE_GAMBIT = "nenhum aplicável: parado"
 
@@ -38,8 +32,7 @@ module Combat
     end
 
     # Runs a chosen option as an action and returns its TurnRecord, without a gambit (the caller logs it).
-    # A gambit's pick (ActionOption#with target and gambit) aims at the rule's target; otherwise the target
-    # is random (#random_target).
+    # A gambit's pick (ActionOption#with target and gambit) aims at the rule's target, any other at #random_target.
     def run(actor:, option:, round:, turn:)
       case option.type
       when :attack
@@ -57,12 +50,7 @@ module Combat
       end
     end
 
-    # War Magic / Improved War Magic (a grants_activity, Combat::FeatureBook#weapon_attacks_after): casting a
-    # spell as the turn's normal action grants its count (one) of bonus weapon attacks right after it (not the
-    # Attack action, so no Extra Attack). Not recursive (a plain attack never triggers another one) and never
-    # fired from the Action Surge extra action — only from the turn's normal option. Nil when none follows.
-    # A gambit-driven actor aims it without rng: the spell's target if it is a living enemy, else the first
-    # living enemy in initiative order. The bonus entry carries the gambit of the spell's entry.
+    # War Magic's bonus attack after the turn's normal option, or nil: .okf/architecture/combat-simulator.md
     def war_magic_turn(actor:, option:, round:, turn:)
       attacks = actor.feature_book.weapon_attacks_after(option.spell) if option.spell?
       return nil unless attacks
@@ -75,9 +63,7 @@ module Combat
       attack(actor:, round:, turn:, focus:, attacks:).with(bonus: true, gambit:)
     end
 
-    # Action Surge for an actor without gambits: with an unused Action Surge, one extra random action right
-    # after its normal one, spending a use. Not recursive: the extra action never grants another one. Nil
-    # when it does not surge. A gambit-driven actor only surges through a rule (#take_turn).
+    # The random Action Surge's extra action, or nil: .okf/architecture/combat-simulator.md
     def action_surge_turn(actor:, round:, turn:)
       return nil if @encounter.over?
 
@@ -92,10 +78,7 @@ module Combat
       run(actor:, option:, round:, turn:).with(extra: true, gambit: RANDOM_GAMBIT)
     end
 
-    # Deliberately primitive turn AI: a spellcaster with at least one castable spell flips a coin between the
-    # "physical" branch (attack + class features, uniform) and the "spell" branch (cast_spell options,
-    # uniform). Non-casters, or casters with nothing castable right now, keep the uniform sample over
-    # everything — no coin flip — so rng draws stay unchanged for the vast majority of actors.
+    # The random pick, with a caster's coin flip: .okf/architecture/combat-simulator.md (Turn resolution)
     def choose_at_random(actor:, options:)
       spell_options = options.select(&:spell?)
       if actor.spellcasting_feature.present? && spell_options.any?
@@ -106,8 +89,7 @@ module Combat
       end
     end
 
-    # A random target of the payload's "target" kind: self, enemy (opposing party) or ally (own party, actor
-    # included). Nil when nobody valid is left alive.
+    # A random living target of the payload's "target" kind (self, enemy or ally), or nil when none is left.
     def random_target(actor:, payload:)
       candidates = case payload["target"]
       when "self" then [ actor ]
@@ -121,10 +103,7 @@ module Combat
 
     private
 
-      # One gambit-driven evaluation of the list, logged as the turn's entries: the winning rule's action
-      # (plus War Magic's bonus attack, never on the extra action), or an idle entry. An Action Surge rule
-      # spends one use, logs a marker and runs the list twice more (normal action, then the extra one), with
-      # surge rules skipped inside both, so a surge never chains into another.
+      # One evaluation of the gambit list as the turn's entries: .okf/architecture/combat-simulator.md (Gambits)
       def gambit_turns(actor:, round:, turn:, surging: false, extra: false)
         return [] if @encounter.over?
 
@@ -154,12 +133,8 @@ module Combat
         record(actor:, round:, turn:, action: { type: :idle }, gambit: IDLE_GAMBIT)
       end
 
-      # maneuver: the chosen class_feature option of a maneuver (payload "applies_to" weapon_attack). Its die
-      # is added to the damage of the first attack that hits; a miss spends nothing.
-      # gambit: the rule that chose this action. Every attack re-runs its target pick (the first one lands on
-      # the target the rule just chose), falling back to the first living enemy in initiative order.
-      # focus: a fixed target (War Magic for a gambit-driven actor), with the same fallback once it is down.
-      # attacks: how many attacks to make; the Attack action's attacks_per_action (Extra Attack) by default.
+      # maneuver: a maneuver option, rider on the first hit; gambit, focus (War Magic) or neither (random) aims each attack.
+      # Target and rider rules: .okf/architecture/combat-simulator.md (Turn resolution, Gambits)
       def attack(actor:, round:, turn:, maneuver: nil, gambit: nil, focus: nil, attacks: actor.attacks_per_action)
         enemy_party = @encounter.enemies_of(actor)
         entries = []
@@ -176,8 +151,7 @@ module Combat
         end
         action = CombatAction.new(source_type: :attack, source_id: nil, actor:)
 
-        # The first weapon attack against a target marked by others (Distracting Strike) uses every such mark up
-        # and rolls with advantage once: advantage does not stack. The attacker's own mark stays.
+        # Others' next_attack_advantage marks: .okf/architecture/combat-simulator.md (Statuses)
         advantage_against = ->(target) { target.take_statuses("next_attack_advantage", not_from: actor).any? }
         ActionRunner.attack(action:, next_target:, attacks:, advantage_against:) do |target, result, advantage|
           riders = []
@@ -194,8 +168,7 @@ module Combat
             end
           end
 
-          # The weapon's damage logs like any effect (amount, hp, roll_outcome, attack_roll); applied is left
-          # out, the same as the attack roll's hit.
+          # Logged like any effect, minus kind and applied: .okf/architecture/combat-simulator.md (Turn resolution)
           effect = TurnRecord.serialize_results([ result ]).first.except(:kind, :applied)
           entries << { kind: :attack, target_id: target.id, target_name: target.name, advantage:, riders: riders.map(&:to_h), **effect }
         end
@@ -203,11 +176,8 @@ module Combat
         record(actor:, round:, turn:, action: { type: :attack, riders: maneuver && [ Rider.for(feature: maneuver.class_feature).to_h ] }.compact, results: entries)
       end
 
-      # Adds the maneuver's die to a weapon attack that just hit: rolls it through the effect pipeline
-      # (doubled on a critical hit), spends a superiority die and applies the payload's statuses to the target,
-      # if any (Distracting Strike: next_attack_advantage). Returns the applied Combat::Rider, with their kinds.
-      # ponytail: the die lands as its own damage instance (own log line, own resistance rounding), not
-      # inside the weapon's single damage roll; merge them if that ever distorts a metric.
+      # Rolls a hit's maneuver die (doubled on a crit), spends a superiority die, applies its statuses; the Combat::Rider.
+      # ponytail: the die is its own damage instance (own log line and resistance rounding); merge if it distorts a metric.
       def apply_maneuver_rider(actor:, target:, maneuver:, crit:)
         feature = maneuver.class_feature
         action = CombatAction.new(source_type: :class_feature, source_id: feature.id, actor:, targets: [ target ])
@@ -255,8 +225,7 @@ module Combat
         payload = option.payload
         target = option.chosen_by_gambit? ? option.target : random_target(actor:, payload:)
 
-        # Only a spell that calls for a save uses up the actor's Eldritch Strike mark on the target (5e: the next
-        # saving throw against the actor's spell); a spell attack such as Fire Bolt leaves it for a later save.
+        # Eldritch Strike's mark, used up only by a spell with a save: .okf/architecture/combat-simulator.md (Statuses)
         disadvantage_on_save = payload["save"].present? && target&.take_statuses("disadvantage_on_next_save", from: actor).present?
 
         results = actor.cast_spell(spell, targets: [ target ].compact, disadvantage_on_save:)

@@ -6,7 +6,7 @@ resource: app/services/combat
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-17T00:00:00Z
+  at: 2026-10-31T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T18:30:17Z }
 sources:
   - id: combat-pipeline-rb
@@ -81,12 +81,12 @@ choice stays with the caller (the simulator's gambits, War Magic focus or
 random pick); the pipeline only asks for "the next target".
 
 **2. Resolution — `Combat::EffectResolver`** turns a `CombatAction` into one
-or more atomic `Combat::EffectInstance` objects (`heal`, `damage`,
-`apply_condition`, `grant_temp_hp`, `resource_change`).
+or more atomic `Combat::EffectInstance` objects (only `heal` and `damage` execute today: the executor raises on any other kind).
 
 **3. Execution — `Combat::EffectExecutor`** applies an `EffectInstance` to
-combat state and returns a `Result` carrying `kind`, `applied`, `amount`,
-`hp_before`/`hp_after`, a `roll_outcome`, the `saving_throw` and the
+combat state and returns a `Result` carrying `kind`, `applied`, `amount` (after the
+save, before the target's defenses and the max-HP cap of a heal, so not the HP
+change; never negative), `hp_before`/`hp_after`, a `roll_outcome`, the `saving_throw` and the
 `attack_roll` (each nil when the effect has none); no human-readable message
 (removed 2026-10-17).[^combat-pipeline-rb]
 
@@ -151,8 +151,12 @@ target's resistance, immunity or vulnerability to *that* type applies.
 `EffectExecutor::AttackRoll`: natural, total, armor_class, hit, crit; nil when
 the effect made none) next to `saving_throw`.
 
-Effects can also declare a `save` whose `"dc"` is either a fixed integer or
-`"spell"`, meaning the actor's `spell_save_dc`; spell attack and save numbers
+Heal and damage effects can also declare a `save`, `{ "ability": "dexterity",
+"dc": 13, "on_success": "half" }`, rolled by the target: `"dc"` is either a fixed
+integer or `"spell"`, meaning the actor's `spell_save_dc`, and a success halves
+the amount (`"half"`, rounded down), zeroes it (`"negate"`) or, with any other
+`on_success`, leaves it whole (`EffectExecutor#apply_save`; `EFFECT_KINDS` only
+checks that `save` is an object); spell attack and save numbers
 come from the spellcasting ability resolved by
 `PlayerCharacter#spellcasting_ability`. Unsupported `attack` values are rejected
 at `EffectInstance` construction.

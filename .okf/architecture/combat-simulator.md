@@ -6,7 +6,7 @@ resource: app/services/combat/simulator.rb
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-19T00:00:00Z
+  at: 2026-10-31T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T19:06:20Z }
 sources:
   - id: combat-simulator-rb
@@ -182,6 +182,16 @@ recording them draws nothing extra. Turn results carry no human-readable
 The available actions are collected into a list and one is picked with
 `.sample(random: rng)` (`TurnExecutor#choose_at_random`) — action choice is random, not strategic — **unless the
 actor has at least one enabled [gambit](/models/gambit.md)** (see below).
+This turn AI is deliberately primitive: a spellcaster with at least one castable
+spell first flips a coin (`rng.rand < 0.5`) between the physical options (attack
+and class features) and the spell options, then samples uniformly inside the
+branch; a non-caster, or a caster with nothing castable right now, samples
+uniformly over everything with no coin, so the RNG draws of most actors are the
+ones they had before the coin existed. Right after that action come War Magic's
+bonus attack, when the spell grants one, and then, with an unused Action Surge,
+one extra action drawn uniformly from all its options (no caster coin) that spends a use (`#action_surge_turn`, nil once the
+fight is over). Neither recurses: the extra action never grants another surge or
+a War Magic bonus, and a plain attack never grants a bonus attack.
 
 **Turn objects.** Each offered action is a `Combat::ActionOption` (an immutable
 `Data`: `type`, `class_feature`, `spell`, `payload`, `uses_remaining`, and

@@ -1,14 +1,4 @@
-# Dice
-#
-# Classe utilitária para rolagem de dados em sistemas de RPG.
-#
-# Exemplos de uso:
-#
-#   Dice.roll(dice: '4d8', modifier: 2)
-#   Dice.d20(modifier: 1)
-#
-# Todos os métodos retornam uma instância de Dice::RollResult.
-#
+# Rolagem de dados: Dice.roll(dice: "4d8", modifier: 2) e os atalhos Dice.d20 ... Dice.d100.
 module Dice
   @@dice_calls = []
 
@@ -28,14 +18,9 @@ module Dice
   def self.reset_dice_logs
     @@dice_calls = []
   end
-  # Rola qualquer combinação de dados no formato "[quantidade]d[tipo]" com modificador opcional.
-  #
-  # @param dice [String] Ex: '2d6', '4d8'
-  # @param modifier [Integer] Modificador a ser somado ao resultado total
-  # @param crit [Boolean] Acerto crítico (5e): rola o dobro de dados ('1d10' rola 2d10), nunca dobra o modificador
-  # @return [Dice::RollResult] Resultado da rolagem, com o valor de cada dado em rolls
+  # Rola dice ("4d8") + modifier (Integer) e devolve um Dice::RollResult, com o valor de cada dado em rolls.
+  # crit: regra do acerto crítico em .okf/architecture/combat-effect-pipeline.md
   def self.roll(dice:, modifier: 0, crit: false)
-    # generic roll, called like Dice.roll(dice: '4d8', modifier: 4)
     dice = dice.to_s.downcase
     raise ArgumentError, "dice must be formatted like [number of dice]d[type of die] (e.g. 4d8)" unless dice.match?(/\d+d\d+/)
     raise ArgumentError, "modifier must be an Integer" unless modifier.is_a?(Integer)
@@ -50,17 +35,12 @@ module Dice
     Dice::RollResult.new(natural:, total: natural + modifier, rolls:)
   end
 
-  # Regra de acerto de um ataque (5e): 20 natural sempre acerta, 1 natural sempre erra,
-  # nos demais casos acerta quando o total alcança a CA.
+  # Regra de acerto de um ataque (5e): .okf/architecture/combat-effect-pipeline.md
   def self.hit?(natural:, total:, armor_class:)
     natural == 20 || (natural != 1 && total >= armor_class)
   end
 
-  # Rola um dado d20 com modificador opcional. O resultado sabe se re-rolar uma
-  # vez com vantagem/desvantagem (ver Dice::D20Roll#with_advantage/#with_disadvantage).
-  #
-  # @param modifier [Integer] Modificador a ser somado ao resultado
-  # @return [Dice::D20Roll]
+  # Rola 1d20 + modifier; o Dice::D20Roll re-rola uma vez com vantagem/desvantagem (#with_advantage/#with_disadvantage).
   def self.d20(modifier: 0)
     roll_result = roll(dice: "1d20", modifier:)
     total = roll_result.natural + modifier
@@ -68,10 +48,7 @@ module Dice
     Dice::D20Roll.new(natural: roll_result.natural, total:, modifier:)
   end
 
-  # Rola um dado d12 com modificador opcional.
-  #
-  # @param modifier [Integer]
-  # @return [Dice::RollResult]
+  # Rola 1d12 + modifier (Integer) e devolve um Dice::RollResult.
   def self.d12(modifier: 0)
     roll_result = roll(dice: "1d12", modifier:)
     total = roll_result.natural + modifier
@@ -79,10 +56,7 @@ module Dice
     Dice::RollResult.new(natural: roll_result.natural, total:)
   end
 
-  # Rola um dado d10 com modificador opcional.
-  #
-  # @param modifier [Integer]
-  # @return [Dice::RollResult]
+  # Rola 1d10 + modifier (Integer) e devolve um Dice::RollResult.
   def self.d10(modifier: 0)
     roll_result = roll(dice: "1d10", modifier:)
     total = roll_result.natural + modifier
@@ -90,10 +64,7 @@ module Dice
     Dice::RollResult.new(natural: roll_result.natural, total:)
   end
 
-  # Rola um dado d8 com modificador opcional.
-  #
-  # @param modifier [Integer]
-  # @return [Dice::RollResult]
+  # Rola 1d8 + modifier (Integer) e devolve um Dice::RollResult.
   def self.d8(modifier: 0)
     roll_result = roll(dice: "1d8", modifier:)
     total = roll_result.natural + modifier
@@ -101,10 +72,7 @@ module Dice
     Dice::RollResult.new(natural: roll_result.natural, total:)
   end
 
-  # Rola um dado d6 com modificador opcional.
-  #
-  # @param modifier [Integer]
-  # @return [Dice::RollResult]
+  # Rola 1d6 + modifier (Integer) e devolve um Dice::RollResult.
   def self.d6(modifier: 0)
     roll_result = roll(dice: "1d6", modifier:)
     total = roll_result.natural + modifier
@@ -112,10 +80,7 @@ module Dice
     Dice::RollResult.new(natural: roll_result.natural, total:)
   end
 
-  # Rola um dado d4 com modificador opcional.
-  #
-  # @param modifier [Integer]
-  # @return [Dice::RollResult]
+  # Rola 1d4 + modifier (Integer) e devolve um Dice::RollResult.
   def self.d4(modifier: 0)
     roll_result = roll(dice: "1d4", modifier:)
     total = roll_result.natural + modifier
@@ -123,10 +88,7 @@ module Dice
     Dice::RollResult.new(natural: roll_result.natural, total:)
   end
 
-  # Rola um dado d100 com modificador opcional.
-  #
-  # @param modifier [Integer]
-  # @return [Dice::RollResult]
+  # Rola 1d100 + modifier (Integer) e devolve um Dice::RollResult.
   def self.d100(modifier: 0)
     roll_result = roll(dice: "1d100", modifier:)
     total = roll_result.natural + modifier

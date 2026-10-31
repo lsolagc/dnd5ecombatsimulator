@@ -1,15 +1,6 @@
 module Combat
-  # Applies an EffectInstance to a Combat::Participant (its HP: #take_damage, #heal) and returns a structured result.
-  #
-  # result fields:
-  #   kind          - :heal | :damage
-  #   applied       - true if the effect was applied
-  #   amount        - effective HP change (always positive)
-  #   hp_before     - target HP before the effect
-  #   hp_after      - target HP after the effect
-  #   roll_outcome  - Combat::RollOutcome with full roll breakdown
-  #   saving_throw  - Combat::SavingThrow rolled by the target, or nil if the effect has no save
-  #   attack_roll   - AttackRoll rolled by the actor, or nil if the effect makes no attack
+  # Applies an EffectInstance to a Combat::Participant (its HP: #take_damage, #heal) and returns a Result.
+  # Result fields: .okf/architecture/combat-effect-pipeline.md (Contract, 3. Execution)
   class EffectExecutor
     Result = Data.define(:kind, :applied, :amount, :hp_before, :hp_after, :roll_outcome, :saving_throw, :attack_roll)
     AttackRoll = Data.define(:natural, :total, :armor_class, :hit, :crit)
@@ -97,8 +88,7 @@ module Combat
         RollExpression.new(expression: @effect.roll_expression).resolve(context:, crit: !!crit)
       end
 
-      # Hits by Dice.hit?. The critical hit that doubles the dice is a natural 20 for a spell attack, and the
-      # actor's critical_hit_threshold (e.g. 19 for a Champion) for a weapon attack.
+      # Hit and crit rules of a spell or weapon attack: .okf/architecture/combat-effect-pipeline.md
       def roll_attack(target)
         weapon = @effect.attack == "weapon"
         roll = Dice.d20(modifier: weapon ? @actor.weapon_attack_bonus : @actor.spell_attack_bonus)
@@ -110,9 +100,7 @@ module Combat
                        crit: roll.natural >= (weapon ? @actor.critical_hit_threshold : 20))
       end
 
-      # Rolls the target's saving throw (if the effect declares one) and returns
-      # the [effective_amount, saving_throw] pair. saving_throw is nil when the
-      # effect has no save.
+      # [effective_amount, saving_throw] after the target's save; saving_throw is nil when the effect has none.
       def apply_save(full_amount:, target:)
         save = @effect.save
         return [ full_amount, nil ] unless save
