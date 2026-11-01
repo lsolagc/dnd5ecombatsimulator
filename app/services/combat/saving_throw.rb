@@ -1,7 +1,5 @@
 module Combat
-  # Resolves a D&D 5e saving throw for a combat actor.
-  #
-  # No proficiency bonus is modeled today — only the raw ability modifier.
+  # A 5e saving throw by a combat actor: .okf/architecture/combat-effect-pipeline.md (Data shape: `effect_payload`)
   class SavingThrow
     attr_reader :ability, :dc, :natural, :total, :success, :rerolled
 

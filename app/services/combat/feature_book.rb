@@ -1,10 +1,5 @@
 module Combat
-  # What a combatant knows how to do in a simulation, read from its sheet: the features it has unlocked,
-  # which of them it can choose as a turn action, the ones the simulator runs by rules of their own (read by
-  # the kind of their effect, ClassFeatureUnlock::EFFECT_KINDS, never by name) and each feature's uses at the
-  # start of combat. Read-only: the uses left are counted by Combat::Participant, which owns its book.
-  # Delegates to the character's cached lookups (PlayerCharacter#feature_unlocks, #action_payload,
-  # #effect_payloads, #combat_superiority); its only state is the known maneuvers, read once per book.
+  # What a combatant knows how to do, read-only (glossary: Feature book): .okf/architecture/combat-simulator.md (Feature book)
   class FeatureBook
     def initialize(character)
       @character = character

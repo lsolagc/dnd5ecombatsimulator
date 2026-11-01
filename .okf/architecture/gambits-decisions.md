@@ -5,7 +5,7 @@ description: The design decisions behind the FFXII-style gambits, grouped by sub
 tags: [combat, gambits]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-18T00:00:00Z
+  at: 2026-11-01T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T20:38:56Z }
 sources:
   - id: issue-41
@@ -117,7 +117,7 @@ Inventory of the Fighter's existing features (the only class with features today
 | A hidden value field with a stale number? | Stimulus also disables it, and `GambitsController#gambit_params` clears `condition_value` whenever the submitted condition is not in `Gambit::CONDITIONS_WITH_VALUE`. | Without the clearing, switching "HP abaixo de 40" to "Qualquer" never saved (the stored 40 failed the absence validation). |
 | Concurrent writes to positions? | `create`, `move`, `destroy` (with its renumbering) and `reorder` run in one transaction holding `lock!` on the owner (`GambitOwner#with_gambits_locked`, since phase 4.1 also around the preset copies and `GambitSetups`); every position is rewritten. Not covered by a real concurrency test. | Two requests reading the same positions could otherwise write duplicates or gaps. |
 | Malformed input to `move`/`reorder`? | `direction` other than up/down and `ids` that are not a list of digit strings answer 422 (`"12abc"` is refused, not read as 12). | A tampered request must not 500 nor be read as "down". |
-| Order of the action options? | Ataque, then features by unlock level and name, then spells by level and name (`PlayerCharacter#gambit_actions`, unsaved `Gambit`s; `GambitsHelper#gambit_action_options` turns them into `[action_label, action_choice]` select pairs, looked up once per character per request). | Deterministic select order; the preset panel reuses both. The model holds the domain list, the helper the presentation (phase 4.4). |
+| Order of the action options? | Ataque, then features by first unlock level and name (those the simulator runs as an action at the character's level, plus an `extra_action`; a maneuver only when known), then spells with an effect by level and name (`PlayerCharacter#gambit_actions`, unsaved `Gambit`s; `GambitsHelper#gambit_action_options` turns them into `[action_label, action_choice]` select pairs, looked up once per character per request). | Deterministic select order; the preset panel reuses both. The model holds the domain list, the helper the presentation (phase 4.4). |
 | Where does a refused 7th gambit show its error? | An alert above the list (the new-rule form is not rendered with 6 rules). | There is no empty slot to attach it to. |
 | A drop the server refuses (stale page)? | The page reloads anyway and shows the stored order. | The server is the truth; no client-side rollback. |
 | All rules off, on the sheet? | The summary lists them dimmed plus "Todos desligados: ação aleatória." | Otherwise the sheet would suggest the rules still drive the turn. |
@@ -146,7 +146,7 @@ Dueling, knows Disarming Attack, Distracting Strike and Precision Attack).
 
 | Question | Decision | Why |
 |---|---|---|
-| How are they configured? | `bin/rails gambits:brenna_corwin` (lib/tasks/gambits.rake, logic and rules in `GambitSetups`, lib/gambit_setups.rb): finds each by exact name, replaces only that character's gambits in one transaction, aborts with a message if a name or a feature is missing. Idempotent by construction (replace, not append). | Task: idempotent, by name, touching nothing else. |
+| How are they configured? | `bin/rails gambits:brenna_corwin` (lib/tasks/gambits.rake, logic and rules in `GambitSetups`, lib/gambit_setups.rb): finds each by exact name, replaces only those characters' gambits, all in one transaction, and aborts with a message, changing nothing, if a name or a feature is missing. Idempotent by construction (replace, not append). | Task: idempotent, by name, touching nothing else. |
 | Brenna (defensive) | 1 Self: HP < 50% → Second Wind · 2 Self: HP < 50% → Action Surge · 3 Inimigo: menor HP → Ataque · 4 (desligada) Self: qualquer → Action Surge | Heals before anything when hurt, then surges while hurt to close the fight; the disabled rule shows the toggle and the "surge at once" alternative. Rule 2 was planned as "Inimigo: HP < 30% → Action Surge", but the model rejects it (Action Surge only takes the Self target, `Gambit::COMPATIBLE_TARGETS`); "Self: HP < 50%" is the closest valid rule. Once Second Wind is spent, rule 1 is skipped and rule 2 fires. |
 | Corwin (aggressive) | 1 Self: qualquer → Action Surge · 2 Inimigo: recurso ≥ 2 → Precision Attack · 3 Self: HP < 25% → Second Wind · 4 Inimigo: menor HP → Disarming Attack · 5 (desligada) Inimigo: não marcado → Distracting Strike · 6 Inimigo: menor HP → Ataque | Surges on the first turn, spends dice on Precision while keeping one back for Disarming (the last die), heals only when nearly down. Distracting Strike's mark only helps other attackers (`marked_for?` ignores the actor's own mark), so enabled in a 1x1 it won every turn and swallowed the pool (Precision and Disarming fired 0 times in 300 seeds); it stays disabled, ready for group fights. |
 

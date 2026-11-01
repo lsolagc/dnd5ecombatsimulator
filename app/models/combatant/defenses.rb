@@ -1,6 +1,4 @@
-# A combatant's defenses: { damage type => "I" | "R" | "V" } (immunity, resistance, vulnerability), only the
-# defended types. Stored in the Combatant's immunities/resistances/vulnerabilities columns ("damage_types"
-# section); a type has one defense at most (Combatant validates it). Immutable.
+# A combatant's defenses, { damage type => "I" | "R" | "V" }, immutable: .okf/models/combatant.md (Defenses)
 class Combatant::Defenses
   TYPES = ConditionAndDamageTypeFormatValidator::EXPECTED_STRUCTURE["damage_types"]
   # Flag => the Combatant column it lives in, in reading precedence (an immunity outranks a resistance).

@@ -1,10 +1,7 @@
 class SimulationRun < ApplicationRecord
   belongs_to :simulation_batch
 
-  # Batch metrics from a Combat::Simulator round_log. Healing done is the HP actually
-  # restored; wasted healing is what a heal rolled past the target's max HP. Damage is HP
-  # actually removed (after resistances, not counting overkill below 0 HP). The riders an attack applied
-  # count like any effect (an attack's riders key; one without an effect, like Eldritch Strike's, counts nothing).
+  # Batch metrics from a Combat::Simulator round_log: .okf/architecture/simulation-batches.md (Metrics)
   def self.metrics(round_log)
     effects_by_round = round_log.map do |round|
       round[:turns].flat_map { |turn| turn[:results].flat_map { |result| [ result, *result[:riders] ] } }

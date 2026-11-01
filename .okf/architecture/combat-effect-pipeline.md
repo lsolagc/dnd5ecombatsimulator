@@ -6,7 +6,7 @@ resource: app/services/combat
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-31T00:00:00Z
+  at: 2026-11-01T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T18:30:17Z }
 sources:
   - id: combat-pipeline-rb
@@ -67,14 +67,21 @@ action = Combat::CombatAction.new(
 )
 ```
 
+`source_type` is `:class_feature`, `:spell` or `:attack`; `source_id` the
+`ClassFeature`'s or `Spell`'s id (nil for `:attack`); `actor` the participant
+acting; `targets` an array (`Array(targets)`; empty for a self-targeted
+effect); `context` a hash nothing reads yet.
+
 **The Attack action — `source_type: :attack`.** `source_id` is nil: the
 `EffectResolver` derives the payload from the actor's equipped weapon —
 `kind: damage`, `roll: "<damage_dice> ± weapon_damage_modifier"`, the weapon's
 `damage_type`, `target: enemy`, `attack: weapon` — and raises `ArgumentError`
 on a malformed die instead of letting `RollExpression` read it as a variable
 worth 0. `Combat::ActionRunner.attack(action:, next_target:,
-advantage_against:, attacks:)` makes up to `attacks` weapon attacks, by default
-`attacks_per_action` (Extra Attack; War Magic's bonus asks for 1). Before each one it calls `next_target`, so an attack that follows a
+advantage_against:, attacks:)` asks for `attacks` weapon attacks (at
+least one), by default `attacks_per_action` (Extra Attack; War Magic's bonus asks for 1), each
+with advantage when `advantage_against.(target)` says so; it returns every
+`[target, result, advantage]` made. Before each one it calls `next_target`, so an attack that follows a
 kill goes to another target and `nil` ends the action; the caller's block sees
 each `(target, result, advantage)` before the next target is picked. Target
 choice stays with the caller (the simulator's gambits, War Magic focus or
@@ -82,6 +89,11 @@ random pick); the pipeline only asks for "the next target".
 
 **2. Resolution — `Combat::EffectResolver`** turns a `CombatAction` into one
 or more atomic `Combat::EffectInstance` objects (only `heal` and `damage` execute today: the executor raises on any other kind).
+By `source_type`: `:class_feature` reads the effect in force at the actor's
+level (`ClassFeature#effect_payload_at`) and raises unless it is a heal or a
+damage; `:spell` reads the `Spell`'s `effect_payload` as it is (no upcasting or
+per-level scaling); `:attack` derives the weapon payload above; any other
+`source_type` raises `ArgumentError`.
 
 **3. Execution — `Combat::EffectExecutor`** applies an `EffectInstance` to
 combat state and returns a `Result` carrying `kind`, `applied`, `amount` (after the
@@ -100,7 +112,13 @@ rolls, modifiers, and total — so combat log/UI/audit can show the full
 breakdown instead of just a final number.[^combat-pipeline-rb] `dice` are the
 terms as rolled and `rolls` one value per die (`"2d6 + 1d4"` →
 `dice: ["2d6", "1d4"]`, `rolls: [3, 4, 2]`), from `Dice.roll`, whose
-`Dice::RollResult#rolls` keeps each die.
+`Dice::RollResult#rolls` keeps each die. An expression is a sum of signed terms,
+spaces and case ignored: dice (`NdM`), integers and variables, which
+`RollContext` resolves against the actor: any `*_level` (and `level`) is its
+level (single-class assumption), `<ability>_modifier` that ability's modifier,
+`proficiency_bonus` its proficiency bonus, and any other variable 0; a `+`/`-`
+term that is none of the three raises `ArgumentError`, but characters outside
+that grammar are dropped silently (`"1d6*2"` reads as `1d6`).
 
 # Data shape: `effect_payload`
 
@@ -144,7 +162,11 @@ true)`, as above, never the flat modifier). A spell attack rolls with
 `PlayerCharacter#spell_attack_bonus` and crits on a natural 20; a weapon attack
 rolls with `#weapon_attack_bonus` (the sheet's final attack bonus, Archery
 included, + any passive `attack_bonus`) and crits at `#critical_hit_threshold` (19 for a Champion). `advantage:`
-on `EffectExecutor.call` rolls the d20 twice and keeps the higher. Damage is
+on `EffectExecutor.call` rolls the d20 twice and keeps the higher:
+`Dice::D20Roll#with_advantage`/`#with_disadvantage` roll one more d20 with the
+same modifier and keep the better/worse total, a tie keeping the first roll. It
+lives beside `Dice.d20`, not as a wrapper for any die, because in 5e advantage
+and disadvantage only apply to d20 rolls (attacks, saves, ability checks). Damage is
 applied with the **effect's** `damage_type` (the attacker's weapon), so the
 target's resistance, immunity or vulnerability to *that* type applies.
 `EffectExecutor::Result` carries the rolled `attack_roll` (an
@@ -156,7 +178,11 @@ Heal and damage effects can also declare a `save`, `{ "ability": "dexterity",
 integer or `"spell"`, meaning the actor's `spell_save_dc`, and a success halves
 the amount (`"half"`, rounded down), zeroes it (`"negate"`) or, with any other
 `on_success`, leaves it whole (`EffectExecutor#apply_save`; `EFFECT_KINDS` only
-checks that `save` is an object); spell attack and save numbers
+checks that `save` is an object). The save is a `Combat::SavingThrow`: `d20 +
+<ability>_modifier`, a success when the total reaches the DC, with no
+saving-throw proficiency modeled (only the raw ability modifier); advantage and
+disadvantage together cancel, and `reroll_if_failed` (Indomitable) rolls once
+more after a failure. Spell attack and save numbers
 come from the spellcasting ability resolved by
 `PlayerCharacter#spellcasting_ability`. Unsupported `attack` values are rejected
 at `EffectInstance` construction.

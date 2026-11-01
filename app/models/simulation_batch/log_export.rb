@@ -1,12 +1,6 @@
-# A batch's download: one pretty JSON with the batch's setup (each combatant's name, settings and gambits as
-# frozen at creation) in a header, then every simulation in order. jsonb doesn't keep key order, so the
-# hashes are rebuilt here in reading order (SIMULATION_LOG_ORDER, down to every turn); keys an older run still
-# carries go after the known ones.
+# A batch's download, one pretty JSON (a header, then every simulation) in reading order: .okf/architecture/simulation-batches.md (UI)
 class SimulationBatch::LogExport
-  # The order of a simulation's keys in the download, nested: key => the order of its value's keys (an array's
-  # items each), nil to keep the value as stored. Below the top, the order Combat::Simulator builds them in
-  # (Combat::TurnRecord, the attack and effect entries, Combat::Rider); one list serves every kind of an entry
-  # (a weapon attack, an effect; each action type), each kind keeping its own keys' relative order.
+  # A simulation's key order in the download: key => its value's key order (nil: as stored), as #in_log_order reads it.
   ROLL_OUTCOME_LOG_ORDER = %w[ expression resolved_expression dice rolls modifiers total ].index_with(nil).freeze
   ATTACK_ROLL_LOG_ORDER = Combat::EffectExecutor::AttackRoll.members.map(&:to_s).index_with(nil).freeze
   EFFECT_LOG_ORDER = %w[ kind applied amount hp_before hp_after roll_outcome attack_roll ].index_with(nil)

@@ -1,15 +1,5 @@
 module Combat
-  # Translates a CombatAction into an array of EffectInstances.
-  #
-  # For :class_feature actions, it reads the effect in force at the actor's
-  # level (ClassFeature#effect_payload_at).
-  #
-  # For :spell actions, it reads the effect_payload directly off the Spell
-  # record (no per-level scaling/upcasting support yet).
-  #
-  # For :attack actions (the Attack action every combatant has), it derives the
-  # payload from the actor's equipped weapon: a weapon attack that deals the
-  # weapon's dice plus weapon_damage_modifier, of the weapon's damage type.
+  # Translates a CombatAction into its EffectInstances, by source_type: .okf/architecture/combat-effect-pipeline.md (Contract)
   class EffectResolver
     def self.call(action:)
       new(action:).call

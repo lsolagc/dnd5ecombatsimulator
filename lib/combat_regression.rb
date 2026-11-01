@@ -1,13 +1,10 @@
-# Safety net for refactoring Combat::Simulator (.okf/ops/combat-regression.md): the compositions
-# that the golden-file test, the query-ceiling test and the benchmark all run, on the content of
-# db/seeds. Every helper that writes to the database must run inside a transaction that rolls back.
+# The compositions the combat regression checks run on db/seeds: .okf/ops/combat-regression.md
+# Every helper that writes to the database must run inside a transaction that rolls back.
 module CombatRegression
   DIR = Rails.root.join("test/fixtures/files/combat_regression")
   SEEDS = (1..12).to_a
 
-  # Each character is a seed character (distinct per composition), changed only for the composition:
-  # level, spells learned on top of the seed's, the maneuvers known (replacing the seed's) and gambits
-  # (add_rule's shorthand in test/services/combat_simulator_gambit_coverage_test.rb).
+  # Each spec is a seed character (distinct per composition), changed only as prepare! reads it; gambits in add_rule!'s shorthand.
   COMPOSITIONS = {
     # 1v1, random: Champion crits, Second Wind, Action Surge on the random path, maneuvers at random.
     "campeao-vs-mestre" => {
@@ -44,9 +41,7 @@ module CombatRegression
       party_one: [ { name: "Campeão" }, { name: "Cavaleiro Arcano", level: 18, spells: %w[fireball] } ],
       party_two: [ { name: "Mestre de Batalha", level: 15 } ]
     },
-    # 2v1, random, with defenses (no seed character has any): the Battle Master resists the weapons'
-    # slashing, is immune to Fire Bolt and vulnerable to Ray of Frost; the Champion resists the
-    # maneuvers' bludgeoning rider.
+    # 2v1, random, with defenses no seed character has: weapons' slashing, Fire Bolt's fire, Ray of Frost's cold, the rider's bludgeoning.
     "defesas" => {
       max_rounds: 20,
       party_one: [ { name: "Campeão", defenses: { "bludgeoning" => "R" } }, { name: "Cavaleiro Arcano", level: 7 } ],

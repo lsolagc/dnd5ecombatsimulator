@@ -6,7 +6,7 @@ resource: app/services/combat/simulator.rb
 tags: [combat, evolution]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-31T00:00:00Z
+  at: 2026-11-01T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T19:06:20Z }
 sources:
   - id: combat-simulator-rb
@@ -110,10 +110,14 @@ result = Combat::Simulator.new(
   [simulation batches](/architecture/simulation-batches.md)).
 - `max_rounds`: default 20; the loop stops early once one party has no
   combatants left alive (`Combat::Encounter#over?`).
+- `gambits`: optional copy of the rules the simulation runs and logs from
+  instead of each combatant's own, keyed by combatant id (see Gambits, Log).
 - A block given to `call` gets the encounter once initiative is rolled, before
   the first round, inside the seed: a test sets statuses or the initiative
   order there. After `call`, `#encounter` holds the participants as they
   ended and `#rng` the random-choice RNG (the tests check what it drew).
+- One fight per instance: a second `call` builds new participants but goes on
+  with the first one's `rng` and appends to its `round_log`.
 
 # Turn resolution
 
@@ -194,7 +198,13 @@ fight is over). Neither recurses: the extra action never grants another surge or
 a War Magic bonus, and a plain attack never grants a bonus attack.
 
 **Turn objects.** Each offered action is a `Combat::ActionOption` (an immutable
-`Data`: `type`, `class_feature`, `spell`, `payload`, `uses_remaining`, and
+`Data`: `type`, one of `:attack`, `:class_feature` (a maneuver included),
+`:cast_spell` and `:action_surge` (offered only to the gambit policy, from
+`Participant#action_surge_option`); `class_feature` for `:class_feature` and
+`:action_surge`; `spell` for `:cast_spell`; `payload`, the feature's action
+payload at the actor's level or the spell's `effect_payload`;
+`uses_remaining`, the uses left of the resource it spends (a maneuver's is the
+superiority-dice pool), nil for a spell or an unlimited feature; and
 `target`/`gambit` once a gambit picks it, through `#with`; predicates
 `chosen_by_gambit?`, `spell?`, `maneuver?`, `action_surge?`). It compares by
 value, as the hashes it replaced did, so the list arithmetic and `sample` draw
@@ -202,7 +212,9 @@ the same. Each logged entry is a `Combat::TurnRecord` (`round`, `turn`,
 `actor_id`, `actor_name`, `actor_party`, `action`, `results`, `gambit`, `extra`,
 `bonus`), its header built in `TurnRecord.for`; the loop turns each round's
 records into hashes (`#to_h`) as it appends them to `round_log`, always in that
-key order and without `gambit` when nil and `extra`/`bonus` when false. The `action` inside
+key order and without `gambit` when nil and `extra`/`bonus` when false (`extra`
+marks Action Surge's extra action, `bonus` War Magic's attack; a turn passive has
+no `gambit`). The `action` inside
 and the effects in `results` are still hashes.
 
 # Gambits (FFXII-style turn AI)

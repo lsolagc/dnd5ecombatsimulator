@@ -5,13 +5,8 @@ class ClassFeatureUnlock < ApplicationRecord
   # One status a maneuver applies to the target it hits (Distracting Strike), from Combat::Status's vocabulary.
   STATUS = { "kind" => Combat::Status::KINDS, "ends" => Combat::Status::ENDS }.freeze
 
-  # Every effect a feature can declare in its effect_payload: kind => the fields it requires and the ones it
-  # may carry, each with the values it accepts (nil: any value; an Array: one of them; a Class: an instance of
-  # it; a Hash: a nested object with exactly those fields, all required; [ Hash ]: a list of such objects).
-  # Any other field is refused.
-  # Only heal and damage without a trigger are turn actions (ClassFeature#action_payload_at); a trigger makes a
-  # passive (PlayerCharacter#passive_effect_payloads). The other kinds carry no trigger: Combat::FeatureBook and
-  # PlayerCharacter#combat_superiority read them by kind.
+  # Every effect_payload kind => its required and optional fields, each with the values it accepts, as #value_problems reads them.
+  # See .okf/models/class-feature-unlock.md (Effect vocabulary)
   EFFECT_KINDS = {
     "heal" => {
       required: { "roll" => String, "target" => TARGETS },

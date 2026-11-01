@@ -1,6 +1,4 @@
-# One FFXII-style turn rule: "target: condition → action". A combatant evaluates its enabled gambits
-# by position (1 = highest priority) in Combat::GambitPolicy; the first one with a valid target and
-# an available action decides the turn.
+# One FFXII-style turn rule, "target: condition → action": .okf/models/gambit.md
 class Gambit < ApplicationRecord
   MAX_PER_OWNER = 6
 
@@ -115,9 +113,7 @@ class Gambit < ApplicationRecord
 
   private
 
-    # The owner's level; a preset has none, so its rules read the feature's highest unlock. A feature with no
-    # effect yet at the owner's level is an action the owner lacks: read like a preset's, so the rule stays
-    # valid and is skipped at runtime, as a feature from another subclass is.
+    # The owner's level, or nil (a preset; a feature with no effect yet at that level): .okf/models/gambit.md
     def feature_level
       level = owner.try(:level)
       level if level && class_feature.effect_payload_at(level)

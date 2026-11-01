@@ -6,7 +6,7 @@ resource: app/models/class_feature_unlock.rb
 tags: [class, feature, combat, persistence, passive]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-18T00:00:00Z
+  at: 2026-11-01T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:06:51Z }
 sources:
   - id: unlock-rb
@@ -69,7 +69,11 @@ rounds stay with [issue #45](https://github.com/lsolagc/dnd5ecombatsimulator/iss
 Every `effect_payload` is validated against one table,
 `ClassFeatureUnlock::EFFECT_KINDS` (enumerable, the base of a future wizard for
 custom classes and monsters): a `kind` outside it, a required field missing, a
-value it does not accept or a field it does not know is refused. Nested objects
+value it does not accept or a field it does not know is refused. Each field
+names the values it accepts (`ClassFeatureUnlock#value_problems`): `nil` any
+value, an array one of its items, a class an instance of it, a range an integer
+inside it (`count`: `1..`), a hash a nested object with exactly those fields, all
+required, and `[ hash ]` a list of such objects. Nested objects
 (`after`) and each object of a list (`statuses`, errors named `statuses[0].kind`)
 are checked the same way. The engine reads a feature by this `kind`,
 never by its name (phase 5.2 of the DDD refactor).[^unlock-rb]

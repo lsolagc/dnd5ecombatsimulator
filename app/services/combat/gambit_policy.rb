@@ -1,11 +1,6 @@
 module Combat
-  # FFXII-style choice of a gambit-driven actor's action (glossary: Gambit policy), one per simulation. Never
-  # draws from any RNG: the first enabled rule (top to bottom) whose action is offered right now and whose
-  # condition finds a target wins.
-  #
-  # Works on Gambit objects (saved or not), never querying mid-turn, so a copy of the rules can stand in for
-  # the owner's own: given gambits: (a batch's gambit_settings, { combatant id (string) => [Gambit#snapshot,
-  # ...] }), each actor's rules are rebuilt from it as unsaved gambits and logged with the copy's own label.
+  # The choice of a gambit-driven actor's action (glossary: Gambit policy): .okf/architecture/combat-simulator.md (Gambits)
+  # Never draws from any RNG.
   class GambitPolicy
     def initialize(encounter:, gambits: nil)
       @encounter = encounter

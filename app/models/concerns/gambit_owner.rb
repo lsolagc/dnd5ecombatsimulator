@@ -1,6 +1,5 @@
-# Anything holding a gambit list (PlayerCharacter, GambitPreset) and its rules: at most
-# Gambit::MAX_PER_OWNER (validated by Gambit#owner_has_room), at contiguous positions 1..n kept by the
-# methods below. Every write of the positions runs in with_gambits_locked.
+# Anything holding a gambit list (PlayerCharacter, GambitPreset): .okf/models/gambit.md
+# Positions stay 1..n, and every write of them runs in with_gambits_locked.
 module GambitOwner
   extend ActiveSupport::Concern
 
@@ -56,11 +55,8 @@ module GambitOwner
     end
   end
 
-  # Replaces the rules with new copies of other's (presets: save, overwrite and apply). Copies take
-  # positions 1..n in the source's priority order; being new rows, they keep no link to the source.
-  # Returns false, changing nothing, when other has no rules. Each copy is validated here (a character's
-  # level, see Gambit#active_feature_payload): the first one that does not hold raises
-  # ActiveRecord::RecordInvalid, changing nothing.
+  # Replaces the rules with new copies of other's; false, changing nothing, when other has none, and the first copy
+  # that does not hold raises ActiveRecord::RecordInvalid. See .okf/models/gambit.md
   def copy_gambits_from(other)
     with_gambits_locked do
       rules = other.gambits.reorder(:position).map { |rule| rule.attributes.slice(*Gambit::SNAPSHOT_ATTRIBUTES).except("position") }

@@ -31,10 +31,7 @@ class SimulationBatch < ApplicationRecord
     }
   end
 
-  # Form input, keyed by combatant id (the character's Combatant's id, never the sheet's: party_one_ids,
-  # party_two_ids and the keys of combatant_settings and gambit_settings are all combatant ids):
-  # { "7" => { "side" => "party_one", "current_hit_points" => "12", "armor_class" => "16", "attack_bonus" => "5",
-  #            "damage_dice" => "1d8", "damage_type" => "slashing", "defenses" => { "fire" => "R", "cold" => "" } } }
+  # Reads the form's { combatant id => { "side" => ..., settings } } into the sides and combatant_settings: .okf/architecture/simulation-batches.md
   def combatants=(entries)
     entries = entries.to_h.deep_stringify_keys
     self.party_one_ids = entries.select { |_id, entry| entry["side"] == "party_one" }.keys.map(&:to_i)
@@ -184,10 +181,7 @@ class SimulationBatch < ApplicationRecord
       @blueprints ||= characters(party_one_ids + party_two_ids).index_by { |character| character.combatant.id }
     end
 
-    # Keeps exactly one settings entry per selected character, filling the missing ones from the
-    # blueprint, so every batch records the parameters it actually ran with, and the character's name
-    # once, at creation (the log's header): never overwritten, so renaming the character later changes
-    # nothing, and a batch from before names were frozen keeps none.
+    # One settings entry per selected character, missing ones from the blueprint, the name frozen once: .okf/architecture/simulation-batches.md
     def snapshot_blueprint_settings
       self.party_one_ids = party_one_ids.compact.uniq
       self.party_two_ids = party_two_ids.compact.uniq

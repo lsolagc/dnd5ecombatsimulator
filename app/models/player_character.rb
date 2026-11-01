@@ -100,9 +100,8 @@ class PlayerCharacter < ApplicationRecord
     end
   end
 
-  # The highest unlock at or below the character's level of every feature the character can see
-  # (ClassFeature.visible_for?), each feature's unlocks loaded. In a fixed order, by the id of the
-  # feature's first unlock at or below the level, since the simulator's random picks follow it.
+  # The unlock in force of every visible feature, unlocks loaded: .okf/models/player-character.md (Cached class lookups)
+  # In a fixed order: the simulator's random picks follow it.
   def feature_unlocks
     cached(:feature_unlocks, choices_key) do
       ClassFeature.where(player_class_id:).eager_load(:class_feature_unlocks).order("class_feature_unlocks.id")
@@ -113,18 +112,14 @@ class PlayerCharacter < ApplicationRecord
     end
   end
 
-  # The feature's action payload at the character's level (ClassFeature#action_payload_at), cached like
-  # #feature_unlocks for the simulator, which asks for every feature on every turn. Nil for a feature the
-  # character has not unlocked.
+  # The feature's ClassFeature#action_payload_at the character's level, cached; nil when not unlocked.
   def action_payload(feature)
     cached(:action_payloads, choices_key) do
       feature_unlocks.to_h { |unlock| [ unlock.class_feature_id, unlock.class_feature.action_payload_at(level).freeze ] }
     end[feature.id]
   end
 
-  # { class_feature_id => effect in force at the character's level (ClassFeature#effect_payload_at), or nil }
-  # for every unlocked feature, cached like #feature_unlocks: Combat::FeatureBook reads the kinds it runs by
-  # rules of their own (extra_action, grants_activity, rider, reroll_save) on every turn.
+  # { class_feature_id => ClassFeature#effect_payload_at the character's level, or nil } of every unlocked feature, cached.
   def effect_payloads
     cached(:effect_payloads, choices_key) do
       feature_unlocks.to_h { |unlock| [ unlock.class_feature_id, unlock.class_feature.effect_payload_at(level).freeze ] }.freeze
@@ -197,10 +192,7 @@ class PlayerCharacter < ApplicationRecord
     progression ? progression.slots_by_level : {}
   end
 
-  # The turn actions a gambit of this character can choose, as unsaved Gambits (GambitsHelper#gambit_action_options
-  # turns them into select options): Ataque, unlocked features the simulator runs as an action at the character's level
-  # (ClassFeature#action_payload_at, plus an extra_action such as Action Surge) by first unlock level, maneuvers only when known,
-  # and known spells with an effect by level.
+  # The turn actions a gambit of this character can choose, as unsaved Gambits: .okf/architecture/gambits-decisions.md (Gambits screen)
   def gambit_actions
     known_maneuver_ids = known_maneuvers.ids
     features = feature_unlocks.map(&:class_feature)
@@ -220,9 +212,7 @@ class PlayerCharacter < ApplicationRecord
       [ player_class_id, level, martial_archetype_id, fighting_style_id ]
     end
 
-    # Per-instance cache for lookups that depend only on the character's class, level and choices. The combat
-    # loop asks for them on every attack; a changed key (say, a level edited on this instance) recomputes, and
-    # #reload clears it.
+    # Per-instance cache: a changed key recomputes, #reload clears it: .okf/models/player-character.md (Cached class lookups)
     def cached(name, key)
       entry = (@lookup_cache ||= {})[name]
       return entry.last if entry&.first == key

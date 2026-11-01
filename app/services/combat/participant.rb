@@ -1,8 +1,5 @@
 module Combat
-  # Who fights in a simulation: Combat::Simulator builds one per character sheet (a PlayerCharacter, the
-  # Combatant's owner) when it starts. It owns what changes during the fight: the current HP, the spell slots
-  # left, each limited feature's uses left and the statuses it carries (Combat::Status). Everything else it reads from the sheet through the delegate
-  # list below, the contract a future Monster has to meet; the sheet itself is never written.
+  # Who fights in a simulation, built from a sheet it never writes (glossary: Participant): .okf/architecture/combat-simulator.md (Participant)
   class Participant
     # What the combat pipeline reads of whoever fights: the simulator, TurnRecord, EffectResolver (the weapon),
     # EffectExecutor (attack, AC, save DC), RollContext and SavingThrow (level, proficiency, ability modifiers).
@@ -65,9 +62,8 @@ module Combat
       @uses[class_feature_id] = [ uses - 1, 0 ].max if uses
     end
 
-    # What it can do with its action right now, as Combat::ActionOptions: the Attack action (always), each
-    # unlocked action feature with a use left (a maneuver it knows included) and each spell it can cast (a
-    # cantrip, or with a slot of its level left). In that order: a seed's random pick depends on it.
+    # This turn's Combat::ActionOptions: .okf/architecture/combat-simulator.md (Participant)
+    # In a fixed order: a seed's random pick depends on it.
     def action_options
       options = [ ActionOption.new(type: :attack) ]
 

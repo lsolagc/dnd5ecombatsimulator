@@ -5,7 +5,7 @@ description: Golden files, query ceiling and time benchmark that prove a Combat:
 tags: [testing, performance, combat]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-19T00:00:00Z
+  at: 2026-11-01T00:00:00Z
 sources:
   - id: compositions
     title: lib/combat_regression.rb
@@ -27,7 +27,11 @@ three checks over the same compositions, defined once in `CombatRegression::COMP
 content of `db/seeds` (Campeão, Cavaleiro Arcano, Mestre de Batalha, levels and choices adjusted per
 composition, every change rolled back). Six compositions × seeds 1–12 = 72 simulations: 1v1 and 2v1,
 random and gambit-driven, one cut at `max_rounds: 2`, and one (`defesas`) that gives the characters
-resistances, an immunity and a vulnerability, which no seed character has.[^compositions]
+resistances, an immunity and a vulnerability, which no seed character has.[^compositions] Each
+character entry names a seed character (distinct within its composition) and may change only its
+`level`, add `spells` to the seed's, replace its known `maneuvers`, give it `gambits` (in `add_rule!`'s
+shorthand: target enemy, condition any and Ataque unless given) and set its `defenses`
+(`CombatRegression.prepare!`).
 
 - **Golden files** (`test/fixtures/files/combat_regression/<composition>.yml`): the whole result of
   every seed, compared byte for byte. YAML keeps symbols apart from strings; record ids (which change

@@ -24,16 +24,13 @@ class ClassFeature < ApplicationRecord
   validate :subclass_marker_belongs_to_the_same_subclass_tree
   validate :spellcasting_ability_is_known, if: :grants_spellcasting
 
-  # A maneuver: a feature paid from +combat_superiority+'s resource (its superiority dice) rather than uses
-  # of its own. +combat_superiority+ is that feature (a resource_pool, PlayerCharacter#combat_superiority), or
-  # nil where there is none.
+  # Whether this is a maneuver of +combat_superiority+ (the resource_pool feature, or nil): .okf/models/class-feature.md (Maneuvers)
   def maneuver_of?(combat_superiority)
     !combat_superiority.nil? && resource_name.present? && resource_name == combat_superiority.resource_name
   end
 
-  # The effect in force at +level+: the payload of the highest unlock at or below it that has one, so an
-  # unlock without a payload inherits the one before it. With no level (a preset), the highest unlock's.
-  # Nil when there is none. Reads the loaded unlocks (PlayerCharacter#feature_unlocks loads them).
+  # The effect in force at +level+ (none: a preset's, the highest unlock's), or nil: .okf/models/class-feature-unlock.md (Overview)
+  # Filters the loaded unlocks (PlayerCharacter#feature_unlocks preloads them).
   def effect_payload_at(level = nil)
     class_feature_unlocks.select { |unlock| unlock.effect_payload.present? && (level.nil? || unlock.level <= level) }
                          .max_by(&:level)&.effect_payload&.deep_stringify_keys
@@ -54,11 +51,7 @@ class ClassFeature < ApplicationRecord
     feature.id == id || feature.subclass_marker_id == id
   end
 
-  ##
-  # Whether +feature+ should be visible to a character with the given +martial_archetype+
-  # and +fighting_style+ choices. Core features are always visible; optional features (e.g.
-  # Fighting Styles) require the character to have chosen that exact feature; subclass and
-  # subclass_progression features require the character to have chosen the matching archetype.
+  # Whether +feature+ is visible to a character with these choices: .okf/models/class-feature.md (Visibility)
   def self.visible_for?(feature, martial_archetype:, fighting_style: nil)
     return feature.id == fighting_style&.id if feature.feature_type_optional?
     return true unless feature.feature_type_subclass? || feature.feature_type_subclass_progression?

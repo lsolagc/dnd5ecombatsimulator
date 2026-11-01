@@ -1,14 +1,11 @@
-# Gambit configurations for named characters that live only in the dev database (not in the YAML seeds),
-# applied by `bin/rails gambits:brenna_corwin` (.okf/architecture/gambits-decisions.md, Pass 6).
-#
-# Idempotent: each run replaces the listed characters' gambits and touches no other row. One transaction
-# for all of them: a missing character or feature aborts the whole run, changing nothing.
+# Gambits of the dev-only characters (`bin/rails gambits:brenna_corwin`): .okf/architecture/gambits-decisions.md (Dev characters: Brenna and Corwin)
+# Idempotent, in one transaction for all: a missing character or feature aborts the whole run, changing nothing.
 module GambitSetups
   # Rules in priority order. action: :attack or the slug of a feature of the character's class.
   BRENNA_CORWIN = {
     "Brenna Ironhide" => [
       { target: :self, condition: :hp_below, value: 50, action: "second-wind", enabled: true },
-      # Action Surge only takes the Self target: "Inimigo: HP < 30%" is rejected by the model (Pass 6).
+      # Action Surge only takes the Self target: "Inimigo: HP < 30%" is rejected by the model (Gambit::COMPATIBLE_TARGETS).
       { target: :self, condition: :hp_below, value: 50, action: "action-surge", enabled: true },
       { target: :enemy, condition: :lowest_hp, value: nil, action: :attack, enabled: true },
       { target: :self, condition: :any, value: nil, action: "action-surge", enabled: false }

@@ -1,10 +1,5 @@
 module Dice
-  # A d20 roll that can re-roll itself once for advantage/disadvantage, keeping
-  # whichever total wins (ties keep the original roll, matching [a, b].max_by/min_by).
-  #
-  # Advantage/disadvantage in 5e only ever apply to d20 rolls (attacks, saves,
-  # ability checks), so this lives next to Dice.d20 rather than as a generic
-  # wrapper for every kind of die.
+  # A d20 roll that re-rolls once for advantage/disadvantage, a tie keeping itself: .okf/architecture/combat-effect-pipeline.md
   class D20Roll < RollResult
     def initialize(natural:, total:, modifier:)
       super(natural:, total:)

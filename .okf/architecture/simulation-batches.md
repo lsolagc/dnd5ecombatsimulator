@@ -6,7 +6,7 @@ resource: app/jobs/simulation_run_job.rb
 tags: [combat, ui]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-17T00:00:00Z
+  at: 2026-11-01T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:00:19Z }
 sources:
   - id: batch-model
@@ -52,9 +52,10 @@ between two sides of `PlayerCharacter`s and aggregates the results.[^batch-model
   edited), `armor_class`, `attack_bonus`, `damage_dice` (`NdM`),
   `damage_type` and `defenses` (`{ damage_type => "R" | "I" | "V" }`, one
   flag per type, a `Combatant::Defenses#to_h`; applied through
-  `Combatant#defenses=`). `before_validation` snapshots missing entries from the sheet
-  (`SimulationBatch.blueprint_settings`), so every batch records exactly what
-  it ran with. `party_one`/`party_two` load fresh characters, apply the
+  `Combatant#defenses=`). `before_validation` keeps exactly one entry per
+  selected combatant (an unselected one's is dropped) and snapshots the missing
+  ones from the sheet (`SimulationBatch.blueprint_settings`), so every batch
+  records exactly what it ran with. `party_one`/`party_two` load fresh characters, apply the
   settings **in memory only** (`combatant.assign_attributes`) and mark
   character and combatant `readonly!`, so an accidental save raises
   `ActiveRecord::ReadOnlyRecord`; the starting HP goes to the simulator instead
@@ -190,7 +191,9 @@ order, so the export rebuilds the hashes in that order, and below it in the
 order the simulator builds them (`SimulationBatch::LogExport::SIMULATION_LOG_ORDER`): each
 initiative entry, round and turn (`Combat::TurnRecord`), its action, results
 (attack and effect entries), riders (`Combat::Rider`), `roll_outcome` and
-`attack_roll`; a key it does not know (an older run's) goes after the known ones
+`attack_roll`. One order serves every kind of entry it covers (a weapon attack
+and an effect share the results' order, every action type the action's), each
+kind keeping its own keys' relative order; a key it does not know (an older run's) goes after the known ones
 of its hash, and `modifiers` keep the stored order. The column stays jsonb.[^log-export]
 Runs saved before
 2026-10-17 carry their old keys (a `gambits` section, `message`s, no

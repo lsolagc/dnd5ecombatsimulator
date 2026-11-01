@@ -1,14 +1,5 @@
 module Combat
-  # Parses and evaluates roll expressions like "1d10 + actor_level" or "2d6 + strength_modifier".
-  #
-  # Supported terms:
-  #   - Dice:      e.g. "1d10", "2d6"
-  #   - Variables: e.g. "actor_level", "strength_modifier", "proficiency_bonus"
-  #   - Integers:  e.g. "3", "2"
-  #
-  # Variables are resolved via a RollContext object. Any "*_level" variable
-  # resolves to actor.level (single-class assumption). Any "*_modifier" variable
-  # resolves the corresponding ability modifier on the actor.
+  # Parses and evaluates a roll expression such as "1d10 + actor_level": .okf/architecture/combat-effect-pipeline.md (Contract)
   class RollExpression
     DICE_PATTERN     = /\A\d+d\d+\z/i
     NUMBER_PATTERN   = /\A\d+\z/

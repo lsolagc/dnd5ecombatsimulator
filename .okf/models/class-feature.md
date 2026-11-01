@@ -6,7 +6,7 @@ resource: app/models/class_feature.rb
 tags: [class, feature, persistence]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-18T00:00:00Z
+  at: 2026-11-01T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:00:19Z }
 sources:
   - id: class-feature-rb
@@ -43,9 +43,21 @@ per class (`index_class_features_on_player_class_id_and_slug`).
 # Maneuvers
 
 `maneuver_of?(combat_superiority)` tells a maneuver: a feature paid from that
-feature's resource (same `resource_name`). The pool itself is the feature whose
+feature's resource (same, present `resource_name`) rather than uses of its own;
+false when the character has no such feature (nil). The pool itself is the feature whose
 effect is a `resource_pool` ([ClassFeatureUnlock](/models/class-feature-unlock.md));
 no feature is recognised by its name.[^class-feature-rb]
+
+# Visibility
+
+`ClassFeature.visible_for?(feature, martial_archetype:, fighting_style:)` says
+whether a character with those choices sees the feature, and so whether
+`PlayerCharacter#feature_unlocks` (and `#spellcasting_feature`) count it: a
+`core` feature always; an `optional` one (a Fighting Style) only when it is the
+character's chosen `fighting_style`; a `subclass` or `subclass_progression` one
+only when the character has a `martial_archetype` and the feature is that
+marker itself or a progression whose `subclass_marker` is it
+(`#subclass_tree_member?`).[^class-feature-rb]
 
 # Schema
 

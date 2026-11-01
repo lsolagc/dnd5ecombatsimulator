@@ -12,13 +12,7 @@ class PlayerClass < ApplicationRecord
     class_level_progressions.find_by(level: level)
   end
 
-  ##
-  # Returns all available hit dice for player classes
-  #
-  # @return [Hash<String>] List of hit dice (e.g. {"d4" => 0, "d6" => 1, "d8" => 2, "d10" => 3, "d12" => 4})
-  #
-  # @example Get all available hit dice
-  #   PlayerClass.hit_dice #=> {"d4" => 0, "d6" => 1, "d8" => 2, "d10" => 3, "d12" => 4}
+  # The hit_die enum's { name => value } mapping (what Rails calls hit_dies).
   def self.hit_dice
     hit_dies
   end

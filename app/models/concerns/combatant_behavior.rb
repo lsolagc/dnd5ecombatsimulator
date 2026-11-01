@@ -16,10 +16,6 @@ module CombatantBehavior
     end
   end
 
-  # ---
-  # Instance methods
-  # ---
-
   def initiative
     dexterity_modifier
   end

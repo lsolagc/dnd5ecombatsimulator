@@ -1,7 +1,5 @@
 module Combat
-  # Orchestrates the full pipeline: CombatAction → EffectResolver → EffectExecutor.
-  #
-  # Returns an array of EffectExecutor::Result, one per resolved EffectInstance.
+  # Runs the pipeline, CombatAction → EffectResolver → EffectExecutor: one EffectExecutor::Result per EffectInstance.
   class ActionRunner
     def self.call(action:, reroll_saving_throw: false, disadvantage_on_save: false, crit: false)
       effects = EffectResolver.call(action:)
@@ -12,12 +10,8 @@ module Combat
       end
     end
 
-    # The Attack action: up to attacks_per_action weapon attacks (Extra Attack), each with its own target.
-    # Before each attack next_target names the target, so an attack after a kill goes to someone else; nil
-    # ends the action early. advantage_against(target) says whether that attack rolls with advantage. The
-    # block sees each attack (target, result, advantage) before the next target is picked.
-    # attacks: how many attacks to make instead (War Magic's bonus makes one).
-    # Returns the [target, result, advantage] of every attack made.
+    # The Attack action: up to +attacks+ weapon attacks, each at next_target's pick (nil ends it), yielding and returning
+    # each [target, result, advantage]. See .okf/architecture/combat-effect-pipeline.md (Contract)
     def self.attack(action:, next_target:, advantage_against: ->(_target) { false }, attacks: action.actor.attacks_per_action)
       effect = EffectResolver.call(action:).first
       made = []

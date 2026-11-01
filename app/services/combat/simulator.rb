@@ -1,8 +1,5 @@
 module Combat
-  # The combat orchestrator (glossary: Simulator): one seeded, repeatable fight between two parties of sheets.
-  # Builds the Combat::Encounter, rolls initiative and runs the rounds; each living actor's turn starts and
-  # ends here (Encounter#start_turn, the turn passives) and its decisions are a Combat::TurnExecutor's, by
-  # the actor's gambits (Combat::GambitPolicy) or at random.
+  # The combat orchestrator, one seeded and repeatable fight of two parties of sheets (glossary: Simulator): .okf/architecture/combat-simulator.md
   class Simulator
     DEFAULT_MAX_ROUNDS = 20
 
@@ -13,13 +10,7 @@ module Combat
     # random choices (picks and targets; the dice roll on the global Random, pinned to the seed in #call).
     attr_reader :encounter, :rng
 
-    # abort_if: optional callable checked before every round (e.g. a batch cancelled from the UI).
-    # party_one, party_two: the character sheets; each fights as a Combat::Participant (built in #call), so
-    # the sheets are only read.
-    # gambits: optional copy of the rules, { combatant id (string) => [Gambit#snapshot, ...] } (a batch's
-    # gambit_settings); the simulation runs and logs from it instead of each combatant's own gambits.
-    # hit_points: optional starting HP, { combatant id => HP } (an experiment's); the sheet's maximum otherwise.
-    # The combatant id is the sheet's Combatant's (sheet.combatant.id, Combat::Participant#id), never the sheet's.
+    # Every parameter, and the combatant ids that key hit_points and gambits: .okf/architecture/combat-simulator.md (Contract)
     def initialize(party_one:, party_two:, seed: nil, max_rounds: DEFAULT_MAX_ROUNDS, abort_if: nil, gambits: nil, hit_points: {})
       raise ArgumentError, "Both parties must be Arrays" unless party_one.is_a?(Array) && party_two.is_a?(Array)
       raise ArgumentError, "Parties must not be empty" if party_one.empty? || party_two.empty?
@@ -36,9 +27,8 @@ module Combat
       @round_log = []
     end
 
-    # Runs the fight and returns the result hash (see .okf/architecture/combat-simulator.md). A block, if
-    # given, gets the encounter once initiative is rolled, before the first round (to set up a scenario).
-    # One fight per instance: a second #call would start over from the state the first one left.
+    # Runs the fight and returns the result hash; a block gets the encounter once initiative is rolled. One fight per
+    # instance. See .okf/architecture/combat-simulator.md (Contract)
     def call
       with_seed do
         build_encounter

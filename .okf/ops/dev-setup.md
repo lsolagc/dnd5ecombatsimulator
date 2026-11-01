@@ -5,7 +5,7 @@ description: Install, database setup, running the dev server, and running the te
 tags: [setup]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-11T22:30:00Z
+  at: 2026-11-01T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:31:53Z }
 sources:
   - id: gemfile
@@ -14,6 +14,9 @@ sources:
   - id: compose
     title: compose.yaml / Dockerfile.dev / bin/okf-server
     resource: ../../compose.yaml
+  - id: seed-data
+    title: lib/seed_data.rb
+    resource: ../../lib/seed_data.rb
 status: stable
 ---
 
@@ -34,6 +37,18 @@ bundle install && yarn install
 bin/rails db:prepare db:seed  # creates/loads all three databases; seed data: YAML under db/seeds/ (templates in db/seeds/templates/)
 ./bin/dev                    # Rails server on :3000 + Bootstrap Sass watch (dartsass) + job workers (bin/jobs)
 ```
+
+# Seed data
+
+`db:seed` runs `SeedData.load_all`, which loads the YAML under `db/seeds/`
+(formats in `db/seeds/templates/`; an unknown top-level key in a class or character file raises) and can run
+again at any time. Spells, features, unlocks and spell-slot rows are updated in
+place; classes, level progressions and characters that already exist are left
+as they are (`ClassLevelProgression` freezes itself `after_find`), except that a
+character still gains the spells and maneuvers its YAML lists. A key left out
+of a YAML entry takes the column default on a new record and keeps the stored
+value on an existing one, so removing a key from a seed takes a data
+migration.[^seed-data]
 
 # Always-on stack (Docker Compose)
 
@@ -108,3 +123,4 @@ no-op — and also undoes manual edits made to their rules since.
 
 [^gemfile]: Source: `Gemfile / .ruby-version`
 [^compose]: Source: `compose.yaml / Dockerfile.dev / bin/okf-server`
+[^seed-data]: Source: `lib/seed_data.rb`

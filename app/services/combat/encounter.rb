@@ -1,7 +1,5 @@
 module Combat
-  # The fight as a whole (glossary: Encounter): the two parties of Combat::Participants and the initiative
-  # order, who is on whose side, who is still standing and when it is over. The statuses live on the
-  # participants that carry them; the encounter only expires them as turns start.
+  # The fight as a whole (glossary: Encounter): .okf/architecture/combat-simulator.md (Encounter)
   class Encounter
     attr_reader :party_one, :party_two, :participants
     # The order turns are taken in; party order until Combat::Simulator rolls initiative.

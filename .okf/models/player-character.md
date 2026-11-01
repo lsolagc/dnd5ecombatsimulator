@@ -6,7 +6,7 @@ resource: app/models/player_character.rb
 tags: [persistence, combat]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-18T00:00:00Z
+  at: 2026-11-01T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:21:20Z }
 sources:
   - id: player-character-rb
@@ -123,8 +123,9 @@ starts from it and spends its own.
 # Cached class lookups
 
 `feature_unlocks` (the highest unlock at or below the level of every
-feature the character can see, one query with each feature's unlocks loaded,
-in a fixed order; behind the simulator's actions and uses and every passive:
+feature the character can see (`ClassFeature.visible_for?`), one query with each
+feature's unlocks loaded, in a fixed order: by the id of each feature's first
+unlock at or below the level; behind the simulator's actions and uses and every passive:
 attack and AC modifiers, critical threshold, turn passives), the passive
 payloads per trigger (`passive_effect_payloads`, frozen), each feature's action
 payload at the level (`action_payload(feature)`, what the simulator offers every

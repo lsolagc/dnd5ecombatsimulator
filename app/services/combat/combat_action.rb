@@ -1,11 +1,5 @@
 module Combat
-  # Represents the intent of a combatant to perform an action on their turn.
-  #
-  # source_type: :class_feature | :spell | :attack
-  # source_id:   ID of the ClassFeature or Spell record (nil for :attack, which uses the equipped weapon)
-  # actor:       The combatant using the action
-  # targets:     Array of target combatants (may be empty for self-targeting actions)
-  # context:     Hash of extra info (e.g. upcast level, ability mode)
+  # The intent of a combatant to act on its turn (glossary: Action); its fields: .okf/architecture/combat-effect-pipeline.md (Contract)
   class CombatAction
     attr_reader :source_type, :source_id, :actor, :targets, :context
 
