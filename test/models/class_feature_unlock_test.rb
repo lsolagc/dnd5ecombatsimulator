@@ -79,6 +79,25 @@ class ClassFeatureUnlockTest < ActiveSupport::TestCase
     end
   end
 
+  test "a save is exactly an ability, a dc from 1 to 30 or spell, and an on_success of half or negate" do
+    error_for = ->(payload) { ClassFeatureUnlock.new(class_feature: @feature, level: 4, effect_payload: payload).tap(&:valid?).errors[:effect_payload] }
+    save = { ability: "dexterity", dc: 15, on_success: "half" }
+    with_save = ->(changes) { { kind: "damage", roll: "1d6", target: "enemy", save: save.merge(changes) } }
+
+    assert_empty error_for.(with_save.({}))
+    assert_empty error_for.(with_save.(dc: "spell", on_success: "negate"))
+    assert_empty error_for.({ kind: "heal", roll: "1d6", target: "ally", save: save.merge(dc: 30) })
+    assert_equal [ "is missing save.ability" ], error_for.(with_save.({}).merge(save: save.except(:ability)))
+    assert_equal [ "is missing save.dc" ], error_for.(with_save.({}).merge(save: save.except(:dc)))
+    assert_equal [ "is missing save.on_success" ], error_for.(with_save.({}).merge(save: save.except(:on_success)))
+    assert_equal [ "save.ability must be one of #{AbilityScores::ABILITY_SCORE_COLUMNS.join(', ')}" ], error_for.(with_save.(ability: "dex"))
+    [ 0, 31, "10", "Spell", 10.5 ].each do |dc|
+      assert_equal [ "save.dc must be an integer from 1 to 30 or spell" ], error_for.(with_save.(dc:)), "dc #{dc.inspect}"
+    end
+    assert_equal [ "save.on_success must be one of half, negate" ], error_for.(with_save.(on_success: "halff")), "a typo would deal full damage"
+    assert_equal [ "save must be an object" ], error_for.(with_save.({}).merge(save: "dexterity"))
+  end
+
   test "every fixture and seed unlock fits the effect vocabulary" do
     SeedData.load_all
 

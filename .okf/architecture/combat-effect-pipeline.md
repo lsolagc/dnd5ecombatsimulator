@@ -177,8 +177,9 @@ Heal and damage effects can also declare a `save`, `{ "ability": "dexterity",
 "dc": 13, "on_success": "half" }`, rolled by the target: `"dc"` is either a fixed
 integer or `"spell"`, meaning the actor's `spell_save_dc`, and a success halves
 the amount (`"half"`, rounded down), zeroes it (`"negate"`) or, with any other
-`on_success`, leaves it whole (`EffectExecutor#apply_save`; `EFFECT_KINDS` only
-checks that `save` is an object). The save is a `Combat::SavingThrow`: `d20 +
+`on_success`, leaves it whole (`EffectExecutor#apply_save`; `EFFECT_KINDS`
+refuses on save any `on_success` but those two, and any `ability` or `dc` outside
+the shape, in both unlocks and spells). The save is a `Combat::SavingThrow`: `d20 +
 <ability>_modifier`, a success when the total reaches the DC, with no
 saving-throw proficiency modeled (only the raw ability modifier); advantage and
 disadvantage together cancel, and `reroll_if_failed` (Indomitable) rolls once

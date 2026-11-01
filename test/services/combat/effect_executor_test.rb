@@ -114,6 +114,18 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
     assert_equal 3, result.amount
   end
 
+  test "half on a successful save rounds an odd amount down" do
+    Random.srand(1)
+    effect = Combat::EffectInstance.new(kind: :damage, roll_expression: "1d1+6", target_type: "target",
+                                        save: { "ability" => "dexterity", "dc" => 1, "on_success" => "half" })
+
+    result = Combat::EffectExecutor.call(effect:, actor: @fighter, target: Combat::Participant.new(player_characters(:aragorn_copy)))
+
+    assert result.saving_throw.success
+    assert_equal 7, result.roll_outcome.total
+    assert_equal 3, result.amount
+  end
+
   test "damage effect with a save negates damage entirely on success" do
     Random.srand(1) # 1d10 roll = 6, target's dexterity save total = 13
     effect = Combat::EffectInstance.new(

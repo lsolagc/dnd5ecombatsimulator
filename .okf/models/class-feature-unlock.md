@@ -12,6 +12,9 @@ sources:
   - id: unlock-rb
     title: app/models/class_feature_unlock.rb
     resource: ../../app/models/class_feature_unlock.rb
+  - id: concern-rb
+    title: app/models/concerns/effect_payload_validation.rb
+    resource: ../../app/models/concerns/effect_payload_validation.rb
   - id: issue-45
     title: "GitHub issue #45: status system (5e conditions, buffs and debuffs with duration)"
     resource: https://github.com/lsolagc/dnd5ecombatsimulator/issues/45
@@ -69,19 +72,25 @@ rounds stay with [issue #45](https://github.com/lsolagc/dnd5ecombatsimulator/iss
 Every `effect_payload` is validated against one table,
 `ClassFeatureUnlock::EFFECT_KINDS` (enumerable, the base of a future wizard for
 custom classes and monsters): a `kind` outside it, a required field missing, a
-value it does not accept or a field it does not know is refused. Each field
-names the values it accepts (`ClassFeatureUnlock#value_problems`): `nil` any
+value it does not accept or a field it does not know is refused. The validator
+lives in the concern `EffectPayloadValidation`
+(`app/models/concerns/effect_payload_validation.rb`), included by
+`ClassFeatureUnlock` and [Spell](/models/spell.md), so both check the same table
+(it stays here, as `ClassFeatureUnlock::EFFECT_KINDS`).[^concern-rb] Each field
+names the values it accepts (`EffectPayloadValidation#value_problems`): `nil` any
 value, an array one of its items, a class an instance of it, a range an integer
-inside it (`count`: `1..`), a hash a nested object with exactly those fields, all
-required, and `[ hash ]` a list of such objects. Nested objects
+inside it (`count`: `1..`, `save.dc`: `1..30`), `[ range, word, ... ]` an integer
+in the range or one of the words (`save.dc`: `[ 1..30, "spell" ]`), a hash a
+nested object with exactly those fields, all required, and `[ hash ]` a list of
+such objects. Nested objects
 (`after`) and each object of a list (`statuses`, errors named `statuses[0].kind`)
 are checked the same way. The engine reads a feature by this `kind`,
 never by its name (phase 5.2 of the DDD refactor).[^unlock-rb]
 
 | `kind` | Required | Optional | Read by |
 |---|---|---|---|
-| `heal` | `roll` (string), `target` (`self`\|`enemy`\|`ally`) | `trigger` (`turn_start`\|`turn_end`), `conditions`, `save` | the turn action pipeline; with a `trigger`, the passives |
-| `damage` | `roll`, `target` | `damage_type`, `attack` (`spell`\|`weapon`), `save`, `applies_to` (`weapon_attack`), `statuses` (a list of `{ kind, ends }`: `kind` from `Combat::Status::KINDS`, `ends` `source_turn_start`), `trigger`, `conditions` | the same; `applies_to` makes a maneuver |
+| `heal` | `roll` (string), `target` (`self`\|`enemy`\|`ally`) | `trigger` (`turn_start`\|`turn_end`), `conditions`, `save` (`SAVE`: exactly `ability`, one of `AbilityScores::ABILITY_SCORE_COLUMNS`; `dc`, an integer 1–30 or `spell`; `on_success`, `half`\|`negate`) | the turn action pipeline; with a `trigger`, the passives |
+| `damage` | `roll`, `target` | `damage_type`, `attack` (`spell`\|`weapon`), `save` (the same `SAVE`), `applies_to` (`weapon_attack`), `statuses` (a list of `{ kind, ends }`: `kind` from `Combat::Status::KINDS`, `ends` `source_turn_start`), `trigger`, `conditions` | the same; `applies_to` makes a maneuver |
 | `modifier` | `modifier` (`attack_bonus`\|`armor_class`\|`damage_bonus`\|`critical_hit_threshold`), `value` (integer) | `trigger` (`always`), `target` | the passives |
 | `extra_action` | — | — | Action Surge: `FeatureBook#unlock_with`, `Gambit#action_surge?`; uses in `uses` |
 | `grants_activity` | `activity` (`weapon_attack`), `count` (integer ≥ 1), `as` (an [action cost](/ubiquitous-language.md): `action`\|`bonus_action`\|`reaction`), `after.cast_with_action` (`cantrip`\|`any_spell`) | — | War Magic / Improved War Magic: `FeatureBook#weapon_attacks_after`; `as` is declared, not charged (issue #39) |
@@ -123,5 +132,7 @@ in an encounter. `CombatAction`, `EffectInstance`, executor results, and
 Index: `index_class_feature_unlocks_on_class_feature_id_and_level` (unique).
 
 [^unlock-rb]: Source: `app/models/class_feature_unlock.rb`
+
+[^concern-rb]: Source: `app/models/concerns/effect_payload_validation.rb`
 
 [^issue-45]: Source: GitHub issue #45: status system (5e conditions, buffs and debuffs with duration)

@@ -65,7 +65,7 @@ mage_hand:
   description: Test fixture only. A cantrip outside the schools allowed for an Eldritch Knight.
 
 # Test-only: a damage spell with a saving throw, used to exercise Eldritch Strike in
-# the Combat::TurnExecutor tests (no seeded game spell currently has a `save` payload).
+# the Combat::TurnExecutor tests (the fireball fixture above has none; the seeded Fireball does).
 test_save_spell:
   name: Test Save Spell
   slug: test-save-spell

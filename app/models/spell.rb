@@ -1,4 +1,6 @@
 class Spell < ApplicationRecord
+  include EffectPayloadValidation
+
   has_many :player_character_spells, dependent: :destroy
   has_many :player_characters, through: :player_character_spells
 

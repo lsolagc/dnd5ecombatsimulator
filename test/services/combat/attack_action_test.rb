@@ -37,6 +37,13 @@ class Combat::AttackActionTest < ActiveSupport::TestCase
     assert_equal @target.max_hit_points - result.amount, @target.current_hit_points
   end
 
+  test "attacks: 0 still makes one attack" do
+    action = Combat::CombatAction.new(source_type: :attack, source_id: nil, actor: Combat::Participant.new(@attacker))
+    made = with_rolls(10, 10) { Combat::ActionRunner.attack(action:, next_target: -> { @target }, attacks: 0) }
+
+    assert_equal 1, made.size
+  end
+
   test "Extra Attack: an attack after a kill goes to the next target, and the action ends when none is left" do
     @target = Combat::Participant.new(@target.character, hit_points: 1)
     picks = 0

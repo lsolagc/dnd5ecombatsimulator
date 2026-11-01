@@ -1,20 +1,24 @@
 class ClassFeatureUnlock < ApplicationRecord
+  include EffectPayloadValidation
+
   TARGETS = %w[self enemy ally].freeze
   # The PHB's costs of an activity in the turn's economy (declared only: the simulator does not charge them yet).
   ACTION_COSTS = %w[action bonus_action reaction].freeze
   # One status a maneuver applies to the target it hits (Distracting Strike), from Combat::Status's vocabulary.
   STATUS = { "kind" => Combat::Status::KINDS, "ends" => Combat::Status::ENDS }.freeze
+  # A saving throw against the effect: dc a number or "spell" (the caster's spell save DC); on_success halves (rounded down) or negates.
+  SAVE = { "ability" => AbilityScores::ABILITY_SCORE_COLUMNS, "dc" => [ 1..30, "spell" ], "on_success" => %w[half negate] }.freeze
 
-  # Every effect_payload kind => its required and optional fields, each with the values it accepts, as #value_problems reads them.
+  # Every effect_payload kind => its required and optional fields, each with the values it accepts, as EffectPayloadValidation#value_problems reads them.
   # See .okf/models/class-feature-unlock.md (Effect vocabulary)
   EFFECT_KINDS = {
     "heal" => {
       required: { "roll" => String, "target" => TARGETS },
-      optional: { "trigger" => %w[turn_start turn_end], "conditions" => Hash, "save" => Hash }
+      optional: { "trigger" => %w[turn_start turn_end], "conditions" => Hash, "save" => SAVE }
     },
     "damage" => {
       required: { "roll" => String, "target" => TARGETS },
-      optional: { "damage_type" => String, "attack" => %w[spell weapon], "save" => Hash, "applies_to" => %w[weapon_attack],
+      optional: { "damage_type" => String, "attack" => %w[spell weapon], "save" => SAVE, "applies_to" => %w[weapon_attack],
                   "statuses" => [ STATUS ], "trigger" => %w[turn_start turn_end], "conditions" => Hash }
     },
     # attack_bonus and armor_class: no feature declares them, the sheet holds the final values (Archery, Defense in).
@@ -46,37 +50,4 @@ class ClassFeatureUnlock < ApplicationRecord
   validates :level, presence: true, inclusion: { in: 1..20 }
   validates :level, uniqueness: { scope: :class_feature_id }
   validates :uses, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
-  validate :effect_payload_fits_its_kind, if: -> { effect_payload.present? }
-
-  private
-
-    def effect_payload_fits_its_kind
-      payload = effect_payload.deep_stringify_keys
-      spec = EFFECT_KINDS[payload["kind"]]
-      return errors.add(:effect_payload, "has an unknown kind: #{payload['kind'].inspect}") if spec.nil?
-
-      field_problems(payload.except("kind"), spec[:required], spec.fetch(:optional, {})).each { errors.add(:effect_payload, it) }
-    end
-
-    def field_problems(fields, required, optional, path = nil)
-      name = ->(key) { [ path, key ].compact.join(".") }
-      missing = (required.keys - fields.keys).map { "is missing #{name.(it)}" }
-      unknown = (fields.keys - required.keys - optional.keys).map { "has an unknown field #{name.(it)}" }
-      invalid = fields.flat_map { |key, value| value_problems(value, required.fetch(key) { optional[key] }, name.(key)) }
-      missing + unknown + invalid
-    end
-
-    def value_problems(value, accepted, label)
-      case accepted
-      in [ Hash => item ]
-        return [ "#{label} must be a list" ] unless value.is_a?(Array)
-
-        value.each_with_index.flat_map { |element, index| value_problems(element, item, "#{label}[#{index}]") }
-      in Hash then value.is_a?(Hash) ? field_problems(value.stringify_keys, accepted, {}, label) : [ "#{label} must be an object" ]
-      in Array then accepted.include?(value) ? [] : [ "#{label} must be one of #{accepted.join(', ')}" ]
-      in Class then value.is_a?(accepted) ? [] : [ "#{label} must be of type #{accepted.name.downcase}" ]
-      in Range then value.is_a?(Integer) && accepted.cover?(value) ? [] : [ "#{label} must be an integer of at least #{accepted.begin}" ]
-      else []
-      end
-    end
 end

@@ -6,7 +6,7 @@ resource: app/models/spell.rb
 tags: [spell, class, feature, combat, persistence, progression]
 generated:
   by: claude-code/claude-opus-5-5
-  at: 2026-10-14T00:00:00Z
+  at: 2026-11-01T00:00:00Z
 verified: { by: human:lsolagc, at: 2026-10-11T21:31:33Z }
 sources:
   - id: spell-rb
@@ -18,6 +18,9 @@ sources:
   - id: player-character-spell-rb
     title: app/models/player_character_spell.rb
     resource: ../../app/models/player_character_spell.rb
+  - id: effect-payload-validation
+    title: app/models/concerns/effect_payload_validation.rb
+    resource: ../../app/models/concerns/effect_payload_validation.rb
   - id: issue-47
     title: "GitHub issue #47: known vs. prepared spells, prepared ones picked per batch"
     resource: https://github.com/lsolagc/dnd5ecombatsimulator/issues/47
@@ -106,6 +109,13 @@ and Scorching Ray are spell attacks; Fireball is a DEX save for half. Scorching
 Ray is one all-or-nothing 6d6 attack (RAW: three 2d6 rays), and Shield/Stoneskin
 have no payload yet.
 
+**Validated payload.** `Spell` includes the `EffectPayloadValidation` concern,
+so a present `effect_payload` must fit
+[ClassFeatureUnlock](/models/class-feature-unlock.md)'s effect vocabulary like
+an unlock's: a `save` is exactly `ability`, `dc` (an integer 1–30 or `"spell"`)
+and `on_success` (`half` or `negate`), so a typo such as `"halff"` is refused
+on save instead of silently dealing full damage.[^spell-rb][^effect-payload-validation]
+
 `Combat::Participant#action_options` offers castable spells as `:cast_spell`
 actions, run by `Combat::TurnExecutor` (see [combat-simulator.md](/architecture/combat-simulator.md));
 its round log carries an `attack_roll` (`natural`, `total`, `armor_class`, `hit`,
@@ -123,7 +133,7 @@ its round log carries an `attack_roll` (`natural`, `total`, `armor_class`, `hit`
 | school | string | Free-form (e.g. `evocation`, `abjuration`) |
 | description | text | Flavor/rules text |
 | notes | text | Optional; used to flag simplifications (e.g. an AoE spell modeled as single-target) |
-| effect_payload | jsonb | Same shape as `class_feature_unlocks.effect_payload`; optional |
+| effect_payload | jsonb | Same shape as `class_feature_unlocks.effect_payload`, validated when present against the same `EFFECT_KINDS` (`EffectPayloadValidation`); optional |
 
 **spell_slot_progressions**
 
@@ -147,5 +157,7 @@ its round log carries an `attack_roll` (`natural`, `total`, `armor_class`, `hit`
 [^spell-slot-progression-rb]: Source: `app/models/spell_slot_progression.rb`
 
 [^player-character-spell-rb]: Source: `app/models/player_character_spell.rb`
+
+[^effect-payload-validation]: Source: `app/models/concerns/effect_payload_validation.rb`
 
 [^issue-47]: Source: GitHub issue #47: known vs. prepared spells, prepared ones picked per batch

@@ -1,5 +1,5 @@
 namespace :gambits do
-  desc "Replace the gambits of Brenna Ironhide and Corwin Vale with their Pass 6 setup (idempotent)"
+  desc "Replace the gambits of Brenna Ironhide and Corwin Vale with their dev setup (idempotent); see .okf/architecture/gambits-decisions.md (Dev characters: Brenna and Corwin)"
   task brenna_corwin: :environment do
     GambitSetups.apply!.each do |character, gambits|
       puts "#{character.name} (id #{character.id})"
