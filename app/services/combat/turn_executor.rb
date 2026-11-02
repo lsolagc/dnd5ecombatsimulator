@@ -197,19 +197,8 @@ module Combat
 
         action = CombatAction.new(source_type: :class_feature, source_id: feature.id, actor:, targets: target.nil? ? [] : [ target ])
 
-        indomitable_unlock = target && target.feature_book.unlock_with("reroll_save")
-        reroll_saving_throw = indomitable_unlock && target.uses_left(indomitable_unlock.class_feature_id).to_i.positive?
-
-        results = ActionRunner.call(action:, reroll_saving_throw: !!reroll_saving_throw)
+        results = ActionRunner.call(action:)
         actor.spend_use!(actor.feature_book.resource_feature_id(feature))
-
-        if reroll_saving_throw
-          results.each do |result|
-            next unless result.saving_throw&.rerolled
-
-            target.spend_use!(indomitable_unlock.class_feature_id)
-          end
-        end
 
         record(actor:, round:, turn:, results: TurnRecord.serialize_results(results), action: {
           type: :class_feature,

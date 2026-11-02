@@ -36,8 +36,8 @@ class ClassFeatureUnlock < ApplicationRecord
     # Rides along a hit (Eldritch Strike): the target's next save against the attacker's own spells has disadvantage.
     # Only the Status kind the engine applies on a hit (Combat::FeatureBook#rider): another one would validate and do nothing.
     "rider" => { required: { "event" => %w[weapon_hit], "applies" => Combat::Status::KINDS & %w[disadvantage_on_next_save], "against" => %w[own_spells] } },
-    # Reroll a failed saving throw (Indomitable); its uses are the unlock's.
-    "reroll_save" => { required: { "when" => %w[failed] } },
+    # Reroll a +roll+ (Indomitable: a saving_throw) +when+ it failed, one die of an advantage/disadvantage pair; its uses are the unlock's.
+    "reroll" => { required: { "roll" => %w[saving_throw], "when" => %w[failed] } },
     # The pool whose uses every feature with the same resource_name spends (Combat Superiority's superiority dice).
     "resource_pool" => { required: {} }
   }.freeze

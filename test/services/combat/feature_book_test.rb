@@ -28,12 +28,17 @@ class Combat::FeatureBookTest < ActiveSupport::TestCase
     assert_equal class_features(:fighter_second_wind).id, book.resource_feature_id(class_features(:fighter_second_wind))
   end
 
-  test "unlock_with returns the unlock in force of the extra_action and the reroll_save, or nil" do
+  test "unlock_with returns the unlock in force of the extra_action, or nil" do
     assert_nil Combat::FeatureBook.new(player_characters(:aragorn)).unlock_with("extra_action")
-    assert_nil Combat::FeatureBook.new(player_characters(:aragorn)).unlock_with("reroll_save")
     assert_equal class_feature_unlocks(:action_surge_level_2), Combat::FeatureBook.new(player_characters(:fighter_no_archetype_seven)).unlock_with("extra_action")
-    assert_nil Combat::FeatureBook.new(player_characters(:fighter_no_archetype_seven)).unlock_with("reroll_save")
-    assert_equal class_feature_unlocks(:indomitable_level_9), Combat::FeatureBook.new(player_characters(:fighter_indomitable_nine)).unlock_with("reroll_save")
+  end
+
+  test "rerolls lists the character's rerolls of that roll, with the feature whose uses they spend" do
+    indomitable = Combat::Reroll.new(class_feature_id: class_features(:fighter_indomitable).id, when: "failed")
+
+    assert_equal [ indomitable ], Combat::FeatureBook.new(player_characters(:fighter_indomitable_nine)).rerolls(:saving_throw)
+    assert_empty Combat::FeatureBook.new(player_characters(:fighter_indomitable_nine)).rerolls(:attack_roll)
+    assert_empty Combat::FeatureBook.new(player_characters(:fighter_no_archetype_seven)).rerolls(:saving_throw)
   end
 
   test "War Magic follows a cantrip only; Improved War Magic any spell" do
@@ -82,7 +87,7 @@ class Combat::FeatureBookTest < ActiveSupport::TestCase
     srand(5)
     book.action_payload(class_features(:fighter_second_wind))
     book.unlock_with("extra_action")
-    book.unlock_with("reroll_save")
+    book.rerolls(:saving_throw)
     book.weapon_attacks_after(spells(:fire_bolt))
     book.rider(event: "weapon_hit", applies: "disadvantage_on_next_save")
     book.resource_feature_id(class_features(:fighter_second_wind))

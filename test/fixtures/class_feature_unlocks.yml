@@ -33,7 +33,8 @@ indomitable_level_9:
   uses: 1
   description: Reroll a failed save; must use the new result.
   effect_payload:
-    kind: reroll_save
+    kind: reroll
+    roll: saving_throw
     when: failed
 
 indomitable_level_13:

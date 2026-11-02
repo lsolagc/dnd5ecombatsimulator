@@ -46,7 +46,7 @@ class ClassFeatureTest < ActiveSupport::TestCase
     assert_nil surge.action_payload_at(9)
     assert_nil character.action_payload(surge)
     passive_kinds = %w[always turn_start turn_end].flat_map { |trigger| character.passive_effect_payloads(trigger:).map { it["kind"] } }
-    assert_empty passive_kinds & %w[extra_action reroll_save], "no trigger, no passive"
+    assert_empty passive_kinds & %w[extra_action reroll], "no trigger, no passive"
   end
 
   test "a spellcasting feature needs a spellcasting ability of its own when the class has none" do

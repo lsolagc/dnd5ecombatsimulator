@@ -164,7 +164,13 @@ rolls with `#weapon_attack_bonus` (the sheet's final attack bonus, Archery
 included, + any passive `attack_bonus`) and crits at `#critical_hit_threshold` (19 for a Champion). `advantage:`
 on `EffectExecutor.call` rolls the d20 twice and keeps the higher:
 `Dice::D20Roll#with_advantage`/`#with_disadvantage` roll one more d20 with the
-same modifier and keep the better/worse total, a tie keeping the first roll. It
+same modifier and keep the better/worse total (equal naturals, equal totals), and
+keep both dice in `rolls`. `#reroll_lower_die` is a reroll by the PHB (Advantage
+and Disadvantage: a feature that rerolls a d20 rolled with advantage or
+disadvantage rerolls only one of the dice): it rerolls the lower die and keeps
+the higher, then keeps the lower of the two with disadvantage (the die that
+counted was the lower) or the higher with advantage (the lower is the only one
+that can improve); a single die is just rolled again. It
 lives beside `Dice.d20`, not as a wrapper for any die, because in 5e advantage
 and disadvantage only apply to d20 rolls (attacks, saves, ability checks). Damage is
 applied with the **effect's** `damage_type` (the attacker's weapon), so the
@@ -182,8 +188,19 @@ refuses on save any `on_success` but those two, and any `ability` or `dc` outsid
 the shape, in both unlocks and spells). The save is a `Combat::SavingThrow`: `d20 +
 <ability>_modifier`, a success when the total reaches the DC, with no
 saving-throw proficiency modeled (only the raw ability modifier); advantage and
-disadvantage together cancel, and `reroll_if_failed` (Indomitable) rolls once
-more after a failure. Spell attack and save numbers
+disadvantage together cancel. **Rerolls** (since 2026-11-02): `EffectExecutor#apply_save`
+is the one place they are decided, for any effect with a save (a feature, a
+spell such as Fireball, a maneuver): it passes the target's
+`Participant#rerolls_for(:saving_throw)` (the `reroll` unlocks with `roll:
+saving_throw` and a use left, Indomitable) to `SavingThrow.new(rerolls:)`, which
+uses each at most once, in order, while the save fails (`when: failed`), each
+through `Dice::D20Roll#reroll_lower_die` (with Eldritch Strike's disadvantage,
+one die is rerolled and the disadvantage stays); `rerolls_used` lists them and
+`rerolled` says whether any was, and the target spends a use of each
+(`Participant#spend_rerolls!`). Always used when the rule allows (when to save a
+use is [issue #53](https://github.com/lsolagc/dnd5ecombatsimulator/issues/53)); a
+reroll costs no reaction. The round_log does not record the save (neither before
+nor now). Impact: [indomitable-spell-saves-impact.md](/architecture/indomitable-spell-saves-impact.md). Spell attack and save numbers
 come from the spellcasting ability resolved by
 `PlayerCharacter#spellcasting_ability`. Unsupported `attack` values are rejected
 at `EffectInstance` construction.

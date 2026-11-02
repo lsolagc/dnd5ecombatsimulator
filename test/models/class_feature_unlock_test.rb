@@ -98,6 +98,18 @@ class ClassFeatureUnlockTest < ActiveSupport::TestCase
     assert_equal [ "save must be an object" ], error_for.(with_save.({}).merge(save: "dexterity"))
   end
 
+  test "a reroll names the roll it rerolls and when, from the vocabulary only" do
+    error_for = ->(payload) { ClassFeatureUnlock.new(class_feature: @feature, level: 4, effect_payload: payload).tap(&:valid?).errors[:effect_payload] }
+
+    assert_empty error_for.({ kind: "reroll", roll: "saving_throw", when: "failed" })
+    assert_equal [ "is missing roll" ], error_for.({ kind: "reroll", when: "failed" })
+    assert_equal [ "is missing when" ], error_for.({ kind: "reroll", roll: "saving_throw" })
+    assert_equal [ "roll must be one of saving_throw" ], error_for.({ kind: "reroll", roll: "attack_roll", when: "failed" })
+    assert_equal [ "when must be one of failed" ], error_for.({ kind: "reroll", roll: "saving_throw", when: "natural_1" })
+    assert_equal [ "has an unknown field trigger" ], error_for.({ kind: "reroll", roll: "saving_throw", when: "failed", trigger: "always" })
+    assert_equal [ "has an unknown kind: \"reroll_save\"" ], error_for.({ kind: "reroll_save", when: "failed" })
+  end
+
   test "every fixture and seed unlock fits the effect vocabulary" do
     SeedData.load_all
 

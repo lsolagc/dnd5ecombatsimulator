@@ -62,6 +62,16 @@ module Combat
       @uses[class_feature_id] = [ uses - 1, 0 ].max if uses
     end
 
+    # The Combat::Rerolls of +roll+ (:saving_throw) with a use left, in unlock order (FeatureBook#rerolls).
+    def rerolls_for(roll)
+      feature_book.rerolls(roll).reject { |reroll| uses_left(reroll.class_feature_id)&.<=(0) }
+    end
+
+    # Spends a use of each reroll the roll (a Combat::SavingThrow) used.
+    def spend_rerolls!(roll)
+      roll.rerolls_used.each { |reroll| spend_use!(reroll.class_feature_id) }
+    end
+
     # This turn's Combat::ActionOptions: .okf/architecture/combat-simulator.md (Participant)
     # In a fixed order: a seed's random pick depends on it.
     def action_options

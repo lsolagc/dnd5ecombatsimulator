@@ -159,7 +159,7 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
   end
 
   test "Indomitable rerolls a failed saving throw against the fighter and consumes a use, whatever its name" do
-    class_features(:fighter_indomitable).update_columns(name: "Indomável") # found by its reroll_save kind
+    class_features(:fighter_indomitable).update_columns(name: "Indomável") # found by its reroll kind
     fighter = player_characters(:fighter_indomitable_nine) # constitution: 12 (mod +1)
     attacker = player_characters(:barbarian_test_striker)
 
@@ -182,6 +182,34 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
     assert_equal 3, damage_result[:amount] # half of 6, since the reroll succeeded
 
     assert_equal 0, fighter.uses_left(indomitable_id)
+  end
+
+  test "Fireball against a fighter with Indomitable rerolls a failed save and spends a use; with none left it does not" do
+    caster, fighter, executor, fireball = fireball_at_indomitable_fighter
+    indomitable_id = class_features(:fighter_indomitable).id
+
+    naturals = [ 2, 20 ] # the save fails on a 2; Indomitable rerolls it into a 20
+    damage = with_d20_naturals(naturals) { executor.run(actor: caster, option: fireball, round: 1, turn: 1) }.results.sole
+    assert_empty naturals
+    assert_equal damage.dig(:roll_outcome, :total) / 2, damage[:amount], "the rerolled save succeeds: half damage"
+    assert_equal 0, fighter.uses_left(indomitable_id)
+
+    naturals = [ 2, 20 ]
+    damage = with_d20_naturals(naturals) { executor.run(actor: caster, option: fireball, round: 1, turn: 2) }.results.sole
+    assert_equal [ 20 ], naturals, "no use left: no reroll"
+    assert_equal damage.dig(:roll_outcome, :total), damage[:amount]
+  end
+
+  test "Fireball under Eldritch Strike: Indomitable rerolls the lower die only, still with disadvantage" do
+    caster, fighter, executor, fireball = fireball_at_indomitable_fighter
+    fighter.add_status(Combat::Status.new(kind: "disadvantage_on_next_save", source: caster, ends: nil))
+
+    naturals = [ 3, 18, 19 ] # disadvantage keeps the 3 (fails); the 3 is rerolled into a 19, the lower of 18 and 19 counts
+    damage = with_d20_naturals(naturals) { executor.run(actor: caster, option: fireball, round: 1, turn: 1) }.results.sole
+    assert_empty naturals, "one die rerolled: three d20s in all"
+    assert_equal damage.dig(:roll_outcome, :total) / 2, damage[:amount], "18 passes DC 15: half damage"
+    assert_equal 0, fighter.uses_left(class_features(:fighter_indomitable).id)
+    assert_empty fighter.statuses
   end
 
   test "choose_at_random picks the physical branch when the coin flip favors it" do
@@ -500,6 +528,24 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
     # association, which only resolves for a persisted owner.
     def spellcaster_with_known_spells(fixture_name)
       player_characters(fixture_name)
+    end
+
+    # An Eldritch Knight with a third-level slot facing a fighter with Indomitable, and Fireball (with its DC 15
+    # Dexterity save, which the fixture lacks) as an option: [caster, fighter, executor, option].
+    def fireball_at_indomitable_fighter
+      caster, fighter = spellcaster_with_known_spells(:eldritch_knight_ten), sturdy(player_characters(:fighter_indomitable_nine))
+      encounter, executor = fight(party_one: [ caster ], party_two: [ fighter ])
+      caster = participant_of(encounter, caster)
+      caster.available_spell_slots[3] = 2
+      fireball = spells(:fireball)
+      fireball.update!(effect_payload: fireball.effect_payload.merge("save" => { "ability" => "dexterity", "dc" => 15, "on_success" => "half" }))
+      option = Combat::ActionOption.new(type: :cast_spell, spell: fireball, payload: fireball.effect_payload.deep_stringify_keys)
+      [ caster, participant_of(encounter, fighter), executor, option ]
+    end
+
+    # Each Dice.d20 call takes the next natural off +naturals+ (the caller sees what is left).
+    def with_d20_naturals(naturals, &)
+      Dice.stub(:d20, ->(modifier: 0) { natural = naturals.shift; Dice::D20Roll.new(natural:, total: natural + modifier, modifier:) }, &)
     end
 
     def maneuver_action(participant, slug)

@@ -57,7 +57,7 @@ feature's name. Besides `heal`, `damage` and `modifier`:
 | **Extra action** | `kind: extra_action` | One more action on the turn (Action Surge). |
 | **Grants activity** | `kind: grants_activity` | `count` activities (`activity: weapon_attack`) at an **action cost** (`as`) once the turn's action did something (`after: { cast_with_action: cantrip \| any_spell }`): War Magic, Improved War Magic. |
 | **Rider** (effect kind) | `kind: rider` | See **Rider** above: declared with `event`, `applies` and `against`. |
-| **Reroll save** | `kind: reroll_save` | Reroll a saving throw `when: failed` (Indomitable). |
+| **Reroll** (Rerolagem) | `kind: reroll`, `Combat::Reroll` | Roll a `roll` (`saving_throw`) again `when` it `failed` (Indomitable), spending a use; with advantage or disadvantage only one die is rerolled (`Dice::D20Roll#reroll_lower_die`). One rule for every source, applied wherever a save is rolled. |
 | **Resource pool** | `kind: resource_pool` | A shared pool of uses: every feature with the same `resource_name` spends it (Combat Superiority's superiority dice, paid by the maneuvers). |
 | **Turn record** | `Combat::TurnRecord` | One entry of a round's turns in the `round_log`: who acted, the action, its effects and the gambit behind it. |
 

@@ -100,7 +100,7 @@ or Docker changes: a WSL kernel update alone moved absolute times by ~18%.
 | defesas | 67.36 | 1.904 | 51 |
 | mestre-vs-cavaleiro-curto | 29.57 | 0.842 | 30 |
 
-Not covered: Indomitable (no seed feature forces a save, so its reroll never runs on real content).
+Indomitable runs on real content since 2026-11-02: Fireball against the Campeão (9) and the Mestre de Batalha (15) in `cavaleiro-vs-campeao` and `campeao-cavaleiro-vs-mestre` (see [indomitable-spell-saves-impact.md](/architecture/indomitable-spell-saves-impact.md)); the coverage check does not count it (the log does not record saves).
 
 [^compositions]: Source: `lib/combat_regression.rb`
 [^test]: Source: `test/services/combat_regression_test.rb`

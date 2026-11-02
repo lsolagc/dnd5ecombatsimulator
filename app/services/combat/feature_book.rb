@@ -18,9 +18,19 @@ module Combat
     end
 
     # The unlock of the feature whose effect at the character's level is of +kind+, or nil: the simulator runs
-    # "extra_action" (Action Surge) and "reroll_save" (Indomitable) by rules of their own, spending the unlock's uses.
+    # "extra_action" (Action Surge) by a rule of its own, spending the unlock's uses.
     def unlock_with(kind)
       unlocks.find { |unlock| effects[unlock.class_feature_id]&.dig("kind") == kind }
+    end
+
+    # The Combat::Rerolls of +roll+ ("saving_throw", Indomitable) the character has, in unlock order, uses aside.
+    def rerolls(roll)
+      unlocks.filter_map do |unlock|
+        payload = effects[unlock.class_feature_id]
+        next unless payload && payload["kind"] == "reroll" && payload["roll"] == roll.to_s
+
+        Reroll.new(class_feature_id: unlock.class_feature_id, when: payload["when"])
+      end
     end
 
     # How many weapon attacks casting +spell+ as the turn's action grants (a grants_activity, War Magic), or nil:

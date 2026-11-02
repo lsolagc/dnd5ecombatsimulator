@@ -38,7 +38,7 @@ features:
         #                                                             # Magia de Guerra (any_spell: a Aprimorada)
         #   { kind: rider, event: weapon_hit, applies: disadvantage_on_next_save, against: own_spells }
         #                                                             # Golpe Místico
-        #   { kind: reroll_save, when: failed }                       # Indomável
+        #   { kind: reroll, roll: saving_throw, when: failed }        # Indomável
         #   { kind: resource_pool }                                   # Superioridade em Combate: features com o mesmo
         #                                                             # resource_name (as manobras) gastam estes usos
         # O motor nunca lê o nome da feature: renomeada, ela funciona igual.

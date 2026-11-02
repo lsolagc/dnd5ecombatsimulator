@@ -323,6 +323,7 @@ owns what changes during the fight, and nothing writes the sheet:
 | current HP | `current_hit_points`, `dead?`, `take_damage(amount:, damage_type:)` (after `defenses.apply`, floored at 0), `heal(amount)` (capped at the maximum) |
 | spell slots left | `available_spell_slots` (from `PlayerCharacter#spell_slots`), `cast_spell(spell, targets:, disadvantage_on_save:)` (spends a slot of the spell's level, none for a cantrip) |
 | uses left | `uses_left(class_feature_id)` (nil: unlimited), `spend_use!(class_feature_id)` (floored at 0), from `FeatureBook#initial_uses` |
+| rerolls | `rerolls_for(:saving_throw)`: `FeatureBook#rerolls` with a use left; `spend_rerolls!(saving_throw)`: a use of each reroll the save used. Both called only by `EffectExecutor#apply_save` (see [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)), so a feature, a spell or a maneuver with a save reroll alike; the turn executor decides nothing about rerolls |
 | turn passives | `apply_turn_passives!(trigger:)` (see [passive-effect-triggers.md](/architecture/passive-effect-triggers.md)) |
 | statuses it carries | `statuses`, `add_status(status)` (renews one of the same kind and source), `take_statuses(kind, not_from:, from:)` (removes and returns them), `status?(kind, not_from:, from:)`, `expire_statuses!(source:)` (see Statuses) |
 | what it can do | `feature_book`; `action_options`: this turn's `ActionOption`s, in a fixed order (a seed's pick depends on it) — the Attack action, each unlocked action feature with a use left (a known maneuver included), each spell with an `effect_payload` that is a cantrip or has a slot of its level left (moved from the simulator in phase 3.5); `action_surge_option`: Action Surge as an option when unlocked with a use left, for the policy's gambit action and the executor's random surge |
@@ -350,7 +351,8 @@ walks unlocks or compares feature names.[^feature-book-rb] It is read-only and h
 |---|---|
 | `unlocks` | the unlocks in force (`PlayerCharacter#feature_unlocks`) |
 | `action_payload(feature)` | the feature's action effect (`PlayerCharacter#action_payload`), nil when not unlocked, not an action at the level, or a maneuver the character has not learned |
-| `unlock_with(kind)` | the unlock in force of the feature whose effect is `extra_action` (Action Surge) or `reroll_save` (Indomitable), or nil |
+| `unlock_with(kind)` | the unlock in force of the feature whose effect is `extra_action` (Action Surge), or nil |
+| `rerolls(roll)` | the `Combat::Reroll`s (`class_feature_id`, `when`) of every unlock whose effect is a `reroll` of that `roll` (`saving_throw`: Indomitable), in unlock order, uses aside |
 | `weapon_attacks_after(spell)` | how many bonus weapon attacks (a `grants_activity`'s `count`, one) follow this spell: `after.cast_with_action` `cantrip` (War Magic) only after a cantrip, `any_spell` (Improved War Magic) after any; nil for none |
 | `rider(event:, applies:)` | the feature whose hit leaves the Eldritch Strike status (`rider`, `event: weapon_hit`, `applies: disadvantage_on_next_save`), or nil; its slug and name go in the attack's `riders` |
 | `resource_feature_id(feature)` | whose uses the feature spends: the `resource_pool`'s (Combat Superiority) for a maneuver, else its own |

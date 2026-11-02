@@ -1,33 +1,30 @@
 module Combat
   # A 5e saving throw by a combat actor: .okf/architecture/combat-effect-pipeline.md (Data shape: `effect_payload`)
   class SavingThrow
-    attr_reader :ability, :dc, :natural, :total, :success, :rerolled
+    attr_reader :ability, :dc, :natural, :total, :success, :rerolls_used
 
-    def initialize(actor:, ability:, dc:, advantage: false, disadvantage: false, reroll_if_failed: false)
-      @actor = actor
+    # rerolls: the actor's Combat::Rerolls (Participant#rerolls_for), each used at most once, in order, while the
+    # save fails; rerolls_used lists those it used, for the actor to spend (Participant#spend_rerolls!).
+    def initialize(actor:, ability:, dc:, advantage: false, disadvantage: false, rerolls: [])
       @ability = ability.to_s
       @dc = dc.to_i
-      @rerolled = false
+      @rerolls_used = []
 
-      roll(advantage:, disadvantage:)
-      @success = @total >= @dc
+      roll = Dice.d20(modifier: actor.public_send("#{@ability}_modifier"))
+      roll = advantage ? roll.with_advantage : roll.with_disadvantage if advantage ^ disadvantage
+      rerolls.each do |reroll|
+        break if roll.total >= @dc
+        next unless reroll.when == "failed"
 
-      if !@success && reroll_if_failed
-        roll(advantage:, disadvantage:)
-        @success = @total >= @dc
-        @rerolled = true
+        roll = roll.reroll_lower_die
+        @rerolls_used << reroll
       end
+
+      @natural = roll.natural
+      @total = roll.total
+      @success = @total >= @dc
     end
 
-    private
-
-      def roll(advantage:, disadvantage:)
-        modifier = @actor.public_send("#{@ability}_modifier")
-        roll_result = Dice.d20(modifier:)
-        roll_result = advantage ? roll_result.with_advantage : roll_result.with_disadvantage if advantage ^ disadvantage
-
-        @natural = roll_result.natural
-        @total = roll_result.total
-      end
+    def rerolled = rerolls_used.any?
   end
 end

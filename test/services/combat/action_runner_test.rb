@@ -74,7 +74,7 @@ class Combat::ActionRunnerTest < ActiveSupport::TestCase
     end
   end
 
-  test "reroll_saving_throw reflects the second saving throw when the first fails" do
+  test "a target with Indomitable rerolls a failed saving throw and spends the use" do
     feature = class_features(:barbarian_test_save_strike) # test fixture, see class_features.yml
     fighter = Combat::Participant.new(player_characters(:fighter_indomitable_nine)) # constitution: 12 (mod +1)
     attacker = Combat::Participant.new(player_characters(:barbarian_test_striker))
@@ -87,13 +87,14 @@ class Combat::ActionRunnerTest < ActiveSupport::TestCase
     )
 
     Random.srand(46) # 1d6 roll = 6; 1st constitution save total 7 (fails dc 8); reroll total 10 (succeeds)
-    results = Combat::ActionRunner.call(action: action, reroll_saving_throw: true)
+    results = Combat::ActionRunner.call(action: action)
 
     assert_equal 1, results.size
     result = results.first
 
     assert result.saving_throw.rerolled
     assert_equal 3, result.amount # half of 6, since the reroll succeeded
+    assert_equal 0, fighter.uses_left(class_features(:fighter_indomitable).id)
   end
 
   test "a spell without an effect_payload raises" do

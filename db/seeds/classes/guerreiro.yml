@@ -70,7 +70,7 @@ features:
       - level: 9
         uses: 1
         description: "Ao falhar um teste de resistência, pode rolar novamente e deve usar o novo resultado. Só pode usar antes de terminar um descanso longo."
-        effect_payload: { kind: reroll_save, when: failed }
+        effect_payload: { kind: reroll, roll: saving_throw, when: failed }
       - level: 13
         uses: 2
         description: Pode usar Indomável duas vezes entre descansos longos.

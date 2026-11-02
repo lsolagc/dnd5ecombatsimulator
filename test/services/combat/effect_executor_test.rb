@@ -144,37 +144,44 @@ class Combat::EffectExecutorTest < ActiveSupport::TestCase
     assert_equal hp_before, result.hp_after
   end
 
-  test "reroll_saving_throw reflects the second roll when the first save fails" do
-    Random.srand(26) # 1d10 roll = 6; 1st dexterity save total 8 (fails dc 10); reroll total 18 (succeeds)
+  test "a target with a reroll of saving throws (Indomitable) rerolls a failed save and spends the use" do
+    Random.srand(46) # 1d6 roll = 6; 1st constitution save total 7 (fails dc 8); reroll total 10 (succeeds)
     effect = Combat::EffectInstance.new(
       kind: :damage,
-      roll_expression: "1d10",
+      roll_expression: "1d6",
       target_type: "target",
-      save: { "ability" => "dexterity", "dc" => 10, "on_success" => "half" }
+      save: { "ability" => "constitution", "dc" => 8, "on_success" => "half" }
     )
-    target = Combat::Participant.new(player_characters(:aragorn_copy))
+    target = Combat::Participant.new(player_characters(:fighter_indomitable_nine)) # constitution: 12 (mod +1)
+    indomitable_id = class_features(:fighter_indomitable).id
 
-    result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target, reroll_saving_throw: true)
+    result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target)
 
     assert result.saving_throw.rerolled
     assert result.saving_throw.success
     assert_equal 3, result.amount
+    assert_equal 0, target.uses_left(indomitable_id)
+
+    Random.srand(46) # the same failed save, no use left: no reroll
+    result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target)
+
+    refute result.saving_throw.rerolled
+    refute result.saving_throw.success
   end
 
-  test "reroll_saving_throw does not reroll a save that succeeds on the first attempt" do
-    Random.srand(1) # 1d10 roll = 6; dexterity save total 13, succeeds dc 5 on the first attempt
+  test "a save that succeeds on the first attempt spends no reroll" do
     effect = Combat::EffectInstance.new(
       kind: :damage,
       roll_expression: "1d10",
       target_type: "target",
-      save: { "ability" => "dexterity", "dc" => 5, "on_success" => "half" }
+      save: { "ability" => "constitution", "dc" => 2, "on_success" => "half" } # any natural passes with +1
     )
-    target = Combat::Participant.new(player_characters(:aragorn_copy))
+    target = Combat::Participant.new(player_characters(:fighter_indomitable_nine))
 
-    result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target, reroll_saving_throw: true)
+    result = Combat::EffectExecutor.call(effect: effect, actor: @fighter, target: target)
 
     refute result.saving_throw.rerolled
-    assert_equal 3, result.amount
+    assert_equal 1, target.uses_left(class_features(:fighter_indomitable).id)
   end
 
   # spell attack / spell save DC

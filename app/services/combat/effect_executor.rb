@@ -10,15 +10,14 @@ module Combat
 
     # crit: the effect rides on a weapon attack that was a critical hit (doubles its dice).
     # advantage: the effect's attack roll is made with advantage.
-    def self.call(effect:, actor:, target:, reroll_saving_throw: false, disadvantage_on_save: false, crit: false, advantage: false)
-      new(effect:, actor:, target:, reroll_saving_throw:, disadvantage_on_save:, crit:, advantage:).execute
+    def self.call(effect:, actor:, target:, disadvantage_on_save: false, crit: false, advantage: false)
+      new(effect:, actor:, target:, disadvantage_on_save:, crit:, advantage:).execute
     end
 
-    def initialize(effect:, actor:, target:, reroll_saving_throw: false, disadvantage_on_save: false, crit: false, advantage: false)
+    def initialize(effect:, actor:, target:, disadvantage_on_save: false, crit: false, advantage: false)
       @effect               = effect
       @actor                = actor
       @target               = target
-      @reroll_saving_throw  = reroll_saving_throw
       @disadvantage_on_save = disadvantage_on_save
       @crit                 = crit
       @advantage            = advantage
@@ -105,7 +104,10 @@ module Combat
         save = @effect.save
         return [ full_amount, nil ] unless save
 
-        saving_throw = SavingThrow.new(actor: target, ability: save.fetch("ability"), dc: save_dc(save), disadvantage: @disadvantage_on_save, reroll_if_failed: @reroll_saving_throw)
+        # The one place a save's rerolls are decided and spent, whatever the action: .okf/architecture/combat-effect-pipeline.md
+        saving_throw = SavingThrow.new(actor: target, ability: save.fetch("ability"), dc: save_dc(save), disadvantage: @disadvantage_on_save,
+                                       rerolls: target.rerolls_for(:saving_throw))
+        target.spend_rerolls!(saving_throw)
         return [ full_amount, saving_throw ] unless saving_throw.success
 
         amount =
