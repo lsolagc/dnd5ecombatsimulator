@@ -212,6 +212,25 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
     assert_empty fighter.statuses
   end
 
+  test "Eldritch Strike's disadvantage holds for a Fireball the same turn or the knight's next, not the one after" do
+    { 0 => [ [], true ], 1 => [ [], true ], 2 => [ [ 3 ], false ] }.each do |turns_later, (left, full)|
+      caster, fighter, executor, fireball, encounter = fireball_at_indomitable_fighter
+      spend_all_uses(fighter, class_features(:fighter_indomitable))
+      encounter.start_turn(caster)
+      Dice.stub(:hit?, true) { executor.run(actor: caster, option: ATTACK, round: 1, turn: 1) }
+      if turns_later.positive? # 0: the same turn (an Action Surge), no turn boundary in between
+        encounter.end_turn(caster)
+        (turns_later - 1).times { [ :start_turn, :end_turn ].each { |step| encounter.public_send(step, caster) } }
+        encounter.start_turn(caster)
+      end
+
+      naturals = [ 18, 3 ] # with disadvantage the 3 counts (fails DC 15); without, the 18 alone passes
+      damage = with_d20_naturals(naturals) { executor.run(actor: caster, option: fireball, round: 1, turn: 2) }.results.sole
+      assert_equal left, naturals, "#{turns_later} turn(s) later"
+      assert_equal full, damage[:amount] == damage.dig(:roll_outcome, :total), "#{turns_later} turn(s) later"
+    end
+  end
+
   test "choose_at_random picks the physical branch when the coin flip favors it" do
     caster = spellcaster_with_known_spells(:eldritch_knight_seven)
     encounter, executor = fight(party_one: [ caster ], party_two: [ fresh_character(:aragorn) ], seed: 1)
@@ -305,8 +324,8 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
     turn = executor.run(actor: participant_of(encounter, caster), option: ATTACK, round: 1, turn: 1)
 
     assert_equal true, turn.results.first.dig(:attack_roll, :hit), "expected the attack to hit (attack_bonus is set high for determinism)"
-    assert_equal [ [ "disadvantage_on_next_save", caster.combatant.id, nil ] ],
-      participant_of(encounter, target).statuses.map { |status| [ status.kind, status.source.id, status.ends ] }, "no end of its own: only a save uses it up"
+    assert_equal [ [ "disadvantage_on_next_save", caster.combatant.id, "source_next_turn_end" ] ],
+      participant_of(encounter, target).statuses.map { |status| [ status.kind, status.source.id, status.ends ] }, "the end the rider declares"
   end
 
   test "two Eldritch Knights hitting the same target each keep their own disadvantage" do
@@ -540,7 +559,7 @@ class Combat::TurnExecutorTest < ActiveSupport::TestCase
       fireball = spells(:fireball)
       fireball.update!(effect_payload: fireball.effect_payload.merge("save" => { "ability" => "dexterity", "dc" => 15, "on_success" => "half" }))
       option = Combat::ActionOption.new(type: :cast_spell, spell: fireball, payload: fireball.effect_payload.deep_stringify_keys)
-      [ caster, participant_of(encounter, fighter), executor, option ]
+      [ caster, participant_of(encounter, fighter), executor, option, encounter ]
     end
 
     # Each Dice.d20 call takes the next natural off +naturals+ (the caller sees what is left).

@@ -5,7 +5,7 @@ class Combat::StatusTest < ActiveSupport::TestCase
     source = Combat::Participant.new(player_characters(:aragorn))
 
     assert_equal %w[next_attack_advantage disadvantage_on_next_save], Combat::Status::KINDS
-    assert_equal %w[source_turn_start], Combat::Status::ENDS
+    assert_equal %w[source_turn_start source_next_turn_end source_turn_end], Combat::Status::ENDS
     status = Combat::Status.new(kind: "next_attack_advantage", source:, ends: "source_turn_start")
     assert_equal [ "next_attack_advantage", source, "source_turn_start" ], [ status.kind, status.source, status.ends ]
     assert_nil Combat::Status.new(kind: "disadvantage_on_next_save", source:).ends, "no end of its own: only consumed"

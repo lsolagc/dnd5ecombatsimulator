@@ -218,6 +218,27 @@ class Combat::SimulatorTest < ActiveSupport::TestCase
     assert_equal [ ally.combatant.id ], participant_of(simulation, target).statuses.map { |status| status.source.id }
   end
 
+  test "a fallen Eldritch Knight's disadvantage still expires at the end of its next turn" do
+    knight = spellcaster_with_known_spells(:eldritch_knight_ten)
+    ally = fresh_character(:aragorn_copy)
+    target = hittable_target(armor_class: 1)
+    @hit_points[knight.combatant.id] = 0
+    simulation = simulator(party_one: [ knight, ally ], party_two: [ target ], seed: 1, max_rounds: 1)
+    held = []
+
+    simulation.call do |encounter|
+      marked = participant_of(encounter, target)
+      [ knight, ally ].each do |source|
+        marked.add_status(Combat::Status.new(kind: "disadvantage_on_next_save", source: participant_of(encounter, source), ends: "source_next_turn_end"))
+      end
+      encounter.initiative_order = [ participant_of(encounter, knight) ]
+      encounter.define_singleton_method(:end_turn) { |actor| held << marked.statuses.map(&:ends); super(actor) }
+    end
+
+    assert_equal [ %w[source_turn_end source_next_turn_end] ], held, "its turn started (dead) and is ending"
+    assert_equal [ ally.combatant.id ], participant_of(simulation, target).statuses.map { |status| status.source.id }
+  end
+
   test "a fallen Battle Master's mark still expires when its turn comes up" do
     battle_master = battle_master_with_known_maneuvers(:battle_master_seven)
     ally = fresh_character(:aragorn_copy)

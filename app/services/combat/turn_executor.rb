@@ -156,10 +156,9 @@ module Combat
         ActionRunner.attack(action:, next_target:, attacks:, advantage_against:) do |target, result, advantage|
           riders = []
           if result.attack_roll.hit
-            eldritch_strike = actor.feature_book.rider(event: "weapon_hit", applies: "disadvantage_on_next_save")
+            eldritch_strike, ends = actor.feature_book.rider(event: "weapon_hit", applies: "disadvantage_on_next_save")
             if eldritch_strike
-              # ponytail: no end of its own (5e: until the end of the attacker's next turn); only a save uses it up.
-              target.add_status(Status.new(kind: "disadvantage_on_next_save", source: actor, ends: nil))
+              target.add_status(Status.new(kind: "disadvantage_on_next_save", source: actor, ends:))
               riders << Rider.for(feature: eldritch_strike, statuses: [ "disadvantage_on_next_save" ])
             end
             if pending_maneuver

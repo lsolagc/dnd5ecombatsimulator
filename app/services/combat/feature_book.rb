@@ -43,12 +43,14 @@ module Combat
       end.max
     end
 
-    # The feature that rides +applies+ along every +event+ (Eldritch Strike: disadvantage_on_next_save on weapon_hit), or nil.
+    # The feature that rides +applies+ along every +event+ (Eldritch Strike: disadvantage_on_next_save on weapon_hit)
+    # and the status's declared end (Combat::Status::ENDS): [feature, ends], or nil.
     def rider(event:, applies:)
-      unlocks.find do |unlock|
-        payload = effects[unlock.class_feature_id]
+      unlock = unlocks.find do |candidate|
+        payload = effects[candidate.class_feature_id]
         payload && payload["kind"] == "rider" && payload["event"] == event && payload["applies"] == applies
-      end&.class_feature
+      end
+      [ unlock.class_feature, effects[unlock.class_feature_id]["ends"] ] if unlock
     end
 
     # The feature whose uses +feature+ spends: a maneuver (ClassFeature#maneuver_of?) spends the shared

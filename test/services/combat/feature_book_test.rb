@@ -61,9 +61,9 @@ class Combat::FeatureBookTest < ActiveSupport::TestCase
     assert_equal [ 2, 2 ], [ book.weapon_attacks_after(spells(:fire_bolt)), book.weapon_attacks_after(spells(:magic_missile)) ]
   end
 
-  test "the disadvantage_on_next_save rider from level 10 of the Eldritch Knight" do
+  test "the disadvantage_on_next_save rider from level 10 of the Eldritch Knight, with the end it declares" do
     assert_nil Combat::FeatureBook.new(player_characters(:eldritch_knight_seven)).rider(event: "weapon_hit", applies: "disadvantage_on_next_save")
-    assert_equal class_features(:fighter_eldritch_knight_eldritch_strike),
+    assert_equal [ class_features(:fighter_eldritch_knight_eldritch_strike), "source_next_turn_end" ],
       Combat::FeatureBook.new(player_characters(:eldritch_knight_ten)).rider(event: "weapon_hit", applies: "disadvantage_on_next_save")
   end
 

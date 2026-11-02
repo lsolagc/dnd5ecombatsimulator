@@ -40,9 +40,18 @@ module Combat
       alive(party_one).empty? || alive(party_two).empty?
     end
 
-    # The actor's turn starts (dead or alive): every status it applied that ends at the start of its turn goes.
+    # The actor's turn starts (dead or alive): on every participant, the statuses it applied that end at the start of
+    # its turn go, and those that end at the end of its next turn now end at the end of this one.
     def start_turn(actor)
-      participants.each { |participant| participant.expire_statuses!(source: actor) }
+      participants.each do |participant|
+        participant.expire_statuses!(source: actor, ends: "source_turn_start")
+        participant.shorten_statuses!(source: actor)
+      end
+    end
+
+    # The actor's turn ends (dead or alive, wherever it started): every status it applied that ends then goes.
+    def end_turn(actor)
+      participants.each { |participant| participant.expire_statuses!(source: actor, ends: "source_turn_end") }
     end
   end
 end

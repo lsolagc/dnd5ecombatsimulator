@@ -3126,7 +3126,7 @@
       :results:
       - :kind: :damage
         :applied: true
-        :amount: 22
+        :amount: 11
         :hp_before: 5
         :hp_after: 0
         :roll_outcome:

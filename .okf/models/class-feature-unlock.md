@@ -64,7 +64,7 @@ maneuver as a rider on a weapon attack and apply each item as a
 [combat-simulator.md](/architecture/combat-simulator.md).
 `statuses` replaced the single-string `debuff` (phase 3.4); each item has
 exactly a `kind` (`Combat::Status::KINDS`) and an `ends`
-(`Combat::Status::ENDS`: `source_turn_start`). Conditions and durations in
+(`Combat::Status::ENDS`: `source_turn_start`, `source_next_turn_end` or `source_turn_end`, see [combat-simulator.md](/architecture/combat-simulator.md) Statuses). Conditions and durations in
 rounds stay with [issue #45](https://github.com/lsolagc/dnd5ecombatsimulator/issues/45).[^issue-45]
 
 # Effect vocabulary
@@ -90,11 +90,11 @@ never by its name (phase 5.2 of the DDD refactor).[^unlock-rb]
 | `kind` | Required | Optional | Read by |
 |---|---|---|---|
 | `heal` | `roll` (string), `target` (`self`\|`enemy`\|`ally`) | `trigger` (`turn_start`\|`turn_end`), `conditions`, `save` (`SAVE`: exactly `ability`, one of `AbilityScores::ABILITY_SCORE_COLUMNS`; `dc`, an integer 1–30 or `spell`; `on_success`, `half`\|`negate`) | the turn action pipeline; with a `trigger`, the passives |
-| `damage` | `roll`, `target` | `damage_type`, `attack` (`spell`\|`weapon`), `save` (the same `SAVE`), `applies_to` (`weapon_attack`), `statuses` (a list of `{ kind, ends }`: `kind` from `Combat::Status::KINDS`, `ends` `source_turn_start`), `trigger`, `conditions` | the same; `applies_to` makes a maneuver |
+| `damage` | `roll`, `target` | `damage_type`, `attack` (`spell`\|`weapon`), `save` (the same `SAVE`), `applies_to` (`weapon_attack`), `statuses` (a list of `{ kind, ends }`: `kind` from `Combat::Status::KINDS`, `ends` from `Combat::Status::ENDS`), `trigger`, `conditions` | the same; `applies_to` makes a maneuver |
 | `modifier` | `modifier` (`attack_bonus`\|`armor_class`\|`damage_bonus`\|`critical_hit_threshold`), `value` (integer) | `trigger` (`always`), `target` | the passives |
 | `extra_action` | — | — | Action Surge: `FeatureBook#unlock_with`, `Gambit#action_surge?`; uses in `uses` |
 | `grants_activity` | `activity` (`weapon_attack`), `count` (integer ≥ 1), `as` (an [action cost](/ubiquitous-language.md): `action`\|`bonus_action`\|`reaction`), `after.cast_with_action` (`cantrip`\|`any_spell`) | — | War Magic / Improved War Magic: `FeatureBook#weapon_attacks_after`; `as` is declared, not charged (issue #39) |
-| `rider` | `event` (`weapon_hit`), `applies` (`disadvantage_on_next_save` only, the one `Combat::Status::KINDS` kind the engine applies on a hit; another would validate and do nothing), `against` (`own_spells`) | — | Eldritch Strike: `FeatureBook#rider` |
+| `rider` | `event` (`weapon_hit`), `applies` (`disadvantage_on_next_save` only, the one `Combat::Status::KINDS` kind the engine applies on a hit; another would validate and do nothing), `against` (`own_spells`), `ends` (when the status ends, from `Combat::Status::ENDS`; Eldritch Strike: `source_next_turn_end`) | — | Eldritch Strike: `FeatureBook#rider` |
 | `reroll` | `roll` (`saving_throw`), `when` (`failed`) | — | Indomitable: `FeatureBook#rerolls`, `Participant#rerolls_for`, every save in `EffectExecutor#apply_save`; uses in `uses` (since 2026-11-02; was `reroll_save`, features only, see [indomitable-spell-saves-impact.md](/architecture/indomitable-spell-saves-impact.md)) |
 | `resource_pool` | — | — | Combat Superiority: `PlayerCharacter#combat_superiority`, `PlayerCharacterManeuver`; maneuvers with its `resource_name` spend its uses |
 

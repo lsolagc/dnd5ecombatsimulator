@@ -136,9 +136,14 @@ module Combat
       statuses.any? { |status| status_matches?(status, kind, not_from:, from:) }
     end
 
-    # The source's turn starts: the statuses it applied that end then go.
-    def expire_statuses!(source:)
-      statuses.reject! { |status| status.ends == "source_turn_start" && status.source.equal?(source) }
+    # The source's turn starts or ends (Combat::Encounter): the statuses it applied that end then (+ends+) go.
+    def expire_statuses!(source:, ends:)
+      statuses.reject! { |status| status.ends == ends && status.source.equal?(source) }
+    end
+
+    # The source's turn starts: the statuses it applied that end at the end of its next turn now end at the end of this one.
+    def shorten_statuses!(source:)
+      statuses.map! { |status| status.ends == "source_next_turn_end" && status.source.equal?(source) ? status.with(ends: "source_turn_end") : status }
     end
 
     private

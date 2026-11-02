@@ -85,26 +85,32 @@ module Combat
       end
 
       # Every actor in initiative order: its turn starts (dead or alive), then a living one's turn passives
-      # and decisions, while the fight lasts.
+      # and decisions, then its turn ends (dead or alive), while the fight lasts.
       def play_round(round_number)
         turns = []
 
         @encounter.initiative_order.each_with_index do |actor, index|
-          turn = index + 1
           @encounter.start_turn(actor)
-          next if actor.dead?
-          break if @encounter.over?
+          # The fight is over: nothing is left to expire for.
+          break if !actor.dead? && @encounter.over?
 
-          start_log = turn_passive_log(actor:, trigger: :turn_start, round: round_number, turn:)
-          turns << start_log if start_log
-          next if actor.dead?
-
-          turns.concat(@executor.take_turn(actor, round: round_number, turn:))
-
-          end_log = turn_passive_log(actor:, trigger: :turn_end, round: round_number, turn:)
-          turns << end_log if end_log
+          turns.concat(play_turn(actor, round: round_number, turn: index + 1)) unless actor.dead?
+          @encounter.end_turn(actor)
         end
 
+        turns
+      end
+
+      # A living actor's turn: its turn_start passives, its decisions (unless they killed it) and its turn_end passives.
+      def play_turn(actor, round:, turn:)
+        turns = []
+        start_log = turn_passive_log(actor:, trigger: :turn_start, round:, turn:)
+        turns << start_log if start_log
+        return turns if actor.dead?
+
+        turns.concat(@executor.take_turn(actor, round:, turn:))
+        end_log = turn_passive_log(actor:, trigger: :turn_end, round:, turn:)
+        turns << end_log if end_log
         turns
       end
 

@@ -138,14 +138,14 @@ class Combat::ParticipantTest < ActiveSupport::TestCase
     assert_equal [], Combat::Participant.new(@aragorn).take_statuses("next_attack_advantage")
   end
 
-  test "expire_statuses! removes only the source's statuses that end at the start of its turn" do
+  test "expire_statuses! removes only the source's statuses that end then" do
     carrier, source, other = [ :aragorn, :aragorn_copy, :merlin ].map { |name| Combat::Participant.new(player_characters(name)) }
     kept = [ Combat::Status.new(kind: "disadvantage_on_next_save", source:, ends: nil),
              Combat::Status.new(kind: "next_attack_advantage", source: other, ends: "source_turn_start") ]
     carrier.add_status(Combat::Status.new(kind: "next_attack_advantage", source:, ends: "source_turn_start"))
     kept.each { |status| carrier.add_status(status) }
 
-    carrier.expire_statuses!(source:)
+    carrier.expire_statuses!(source:, ends: "source_turn_start")
 
     assert_equal kept, carrier.statuses
   end

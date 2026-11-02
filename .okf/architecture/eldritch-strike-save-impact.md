@@ -25,7 +25,7 @@ saving throw it makes against a spell the knight casts. The simulator keeps that
 knight cast at the target used it up, so a Fire Bolt or Ray of Frost (spell attacks, no save) spent the
 disadvantage without it doing anything. Decided with the user: only a spell whose payload calls for a
 `save` uses it up (`Combat::TurnExecutor#cast_spell`, then `CombatSimulatorService#execute_cast_spell_action`).[^simulator-rb] The expiry at the
-end of the knight's next turn is still missing: issue #50.
+end of the knight's next turn came on 2026-11-02 (issue #50, [eldritch-strike-expiry-impact.md](/architecture/eldritch-strike-expiry-impact.md)).
 
 # Proof on the golden files
 

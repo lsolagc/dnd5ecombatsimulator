@@ -48,7 +48,11 @@ class ClassFeatureUnlockTest < ActiveSupport::TestCase
     assert_empty error_for.({ kind: "extra_action" })
     assert_equal [ "has an unknown kind: \"teleport\"" ], error_for.({ kind: "teleport" })
     assert_equal [ "has an unknown kind: nil" ], error_for.({ roll: "1d6" })
-    assert_equal [ "is missing against" ], error_for.({ kind: "rider", event: "weapon_hit", applies: "disadvantage_on_next_save" })
+    eldritch_strike = { kind: "rider", event: "weapon_hit", applies: "disadvantage_on_next_save", against: "own_spells", ends: "source_next_turn_end" }
+    assert_empty error_for.(eldritch_strike)
+    assert_equal [ "is missing against" ], error_for.(eldritch_strike.except(:against))
+    assert_equal [ "is missing ends" ], error_for.(eldritch_strike.except(:ends)), "a rider declares how long its status lasts"
+    assert_equal [ "ends must be one of #{Combat::Status::ENDS.join(', ')}" ], error_for.(eldritch_strike.merge(ends: "end_of_round"))
     assert_equal [ "is missing after.cast_with_action" ], error_for.(war_magic.merge(after: {}))
     assert_equal [ "after.cast_with_action must be one of cantrip, any_spell" ], error_for.(war_magic.merge(after: { cast_with_action: "ritual" }))
     assert_equal [ "as must be one of action, bonus_action, reaction" ], error_for.(war_magic.merge(as: "free"))
@@ -70,12 +74,12 @@ class ClassFeatureUnlockTest < ActiveSupport::TestCase
     assert_equal [ "statuses must be a list" ], error_for.(maneuver.merge(statuses: mark))
     assert_equal [ "statuses[0] must be an object" ], error_for.(maneuver.merge(statuses: [ "next_attack_advantage" ]))
     assert_equal [ "statuses[1].kind must be one of #{Combat::Status::KINDS.join(', ')}" ], error_for.(maneuver.merge(statuses: [ mark, mark.merge(kind: "stunned") ]))
-    assert_equal [ "statuses[0].ends must be one of source_turn_start" ], error_for.(maneuver.merge(statuses: [ mark.merge(ends: "end_of_round") ]))
+    assert_equal [ "statuses[0].ends must be one of #{Combat::Status::ENDS.join(', ')}" ], error_for.(maneuver.merge(statuses: [ mark.merge(ends: "end_of_round") ]))
     assert_equal [ "is missing statuses[0].ends" ], error_for.(maneuver.merge(statuses: [ mark.except(:ends) ]))
     assert_equal [ "has an unknown field statuses[0].rounds" ], error_for.(maneuver.merge(statuses: [ mark.merge(rounds: 1) ]))
     [ "stunned", "next_attack_advantage" ].each do |status|
       assert_equal [ "applies must be one of disadvantage_on_next_save" ],
-        error_for.({ kind: "rider", event: "weapon_hit", applies: status, against: "own_spells" }), "a rider applies only what the engine runs on a hit"
+        error_for.({ kind: "rider", event: "weapon_hit", applies: status, against: "own_spells", ends: "source_next_turn_end" }), "a rider applies only what the engine runs on a hit"
     end
   end
 

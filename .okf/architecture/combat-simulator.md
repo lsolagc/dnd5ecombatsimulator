@@ -63,7 +63,7 @@ Three objects since phase 3.5 (decisions D1–D5, approved 2026-10-19), all in
 
 | Object | Owns | Public API |
 |---|---|---|
-| `Combat::Simulator`[^combat-simulator-rb] | the fight as a whole: the seed (`with_seed`), the `Encounter` and its participants (built in party order), initiative, the round loop, each turn's start (`Encounter#start_turn`, skipping the dead) and turn passives (`turn_start`/`turn_end`), the result | `new(...)`, `#call` (with an optional block, see Contract), `#encounter`, `#rng`, `Aborted`, `DEFAULT_MAX_ROUNDS` |
+| `Combat::Simulator`[^combat-simulator-rb] | the fight as a whole: the seed (`with_seed`), the `Encounter` and its participants (built in party order), initiative, the round loop, each turn's start and end (`Encounter#start_turn`/`#end_turn`, for the dead too) and a living actor's turn passives (`turn_start`/`turn_end`), the result | `new(...)`, `#call` (with an optional block, see Contract), `#encounter`, `#rng`, `Aborted`, `DEFAULT_MAX_ROUNDS` |
 | `Combat::GambitPolicy`[^gambit-policy-rb] | the gambit-driven choice, one per simulation; never draws from any RNG | `#rules_for(actor)` (enabled rules by position, loaded once: the actor's own or the `gambits:` copy's), `#choose(actor:, options:, surging: false)` (the winning `ActionOption` with its target and gambit, Action Surge included, or nil), `#target(actor:, gambit:)` (the criteria), `#log(gambit)` (`{ position:, rule: }`, the copy's label when it has one) |
 | `Combat::TurnExecutor`[^turn-executor-rb] | one actor's decisions in a turn, with the encounter, the simulator's RNG and the policy: gambits or the random choice (the coin flip between physical and spell options stays here: no RandomPolicy), Action Surge (by rule or at random), War Magic, and running the actions through the pipeline into `TurnRecord`s | `#take_turn(actor, round:, turn:)` (the turn's decision entries, passives aside), `#run(actor:, option:, round:, turn:)` (one chosen option, without its gambit), `#war_magic_turn`, `#action_surge_turn`, `#choose_at_random(actor:, options:)`, `#random_target(actor:, payload:)`; `RANDOM_GAMBIT`, `IDLE_GAMBIT` |
 
@@ -277,7 +277,8 @@ keeps none of that state itself:
 | `allies_of(participant)`, `enemies_of(participant)` | its own party (itself included), the other one |
 | `alive(party)`, `first_living_enemy(participant)` | who is standing; the first living enemy in initiative order (War Magic's and a gambit's fallback) |
 | `over?` | a party has no one standing |
-| `start_turn(actor)` | called at the top of every turn, before the dead actor is skipped: expires on every participant the statuses the actor applied with `ends: source_turn_start` |
+| `start_turn(actor)` | called at the top of every turn, before the dead actor is skipped: on every participant, expires the statuses the actor applied with `ends: source_turn_start` and turns its `source_next_turn_end` ones into `source_turn_end` (`Participant#shorten_statuses!`) |
+| `end_turn(actor)` | called at the end of every turn whose start ran, dead actor included (after a living one's `turn_end` passives): expires on every participant the statuses the actor applied with `ends: source_turn_end`. Not called when the round stops because the fight is over: nothing is left to expire for |
 
 # Statuses
 
@@ -285,8 +286,20 @@ A status is a `Combat::Status` (`kind`, `source`: the participant who applied
 it, `ends`), carried by the participant it is on.[^status-rb] `kind` comes from
 `Combat::Status::KINDS`, the one vocabulary that
 [ClassFeatureUnlock](/models/class-feature-unlock.md) also validates the
-`rider`'s `applies` and a maneuver's `statuses` against; `ends` is
-`source_turn_start` or nil (only used up). A carrier holds **at most one per
+`rider`'s `applies` and a maneuver's `statuses` against; `ends`
+(`Combat::Status::ENDS`, which the rider's and a maneuver's `ends` are
+validated against) is one of:
+
+- `source_turn_start`: expires at the start of the source's next turn (`Encounter#start_turn`).
+- `source_next_turn_end`: expires at the end of the source's **next** turn, in two phases: the start of the
+  source's turn turns it into `source_turn_end`, the end of that turn (`Encounter#end_turn`) expires it. Applied
+  in the source's turn N, it lasts through turn N + 1; applied again it renews and starts over. The source's
+  turns start and end dead or alive, so a fallen source's status still expires on time.
+- `source_turn_end`: expires at the end of the source's current turn (only reached from `source_next_turn_end`
+  today).
+- nil: no end of its own, only used up (no seed declares it since 2026-11-02).
+
+A carrier holds **at most one per A carrier holds **at most one per
 kind and source**: the same source applying it again renews it
 (`Participant#add_status`). Two kinds:
 
@@ -298,8 +311,9 @@ kind and source**: the same source applying it again renews it
   attacker's own mark stays. Weapon attacks only; spell attacks ignore marks.
   Weapon attacks have no disadvantage yet (issue #48), so nothing cancels it.
 - `disadvantage_on_next_save` (Eldritch Strike, applied on every hit by a
-  feature whose `rider` `applies` it, no end of its own; 5e ends it at the end
-  of the attacker's next turn, [issue #50](https://github.com/lsolagc/dnd5ecombatsimulator/issues/50)): the next spell the source
+  feature whose `rider` `applies` it, with the rider's `ends`:
+  `source_next_turn_end`, the end of the attacker's next turn as in 5e, since 2026-11-02, see
+  [eldritch-strike-expiry-impact.md](/architecture/eldritch-strike-expiry-impact.md); before that it had no end of its own): the next spell the source
   casts at the carrier **that calls for a save** uses up the source's own status
   (`take_statuses(kind, from: caster)`) and that save has disadvantage; a spell
   attack such as Fire Bolt leaves it in place (since 2026-10-19, see
@@ -325,7 +339,7 @@ owns what changes during the fight, and nothing writes the sheet:
 | uses left | `uses_left(class_feature_id)` (nil: unlimited), `spend_use!(class_feature_id)` (floored at 0), from `FeatureBook#initial_uses` |
 | rerolls | `rerolls_for(:saving_throw)`: `FeatureBook#rerolls` with a use left; `spend_rerolls!(saving_throw)`: a use of each reroll the save used. Both called only by `EffectExecutor#apply_save` (see [combat-effect-pipeline.md](/architecture/combat-effect-pipeline.md)), so a feature, a spell or a maneuver with a save reroll alike; the turn executor decides nothing about rerolls |
 | turn passives | `apply_turn_passives!(trigger:)` (see [passive-effect-triggers.md](/architecture/passive-effect-triggers.md)) |
-| statuses it carries | `statuses`, `add_status(status)` (renews one of the same kind and source), `take_statuses(kind, not_from:, from:)` (removes and returns them), `status?(kind, not_from:, from:)`, `expire_statuses!(source:)` (see Statuses) |
+| statuses it carries | `statuses`, `add_status(status)` (renews one of the same kind and source), `take_statuses(kind, not_from:, from:)` (removes and returns them), `status?(kind, not_from:, from:)`, `expire_statuses!(source:, ends:)` and `shorten_statuses!(source:)` (called by `Encounter#start_turn`/`#end_turn`, see Statuses) |
 | what it can do | `feature_book`; `action_options`: this turn's `ActionOption`s, in a fixed order (a seed's pick depends on it) — the Attack action, each unlocked action feature with a use left (a known maneuver included), each spell with an `effect_payload` that is a cantrip or has a slot of its level left (moved from the simulator in phase 3.5); `action_surge_option`: Action Surge as an option when unlocked with a use left, for the policy's gambit action and the executor's random surge |
 
 Everything else it reads from the sheet through one explicit `delegate` list,
@@ -354,7 +368,7 @@ walks unlocks or compares feature names.[^feature-book-rb] It is read-only and h
 | `unlock_with(kind)` | the unlock in force of the feature whose effect is `extra_action` (Action Surge), or nil |
 | `rerolls(roll)` | the `Combat::Reroll`s (`class_feature_id`, `when`) of every unlock whose effect is a `reroll` of that `roll` (`saving_throw`: Indomitable), in unlock order, uses aside |
 | `weapon_attacks_after(spell)` | how many bonus weapon attacks (a `grants_activity`'s `count`, one) follow this spell: `after.cast_with_action` `cantrip` (War Magic) only after a cantrip, `any_spell` (Improved War Magic) after any; nil for none |
-| `rider(event:, applies:)` | the feature whose hit leaves the Eldritch Strike status (`rider`, `event: weapon_hit`, `applies: disadvantage_on_next_save`), or nil; its slug and name go in the attack's `riders` |
+| `rider(event:, applies:)` | `[feature, ends]`: the feature whose hit leaves the Eldritch Strike status (`rider`, `event: weapon_hit`, `applies: disadvantage_on_next_save`) and the status's `ends` it declares, or nil; the feature's slug and name go in the attack's `riders` |
 | `resource_feature_id(feature)` | whose uses the feature spends: the `resource_pool`'s (Combat Superiority) for a maneuver, else its own |
 | `initial_uses` | `{ class_feature_id => uses }` at the start of combat (see Resource tracking) |
 
