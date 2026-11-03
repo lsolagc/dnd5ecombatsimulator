@@ -13,7 +13,7 @@ O objetivo principal deste repositório não é apenas cadastrar personagens ou 
 
 - Ruby on Rails 8
 - ERB + Bootstrap para UI
-- SQLite no desenvolvimento, com suporte a PostgreSQL
+- PostgreSQL (o `docker compose` sobe o serviço)
 
 ## Estado atual da arquitetura
 
